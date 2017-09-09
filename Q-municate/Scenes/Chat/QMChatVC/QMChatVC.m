@@ -423,7 +423,7 @@ QMUsersServiceDelegate
 
 - (NSArray *)storedMessages {
     
-    return [QMCore.instance.chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
+  return [QMCore.instance.chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
 }
 
 - (QMDeferredQueueManager *)deferredQueueManager {
@@ -1799,6 +1799,26 @@ didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
     if (self.chatDialog.type != QBChatDialogTypePrivate && [self.chatDialog.ID isEqualToString:chatDialog.ID]) {
         
+        [self.onlineTitleView setTitle:self.chatDialog.name];
+        [self updateGroupChatOnlineStatus];
+        [self updateGroupAvatarImage];
+    }
+}
+
+- (void)chatService:(QMChatService *)chatService
+didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+    
+    QBChatDialog *updatedDialog = nil;
+    
+    for (QBChatDialog *dialog in dialogs) {
+         if (self.chatDialog.type != QBChatDialogTypePrivate
+             && [self.chatDialog.ID isEqualToString:dialog.ID]) {
+             updatedDialog = dialog;
+             break;
+         }
+    }
+    
+    if (updatedDialog) {
         [self.onlineTitleView setTitle:self.chatDialog.name];
         [self updateGroupChatOnlineStatus];
         [self updateGroupAvatarImage];

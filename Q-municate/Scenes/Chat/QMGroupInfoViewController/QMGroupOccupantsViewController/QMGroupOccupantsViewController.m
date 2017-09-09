@@ -112,10 +112,18 @@ QMUsersServiceDelegate
 
 - (void)updateOccupants {
     
-    NSArray<QBUUser *> *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:self.chatDialog.occupantIDs];
-    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"fullName" ascending:NO];
-    NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sort]];
-    self.dataSource.items = [sortedUsers mutableCopy];
+    [[QMCore.instance.usersService getUsersWithIDs:self.chatDialog.occupantIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+        if (t.result) {
+            
+            self.dataSource.items = [[t.result sortedArrayUsingComparator:^NSComparisonResult(QBUUser *u1, QBUUser *u2) {
+                return [u1.fullName caseInsensitiveCompare:u2.fullName];
+            }] mutableCopy];
+            
+            [self.tableView reloadData];
+        }
+        
+        return nil;
+    }];
 }
 
 //MARK: - Actions
@@ -251,7 +259,6 @@ QMUsersServiceDelegate
     if ([dialogs containsObject:self.chatDialog]) {
         
         [self updateOccupants];
-        [self.tableView reloadData];
     }
 }
 
@@ -260,13 +267,11 @@ QMUsersServiceDelegate
 - (void)contactListServiceDidLoadCache {
     
     [self updateOccupants];
-    [self.tableView reloadData];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
     
     [self updateOccupants];
-    [self.tableView reloadData];
 }
 
 //MARK: - QMUsersServiceDelegate
@@ -274,7 +279,6 @@ QMUsersServiceDelegate
 - (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     [self updateOccupants];
-    [self.tableView reloadData];
 }
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)user {
@@ -284,7 +288,6 @@ QMUsersServiceDelegate
     if ([self.chatDialog.occupantIDs qm_containsObjectFromArray:idsOfUsers]) {
         
         [self updateOccupants];
-        [self.tableView reloadData];
     }
 }
 

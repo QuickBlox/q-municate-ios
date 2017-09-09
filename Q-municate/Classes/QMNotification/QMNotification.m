@@ -37,7 +37,6 @@
     }
     
     NSString *title = nil;
-    NSUInteger placeholderID = 0;
     NSString *imageURLString = nil;
     
     switch (chatDialog.type) {
@@ -45,8 +44,6 @@
         case QBChatDialogTypePrivate: {
             
             QBUUser *user = [QMCore.instance.usersService.usersMemoryStorage userWithID:chatMessage.senderID];
-            
-            placeholderID = user.ID;
             imageURLString = user.avatarUrl;
             
             title = user.fullName ?: [NSString stringWithFormat:@"%tu", user.ID];
@@ -57,9 +54,7 @@
         case QBChatDialogTypeGroup:
         case QBChatDialogTypePublicGroup: {
             
-            placeholderID = chatDialog.ID.hash;
             imageURLString = chatDialog.photo;
-            
             title = chatDialog.name;
             
             break;
