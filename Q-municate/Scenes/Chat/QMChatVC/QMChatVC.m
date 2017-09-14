@@ -1805,7 +1805,7 @@ didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     }
 }
 
-- (void)chatService:(QMChatService *)chatService
+- (void)chatService:(QMChatService *)__unused chatService
 didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
     
     QBChatDialog *updatedDialog = nil;
