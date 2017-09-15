@@ -1,0 +1,1 @@
+../../../../FirebaseUI/FirebaseUIFrameworks/FirebasePhoneAuthUI/Frameworks/FirebasePhoneAuthUI.framework/Headers/FUIPhoneAuth.h

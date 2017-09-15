@@ -7,9 +7,6 @@ PODS:
   - Bolts/Tasks (1.8.4)
   - Crashlytics (3.8.6):
     - Fabric (~> 1.6.3)
-  - Digits (3.0.2):
-    - Fabric
-    - TwitterCore
   - Fabric (1.6.13)
   - FBSDKCoreKit (4.26.0):
     - Bolts (~> 1.7)
@@ -18,14 +15,54 @@ PODS:
   - FBSDKShareKit (4.26.0):
     - FBSDKCoreKit
   - FFCircularProgressView (0.5)
+  - Firebase/Auth (4.1.1):
+    - Firebase/Core
+    - FirebaseAuth (= 4.1.1)
+  - Firebase/Core (4.1.1):
+    - FirebaseAnalytics (= 4.0.3)
+    - FirebaseCore (= 4.0.6)
+  - FirebaseAnalytics (4.0.3):
+    - FirebaseCore (~> 4.0)
+    - FirebaseInstanceID (~> 2.0)
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseAuth (4.1.1):
+    - FirebaseAnalytics (~> 4.0)
+    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+    - GTMSessionFetcher/Core (~> 1.1)
+  - FirebaseCore (4.0.6):
+    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
+    - nanopb (~> 0.3)
+  - FirebaseInstanceID (2.0.2):
+    - FirebaseCore (~> 4.0)
+  - FirebaseUI/Auth (4.2.0):
+    - Firebase/Auth (~> 4.0)
+  - FirebaseUI/Phone (4.2.0):
+    - FirebaseUI/Auth
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurrySDK (8.2.0)
+  - Flurry-iOS-SDK/FlurrySDK (8.2.1)
+  - GoogleToolboxForMac/DebugUtils (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - GoogleToolboxForMac/Defines (2.1.1)
+  - GoogleToolboxForMac/NSData+zlib (2.1.1):
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1):
+    - GoogleToolboxForMac/DebugUtils (= 2.1.1)
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
+  - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
+  - GTMSessionFetcher/Core (1.1.11)
   - libextobjc/EXTKeyPathCoding (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
   - MPGNotification (1.2.4)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
   - NYTPhotoViewer (1.1.0):
     - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
     - NYTPhotoViewer/Core (= 1.1.0)
@@ -93,17 +130,15 @@ PODS:
   - SSKeychain (1.2.3)
   - SVProgressHUD (1.1.3)
   - TTTAttributedLabel (2.0.0)
-  - TwitterCore (2.8.0):
-    - Fabric
   - UIDevice-Hardware (0.1.10)
 
 DEPENDENCIES:
   - Crashlytics
-  - Digits
   - Fabric
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
+  - FirebaseUI/Phone (~> 4.0)
   - Flurry-iOS-SDK/FlurrySDK
   - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
@@ -116,7 +151,6 @@ DEPENDENCIES:
   - SSKeychain (~> 1.2.2)
   - SVProgressHUD (~> 1.0)
   - TTTAttributedLabel (~> 2.0)
-  - TwitterCore
   - UIDevice-Hardware (~> 0.1.3)
 
 EXTERNAL SOURCES:
@@ -138,16 +172,24 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
-  Digits: b081fcf5c6d281f5e42830b428412a3ef8fc6c68
   Fabric: 2fb5676bc811af011a04513451f463dac6803206
   FBSDKCoreKit: c8b8582311ec11b145451d8b9717dc6cc2ae5a76
   FBSDKLoginKit: f3f03b94c21eb834af243c0a881d48641f47ca60
   FBSDKShareKit: 320712d8293fde6392872c91eb80ef0da5d73cc3
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
+  Firebase: 052c0de688fc87b414996eea13e223dd9fee3fa2
+  FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
+  FirebaseAuth: f8b07aa83de60d606b4eadd81484b3ac2097ea3e
+  FirebaseCore: 28def3c643989c97ea5a69ea5000f5fa9902b9fd
+  FirebaseInstanceID: c4c7fca62c7b7330caee5da04f19a37ea37bb1c1
+  FirebaseUI: 76877afa8aa122ea135aa51a10fc7d622a82d096
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: 5907f4767bbe538ced4d39f1268096730193b471
+  Flurry-iOS-SDK: b0dcfbdb6e87c55b9e41ad4441945be492348132
+  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  GTMSessionFetcher: 5ad62e8200fa00ed011fe5e08d27fef72c5b1429
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   MPGNotification: f0e3924087afa9b3eccd5ce624e03965ae31ae61
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
   QMCVDevelopment: 06e12ea9060e58fea15b9251962bd96d9a3e1092
   QMServicesDevelopment: bfe42b54bff806f8b3b759d6219d19b2508603e2
@@ -156,9 +198,8 @@ SPEC CHECKSUMS:
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
-  TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: f3e8296d484f83b2f438f55940d9a9088d5dff6a
+PODFILE CHECKSUM: ae3a75784bcafec558bae1175ffa1bd05b26969b
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.1.1

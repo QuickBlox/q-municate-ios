@@ -18,9 +18,6 @@ case "${TARGETED_DEVICE_FAMILY}" in
   2)
     TARGET_DEVICE_ARGS="--target-device ipad"
     ;;
-  3)
-    TARGET_DEVICE_ARGS="--target-device tv"
-    ;;
   *)
     TARGET_DEVICE_ARGS="--target-device mac"
     ;;
@@ -77,8 +74,9 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "FBSDKCoreKit/FacebookSDKStrings.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle"
   install_resource "QMCVDevelopment/QMChatViewController/Icons/Media.xcassets"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
@@ -89,8 +87,9 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "FBSDKCoreKit/FacebookSDKStrings.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle"
   install_resource "QMCVDevelopment/QMChatViewController/Icons/Media.xcassets"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
