@@ -16,10 +16,15 @@
 #import "QMContent.h"
 #import "QMTasks.h"
 
-#import <DigitsKit/DigitsKit.h>
-#import "QMDigitsConfigurationFactory.h"
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
+#import <FirebasePhoneAuthUI/FUIPhoneAuth.h>
 
 static NSString * const kQMFacebookIDField = @"id";
+
+@interface QMWelcomeScreenViewController () <FUIAuthDelegate>
+
+@end
 
 @implementation QMWelcomeScreenViewController
 
@@ -43,7 +48,7 @@ static NSString * const kQMFacebookIDField = @"id";
         // License agreement check
         if (success) {
             @strongify(self);
-            [self performDigitsLogin];
+            [self performPhoneLogin];
         }
     }];
 }
@@ -131,56 +136,55 @@ static NSString * const kQMFacebookIDField = @"id";
     }];
 }
 
-- (void)performDigitsLogin {
+- (void)performPhoneLogin {
     
+    FUIAuth *authUI = [FUIAuth defaultAuthUI];
+    authUI.signInWithEmailHidden = YES;
+    authUI.delegate = self;
+    FUIPhoneAuth *phoneAuth = [[FUIPhoneAuth alloc] initWithAuthUI:authUI];
+    authUI.providers = @[phoneAuth];
+    [phoneAuth signInWithPresentingViewController:self];
+}
+
+// MARK: - FUIAuthDelegate delegate
+
+- (void)authUI:(FUIAuth *)__unused authUI didSignInWithUser:(FIRUser *)fuser error:(NSError *)ferror {
+    
+    if (ferror.userInfo.count > 0) {
+        
+        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO inViewController:self];
+    }
+    
+    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
     @weakify(self);
-    [[Digits sharedInstance] authenticateWithViewController:nil configuration:[QMDigitsConfigurationFactory qmunicateThemeConfiguration] completion:^(DGTSession *session, NSError *error) {
+    [fuser getIDTokenWithCompletion:^(NSString * _Nullable token, NSError * _Nullable __unused error) {
         @strongify(self);
-        // twitter digits auth
-        if (error.userInfo.count > 0) {
+        
+        [[[QMCore instance].authService logInWithFirebaseProjectID:[authUI auth].app.options.projectID accessToken:token] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
             
-            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO inViewController:self];
-        }
-        else {
-            
-            DGTOAuthSigning *oauthSigning = [[DGTOAuthSigning alloc] initWithAuthConfig:[Digits sharedInstance].authConfig
-                                                                            authSession:session];
-            
-            NSDictionary *authHeaders = [oauthSigning OAuthEchoHeadersToVerifyCredentials];
-            if (!authHeaders) {
-                // user seems skipped auth process
-                return;
-            }
-            
-            [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
-            
-            [[QMCore.instance.authService loginWithTwitterDigitsAuthHeaders:authHeaders] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+            [SVProgressHUD dismiss];
+            if (!task.isFaulted) {
                 
-                [SVProgressHUD dismiss];
+                [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
                 
-                if (!task.isFaulted) {
+                QMCore.instance.currentProfile.accountType = QMAccountTypePhone;
+                
+                QBUUser *user = task.result;
+                if (user.fullName.length == 0) {
+                    // setting phone as user full name
+                    user.fullName = user.phone;
                     
-                    [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
+                    QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
+                    updateUserParams.fullName = user.fullName;
                     
-                    QMCore.instance.currentProfile.accountType = QMAccountTypeDigits;
-                    
-                    QBUUser *user = task.result;
-                    if (user.fullName.length == 0) {
-                        // setting phone as user full name
-                        user.fullName = user.phone;
-                        
-                        QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
-                        updateUserParams.fullName = user.fullName;
-                        
-                        return [QMTasks taskUpdateCurrentUser:updateUserParams];
-                    }
-                    
-                    [QMCore.instance.currentProfile synchronizeWithUserData:user];
+                    return [QMTasks taskUpdateCurrentUser:updateUserParams];
                 }
                 
-                return nil;
-            }];
-        }
+                [QMCore.instance.currentProfile synchronizeWithUserData:user];
+            }
+            
+            return nil;
+        }];
     }];
 }
 

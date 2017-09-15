@@ -25,7 +25,6 @@
 
         #import "SegueIdentifiers.h"
         #import "QMConstants.h"
-        #import <DigitsKit/DigitsKit.h>
         #import <QMServices.h>
         #import <EXTScope.h>
         #import <EXTKeyPathCoding.h>
