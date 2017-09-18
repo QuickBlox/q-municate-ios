@@ -28,7 +28,22 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 
 @implementation QMNavigationController
 
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    
+    
+    if (iosMajorVersion() >= 11) {
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        self.navigationBar.prefersLargeTitles = YES;
+#pragma clang diagnostic pop
+    }
+}
+
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
+    
     if ([self.navigationBar isKindOfClass:[QMNavigationBar class]]) {
         
         BOOL notify = YES;

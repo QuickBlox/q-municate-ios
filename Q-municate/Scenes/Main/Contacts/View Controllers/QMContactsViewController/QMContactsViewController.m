@@ -18,6 +18,7 @@
 #import "QMCore.h"
 #import "QMTasks.h"
 #import "QMAlert.h"
+#import "QMHelpers.h"
 
 #import "QMContactCell.h"
 #import "QMNoContactsCell.h"
@@ -129,10 +130,18 @@ QMUsersServiceDelegate
     self.searchController.searchBar.delegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
-    self.definesPresentationContext = YES;
+    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
-    self.tableView.tableHeaderView = self.searchController.searchBar;
+    
+    if (iosMajorVersion() >= 11) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
+    }
+    else {
+        self.tableView.tableHeaderView = self.searchController.searchBar;
+    }
+    
+    self.definesPresentationContext = YES;
 }
 
 - (void)configureDataSources {

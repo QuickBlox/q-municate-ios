@@ -36,6 +36,7 @@
 #import "QMAudioPlayer.h"
 #import "QMPermissions.h"
 #import "UIScreen+QMLock.h"
+#import "QMImageBarButtonItem.h"
 
 // external
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -79,7 +80,6 @@ QMDeferredQueueManagerDelegate,
 QMChatActionsHandler,
 QMChatCellDelegate,
 QMImagePickerResultHandler,
-QMImageViewDelegate,
 QMMediaControllerDelegate,
 QMCallManagerDelegate,
 QMOpenGraphServiceDelegate,
@@ -131,15 +131,14 @@ QMUsersServiceDelegate
  */
 @property (weak, nonatomic) BFTask *contactRequestTask;
 
-/**
- *  Group avatar image view.
- */
-@property (strong, nonatomic) QMImageView *groupAvatarImageView;
-
 @property (strong, nonatomic) QMMediaController *mediaController;
 @property (strong, nonatomic) QMAudioRecorder *currentAudioRecorder;
 
 @property (strong, nonatomic) NSMutableSet *messagesToRead;
+/**
+ *  Group avatar bar button item. Is used for right bar button item.
+ */
+@property (strong, nonatomic)  QMImageBarButtonItem *imageBarButtonItem;
 
 @end
 
@@ -201,6 +200,10 @@ QMUsersServiceDelegate
     
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
+    }
+    
+    if (iosMajorVersion() >= 11) {
+        self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     }
     
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
@@ -423,7 +426,7 @@ QMUsersServiceDelegate
 
 - (NSArray *)storedMessages {
     
-  return [QMCore.instance.chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
+    return [QMCore.instance.chatService.messagesMemoryStorage messagesWithDialogID:self.chatDialog.ID];
 }
 
 - (QMDeferredQueueManager *)deferredQueueManager {
@@ -1571,7 +1574,7 @@ QMUsersServiceDelegate
     
     NSString *messageText =
     [NSString stringWithFormat:@"%@ attachment",
-     [[attachment stringContentType] capitalizedString]];
+     attachment.type.capitalizedString];
     
     QBChatMessage *message = [QMMessagesHelper chatMessageWithText:messageText
                                                         attachment:attachment
@@ -1663,7 +1666,7 @@ QMUsersServiceDelegate
             break;
     }
     
-    self.groupAvatarImageView.frame = CGRectMake(0, 0, defaultSize, defaultSize);
+    self.imageBarButtonItem.size = CGSizeMake(defaultSize, defaultSize);
 }
 
 //MARK: - Configuring
@@ -1684,24 +1687,27 @@ QMUsersServiceDelegate
 
 - (void)configureGroupChatAvatar {
     
-    // chat avatar
-    self.groupAvatarImageView = [[QMImageView alloc] initWithFrame:CGRectMake(0, 0, 36, 36)];
+    self.imageBarButtonItem = [[QMImageBarButtonItem alloc] init];
+    
+    __weak typeof(self) weakSelf = self;
+    void(^onTapBlock)(QMImageView *) = ^(QMImageView __unused *imageView) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf performSegueWithIdentifier:KQMSceneSegueGroupInfo sender:strongSelf.chatDialog];
+    };
+    
+    self.imageBarButtonItem.onTapHandler = onTapBlock;
+    
+    self.navigationItem.rightBarButtonItem = self.imageBarButtonItem;
+    
     [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
-    self.groupAvatarImageView.imageViewType = QMImageViewTypeCircle;
-    self.groupAvatarImageView.delegate = self;
-    
-    UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.groupAvatarImageView];
-    self.navigationItem.rightBarButtonItem = rightBarButtonItem;
-    
     [self updateGroupAvatarImage];
 }
 
 - (void)updateGroupAvatarImage {
     
     NSURL *avatarURL = [NSURL URLWithString:self.chatDialog.photo];
-    [self.groupAvatarImageView setImageWithURL:avatarURL
-                                         title:self.chatDialog.name
-                                completedBlock:nil];
+    [self.imageBarButtonItem setImageWithURL:avatarURL
+                                       title:self.chatDialog.name];
 }
 
 - (void)updateGroupChatOnlineStatus {
@@ -1746,13 +1752,6 @@ QMUsersServiceDelegate
     self.topContentAdditionalInset = additionalNavigationBarHeight;
 }
 
-//MARK: - QMImageViewDelegate
-
-- (void)imageViewDidTap:(QMImageView *)__unused imageView {
-    
-    [self performSegueWithIdentifier:KQMSceneSegueGroupInfo sender:self.chatDialog];
-}
-
 //MARK: - QMChatServiceDelegate
 
 - (void)chatService:(QMChatService *)__unused chatService didLoadMessagesFromCache:(NSArray *)messages forDialogID:(NSString *)dialogID {
@@ -1766,7 +1765,9 @@ QMUsersServiceDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didAddMessageToMemoryStorage:(QBChatMessage *)message forDialogID:(NSString *)dialogID {
+- (void)chatService:(QMChatService *)__unused chatService
+didAddMessageToMemoryStorage:(QBChatMessage *)message
+        forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
@@ -1788,7 +1789,6 @@ QMUsersServiceDelegate
             [self.chatDataSource updateMessage:message];
         }
         else {
-            
             [self.chatDataSource addMessage:message];
         }
     }
@@ -1805,17 +1805,17 @@ didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     }
 }
 
-- (void)chatService:(QMChatService *)chatService
+- (void)chatService:(QMChatService *)__unused chatService
 didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
     
     QBChatDialog *updatedDialog = nil;
     
     for (QBChatDialog *dialog in dialogs) {
-         if (self.chatDialog.type != QBChatDialogTypePrivate
-             && [self.chatDialog.ID isEqualToString:dialog.ID]) {
-             updatedDialog = dialog;
-             break;
-         }
+        if (self.chatDialog.type != QBChatDialogTypePrivate
+            && [self.chatDialog.ID isEqualToString:dialog.ID]) {
+            updatedDialog = dialog;
+            break;
+        }
     }
     
     if (updatedDialog) {
@@ -2139,7 +2139,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker
 didFinishPickingWithError:(NSError *)error {
-
+    
     NSString *errorMessage =
     error.localizedDescription ?: NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil);
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
