@@ -93,7 +93,7 @@
     
     self.status.mediaID = itemID;
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url
-                                                       fileTypeHint:AVFileTypeMPEGLayer3
+                                                       fileTypeHint:nil
                                                               error:&error];
     self.audioPlayer.delegate = self;
     [self _qmPlayerPlay];
@@ -236,5 +236,8 @@
             break;
     }
 }
-
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player
+                                 error:(NSError *)error {
+    NSLog(@"Error %@", error);
+}
 @end

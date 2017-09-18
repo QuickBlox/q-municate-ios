@@ -8,8 +8,6 @@
 
 #import "QMCallNotificationItem.h"
 #import "QMCore.h"
-#import "QMHelpers.h"
-
 #import "QBChatMessage+QMCallNotifications.h"
 
 static UIImage *missedAudioIcon() {

@@ -16,7 +16,6 @@
 #import "QMCallManager.h"
 #import <Intents/Intents.h>
 #import "NSString+QMTransliterating.h"
-#import "QMHelpers.h"
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
