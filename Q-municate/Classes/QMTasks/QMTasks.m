@@ -11,7 +11,10 @@
 #import "QMErrorsFactory.h"
 #import "QMFacebook.h"
 #import "QMContent.h"
-#import <DigitsKit/DigitsKit.h>
+
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
+#import <Bolts/Bolts.h>
 
 static const NSUInteger kQMDialogsPageLimit = 10;
 static const NSUInteger kQMUsersPageLimit = 100;
@@ -105,20 +108,32 @@ static const NSUInteger kQMUsersPageLimit = 100;
             return task.result ? [core.authService loginWithFacebookSessionToken:task.result] : nil;
         }];
     }
-    else if (type == QMAccountTypeDigits) {
+    else if (type == QMAccountTypePhone) {
         
-        Digits *digits = [Digits sharedInstance];
-        DGTOAuthSigning *oauthSigning =
-        [[DGTOAuthSigning alloc] initWithAuthConfig:digits.authConfig
-                                        authSession:[digits session]];
+        BFTaskCompletionSource *source =
+        [BFTaskCompletionSource taskCompletionSource];
         
-        NSDictionary *authHeaders = [oauthSigning OAuthEchoHeadersToVerifyCredentials];
-        if (!authHeaders) {
+        FIRAuth *auth = [FIRAuth auth];
+        FIRUser *phoneUser = [[FIRAuth auth] currentUser];
+        if (phoneUser) {
+            [phoneUser getIDTokenWithCompletion:^(NSString * _Nullable token, NSError * _Nullable error) {
+                if (error) {
+                    [source setError:error];
+                    return;
+                }
+                
+                [[[QMCore instance].authService logInWithFirebaseProjectID:auth.app.options.projectID accessToken:token] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull t) {
+                    t.isFaulted ? [source setError:t.error] : [source setResult:t.result];
+                    return nil;
+                }];
+            }];
+        }
+        else {
             NSError *error = [QMErrorsFactory errorNotLoggedInREST];
-            return [BFTask taskWithError:error];
+            [source setError:error];
         }
         
-        return [QMCore.instance.authService loginWithTwitterDigitsAuthHeaders:authHeaders];
+        return source.task;
     }
     else {
         

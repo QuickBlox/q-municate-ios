@@ -32,5 +32,4 @@
 #import "QMLog.h"
 #import "QMHelpers.h"
 
-
 #endif
