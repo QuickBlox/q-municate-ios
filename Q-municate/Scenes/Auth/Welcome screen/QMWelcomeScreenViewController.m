@@ -153,6 +153,7 @@ static NSString * const kQMFacebookIDField = @"id";
     if (ferror.userInfo.count > 0) {
         
         [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO inViewController:self];
+        return;
     }
     
     [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
