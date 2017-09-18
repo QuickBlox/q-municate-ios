@@ -25,7 +25,6 @@
     return self;
 }
 
-
 - (instancetype)initWithSize:(CGSize)size {
     
     if (self = [super init]) {
@@ -36,8 +35,6 @@
     return self;
 }
 
-
-
 - (instancetype)init {
     
     if (self = [super init]) {
@@ -45,6 +42,7 @@
     }
     return self;
 }
+
 
 - (void)configureCustomView {
     
@@ -116,7 +114,7 @@
          _imageViewHeightConstraint.constant);
     }
     else {
-        _imageView.frame.size;
+        return _imageView.frame.size;
     }
 }
 

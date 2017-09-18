@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^QMImageViewTapBlock)(QMImageView *imageView);
 
 @property (nonatomic, strong, readonly) QMImageView *imageView;
-@property (nonatomic, copy) QMImageViewTapBlock onTapHandler;
+@property (nonatomic, copy, nullable) QMImageViewTapBlock onTapHandler;
 @property (nonatomic, assign) CGSize size;
 
 - (void)setImageWithURL:(NSURL *)imageURL
