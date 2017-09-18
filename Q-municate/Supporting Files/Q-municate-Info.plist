@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.1.1(1010)</string>
+	<string>2.4.1.1(3000)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -46,17 +46,6 @@
 				<dict/>
 				<key>KitName</key>
 				<string>Crashlytics</string>
-			</dict>
-			<dict>
-				<key>KitInfo</key>
-				<dict>
-					<key>consumerKey</key>
-					<string>KCcPaHrIgJ44gs3kwJuIbLaad</string>
-					<key>consumerSecret</key>
-					<string>JFFZaMw5I7qX09NPpJHOGIeDEDDS7PeDrHYgnNev6h2vbUTAkG</string>
-				</dict>
-				<key>KitName</key>
-				<string>Digits</string>
 			</dict>
 		</array>
 	</dict>
