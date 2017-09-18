@@ -184,6 +184,7 @@
 		E08441D91E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */; };
 		E08441DA1E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */; };
 		E08D52151E5AABF700918B5B /* QMMediaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E08D52141E5AABF700918B5B /* QMMediaController.m */; };
+		E0921D901F6FDA87005961CF /* QMImageBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E0921D8F1F6FDA87005961CF /* QMImageBarButtonItem.m */; };
 		E09FCA671E60A9270013E3EB /* QMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E09FCA661E60A9270013E3EB /* QMAudioPlayer.m */; };
 		E0B6A3361E2A615E001125FC /* AppIntentVocabulary.plist in Resources */ = {isa = PBXBuildFile; fileRef = E0B6A3381E2A615E001125FC /* AppIntentVocabulary.plist */; };
 		E0D3D9A51F4DCCBB006AB505 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0D3D9A41F4DCCBA006AB505 /* CoreTelephony.framework */; };
@@ -556,6 +557,8 @@
 		E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMSiriUtils.m"; sourceTree = "<group>"; };
 		E08D52131E5AABF700918B5B /* QMMediaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMediaController.h; sourceTree = "<group>"; };
 		E08D52141E5AABF700918B5B /* QMMediaController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMediaController.m; sourceTree = "<group>"; };
+		E0921D8E1F6FDA87005961CF /* QMImageBarButtonItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMImageBarButtonItem.h; sourceTree = "<group>"; };
+		E0921D8F1F6FDA87005961CF /* QMImageBarButtonItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMImageBarButtonItem.m; sourceTree = "<group>"; };
 		E09FCA651E60A9270013E3EB /* QMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAudioPlayer.h; sourceTree = "<group>"; };
 		E09FCA661E60A9270013E3EB /* QMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAudioPlayer.m; sourceTree = "<group>"; };
 		E0B6A3351E2A614B001125FC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -1929,6 +1932,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E0921D8D1F6FDA3E005961CF /* QMImageBarButtonItem */,
 				E03AD8EB1F556D6100F411CE /* QMExpandableTableViewController */,
 				584277D91C3FE58900CDE35B /* Core */,
 				6943843218E42677001E08A9 /* CustomSegues */,
@@ -2155,6 +2159,15 @@
 			path = QMMediaController;
 			sourceTree = "<group>";
 		};
+		E0921D8D1F6FDA3E005961CF /* QMImageBarButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				E0921D8E1F6FDA87005961CF /* QMImageBarButtonItem.h */,
+				E0921D8F1F6FDA87005961CF /* QMImageBarButtonItem.m */,
+			);
+			path = QMImageBarButtonItem;
+			sourceTree = "<group>";
+		};
 		E0D258BA1F0A84390046D2FA /* QMImageLoader */ = {
 			isa = PBXGroup;
 			children = (
@@ -2276,7 +2289,7 @@
 					E07BC21E1DDF5FD900B8D3B0 = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 8885H5G2YX;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
@@ -2598,6 +2611,7 @@
 				E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */,
 				589B62921CE1CB4A0038F5E0 /* QMPushNotificationManager.m in Sources */,
 				584277D51C3FCFBA00CDE35B /* QMFacebook.m in Sources */,
+				E0921D901F6FDA87005961CF /* QMImageBarButtonItem.m in Sources */,
 				E09FCA671E60A9270013E3EB /* QMAudioPlayer.m in Sources */,
 				58C64D031C905F9800F1387B /* QMChatVC.m in Sources */,
 				58D847701C85BB36000C40BA /* QMSearchCell.m in Sources */,
@@ -2885,8 +2899,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMSiriExtension/QMSiriExtension.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 8885H5G2YX;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2898,8 +2913,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9fe6dfc3-2aea-47d2-8611-6b293513bd90";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2916,9 +2931,10 @@
 				CODE_SIGN_ENTITLEMENTS = QMSiriExtension/QMSiriExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 8885H5G2YX;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2930,8 +2946,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9fe6dfc3-2aea-47d2-8611-6b293513bd90";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension dev";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
