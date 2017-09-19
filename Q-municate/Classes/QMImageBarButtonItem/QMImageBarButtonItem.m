@@ -53,7 +53,7 @@
     self.customView = self.imageView;
     
     // Autolayout is available for UIBarButtonItem from iOS 11
-    if (@available(iOS 11, *)) {
+    if (iosMajorVersion() >= 11) {
         
         self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
         self.imageViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.imageView
@@ -97,7 +97,7 @@
 - (void)setSize:(CGSize)size {
     
     // Autolayout is available for UIBarButtonItem from iOS 11
-    if (@available(iOS 11, *)) {
+    if (iosMajorVersion() >= 11) {
         _imageViewWidthConstraint.constant = size.width;
         _imageViewHeightConstraint.constant = size.height;
     }
@@ -108,7 +108,7 @@
 
 - (CGSize)size {
     
-    if (@available(iOS 11, *)) {
+    if (iosMajorVersion() >= 11) {
         return CGSizeMake
         (_imageViewWidthConstraint.constant,
          _imageViewHeightConstraint.constant);

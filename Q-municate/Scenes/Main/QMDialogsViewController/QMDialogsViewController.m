@@ -323,13 +323,18 @@ didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
     
     if (self.dialogsDataSource.items.count == 0) {
         self.tableView.backgroundView = self.placeholderView;
-  
+        
+#ifdef __IPHONE_11_0
         if (iosMajorVersion() >= 11) {
             self.navigationItem.searchController = nil;
         }
         else {
             self.tableView.tableHeaderView = nil;
         }
+#else
+        self.tableView.tableHeaderView = nil;
+#endif
+        
     }
     
     [self.tableView reloadData];
@@ -482,8 +487,10 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 - (void)removePlaceholder {
     
     if (self.tableView.backgroundView) {
+        
         self.tableView.backgroundView = nil;
-
+        
+#ifdef __IPHONE_11_0
         if (iosMajorVersion() >= 11) {
             self.navigationItem.searchController = self.searchController;
             self.navigationItem.hidesSearchBarWhenScrolling = NO;
@@ -491,6 +498,9 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
         else {
             self.tableView.tableHeaderView = self.searchController.searchBar;
         }
+#else
+        self.tableView.tableHeaderView = self.searchController.searchBar;
+#endif
     }
 }
 
