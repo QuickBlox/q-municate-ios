@@ -153,12 +153,6 @@ static const CGFloat kQMVideoCallDeclineButtonWidth = 147.0f;
                                                                                 0,
                                                                                 kQMButtonSizeSmall,
                                                                                 kQMButtonSizeSmall)];
-//    
-//    [cameraRotationButton setImage:[UIImage imageNamed:@"qm-ic-camera-rotation"]
-//                          forState:UIControlStateNormal];
-//    
-//    [cameraRotationButton setImage:[UIImage imageNamed:@"qm-ic-camera-rotation-selected"]
-//                          forState:UIControlStateSelected];
     [minimizeButton setTitle:@"M" forState:UIControlStateNormal];
     return minimizeButton;
 }

@@ -183,7 +183,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
-    [[FIRAuth auth] setAPNSToken:deviceToken type:FIRAuthAPNSTokenTypeSandbox];
+    FIRAuthAPNSTokenType firTokenType;
+#if DEVELOPMENT == 0
+    firTokenType = FIRAuthAPNSTokenTypeProd;
+#else
+    firTokenType = FIRAuthAPNSTokenTypeSandbox;
+#endif
+    [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
 - (void)application:(UIApplication *)__unused application

@@ -15,6 +15,7 @@
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
 #import "QMImageLoader+QBChatAttachment.h"
+#import "UIImage+QM.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
 NYTPhotosViewControllerDelegate,
@@ -599,28 +600,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto {
-    
-    // clearing previous reference view
-    self.photoReferenceView = nil;
-    
-    QMPhoto *photo = [[QMPhoto alloc] init];
-    photo.image = pickedPhoto;
-    
-    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_DONE", nil)
-                                                                      style:UIBarButtonItemStyleDone
-                                                                     target:self
-                                                                     action:@selector(notifyAboutAcceptingPickedImage)];
-    
-    [self presentViewControllerWithPhoto:photo rightBarButtonItem:barButtonItem];
-}
-
-- (void)notifyAboutAcceptingPickedImage {
-    NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)_presentedViewController;
-    [_viewController sendAttachmentMessageWithImage:photosViewController.currentlyDisplayedPhoto.image];
-    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (QMChatAttachmentService *)attachmentsService {
     
     return QMCore.instance.chatService.chatAttachmentService;
@@ -644,17 +623,100 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
-    [self presentViewControllerWithPhoto:photo rightBarButtonItem:nil];
+//MARK:  - NYTPhotosViewController
+
+- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto {
+    
+    // clearing previous reference view
+    self.photoReferenceView = nil;
+    
+    QMPhoto *photo = [[QMPhoto alloc] init];
+    photo.image = pickedPhoto;
+    
+    UIColor *darkColor = [UIColor colorWithWhite:0.0 alpha:0.6];
+    UIImage *backgroundImage = [UIImage resizableImageWithColor:darkColor
+                                                   cornerRadius:10.0];
+    
+    UIBarButtonItem *rightBarButtonItem =
+    [self barButtonWithTitle:NSLocalizedString(@"QM_STR_SEND", nil)
+             backgroundImage:backgroundImage action:@selector(notifyAboutAcceptingPickedImage)];
+    
+    UIBarButtonItem *leftBarButtonItem =
+    [self barButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+             backgroundImage:backgroundImage action:@selector(notifyAboutCancellingPickedImage)];
+    
+    [self presentViewControllerWithPhoto:photo
+                      rightBarButtonItem:rightBarButtonItem
+                       leftBarButtonItem:leftBarButtonItem];
 }
 
-- (void)presentViewControllerWithPhoto:(QMPhoto *)photo rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem {
+- (UIBarButtonItem *)barButtonWithTitle:(NSString *)title
+                        backgroundImage:(UIImage *)backgroundImage
+                                 action:(SEL)action {
+    
+    UIButton *button = [[UIButton alloc] init];
+    
+    if (title) {
+        
+        CGSize textSize =
+        [title sizeWithAttributes:@{NSFontAttributeName : button.titleLabel.font}];
+        
+        button.frame = CGRectMake(0, 0, textSize.width + 20, 30);
+        
+        [button setTitle:title forState:UIControlStateNormal];
+    }
+    else {
+        button.frame = CGRectMake(0, 0, 30, 30);
+    }
+    
+    [button addTarget:self
+               action:action
+     forControlEvents:UIControlEventTouchDown];
+    
+    [button setBackgroundImage:backgroundImage
+                      forState:UIControlStateNormal];
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:button];
+}
+
+
+- (void)notifyAboutAcceptingPickedImage {
+    
+    NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)_presentedViewController;
+    [_viewController sendAttachmentMessageWithImage:photosViewController.currentlyDisplayedPhoto.image];
+    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)notifyAboutCancellingPickedImage {
+    
+    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
+    
+    [self presentViewControllerWithPhoto:photo
+                      rightBarButtonItem:nil
+                       leftBarButtonItem:nil];
+}
+
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo
+                    rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem
+                     leftBarButtonItem:(UIBarButtonItem *)leftBarButtonItem {
+    
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    
     if (rightBarButtonItem != nil) {
         photosViewController.rightBarButtonItem = rightBarButtonItem;
     }
+    
+    if (leftBarButtonItem != nil) {
+        photosViewController.leftBarButtonItem = leftBarButtonItem;
+    }
+    
     photosViewController.delegate = self;
+    
     
     [self.viewController.view endEditing:YES]; // hiding keyboard
     [self.viewController presentViewController:photosViewController

@@ -183,6 +183,7 @@
 		E08441D91E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */; };
 		E08441DA1E1E611D00B87D0F /* NSString+QMSiriUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */; };
 		E08D52151E5AABF700918B5B /* QMMediaController.m in Sources */ = {isa = PBXBuildFile; fileRef = E08D52141E5AABF700918B5B /* QMMediaController.m */; };
+		E0921D941F6FEE11005961CF /* QMImageBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E0921D931F6FEE11005961CF /* QMImageBarButtonItem.m */; };
 		E09FCA671E60A9270013E3EB /* QMAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E09FCA661E60A9270013E3EB /* QMAudioPlayer.m */; };
 		E0B6A3361E2A615E001125FC /* AppIntentVocabulary.plist in Resources */ = {isa = PBXBuildFile; fileRef = E0B6A3381E2A615E001125FC /* AppIntentVocabulary.plist */; };
 		E0D3D9A51F4DCCBB006AB505 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0D3D9A41F4DCCBA006AB505 /* CoreTelephony.framework */; };
@@ -554,6 +555,8 @@
 		E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMSiriUtils.m"; sourceTree = "<group>"; };
 		E08D52131E5AABF700918B5B /* QMMediaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMediaController.h; sourceTree = "<group>"; };
 		E08D52141E5AABF700918B5B /* QMMediaController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMediaController.m; sourceTree = "<group>"; };
+		E0921D921F6FEE11005961CF /* QMImageBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMImageBarButtonItem.h; sourceTree = "<group>"; };
+		E0921D931F6FEE11005961CF /* QMImageBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMImageBarButtonItem.m; sourceTree = "<group>"; };
 		E09FCA651E60A9270013E3EB /* QMAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAudioPlayer.h; sourceTree = "<group>"; };
 		E09FCA661E60A9270013E3EB /* QMAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAudioPlayer.m; sourceTree = "<group>"; };
 		E0B6A3351E2A614B001125FC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -1918,6 +1921,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E0921D911F6FEE11005961CF /* QMImageBarButtonItem */,
 				E03AD8EB1F556D6100F411CE /* QMExpandableTableViewController */,
 				584277D91C3FE58900CDE35B /* Core */,
 				6943843218E42677001E08A9 /* CustomSegues */,
@@ -2143,6 +2147,15 @@
 				E043459B1F29545F0066851D /* QMAttachmentController.m */,
 			);
 			path = QMMediaController;
+			sourceTree = "<group>";
+		};
+		E0921D911F6FEE11005961CF /* QMImageBarButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				E0921D921F6FEE11005961CF /* QMImageBarButtonItem.h */,
+				E0921D931F6FEE11005961CF /* QMImageBarButtonItem.m */,
+			);
+			path = QMImageBarButtonItem;
 			sourceTree = "<group>";
 		};
 		E0D258BA1F0A84390046D2FA /* QMImageLoader */ = {
@@ -2584,6 +2597,7 @@
 				589D4CF91C981888005F1E76 /* QMContactsDataSource.m in Sources */,
 				5868B05B1CE9C647004F9233 /* QMCallViewController.m in Sources */,
 				580FEBF61CC50423000AED72 /* QMMessagesHelper.m in Sources */,
+				E0921D941F6FEE11005961CF /* QMImageBarButtonItem.m in Sources */,
 				584A6D971C9D9D9F00B7D641 /* QMAlphabetizedDataSource.m in Sources */,
 				E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */,
 				589B62921CE1CB4A0038F5E0 /* QMPushNotificationManager.m in Sources */,
@@ -2757,9 +2771,10 @@
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CODE_SIGN_ENTITLEMENTS = "Q-municate/Q-municate.entitlements";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 8885H5G2YX;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2790,8 +2805,8 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "948b7b67-324e-459f-94ae-5cc2ae57acff";
-				PROVISIONING_PROFILE_SPECIFIER = "Q-municate_dev";
+				PROVISIONING_PROFILE = "c1ebea0b-5462-4d27-b39e-f0820537022f";
+				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Development";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2820,9 +2835,10 @@
 				CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CODE_SIGN_ENTITLEMENTS = "Q-municate/Q-municate.entitlements";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 8885H5G2YX;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2858,8 +2874,8 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
-				PROVISIONING_PROFILE = "9b7fd9c3-b6c1-4475-b54c-660f171c4eb0";
-				PROVISIONING_PROFILE_SPECIFIER = "Q-municate adHoc";
+				PROVISIONING_PROFILE = "99d3b5dd-c5c3-41f4-94a1-aef669a59636";
+				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Ad hoc";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2878,9 +2894,9 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMSiriExtension/QMSiriExtension.entitlements;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 8885H5G2YX;
 				ENABLE_BITCODE = NO;
@@ -2894,8 +2910,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9b7fd9c3-b6c1-4475-b54c-660f171c4eb0";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension dev";
+				PROVISIONING_PROFILE = "4fe4c0fb-d0d1-4d1a-9cb0-f0696ac98f93";
+				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Siri Extension Development";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2910,9 +2926,9 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMSiriExtension/QMSiriExtension.entitlements;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8885H5G2YX;
@@ -2927,8 +2943,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c8d218ec-8063-42e9-b712-55b0b7df4095";
-				PROVISIONING_PROFILE_SPECIFIER = "Siri extension AdHoc";
+				PROVISIONING_PROFILE = "5ca706f5-be87-490a-aa67-95e10d261fc9";
+				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Siri extension AdHoc";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
