@@ -2805,6 +2805,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
+				PROVISIONING_PROFILE = "c1ebea0b-5462-4d27-b39e-f0820537022f";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Development";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
@@ -2873,6 +2874,7 @@
 				OTHER_LIBTOOLFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "Q-municate";
+				PROVISIONING_PROFILE = "99d3b5dd-c5c3-41f4-94a1-aef669a59636";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Ad hoc";
 				REZ_SEARCH_PATHS = "$(inherited)";
 				SDKROOT = iphoneos;
@@ -2908,6 +2910,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "4fe4c0fb-d0d1-4d1a-9cb0-f0696ac98f93";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Siri Extension Development";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2940,6 +2943,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMSiriExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "5ca706f5-be87-490a-aa67-95e10d261fc9";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Siri extension AdHoc";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
