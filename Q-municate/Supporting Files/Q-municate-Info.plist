@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.4.1.1(3000)</string>
+	<string>2.4.1.1(3001)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -90,6 +90,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Taking pictures, video calls</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Saving pictures</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location for messaging</string>
 	<key>NSMicrophoneUsageDescription</key>
