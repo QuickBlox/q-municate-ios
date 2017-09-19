@@ -178,7 +178,7 @@ static NSString * const kQMFacebookIDField = @"id";
                     QBUpdateUserParameters *updateUserParams = [QBUpdateUserParameters new];
                     updateUserParams.fullName = user.fullName;
                     
-                    return [QMTasks taskUpdateCurrentUser:updateUserParams];
+                    [QMTasks taskUpdateCurrentUser:updateUserParams];
                 }
                 
                 [QMCore.instance.currentProfile synchronizeWithUserData:user];
