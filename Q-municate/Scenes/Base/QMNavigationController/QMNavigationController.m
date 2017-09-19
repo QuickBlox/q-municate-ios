@@ -32,14 +32,11 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
     
     [super viewDidLoad];
     
-    
+#ifdef __IPHONE_11_0
     if (iosMajorVersion() >= 11) {
-        
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         self.navigationBar.prefersLargeTitles = YES;
-#pragma clang diagnostic pop
     }
+#endif
 }
 
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
