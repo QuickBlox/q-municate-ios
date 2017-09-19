@@ -78,7 +78,14 @@ UISearchResultsUpdating
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
-    self.tableView.tableHeaderView = self.searchController.searchBar;
+    
+    if (iosMajorVersion() >= 11) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
+    }
+    else {
+        self.tableView.tableHeaderView = self.searchController.searchBar;
+    }
 }
 
 - (void)updateUsers {

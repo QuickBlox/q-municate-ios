@@ -29,5 +29,6 @@
         #import <EXTScope.h>
         #import <EXTKeyPathCoding.h>
         #import "QMLog.h"
+        #import "QMHelpers.h"
 
 #endif
