@@ -17,7 +17,11 @@ NSString * const kQMNavigationBarHeightChangeNotification = @"kQMNavigationBarHe
 
 static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 
-@interface QMNavigationController () {
+@interface QMNavigationController ()
+<
+UINavigationBarDelegate
+>
+{
     NSTimer *_dismissTimer;
     BOOL _notificationShown;
 }
@@ -29,14 +33,15 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 @implementation QMNavigationController
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
     
 #ifdef __IPHONE_11_0
-    if (iosMajorVersion() >= 11) {
+    if (@available(iOS 11.0, *)) {
         self.navigationBar.prefersLargeTitles = YES;
     }
 #endif
+    
+    self.navigationBar.delegate = self;
 }
 
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
@@ -101,6 +106,31 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kQMNavigationBarHeightChangeNotification
      object:nil];
+}
+
+// MARK: - UINavigationBarDelegate
+
+- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPushItem:(UINavigationItem *)item {
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        if (item.largeTitleDisplayMode == UINavigationItemLargeTitleDisplayModeNever) {
+            ((QMNavigationBar *)navigationBar).restrictedLargeTitles++;
+        }
+    }
+#endif
+    return YES;
+}
+
+- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        if (item.largeTitleDisplayMode == UINavigationItemLargeTitleDisplayModeNever) {
+            ((QMNavigationBar *)navigationBar).restrictedLargeTitles--;
+        }
+    }
+#endif
+    [self popViewControllerAnimated:YES];
+    return YES;
 }
 
 @end
