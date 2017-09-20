@@ -55,7 +55,9 @@ QMImageViewDelegate,
 QMImagePickerResultHandler,
 QMUsersServiceListenerProtocol,
 
-NYTPhotosViewControllerDelegate
+NYTPhotosViewControllerDelegate,
+
+UIViewControllerRestoration
 >
 
 @property (weak, nonatomic) IBOutlet QMImageView *avatarImageView;
@@ -75,7 +77,54 @@ NYTPhotosViewControllerDelegate
 
 @implementation QMSettingsViewController
 
+- (void)awakeFromNib {
+    
+    [super awakeFromNib];
+    
+    self.restorationClass = [self class];
+}
+
++ (UIViewController *)viewControllerWithRestorationIdentifierPath:(NSArray *)identifierComponents coder:(NSCoder *)coder {
+    
+    QMSettingsViewController *vc = nil;
+    
+    NSLog(@"QMSettingsViewController: viewControllerWithRestorationIdentifierPath");
+    
+    // get our main storyboard
+    UIStoryboard *storyboard = [coder decodeObjectForKey:UIStateRestorationViewControllerStoryboardKey];
+    
+    if (storyboard) {
+        
+        vc = (QMSettingsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"QMSettingsViewController"];
+        vc.restorationIdentifier = [identifierComponents lastObject];
+        vc.restorationClass = [QMSettingsViewController class];
+    }
+    
+    return vc;
+}
+// this is called when the app is suspended to the background
+- (void)encodeRestorableStateWithCoder:(NSCoder *)coder {
+    
+    NSLog(@"QMSettingsViewController: encodeRestorableStateWithCoder");
+    
+    [super encodeRestorableStateWithCoder:coder];
+    
+    [QMCore.instance.currentProfile synchronize];
+}
+
+// this is called when the app is re-launched
+- (void)decodeRestorableStateWithCoder:(NSCoder *)coder {
+    
+    // important: don't affect our views just yet, we might not visible or we aren't the current
+    // view controller, save off our ivars and restore our text view in viewWillAppear
+    //
+    NSLog(@"QMSettingsViewController: decodeRestorableStateWithCoder");
+    
+    [super decodeRestorableStateWithCoder:coder];
+}
+
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     
     QMCore *core = [QMCore instance];

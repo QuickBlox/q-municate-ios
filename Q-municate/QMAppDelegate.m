@@ -192,6 +192,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
+-(BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
+    
+}
+
+-(BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
+    
+}
+
 - (void)application:(UIApplication *)__unused application
 didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     [[QMCore instance].pushNotificationManager handleError:error];
