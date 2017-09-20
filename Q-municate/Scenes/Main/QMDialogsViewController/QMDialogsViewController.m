@@ -21,6 +21,7 @@
 #import "QBChatDialog+OpponentID.h"
 #import "QMSplitViewController.h"
 #import "QMNavigationController.h"
+#import "QMNavigationBar.h"
 
 static const NSInteger kQMUnAuthorizedErrorCode = -1011;
 
@@ -325,7 +326,7 @@ didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
         self.tableView.backgroundView = self.placeholderView;
         
 #ifdef __IPHONE_11_0
-        if (iosMajorVersion() >= 11) {
+        if (@available(iOS 11.0, *)) {
             self.navigationItem.searchController = nil;
         }
         else {
@@ -491,8 +492,9 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
         self.tableView.backgroundView = nil;
         
 #ifdef __IPHONE_11_0
-        if (iosMajorVersion() >= 11) {
+        if (@available(iOS 11.0, *)) {
             self.navigationItem.searchController = self.searchController;
+            [(QMNavigationBar *)self.navigationController.navigationBar setAdditionalBarShift:52.0f];
             self.navigationItem.hidesSearchBarWhenScrolling = NO;
         }
         else {
