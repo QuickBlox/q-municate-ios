@@ -74,7 +74,7 @@ typedef NS_ENUM(NSInteger, QMMediaViewState) {
 @property (nonatomic, assign) CGFloat progress;
 
 /**
- Sets the placeholder image.
+ Sets the thumbnail image.
  */
 @property (nonatomic, strong) UIImage *thumbnailImage;
 

@@ -77,7 +77,9 @@
 - (void)prepareForReuse {
     
     [super prepareForReuse];
+    
     [self setViewState:QMMediaViewStateNotReady];
+    
     self.progress = 0.0;
     self.previewImageView.image = nil;
     
@@ -89,7 +91,8 @@
     }
 }
 
-- (void)setCurrentTime:(NSTimeInterval)currentTime {
+- (void)setCurrentTime:(NSTimeInterval)currentTime
+              animated:(BOOL)animated {
     
     if (_currentTime == currentTime) {
         return;
@@ -101,6 +104,12 @@
     _currentTime = currentTime;
     
     self.durationLabel.text = [self timestampString:currentTime forDuration:_duration];
+}
+
+
+- (void)setCurrentTime:(NSTimeInterval)currentTime {
+    [self setCurrentTime:currentTime
+                animated:NO];
 }
 
 - (void)showLoadingError:(NSError *)error {
