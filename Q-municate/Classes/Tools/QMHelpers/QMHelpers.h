@@ -17,14 +17,14 @@ NSInteger iosMajorVersion();
 extern void removeControllerFromNavigationStack(UINavigationController *navC, UIViewController *vc);
 
 
-@protocol QMRestorableViewController <NSObject>
+//@protocol QMRestorableViewController <NSObject>
+//
+//@property (strong, nonatomic) NSString *restorationIdentifier;
+//
+//@end
 
-@property (strong, nonatomic) NSString *restorationIdentifier;
 
-@end
-
-
-
+/*
 @interface QMRestoration : NSObject
 
 @property (class, assign, getter=isEnabled) BOOL enabled;
@@ -82,4 +82,4 @@ static BOOL _enabled = NO;
 }
 
 @end
-
+*/

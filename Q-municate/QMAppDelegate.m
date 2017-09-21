@@ -50,10 +50,10 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 @implementation QMAppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)__unused launchOptions {
     
     application.applicationIconBadgeNumber = 0;
-    
+    self.window.restorationIdentifier = @"Window";
     // Quickblox settings
     [QBSettings setApplicationID:kQMApplicationID];
     [QBSettings setAuthKey:kQMAuthorizationKey];
@@ -84,6 +84,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
+    
+    return YES;
+}
+    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+   
     // Configuring app appearance
     [[UITabBar appearance] setTintColor:QMMainApplicationColor()];
     [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
@@ -193,11 +200,11 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 }
 
 -(BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
-    
+    return YES;
 }
 
 -(BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
-    
+    return YES;
 }
 
 - (void)application:(UIApplication *)__unused application

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -128,8 +129,8 @@ out here.</string>
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="312-xk-x9O" customClass="QMNewMessageViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="csN-5F-4uv"/>
-                        <viewControllerLayoutGuide type="bottom" id="naP-m6-BjI"/>
+                        <viewControllerLayoutGuide type="top" id="lrp-Ll-Fsp"/>
+                        <viewControllerLayoutGuide type="bottom" id="XvI-R3-LnR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="D3L-Fa-dYZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -156,7 +157,7 @@ out here.</string>
                             <constraint firstAttribute="trailingMargin" secondItem="Kqz-t0-q4s" secondAttribute="trailing" constant="-20" id="JwE-A8-C52"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Kqz-t0-q4s" secondAttribute="bottom" id="YZW-sv-dBa"/>
                             <constraint firstItem="Kqz-t0-q4s" firstAttribute="leading" secondItem="D3L-Fa-dYZ" secondAttribute="leadingMargin" constant="-20" id="iIB-q9-gJY"/>
-                            <constraint firstItem="PV0-ej-tkc" firstAttribute="top" secondItem="csN-5F-4uv" secondAttribute="bottom" id="oaO-IX-iVo"/>
+                            <constraint firstItem="PV0-ej-tkc" firstAttribute="top" secondItem="lrp-Ll-Fsp" secondAttribute="bottom" id="oaO-IX-iVo"/>
                             <constraint firstAttribute="trailingMargin" secondItem="PV0-ej-tkc" secondAttribute="trailing" constant="-20" id="q2x-5p-Azk"/>
                         </constraints>
                     </view>
@@ -203,21 +204,21 @@ out here.</string>
             <objects>
                 <viewController restorationIdentifier="ViewControllerNoSelection" storyboardIdentifier="ViewControllerNoSelection" id="nI4-LA-Hfc" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="IOW-IO-0mY"/>
-                        <viewControllerLayoutGuide type="bottom" id="wna-Fh-SKm"/>
+                        <viewControllerLayoutGuide type="top" id="Add-pF-Bth"/>
+                        <viewControllerLayoutGuide type="bottom" id="smT-Hp-J9W"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vHP-0k-RMj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qm-logo-split-view" translatesAutoresizingMaskIntoConstraints="NO" id="A6t-bd-vnt">
-                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wna-Fh-SKm" firstAttribute="top" secondItem="A6t-bd-vnt" secondAttribute="bottom" id="IFJ-dC-oe9"/>
-                            <constraint firstItem="A6t-bd-vnt" firstAttribute="top" secondItem="IOW-IO-0mY" secondAttribute="bottom" id="NJr-zP-j8q"/>
+                            <constraint firstItem="smT-Hp-J9W" firstAttribute="top" secondItem="A6t-bd-vnt" secondAttribute="bottom" id="IFJ-dC-oe9"/>
+                            <constraint firstItem="A6t-bd-vnt" firstAttribute="top" secondItem="Add-pF-Bth" secondAttribute="bottom" id="NJr-zP-j8q"/>
                             <constraint firstItem="A6t-bd-vnt" firstAttribute="leading" secondItem="vHP-0k-RMj" secondAttribute="leading" id="mcb-oJ-fDw"/>
                             <constraint firstAttribute="trailing" secondItem="A6t-bd-vnt" secondAttribute="trailing" id="zTf-8v-INz"/>
                         </constraints>
@@ -230,7 +231,7 @@ out here.</string>
         <!--Tab BarVC-->
         <scene sceneID="ZVl-Pg-Gvu">
             <objects>
-                <tabBarController id="Rsx-Bb-MAV" customClass="QMTabBarVC" sceneMemberID="viewController">
+                <tabBarController restorationIdentifier="QMTabBarVC" id="Rsx-Bb-MAV" customClass="QMTabBarVC" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="Ag3-4N-6Na"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" itemPositioning="centered" id="50y-0d-JdD">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -251,7 +252,7 @@ out here.</string>
         <!--Master-->
         <scene sceneID="REi-kC-PjP">
             <objects>
-                <splitViewController title="Master" id="FCI-lM-7qj" customClass="QMSplitViewController" sceneMemberID="viewController">
+                <splitViewController restorationIdentifier="QMSplitViewController" title="Master" id="FCI-lM-7qj" customClass="QMSplitViewController" sceneMemberID="viewController">
                     <connections>
                         <segue destination="Rsx-Bb-MAV" kind="relationship" relationship="masterViewController" id="Q7G-iv-tg5"/>
                         <segue destination="nI4-LA-Hfc" kind="relationship" relationship="detailViewController" id="bln-3D-FUO"/>
@@ -264,7 +265,7 @@ out here.</string>
         <!--Link View Controller-->
         <scene sceneID="7KQ-aW-jk8">
             <objects>
-                <viewController storyboardIdentifier="Settings" id="W7Z-nM-mgl" customClass="QMLinkViewController" sceneMemberID="viewController">
+                <viewController id="W7Z-nM-mgl" customClass="QMLinkViewController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="qm-tb-settings" id="YBg-8g-Bau">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
@@ -286,7 +287,7 @@ out here.</string>
                     <tabBarItem key="tabBarItem" title="" image="qm-tb-contacts" id="fYc-rl-dnk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jYx-TX-49w" customClass="QMNavigationBar">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -310,7 +311,7 @@ out here.</string>
                     <tabBarItem key="tabBarItem" title="" image="qm-tb-chats" id="l6Z-lD-4Rv"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Irs-ba-SJb" customClass="QMNavigationBar">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -332,8 +333,8 @@ out here.</string>
             <objects>
                 <viewController storyboardIdentifier="QMChatVC" title="ChatVC" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="tuk-08-fQq" customClass="QMChatVC" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="sVY-fU-EIq"/>
-                        <viewControllerLayoutGuide type="bottom" id="SCw-m4-fka"/>
+                        <viewControllerLayoutGuide type="top" id="oPO-PI-W5F"/>
+                        <viewControllerLayoutGuide type="bottom" id="NBG-HU-BLM"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dYl-Nc-bFj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -341,7 +342,7 @@ out here.</string>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="WVr-hG-2uC">
-                        <view key="titleView" contentMode="scaleToFill" id="mhp-PO-7pR" customClass="QMOnlineTitleView">
+                        <view key="titleView" contentMode="scaleToFill" misplaced="YES" id="mhp-PO-7pR" customClass="QMOnlineTitleView">
                             <rect key="frame" x="12" y="4" width="390" height="36"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -401,7 +402,7 @@ out here.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="smd-oe-3SF" customClass="QMNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="gyT-Uq-WjS" customClass="QMNavigationBar">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -419,7 +420,7 @@ out here.</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="grf-7O-2S3" customClass="QMNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uaF-lR-4Sh" customClass="QMNavigationBar">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

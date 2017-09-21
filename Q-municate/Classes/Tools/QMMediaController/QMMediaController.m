@@ -14,7 +14,6 @@
 #import "QMPhoto.h"
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
-#import "QMImageLoader+QBChatAttachment.h"
 #import "UIImage+QM.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,

@@ -57,7 +57,8 @@ QMUsersServiceListenerProtocol,
 
 NYTPhotosViewControllerDelegate,
 
-UIViewControllerRestoration
+UIViewControllerRestoration,
+UIStateRestoring 
 >
 
 @property (weak, nonatomic) IBOutlet QMImageView *avatarImageView;
