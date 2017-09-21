@@ -191,6 +191,7 @@
 		E333FBA71F5461FA0095F224 /* Quickblox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E333FBA41F5461FA0095F224 /* Quickblox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E333FBA81F5461FA0095F224 /* QuickbloxWebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E333FBA51F5461FA0095F224 /* QuickbloxWebRTC.framework */; };
 		E333FBA91F5461FA0095F224 /* QuickbloxWebRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E333FBA51F5461FA0095F224 /* QuickbloxWebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E3826B8E1F73CAB3009DB491 /* MPGNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E3826B8D1F73CAB3009DB491 /* MPGNotification.m */; };
 		E39BEBBA1F6BF04000F7D50F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E39BEBB91F6BF02700F7D50F /* GoogleService-Info.plist */; };
 		E3D2EEA41EF7C693002DC44E /* QMTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */; };
 		E3D2EEA81EF7E71C002DC44E /* QMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA71EF7E71C002DC44E /* QMViewController.m */; };
@@ -567,6 +568,8 @@
 		E0D3D9A41F4DCCBA006AB505 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		E333FBA41F5461FA0095F224 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		E333FBA51F5461FA0095F224 /* QuickbloxWebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickbloxWebRTC.framework; path = External/QuickbloxWebRTC.framework; sourceTree = "<group>"; };
+		E3826B8C1F73CAB3009DB491 /* MPGNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGNotification.h; sourceTree = "<group>"; };
+		E3826B8D1F73CAB3009DB491 /* MPGNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGNotification.m; sourceTree = "<group>"; };
 		E39BEBB91F6BF02700F7D50F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E3D2EEA21EF7C693002DC44E /* QMTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTableViewController.h; path = QMTableViewController/QMTableViewController.h; sourceTree = "<group>"; };
 		E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTableViewController.m; path = QMTableViewController/QMTableViewController.m; sourceTree = "<group>"; };
@@ -1921,6 +1924,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E3826B8B1F73CAB3009DB491 /* MPGNotification */,
 				E0921D911F6FEE11005961CF /* QMImageBarButtonItem */,
 				E03AD8EB1F556D6100F411CE /* QMExpandableTableViewController */,
 				584277D91C3FE58900CDE35B /* Core */,
@@ -2165,6 +2169,15 @@
 				E0D258BC1F0A84390046D2FA /* QMImageLoader+QBChatAttachment.m */,
 			);
 			path = QMImageLoader;
+			sourceTree = "<group>";
+		};
+		E3826B8B1F73CAB3009DB491 /* MPGNotification */ = {
+			isa = PBXGroup;
+			children = (
+				E3826B8C1F73CAB3009DB491 /* MPGNotification.h */,
+				E3826B8D1F73CAB3009DB491 /* MPGNotification.m */,
+			);
+			path = MPGNotification;
 			sourceTree = "<group>";
 		};
 		E3D2EE9D1EF42D7C002DC44E /* QMNavigationController */ = {
@@ -2447,7 +2460,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6936DF91158CD5FF2D1E6C5 /* [CP] Check Pods Manifest.lock */ = {
@@ -2465,7 +2478,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E911BC553233DD014AE11AC7 /* [CP] Copy Pods Resources */ = {
@@ -2614,6 +2627,7 @@
 				E08D52151E5AABF700918B5B /* QMMediaController.m in Sources */,
 				581BAC8E1CAD8DD900E0567D /* QMColors.m in Sources */,
 				585DE45F1C4686060068E03E /* QMErrorsFactory.m in Sources */,
+				E3826B8E1F73CAB3009DB491 /* MPGNotification.m in Sources */,
 				58A6392D1CEB78D000D682C4 /* QMLinkViewController.m in Sources */,
 				E3D2EEAB1EF7F6A2002DC44E /* QMNavigationController.m in Sources */,
 				5839F2761CC533A30055EBF8 /* QMGroupHeaderView.m in Sources */,
