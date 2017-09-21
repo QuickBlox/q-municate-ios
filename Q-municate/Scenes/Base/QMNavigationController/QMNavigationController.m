@@ -40,8 +40,6 @@ UINavigationBarDelegate
         self.navigationBar.prefersLargeTitles = YES;
     }
 #endif
-    
-    self.navigationBar.delegate = self;
 }
 
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
@@ -129,7 +127,11 @@ UINavigationBarDelegate
         }
     }
 #endif
-    [self popViewControllerAnimated:YES];
+    
+    if (item == [[self.viewControllers lastObject] navigationItem]) {
+        [self popViewControllerAnimated:YES];
+    }
+    
     return YES;
 }
 
