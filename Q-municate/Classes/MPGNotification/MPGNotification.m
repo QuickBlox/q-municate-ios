@@ -260,6 +260,15 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     self.subtitleLabel.textColor = self.subtitleColor;
 }
 
+- (void)safeAreaInsetsDidChange {
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeAreaInsets = self.safeAreaInsets;
+        [self setContentOffset:CGPointMake(0, safeAreaInsets.top) animated:NO]; // try animated
+    }
+#endif
+}
+
 #pragma mark - UIScrollView Delegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
