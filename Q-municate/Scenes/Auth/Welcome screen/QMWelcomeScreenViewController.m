@@ -150,9 +150,14 @@ static NSString * const kQMFacebookIDField = @"id";
 
 - (void)authUI:(FUIAuth *)__unused authUI didSignInWithUser:(FIRUser *)fuser error:(NSError *)ferror {
     
-    if (ferror.userInfo.count > 0) {
+    if (ferror != nil) {
         
-        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO inViewController:self];
+        if (ferror.userInfo.count > 0) {
+            // only notify user if something happened in error
+            // error without user info is cancel
+            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO inViewController:self];
+        }
+        
         return;
     }
     
