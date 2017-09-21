@@ -124,6 +124,14 @@ static const CGFloat kColorAdjustmentLight = 0.35;
         
         self.backgroundTapsEnabled = YES;
         self.swipeToDismissEnabled = YES;
+        
+        if (iosMajorVersion() > 10) {
+            NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+            [center addObserver:self
+                       selector:@selector(deviceOrientationDidChange:)
+                           name:UIDeviceOrientationDidChangeNotification
+                         object:nil];
+        }
     }
     return self;
 }
@@ -138,9 +146,12 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     return self;
 }
 
-//- (void)dealloc {
-//    NSLog(@"DEBUG: NOTIFICATION DEALLOC");
-//}
+- (void)dealloc {
+    if (iosMajorVersion() > 10) {
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+    }
+}
 
 #pragma mark - Class Overrides
 
@@ -260,26 +271,16 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     self.subtitleLabel.textColor = self.subtitleColor;
 }
 
-- (void)safeAreaInsetsDidChange {
-#ifdef __IPHONE_11_0
-    if (@available(iOS 11.0, *)) {
-        UIEdgeInsets safeAreaInsets = self.safeAreaInsets;
-        [self setContentOffset:CGPointMake(0, safeAreaInsets.top) animated:NO]; // try animated
-    }
-#endif
-}
-
 #pragma mark - UIScrollView Delegate
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)__unused scrollView {
     
     if (self.notificationDragged == NO) {
         self.notificationDragged = YES;
     }
-    
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+- (void)scrollViewDidEndDragging:(UIScrollView *)__unused scrollView willDecelerate:(BOOL)decelerate {
     if (!decelerate &&
         [self _notificationOffScreen] &&
         self.notificationRevealed) {
@@ -288,7 +289,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)__unused scrollView {
     if ([self _notificationOffScreen] &&
         self.notificationRevealed) {
         [self _destroyNotification];
@@ -297,7 +298,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
 
 #pragma mark - UIDynamicAnimator Delegate
 
-- (void)dynamicAnimatorDidPause:(UIDynamicAnimator *)animator{
+- (void)dynamicAnimatorDidPause:(UIDynamicAnimator *)__unused animator{
     [self _destroyNotification];
 }
 
@@ -522,6 +523,10 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     
     // Called to display the initiliased notification on screen.
     
+    if (![UIDevice currentDevice].isGeneratingDeviceOrientationNotifications) {
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    }
+    
     self.notificationDestroyed = NO;
     self.notificationRevealed = YES;
     
@@ -607,7 +612,7 @@ static const CGFloat kColorAdjustmentLight = 0.35;
                 
                 [UIView animateWithDuration:kLinearAnimationTime animations:^{
                     self.contentOffset = CGPointMake(0, CGRectGetHeight(self.bounds));
-                } completion:^(BOOL finished){
+                } completion:^(BOOL __unused finished){
                     [self _destroyNotification];
                 }];
                 break;
@@ -638,13 +643,26 @@ static const CGFloat kColorAdjustmentLight = 0.35;
     
 }
 
-- (void)_backgroundTapped:(UITapGestureRecognizer *)tapRecognizer {
+- (void)_backgroundTapped:(UITapGestureRecognizer *)__unused tapRecognizer {
     
     [self _responderTapped:self.backgroundView];
     
 }
 
 #pragma mark - Private Methods
+
+- (void)deviceOrientationDidChange:(NSNotification *)__unused notification {
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        if (self.notificationRevealed) {
+            UIEdgeInsets safeAreaInsets = self.safeAreaInsets;
+            CGRect frame = self.frame;
+            frame.origin = CGPointMake(0, safeAreaInsets.top);
+            self.frame = frame;
+        }
+    }
+#endif
+}
 
 //Color methods to create a darker and lighter tone of the notification background color. These colors are used for providing backgrounds to button and make sure that buttons are suited to all color environments.
 - (UIColor *)_darkerColorForColor:(UIColor *)color
@@ -767,15 +785,25 @@ static const CGFloat kColorAdjustmentLight = 0.35;
         self.windowLevel = [[[[UIApplication sharedApplication] delegate] window] windowLevel];
         
         // Update windowLevel to make sure status bar does not interfere with the notification
-        [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:UIWindowLevelStatusBar+1];
+        UIWindowLevel windowLevelShift = iosMajorVersion() > 10 ? -1 : 1;
+        [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:UIWindowLevelStatusBar+windowLevelShift];
         
         // add the notification to the screen
         [window.subviews.lastObject addSubview:self];
-        
     }
     
     UIView *superview = self.superview;
-    self.frame = CGRectMake(0, 0, CGRectGetWidth(superview.bounds), kNotificationHeight);
+    
+    CGFloat additionalTopInset = 0;
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeAreaInsets = self.safeAreaInsets;
+        // TODO: might as well respect left and right safe area insets
+        // need more tests, just keeping it in mind for now
+        additionalTopInset = safeAreaInsets.top;
+    }
+#endif
+    self.frame = CGRectMake(0, additionalTopInset, CGRectGetWidth(superview.bounds), kNotificationHeight);
     self.contentSize = CGSizeMake(CGRectGetWidth(self.bounds), 2 * CGRectGetHeight(self.bounds));
     self.backgroundView.frame = self.bounds;
 }
