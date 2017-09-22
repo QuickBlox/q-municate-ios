@@ -133,6 +133,8 @@ QMUsersServiceDelegate
     self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
     
+    
+#ifdef __IPHONE_11_0
     if (iosMajorVersion() >= 11) {
         self.navigationItem.searchController = self.searchController;
         self.navigationItem.hidesSearchBarWhenScrolling = NO;
@@ -140,6 +142,9 @@ QMUsersServiceDelegate
     else {
         self.tableView.tableHeaderView = self.searchController.searchBar;
     }
+#else
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+#endif
     
     self.definesPresentationContext = YES;
 }

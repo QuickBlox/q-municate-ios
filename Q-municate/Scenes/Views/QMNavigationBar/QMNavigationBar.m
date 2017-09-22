@@ -29,19 +29,19 @@
     [super setFrame:frame];
     
     _notificationPanelContainer.alpha = frame.origin.y < 0.0f ? 0.0f : 1.0f;
-    _notificationPanelContainer.frame = CGRectMake(0.0f, frame.size.height, frame.size.width, 37.0f);
-}
-
-- (void)setBounds:(CGRect)bounds {
-    [super setBounds:bounds];
-    
-    _notificationPanelContainer.frame = CGRectMake(0.0f, bounds.size.height, bounds.size.width, 37.0f);
+    if (!_restrictedLargeTitles
+        && iosMajorVersion() > 10) {
+        _notificationPanelContainer.frame = CGRectMake(0.0f, frame.size.height + _additionalBarShift, frame.size.width, 37.0f);
+    }
+    else {
+        _notificationPanelContainer.frame = CGRectMake(0.0f, frame.size.height, frame.size.width, 37.0f);
+    }
 }
 
 // MARK: -
 
 - (CGRect)notificationPanelFrameForContainerSize:(CGSize)containerSize {
-    return CGRectMake(0.0f, 0, containerSize.width, containerSize.height);
+    return CGRectMake(0, 0, containerSize.width, containerSize.height);
 }
 
 - (void)showNotificationPanelView:(BOOL)show animation:(void (^)())animation {

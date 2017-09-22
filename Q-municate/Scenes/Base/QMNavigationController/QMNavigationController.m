@@ -17,7 +17,11 @@ NSString * const kQMNavigationBarHeightChangeNotification = @"kQMNavigationBarHe
 
 static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 
-@interface QMNavigationController () {
+@interface QMNavigationController ()
+<
+UINavigationBarDelegate
+>
+{
     NSTimer *_dismissTimer;
     BOOL _notificationShown;
 }
@@ -29,17 +33,13 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 @implementation QMNavigationController
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
     
-    
-    if (iosMajorVersion() >= 11) {
-        
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
         self.navigationBar.prefersLargeTitles = YES;
-#pragma clang diagnostic pop
     }
+#endif
 }
 
 - (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
@@ -104,6 +104,35 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kQMNavigationBarHeightChangeNotification
      object:nil];
+}
+
+// MARK: - UINavigationBarDelegate
+
+- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPushItem:(UINavigationItem *)item {
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        if (item.largeTitleDisplayMode == UINavigationItemLargeTitleDisplayModeNever) {
+            ((QMNavigationBar *)navigationBar).restrictedLargeTitles++;
+        }
+    }
+#endif
+    return YES;
+}
+
+- (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item {
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        if (item.largeTitleDisplayMode == UINavigationItemLargeTitleDisplayModeNever) {
+            ((QMNavigationBar *)navigationBar).restrictedLargeTitles--;
+        }
+    }
+#endif
+    
+    if (item == [[self.viewControllers lastObject] navigationItem]) {
+        [self popViewControllerAnimated:YES];
+    }
+    
+    return YES;
 }
 
 @end

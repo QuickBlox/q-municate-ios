@@ -32,6 +32,8 @@
 - (CALayer *)maskLayerFromImage:(UIImage *)image
                       withFrame:(CGRect)frame;
 
+- (void)setCurrentTime:(NSTimeInterval)currentTime
+              animated:(BOOL)animated;
 @end
 
 

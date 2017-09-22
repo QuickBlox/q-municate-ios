@@ -202,9 +202,11 @@ QMUsersServiceDelegate
         self.collectionView.prefetchingEnabled = NO;
     }
     
+#ifdef __IPHONE_11_0
     if (iosMajorVersion() >= 11) {
         self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     }
+#endif
     
     self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];

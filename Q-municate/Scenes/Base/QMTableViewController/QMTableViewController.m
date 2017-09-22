@@ -52,14 +52,12 @@
         self.tableView.scrollIndicatorInsets = finalScrollIndicatorInsets;
         
         if (!UIEdgeInsetsEqualToEdgeInsets(previousInset, UIEdgeInsetsZero)) {
-            
-            CGFloat maxOffset = self.tableView.contentSize.height - (self.tableView.frame.size.height - finalInset.bottom);
             contentOffset.y += previousInset.top - finalInset.top;
-            contentOffset.y = MAX(-finalInset.top, MIN(contentOffset.y, maxOffset));
+            contentOffset.y = MIN(-finalInset.top, contentOffset.y);
             [self.tableView setContentOffset:contentOffset animated:NO];
         }
         else if (contentOffset.y < finalInset.top) {
-            contentOffset.y = -finalInset.top;
+            contentOffset.y -= finalInset.top;
             [self.tableView setContentOffset:contentOffset animated:NO];
         }
     }
