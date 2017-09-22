@@ -39,6 +39,7 @@ static const CGFloat kQMVersionLabelPosiitonY = 33.0f;
 static const CGFloat kQMSpaceBetweenLabels = 16.0f;
 
 static NSString *const kQMBundleShortVersionString = @"CFBundleShortVersionString";
+static NSString *const KQMBundleVersion = @"CFBundleVersion";
 
 @interface QMSettingsFooterView ()
 
@@ -82,9 +83,10 @@ static NSString *const kQMBundleShortVersionString = @"CFBundleShortVersionStrin
         [self configureLabel:_versionLabel];
         NSDictionary *info = NSBundle.mainBundle.infoDictionary;
         // setting custom text
-        NSString *versionString = [NSString stringWithFormat:@"%@ %@ %@",
+        NSString *versionString = [NSString stringWithFormat:@"%@ %@ (%@)",
                                    NSLocalizedString(@"QM_STR_VERSION", nil),
-                                   info[kQMBundleShortVersionString], info[@"CFBundleVersion"]];
+                                   info[kQMBundleShortVersionString],
+                                   info[KQMBundleVersion]];
         
         _versionLabel.text = versionString;
         [_versionLabel sizeToFit];
