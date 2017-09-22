@@ -3,4 +3,5 @@ framework module FirebaseAuth {
   export *
   module * { export *}
   link "z"
+  link framework "SafariServices"
   link framework "Security"}

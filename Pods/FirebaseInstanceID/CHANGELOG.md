@@ -1,3 +1,8 @@
+# 2017-09-13 -- v2.0.3
+- Fixed a race condition where a token was not being generated on first start,
+  if Firebase Messaging was included and the app did not register for remote
+  notifications.
+
 # 2017-08-25 -- v2.0.2
 - Fixed a startup performance regression, removing a call which was blocking the
   main thread.
