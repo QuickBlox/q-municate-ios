@@ -1,0 +1,1 @@
+../../../../QuickBlox/Quickblox.framework/Headers/QBRequest+QBChat.h
