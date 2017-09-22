@@ -39,6 +39,7 @@
     _additionalNavigationBarHeight = additionalNavigationBarHeight;
     
     if (self.isViewLoaded) {
+        
         CGPoint contentOffset = self.tableView.contentOffset;
         UIEdgeInsets finalInset = self.tableView.contentInset;
         UIEdgeInsets finalScrollIndicatorInsets = self.tableView.scrollIndicatorInsets;

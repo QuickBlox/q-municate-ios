@@ -19,7 +19,7 @@
                   progress:(_Nullable SDWebImageDownloaderProgressBlock)progressBlock
                  completed:(QMWebImageCompletionWithFinishedBlock)completedBlock {
     
-    if (attachment.contentType == QMAttachmentContentTypeImage) {
+    if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
         NSURL *remoteURL = [attachment remoteURLWithToken:NO];
         NSString *token = QBSession.currentSession.sessionDetails.token;
@@ -32,7 +32,7 @@
                          completed:completedBlock];
         }
     
-    else if (attachment.contentType == QMAttachmentContentTypeVideo){}
+    else if (attachment.attachmentType == QMAttachmentContentTypeVideo){}
 //
     
 
