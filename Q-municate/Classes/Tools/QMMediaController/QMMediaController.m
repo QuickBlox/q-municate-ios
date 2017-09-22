@@ -631,7 +631,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     QMPhoto *photo = [[QMPhoto alloc] init];
     photo.image = pickedPhoto;
     
-    UIColor *darkColor = [UIColor colorWithWhite:0.0 alpha:0.6];
+    UIColor *darkColor = [UIColor colorWithWhite:0.0 alpha:0.6f];
     UIImage *backgroundImage = [UIImage resizableImageWithColor:darkColor
                                                    cornerRadius:10.0];
     

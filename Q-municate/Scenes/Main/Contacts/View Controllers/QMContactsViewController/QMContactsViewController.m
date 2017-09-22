@@ -136,8 +136,12 @@ QMUsersServiceDelegate
     
 #ifdef __IPHONE_11_0
     if (iosMajorVersion() >= 11) {
-        self.navigationItem.searchController = self.searchController;
-        self.navigationItem.hidesSearchBarWhenScrolling = NO;
+        
+        if (@available(iOS 11.0, *)) {
+            self.navigationItem.searchController = self.searchController;
+            self.navigationItem.hidesSearchBarWhenScrolling = NO;
+        }
+        
     }
     else {
         self.tableView.tableHeaderView = self.searchController.searchBar;

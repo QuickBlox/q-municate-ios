@@ -203,7 +203,8 @@ QMUsersServiceDelegate
     }
     
 #ifdef __IPHONE_11_0
-    if (iosMajorVersion() >= 11) {
+    
+    if (@available(iOS 11.0, *)) {
         self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     }
 #endif

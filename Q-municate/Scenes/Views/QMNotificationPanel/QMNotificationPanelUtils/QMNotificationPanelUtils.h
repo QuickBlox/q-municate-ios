@@ -14,16 +14,16 @@
  *
  *  @return representative image
  */
-UIImage *successImage();
-UIImage *warningImage();
-UIImage *failImage();
+UIImage *successImage(void);
+UIImage *warningImage(void);
+UIImage *failImage(void);
 
 /**
  *  Colors
  *
  *  @return representative color
  */
-UIColor *successColor();
-UIColor *warningColor();
-UIColor *failedColor();
-UIColor *loadingColor();
+UIColor *successColor(void);
+UIColor *warningColor(void);
+UIColor *failedColor(void);
+UIColor *loadingColor(void);

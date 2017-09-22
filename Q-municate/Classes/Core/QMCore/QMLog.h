@@ -13,7 +13,7 @@ extern "C" {
 #endif
     
     void QMLogSetEnabled(BOOL enabled);
-    BOOL QMLogEnabled();
+    BOOL QMLogEnabled(void);
     void QMLog(NSString *format, ...);
     
 #ifdef __cplusplus

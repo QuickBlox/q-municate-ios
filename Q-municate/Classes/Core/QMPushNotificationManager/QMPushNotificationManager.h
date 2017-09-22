@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleActionWithIdentifier:(NSString *)identifier
                 remoteNotification:(NSDictionary *)userInfo
                       responseInfo:(NSDictionary *)responseInfo
-                 completionHandler:(void(^)())completionHandler;
+                 completionHandler:(dispatch_block_t)completionHandler;
 
 - (void)updateToken:(nullable NSData *)token;
 - (void)handleError:(nullable NSError *)error;

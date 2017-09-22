@@ -48,8 +48,8 @@ static const CGFloat kSubtitleFontSize = 14.0;
 static const CGFloat kButtonFontSize = 13.0;
 static const CGFloat kButtonCornerRadius = 3.0;
 
-static const CGFloat kColorAdjustmentDark = -0.15;
-static const CGFloat kColorAdjustmentLight = 0.35;
+static const CGFloat kColorAdjustmentDark = -0.15f;
+static const CGFloat kColorAdjustmentLight = 0.35f;
 
 ////////////////////////////////////////////////////////////////////////////////
 
