@@ -165,7 +165,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
     static const CGFloat kPaddingX = 5;
     CGFloat notificationWidth = CGRectGetWidth(self.bounds);
     
-    CGFloat maxWidth = 0.5 * (notificationWidth - kMaximumNotificationWidth);
+    CGFloat maxWidth = 0.5f * (notificationWidth - kMaximumNotificationWidth);
     CGFloat contentPaddingX = (self.fullWidthMessages) ? 0 : MAX(0,maxWidth);
     
     // ICON IMAGE
@@ -257,12 +257,12 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
         static const CGFloat kSwipeHintHeight = 5;
         static const CGFloat kSwipeHintTrailingY = 5;
         
-        self.swipeHintView.frame = CGRectMake(0.5 * (CGRectGetWidth(self.backgroundView.bounds) - kSwipeHintWidth),
+        self.swipeHintView.frame = CGRectMake(0.5f * (CGRectGetWidth(self.backgroundView.bounds) - kSwipeHintWidth),
                                               CGRectGetHeight(self.backgroundView.bounds) - kSwipeHintTrailingY - kSwipeHintHeight,
                                               kSwipeHintWidth,
                                               kSwipeHintHeight);
         
-        self.swipeHintView.layer.cornerRadius = CGRectGetHeight(self.swipeHintView.bounds) * 0.5;
+        self.swipeHintView.layer.cornerRadius = CGRectGetHeight(self.swipeHintView.bounds) * 0.5f;
     }
     
     // COLORS!!
@@ -583,8 +583,8 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
             
             self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
             
-            CGPoint centerPoint = CGPointMake(CGRectGetWidth(self.bounds) * 0.5,
-                                              CGRectGetHeight(self.bounds) * 0.5);
+            CGPoint centerPoint = CGPointMake(CGRectGetWidth(self.bounds) * 0.5f,
+                                              CGRectGetHeight(self.bounds) * 0.5f);
             
             UISnapBehavior *snapBehaviour = [[UISnapBehavior alloc] initWithItem:self.backgroundView snapToPoint:centerPoint];
             snapBehaviour.damping = 0.50f;
