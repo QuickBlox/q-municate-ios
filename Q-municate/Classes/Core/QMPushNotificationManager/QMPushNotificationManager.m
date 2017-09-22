@@ -8,7 +8,6 @@
 
 #import "QMPushNotificationManager.h"
 #import "QMCore.h"
-#import "QMHelpers.h"
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";

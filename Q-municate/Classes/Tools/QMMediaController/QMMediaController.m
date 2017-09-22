@@ -66,7 +66,7 @@ QMMediaHandler>
     if (!view.mediaHandler) {
         view.mediaHandler = self;
     }
-    if (attachment.contentType != QMAttachmentContentTypeAudio && attachment.ID) {
+    if (attachment.attachmentType != QMAttachmentContentTypeAudio && attachment.ID) {
         
         if (view.messageID != nil && ![view.messageID isEqualToString:message.ID]) {
             
@@ -76,7 +76,9 @@ QMMediaHandler>
         }
     }
     
-    [self updateView:view withAttachment:attachment message:message];
+    [self updateView:view
+      withAttachment:attachment
+             message:message];
 }
 
 
@@ -86,8 +88,8 @@ QMMediaHandler>
     
     view.messageID = message.ID;
     view.duration = attachment.duration;
-    view.playable = attachment.contentType == QMAttachmentContentTypeAudio ||  attachment.contentType == QMAttachmentContentTypeVideo;
-    view.cancellable = attachment.contentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
+    view.playable = attachment.attachmentType == QMAttachmentContentTypeAudio ||  attachment.attachmentType == QMAttachmentContentTypeVideo;
+    view.cancellable = attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
@@ -106,7 +108,7 @@ QMMediaHandler>
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
     
-        if (attachment.contentType == QMAttachmentContentTypeAudio) {
+        if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
             
             QMAudioPlayerStatus *status = [QMAudioPlayer audioPlayer].status;
             
@@ -124,7 +126,7 @@ QMMediaHandler>
         return;
     }
     
-    if (attachment.contentType != QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType != QMAttachmentContentTypeAudio) {
         [self loadAttachment:attachment
                   forMessage:message
                     withView:view];
@@ -135,7 +137,7 @@ QMMediaHandler>
             forMessage:(QBChatMessage *)message
               withView:(id<QMMediaViewDelegate>)view {
     
-    if (attachment.contentType == QMAttachmentContentTypeImage) {
+    if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
         CGSize targetSize  = ((QMBaseMediaCell*)view).previewImageView.bounds.size;
         QMImageTransform *transform = [QMImageTransform transformWithSize:targetSize
@@ -225,7 +227,7 @@ QMMediaHandler>
             }
         }
     }
-    else if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         UIImage *image = attachment.image;
         
@@ -282,7 +284,7 @@ QMMediaHandler>
             }
         }
     }
-    if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         __weak typeof(self) weakSelf = self;
         [self.attachmentsService attachmentWithID:attachment.ID message:message progressBlock:^(float progress) {
@@ -313,7 +315,7 @@ QMMediaHandler>
             }
         }];
     }
-    if (attachment.contentType == QMAttachmentContentTypeAudio || attachment.contentType == QMAttachmentContentTypeVideo) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         BOOL isReady = [self.attachmentsService attachmentIsReadyToPlay:attachment message:message];
         if (isReady) {
@@ -322,7 +324,7 @@ QMMediaHandler>
         
         if (isReady) {
             
-            if (attachment.contentType == QMAttachmentContentTypeAudio) {
+            if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
                 
                 QMAudioPlayerStatus *status = [QMAudioPlayer audioPlayer].status;
                 
@@ -468,7 +470,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     NSParameterAssert(attachment);
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
-    if (attachment.contentType == QMAttachmentContentTypeImage) {
+    if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
         QBUUser *user =
         [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
@@ -498,14 +500,14 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         
         [self presentViewControllerWithPhoto:photo];
     }
-    else if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         if (attachmentStatus == QMMessageAttachmentStatusPreparing || attachmentStatus == QMMessageAttachmentStatusError) {
             return;
         }
         [self playAttachment:attachment forMessage:message];
     }
-    else if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         if (attachmentStatus == QMMessageAttachmentStatusLoading) {
             view.viewState = QMMediaViewStateNotReady;
@@ -559,7 +561,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 - (void)playAttachment:(QBChatAttachment *)attachment
             forMessage:(QBChatMessage *)message {
     
-    if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         NSURL *fileURL = [self.attachmentsService.storeService fileURLForAttachment:attachment
                                                                           messageID:message.ID
@@ -568,7 +570,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         [[QMAudioPlayer audioPlayer] playMediaAtURL:fileURL withID:message.ID];
     }
     
-    if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:attachment.remoteURL];
         

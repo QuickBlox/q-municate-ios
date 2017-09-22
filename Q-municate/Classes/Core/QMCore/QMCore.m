@@ -16,7 +16,6 @@
 #import "QMCallManager.h"
 #import <Intents/Intents.h>
 #import "NSString+QMTransliterating.h"
-#import "QMHelpers.h"
 
 #import <FirebaseCore/FirebaseCore.h>
 #import <FirebaseAuth/FirebaseAuth.h>

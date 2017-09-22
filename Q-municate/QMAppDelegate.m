@@ -9,9 +9,7 @@
 #import "QMAppDelegate.h"
 #import "QMCore.h"
 #import "QMImages.h"
-#import "QMHelpers.h"
 #import "QMColors.h"
-
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Flurry.h>
