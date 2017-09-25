@@ -17,7 +17,7 @@
 @property (strong ,nonatomic) AVAsset *asset;
 @property (strong, nonatomic) NSURL *assetURL;
 @property (copy, nonatomic) NSString *messageID;
-@property (assign, nonatomic) QMAttachmentContentType contentType;
+@property (assign, nonatomic) QMAttachmentType contentType;
 @property (strong, nonatomic) AVAssetImageGenerator *imageGenerator;
 @property (strong, nonatomic) QMTimeOut *preloadTimeout;
 @property (copy, nonatomic) QMAssetLoaderCompletionBlock completion;
@@ -60,7 +60,7 @@
     
     assetLoader.assetURL = mediaURL;
     assetLoader.loaderStatus = QMAssetLoaderStatusNotLoaded;
-    assetLoader.contentType = attachment.contentType;
+    assetLoader.contentType = attachment.attachmentType;
     assetLoader.messageID = messageID;
     
     return assetLoader;

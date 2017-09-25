@@ -62,7 +62,7 @@
                                 <constraint firstAttribute="width" secondItem="21S-RQ-hLa" secondAttribute="height" multiplier="90:133" id="d79-LK-KPe"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="2" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a2R-U6-Tau">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="2" translatesAutoresizingMaskIntoConstraints="NO" id="a2R-U6-Tau">
                             <rect key="frame" x="114" y="276" width="186" height="86"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="a2R-U6-Tau" secondAttribute="height" multiplier="93:43" id="SA7-9q-a5u"/>

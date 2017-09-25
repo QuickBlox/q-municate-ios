@@ -472,7 +472,7 @@ static NSString* mediaPath(NSString *dialogID, NSString *messsageID, QBChatAttac
     NSString *filePath =
     [NSString stringWithFormat:@"/attachment-%@.%@",
      messsageID,
-     [attachment extension]];
+     attachment.fileExtension];
     
     return [mediaPatch stringByAppendingPathComponent:filePath];
 }

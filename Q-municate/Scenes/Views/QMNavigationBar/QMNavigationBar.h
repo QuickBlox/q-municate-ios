@@ -16,7 +16,7 @@
 @property (assign, nonatomic) NSUInteger restrictedLargeTitles;
 @property (assign, nonatomic) CGFloat additionalBarShift;
 
-- (void)showNotificationPanelView:(BOOL)show animation:(void (^)())animation;
+- (void)showNotificationPanelView:(BOOL)show animation:(dispatch_block_t)animation;
 - (void)shake;
 
 @end

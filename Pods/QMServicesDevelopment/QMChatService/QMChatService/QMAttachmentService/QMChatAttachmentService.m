@@ -152,7 +152,7 @@
     [self.storeService cachedImageForAttachment:attachment
                                       messageID:attachmentMessage.ID
                                        dialogID:attachmentMessage.dialogID
-                                     completion:^(UIImage *image){
+                                     completion:^(UIImage *image) {
                                          if (completion) {
                                              completion(image);
                                          }
@@ -160,24 +160,22 @@
 }
 
 
-
 - (BOOL)attachmentIsReadyToPlay:(QBChatAttachment *)attachment
                         message:(QBChatMessage *)message {
     
-    
-    if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         NSURL *fileURL = [self.storeService fileURLForAttachment:attachment
                                                        messageID:message.ID
                                                         dialogID:message.dialogID];
         return fileURL != nil;
     }
-    else if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         QMMessageAttachmentStatus status = [self attachmentStatusForMessage:message];
         BOOL isReady = status == QMMessageAttachmentStatusLoaded || status == QMMessageAttachmentStatusNotLoaded;
         return attachment.ID != nil && isReady;
     }
-    else if (attachment.contentType == QMAttachmentContentTypeImage) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         return attachment.image != nil;
     }
     return NO;
@@ -434,7 +432,8 @@
                      
                      [self.storeService storeAttachment:attachment
                                                withData:nil
-                                              cacheType:QMAttachmentCacheTypeDisc|QMAttachmentCacheTypeMemory messageID:message.ID
+                                              cacheType:QMAttachmentCacheTypeDisc|QMAttachmentCacheTypeMemory
+                                              messageID:message.ID
                                                dialogID:message.dialogID
                                              completion:^{
                                                  
@@ -452,7 +451,7 @@
                  }
              };
              
-             if (attachment.contentType == QMAttachmentContentTypeImage) {
+             if (attachment.attachmentType == QMAttachmentContentTypeImage) {
                  NSData *imageData = [self.storeService dataForImage:attachment.image];
                  [self.contentService uploadAttachment:attachment messageID:message.ID withData:imageData progressBlock:progressBlock completionBlock:operationCompletionBlock];
              }
@@ -492,11 +491,13 @@
     }
     
     QBChatAttachment *attachment = message.attachments.firstObject;
+    
     NSParameterAssert(attachment != nil);
     __weak QMAttachmentOperation *weakOperation = attachmentOperation;
     
-    if (attachment.contentType == QMAttachmentContentTypeAudio
-        || attachment.contentType == QMAttachmentContentTypeImage) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio
+        || attachment.attachmentType == QMAttachmentContentTypeImage
+        || attachment.attachmentType == QMAttachmentContentTypeCustom) {
         
         if ([self attachmentStatusForMessage:message] == QMMessageAttachmentStatusLoading) {
             return;
@@ -521,7 +522,7 @@
                  
                  [self changeMessageAttachmentStatus:QMMessageAttachmentStatusLoaded
                                           forMessage:message];
-                 if (attachment.contentType == QMAttachmentContentTypeImage) {
+                 if (attachment.attachmentType == QMAttachmentContentTypeImage) {
                      attachment.image = [UIImage imageWithData:data];
                  }
                  attachment.localFileURL = fileURL;

@@ -236,7 +236,7 @@
             break;
     }
 }
-- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player
+- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)__unused player
                                  error:(NSError *)error {
     NSLog(@"Error %@", error);
 }

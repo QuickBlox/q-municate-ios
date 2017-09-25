@@ -234,7 +234,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 - (void)handleActionWithIdentifier:(NSString *)identifier
                 remoteNotification:(NSDictionary *)userInfo
                       responseInfo:(NSDictionary *)responseInfo
-                 completionHandler:(void(^)())completionHandler {
+                 completionHandler:(dispatch_block_t)completionHandler {
     
     if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
    

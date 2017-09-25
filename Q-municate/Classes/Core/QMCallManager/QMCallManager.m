@@ -186,7 +186,7 @@ QBRTCClientDelegate
     self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
 }
 
-- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)__unused report forUserID:(NSNumber *)__unused userID {
     
     ILog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
 }

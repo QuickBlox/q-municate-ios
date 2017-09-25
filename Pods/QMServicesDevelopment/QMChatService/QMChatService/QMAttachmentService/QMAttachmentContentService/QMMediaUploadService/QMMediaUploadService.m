@@ -75,7 +75,7 @@
      
          QBRequest *request = [QBRequest uploadFileWithUrl:fileURL
                              fileName:attachment.name
-                          contentType:[attachment stringMIMEType]
+                          contentType:attachment.contentType
                              isPublic:YES
                          successBlock:^(QBResponse * _Nonnull response, QBCBlob * _Nonnull tBlob)
           {
@@ -156,7 +156,7 @@
          weakOperation.objectToCancel = (id <QMCancellableObject>)
          [QBRequest TUploadFile:data
                        fileName:attachment.name
-                    contentType:[attachment stringMIMEType]
+                    contentType:attachment.contentType
                        isPublic:NO
                    successBlock:^(QBResponse * _Nonnull response,
                                   QBCBlob * _Nonnull tBlob)

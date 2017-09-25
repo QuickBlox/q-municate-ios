@@ -8,24 +8,33 @@
 
 #import <Quickblox/Quickblox.h>
 
-typedef NS_ENUM(NSInteger, QMAttachmentContentType) {
+typedef NS_ENUM(NSInteger, QMAttachmentType) {
     
     QMAttachmentContentTypeAudio = 1,
     QMAttachmentContentTypeVideo,
     QMAttachmentContentTypeImage,
-    QMAttachmentContentTypeCustom
+    QMAttachmentContentTypeCustom = 999
 };
 
 @interface QBChatAttachment (QMCustomParameters)
 
-@property (assign, nonatomic) QMAttachmentContentType contentType;
-
-//@property (assign, nonatomic) QMAttachmentStatus status;
+@property (assign, nonatomic) QMAttachmentType attachmentType;
 
 /**
  *  The URL that identifies locally saved attachment resource.
  */
 @property (copy, nonatomic) NSURL *localFileURL;
+
+/**
+ *  Determinates attachment's content type(MIME)
+ *  https://en.wikipedia.org/wiki/Media_type
+ */
+@property (copy, nonatomic) NSString *contentType;
+
+/**
+ *  Determinates attachment's file extension. 'Content type' should be specified.
+ */
+@property (copy, nonatomic, readonly) NSString *fileExtension;
 
 /**
  *  Image of attachment (for video/image).
@@ -59,8 +68,5 @@ typedef NS_ENUM(NSInteger, QMAttachmentContentType) {
 
 - (NSURL *)remoteURLWithToken:(BOOL)withToken;
 - (NSURL *)remoteURL;
-- (NSString *)stringContentType;
-- (NSString *)stringMIMEType;
-- (NSString *)extension;
 
 @end
