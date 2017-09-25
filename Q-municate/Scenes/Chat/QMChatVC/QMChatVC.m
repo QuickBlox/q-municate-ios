@@ -198,6 +198,8 @@ QMUsersServiceDelegate
     
     [super viewDidLoad];
     
+    self.navigationItem.titleView = self.onlineTitleView;
+    
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
     }
