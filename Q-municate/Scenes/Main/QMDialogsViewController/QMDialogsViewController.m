@@ -23,7 +23,8 @@
 #import "QMNavigationController.h"
 #import "QMNavigationBar.h"
 
-static const NSInteger kQMUnAuthorizedErrorCode = -1011;
+static const NSInteger kQMNotAuthorizedInRest = -1000;
+static const NSInteger kQMUnauthorizedErrorCode = -1011;
 
 @interface QMDialogsViewController ()
 
@@ -137,10 +138,12 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
             
             [(QMNavigationController *)navigationController dismissNotificationPanel];
             
-            if (task.error.code == kQMUnAuthorizedErrorCode
-                || (task.error.code == kBFMultipleErrorsError
-                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnAuthorizedErrorCode
-                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnAuthorizedErrorCode))) {
+            NSInteger errorCode = task.error.code;
+            if (errorCode == kQMNotAuthorizedInRest
+                || errorCode == kQMUnauthorizedErrorCode
+                || (errorCode == kBFMultipleErrorsError
+                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
+                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
                         
                         return [QMCore.instance logout];
                     }
