@@ -95,7 +95,6 @@ static const NSUInteger kQMUsersPageLimit = 100;
             case QMAccountTypePhone: {
                 FIRUser *phoneUser = [[FIRAuth auth] currentUser];
                 if (phoneUser == nil) {
-                    NSLog(@"!!! I got here cause this is the issue.");
                     NSError *error = [QMErrorsFactory errorNotLoggedInREST];
                     return [BFTask taskWithError:error];
                 }
