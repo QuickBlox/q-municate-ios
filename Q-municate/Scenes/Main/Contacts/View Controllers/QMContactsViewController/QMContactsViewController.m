@@ -135,13 +135,9 @@ QMUsersServiceDelegate
     
     
 #ifdef __IPHONE_11_0
-    if (iosMajorVersion() >= 11) {
-        
-        if (@available(iOS 11.0, *)) {
-            self.navigationItem.searchController = self.searchController;
-            self.navigationItem.hidesSearchBarWhenScrolling = NO;
-        }
-        
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
     }
     else {
         self.tableView.tableHeaderView = self.searchController.searchBar;
@@ -414,5 +410,19 @@ QMUsersServiceDelegate
     
     [QMNoContactsCell registerForReuseInTableView:self.tableView];
 }
+
+#ifdef __IPHONE_11_0
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        if (@available(iOS 11.0, *)) {
+            self.searchController.active = NO;
+        }
+    } completion:nil];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+#endif
 
 @end
