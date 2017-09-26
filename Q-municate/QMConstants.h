@@ -9,6 +9,8 @@
 #ifndef QMConstants_h
 #define QMConstants_h
 
+#import <CoreLocation/CLLocation.h>
+
 #ifdef DEBUG
 
 #define ILog(...) do { NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
