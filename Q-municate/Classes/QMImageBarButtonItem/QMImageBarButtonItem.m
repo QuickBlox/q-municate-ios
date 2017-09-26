@@ -1,3 +1,4 @@
+
 //
 //  QMImageBarButtonItem.m
 //  Q-municate
@@ -6,8 +7,11 @@
 //
 
 #import "QMImageBarButtonItem.h"
+#import "QMImageView.h"
 
-@interface QMImageBarButtonItem() <QMImageViewDelegate>
+@interface QMImageBarButtonItem() <QMImageViewDelegate> {
+    BOOL _hasConstraints;
+}
 
 @property (nonatomic, strong, readwrite) QMImageView *imageView;
 @property (nonatomic, weak)  NSLayoutConstraint *imageViewHeightConstraint;
@@ -22,16 +26,17 @@
     if (self = [super initWithCoder:aDecoder]) {
         [self configureCustomView];
     }
+    
     return self;
 }
 
 - (instancetype)initWithSize:(CGSize)size {
     
     if (self = [super init]) {
-        
         [self configureCustomView];
         self.size = size;
     }
+    
     return self;
 }
 
@@ -54,34 +59,12 @@
     
     // Autolayout is available for UIBarButtonItem from iOS 11
     if (iosMajorVersion() >= 11) {
-        
-        self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.imageViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.imageView
-                                                                      attribute:NSLayoutAttributeHeight
-                                                                      relatedBy:NSLayoutRelationEqual
-                                                                         toItem:nil
-                                                                      attribute:NSLayoutAttributeNotAnAttribute
-                                                                     multiplier:1.0
-                                                                       constant:0];
-        
-        [self.imageView addConstraint:self.imageViewHeightConstraint];
-        
-        self.imageViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.imageView
-                                                                     attribute:NSLayoutAttributeWidth
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:nil
-                                                                     attribute:NSLayoutAttributeNotAnAttribute
-                                                                    multiplier:1.0
-                                                                      constant:0];
-        
-        [self.imageView addConstraint:self.imageViewWidthConstraint];
+        _imageView.translatesAutoresizingMaskIntoConstraints = NO;
     }
-    
 }
 
 
 - (void)imageViewDidTap:(QMImageView *)imageView {
-    
     if (self.onTapHandler) {
         self.onTapHandler(imageView);
     }
@@ -89,6 +72,7 @@
 
 - (void)setImageWithURL:(NSURL *)imageURL
                   title:(NSString *)title {
+    
     [self.imageView setImageWithURL:imageURL
                               title:title
                      completedBlock:nil];
@@ -96,26 +80,33 @@
 
 - (void)setSize:(CGSize)size {
     
+    _imageView.frame = (CGRect) {
+        .origin = _imageView.frame.origin,
+        .size = CGSizeMake(size.width, size.height)
+    };
+    
     // Autolayout is available for UIBarButtonItem from iOS 11
     if (iosMajorVersion() >= 11) {
-        _imageViewWidthConstraint.constant = size.width;
-        _imageViewHeightConstraint.constant = size.height;
-    }
-    else {
-        _imageView.frame = CGRectMake(0, 0, size.width, size.height);
+        
+        if (!_hasConstraints) {
+            
+            _imageViewWidthConstraint = [_imageView.widthAnchor constraintEqualToConstant:size.width];
+            _imageViewWidthConstraint.active = YES;
+            
+            _imageViewHeightConstraint  = [_imageView.heightAnchor constraintEqualToConstant:size.height];
+            _imageViewHeightConstraint.active = YES;
+            
+            _hasConstraints = YES;
+        }
+        else {
+            _imageViewWidthConstraint.constant = size.width;
+            _imageViewHeightConstraint.constant = size.height;
+        }
     }
 }
 
 - (CGSize)size {
-    
-    if (iosMajorVersion() >= 11) {
-        return CGSizeMake
-        (_imageViewWidthConstraint.constant,
-         _imageViewHeightConstraint.constant);
-    }
-    else {
-        return _imageView.frame.size;
-    }
+    return _imageView.frame.size;
 }
 
 @end
