@@ -135,17 +135,15 @@ QMUsersServiceDelegate
     
     
 #ifdef __IPHONE_11_0
-    if (iosMajorVersion() >= 11) {
-        
-        if (@available(iOS 11.0, *)) {
-            self.navigationItem.searchController = self.searchController;
-            self.navigationItem.hidesSearchBarWhenScrolling = NO;
-        }
-        
+    
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
     }
     else {
         self.tableView.tableHeaderView = self.searchController.searchBar;
     }
+    
 #else
     self.tableView.tableHeaderView = self.searchController.searchBar;
 #endif
@@ -215,22 +213,20 @@ QMUsersServiceDelegate
         }];
     };
 }
-
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        
-        if (iosMajorVersion() >= 11) {
-            
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
             self.searchController.active = NO;
         }
+#endif
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         
     }];
     
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
-
 
 //MARK: - Update items
 
