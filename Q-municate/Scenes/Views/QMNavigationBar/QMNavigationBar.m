@@ -44,7 +44,7 @@
     return CGRectMake(0, 0, containerSize.width, containerSize.height);
 }
 
-- (void)showNotificationPanelView:(BOOL)show animation:(void (^)())animation {
+- (void)showNotificationPanelView:(BOOL)show animation:(dispatch_block_t)animation {
     _showNotification = show;
     if (show) {
         if (_notificationPanelContainer == nil) {

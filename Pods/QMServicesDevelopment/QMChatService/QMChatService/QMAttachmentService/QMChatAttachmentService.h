@@ -179,13 +179,13 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'addDelegate:' instead.");
  *  @param image        Attachment image.
  *  @param completion   Upload message result.
  *
- *  @warning *Deprecated in QMServices 0.4.7:* Use 'uploadAndSendAttachmentMessage:toDialog:withChatService:attachment:completion:' instead.
+ *  @warning *Deprecated in QMServices 0.5: * Use 'uploadAndSendAttachmentMessage:toDialog:withChatService:attachment:completion:' instead.
  */
 - (void)uploadAndSendAttachmentMessage:(QBChatMessage *)message
                               toDialog:(QBChatDialog *)dialog
                        withChatService:(QMChatService *)chatService
                      withAttachedImage:(UIImage *)image
-                            completion:(nullable QBChatCompletionBlock)completion DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'uploadAndSendAttachmentMessage:toDialog:withChatService:attachment:completion:' instead.");
+                            completion:(nullable QBChatCompletionBlock)completion DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.5 Use 'uploadAndSendAttachmentMessage:toDialog:withChatService:attachment:completion:' instead.");
 
 /**
  *  Gets the image from the attachment message.
@@ -197,7 +197,7 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'addDelegate:' instead.");
                        completion:(void(^)(NSError * _Nullable error, UIImage * _Nullable image))completion;
 
 /**
- *  Gets image local image by attachment message.
+ *  Gets local image for attachment message.
  *
  *  @param attachmentMessage      Message with attachment.
  *  @param completion             Local image or nil if no image.
@@ -224,6 +224,7 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'addDelegate:' instead.");
 
 @protocol QMChatAttachmentServiceDelegate <NSObject>
 
+@optional
 
 /**
  *  Is called when attachment service did change current state of the attachment.
@@ -245,14 +246,14 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'addDelegate:' instead.");
  *  @param progress changed value of progress min 0.0, max 1.0
  *  @param attachment loaded QBChatAttachment
  *
- *  @warning *Deprecated in QMServices 0.4.7:* Use 'chatAttachmentService:didChangeLoadingProgress:forMessage:attachment:' instead.
+ *  @warning *Deprecated in QMServices 0.5:* Use 'chatAttachmentService:didChangeLoadingProgress:forMessage:attachment:' instead.
  */
 
 - (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
      didChangeLoadingProgress:(CGFloat)progress
             forChatAttachment:(QBChatAttachment *)attachment
 
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'chatAttachmentService:didChangeLoadingProgress:forMessage:attachment:' instead.");
+DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.5 Use 'chatAttachmentService:didChangeLoadingProgress:forMessage:attachment:' instead.");
 
 /**
  *  Is called when chat attachment service did change Uploading progress for attachment in message.
@@ -271,7 +272,7 @@ DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.4.7. Use 'chatAttachmentService:didCha
  *  Used for display downloading progress.
  *
  *  @param chatAttachmentService 'QMChatAttachmentService' instance.
- *  @param progress              Changed value of progress min 0.0, max 1.0
+ *  @param progress              Changed value of progress. Min 0.0, max 1.0
  *  @param message               QBChatMessage instance, that contains attachment.
  *  @param attachment            'QBChatAttachment' instance that uploading.
  */

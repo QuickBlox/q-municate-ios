@@ -13,18 +13,17 @@
 #import "QMSLog.h"
 
 @implementation QMDownloadOperation
-
+    
 @end
 
 @interface QMMediaDownloadService()
-
+    
 @property (strong, nonatomic) NSOperationQueue *downloadOperationQueue;
-
-
+    
 @end
 
 @implementation QMMediaDownloadService
-
+    
 - (instancetype)init {
     
     if (self  = [super init]) {
@@ -37,11 +36,11 @@
     
     return self;
 }
-
+    
 - (void)dealloc {
     QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
-
+    
 - (void)downloadAttachmentWithID:(NSString *)attachmentID
                        messageID:(NSString *)messageID
                    progressBlock:(QMAttachmentProgressBlock)progressBlock
@@ -71,50 +70,83 @@
     
     [downloadOperation setAsyncOperationBlock:^(dispatch_block_t _Nonnull finish) {
         QMSLog(@"Start Download operation with ID: %@", weakOperation.operationID);
-        weakOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest backgroundDownloadFileWithUID:attachmentID
-                                                                                             successBlock:^(QBResponse * _Nonnull response,
-                                                                                                            NSData * _Nonnull fileData)
-                                                                  {
-                                                                      QMSLog(@"Complete operation with ID: %@", weakOperation.operationID);
-                                                                      
-                                                                      __strong typeof(weakOperation) strongOperation = weakOperation;
-                                                                      strongOperation.data = fileData;
-                                                                      completion(strongOperation);
-                                                                      finish();
-                                                                      
-                                                                  } statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nonnull status) {
-                                                                      if (progressBlock) {
-                                                                          QMSLog(@"donwload progress %f",status.percentOfCompletion);
-                                                                          progressBlock(status.percentOfCompletion);
-                                                                      }
-                                                                  } errorBlock:^(QBResponse * _Nonnull response) {
-                                                                      QMSLog(@"Error operation with ID: %@", weakOperation.operationID);
-                                                                      __strong typeof(weakOperation) strongOperation = weakOperation;
-                                                                      strongOperation.error = response.error.error;
-                                                                      completion(strongOperation);
-                                                                      finish();
-                                                                  }];
+        
+        NSCharacterSet *notDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+        //Backward compatibility for attachments with integer ID
+        if ([attachmentID rangeOfCharacterFromSet:notDigits].location == NSNotFound) {
+            
+            weakOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest downloadFileWithID:attachmentID.integerValue
+                                                                                      successBlock:^(QBResponse * _Nonnull response,
+                                                                                                     NSData * _Nonnull fileData)
+                                                                      {
+                                                                          QMSLog(@"Complete operation with ID: %@", weakOperation.operationID);
+                                                                          
+                                                                          __strong typeof(weakOperation) strongOperation = weakOperation;
+                                                                          strongOperation.data = fileData;
+                                                                          completion(strongOperation);
+                                                                          finish();
+                                                                      } statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nonnull status)
+                                                                      {
+                                                                          if (progressBlock) {
+                                                                              QMSLog(@"donwload progress %f",status.percentOfCompletion);
+                                                                              progressBlock(status.percentOfCompletion);
+                                                                          }
+                                                                      } errorBlock:^(QBResponse * _Nonnull response)
+                                                                      {
+                                                                          QMSLog(@"Error operation with ID: %@", weakOperation.operationID);
+                                                                          __strong typeof(weakOperation) strongOperation = weakOperation;
+                                                                          strongOperation.error = response.error.error;
+                                                                          completion(strongOperation);
+                                                                          finish();
+                                                                      }];
+        }
+        else {
+            
+            weakOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest backgroundDownloadFileWithUID:attachmentID
+                                                                                                 successBlock:^(QBResponse * _Nonnull response,
+                                                                                                                NSData * _Nonnull fileData)
+                                                                      {
+                                                                          QMSLog(@"Complete operation with ID: %@", weakOperation.operationID);
+                                                                          
+                                                                          __strong typeof(weakOperation) strongOperation = weakOperation;
+                                                                          strongOperation.data = fileData;
+                                                                          completion(strongOperation);
+                                                                          finish();
+                                                                          
+                                                                      } statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nonnull status)
+                                                                      {
+                                                                          if (progressBlock) {
+                                                                              QMSLog(@"donwload progress %f",status.percentOfCompletion);
+                                                                              progressBlock(status.percentOfCompletion);
+                                                                          }
+                                                                      } errorBlock:^(QBResponse * _Nonnull response)
+                                                                      {
+                                                                          QMSLog(@"Error operation with ID: %@", weakOperation.operationID);
+                                                                          __strong typeof(weakOperation) strongOperation = weakOperation;
+                                                                          strongOperation.error = response.error.error;
+                                                                          completion(strongOperation);
+                                                                          finish();
+                                                                      }];
+        }
     }];
     
-    
     [_downloadOperationQueue addOperation:downloadOperation];
-    QMSLog(@"donwload operation queue %@", self.downloadOperationQueue.operations);
 }
-
+    
 - (BOOL)isDownloadingMessageWithID:(NSString *)messageID {
     return [self.downloadOperationQueue hasOperationWithID:messageID];
 }
-
+    
 //MARK: - QMCancellableService
-
+    
 - (void)cancelOperationWithID:(NSString *)operationID {
     
     [self.downloadOperationQueue cancelOperationWithID:operationID];
 }
-
+    
 - (void)cancelAllOperations {
     
     [self.downloadOperationQueue cancelAllOperations];
 }
-
+    
 @end

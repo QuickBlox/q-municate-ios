@@ -9,27 +9,27 @@
 #import <Foundation/Foundation.h>
 
 //Application colors
-UIColor *QMMainApplicationColor();
-UIColor *QMSecondaryApplicationColor();
+UIColor *QMMainApplicationColor(void);
+UIColor *QMSecondaryApplicationColor(void);
 
 // Background colors
-UIColor *QMTableViewBackgroundColor();
-UIColor *QMVideoCallBackgroundColor();
+UIColor *QMTableViewBackgroundColor(void);
+UIColor *QMVideoCallBackgroundColor(void);
 
 // Chat colors
-UIColor *QMChatBackgroundColor();
-UIColor *QMChatTopLabelColor();
-UIColor *QMChatIncomingBottomLabelColor();
-UIColor *QMChatOutgoingBottomLabelColor();
-UIColor *QMChatCellHighlightedColor();
-UIColor *QMChatOutgoingCellColor();
-UIColor *QMChatIncomingCellColor();
-UIColor *QMChatOutgoingCellSendingColor();
-UIColor *QMChatOutgoingCellFailedColor();
-UIColor *QMChatNotificationCellColor();
-UIColor *QMChatRedNotificationCellColor();
-UIColor *QMChatEmojiiKeyboardTintColor();
-UIColor *QMChatIncomingLinkColor();
-UIColor *QMChatCellIncomingHighlightedColor();
-UIColor *QMChatCellOutgoingHighlightedColor();
+UIColor *QMChatBackgroundColor(void);
+UIColor *QMChatTopLabelColor(void);
+UIColor *QMChatIncomingBottomLabelColor(void);
+UIColor *QMChatOutgoingBottomLabelColor(void);
+UIColor *QMChatCellHighlightedColor(void);
+UIColor *QMChatOutgoingCellColor(void);
+UIColor *QMChatIncomingCellColor(void);
+UIColor *QMChatOutgoingCellSendingColor(void);
+UIColor *QMChatOutgoingCellFailedColor(void);
+UIColor *QMChatNotificationCellColor(void);
+UIColor *QMChatRedNotificationCellColor(void);
+UIColor *QMChatEmojiiKeyboardTintColor(void);
+UIColor *QMChatIncomingLinkColor(void);
+UIColor *QMChatCellIncomingHighlightedColor(void);
+UIColor *QMChatCellOutgoingHighlightedColor(void);
 

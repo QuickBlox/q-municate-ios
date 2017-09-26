@@ -198,12 +198,15 @@ QMUsersServiceDelegate
     
     [super viewDidLoad];
     
+    self.navigationItem.titleView = self.onlineTitleView;
+    
     if (iosMajorVersion() >= 10) {
         self.collectionView.prefetchingEnabled = NO;
     }
     
 #ifdef __IPHONE_11_0
-    if (iosMajorVersion() >= 11) {
+    
+    if (@available(iOS 11.0, *)) {
         self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     }
 #endif

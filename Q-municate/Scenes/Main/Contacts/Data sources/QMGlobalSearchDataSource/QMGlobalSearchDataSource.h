@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Add user block action.
  */
-@property (copy, nonatomic) void (^didAddUserBlock)();
+@property (copy, nonatomic) void (^didAddUserBlock)(UITableViewCell *cell);
 
 @end
 

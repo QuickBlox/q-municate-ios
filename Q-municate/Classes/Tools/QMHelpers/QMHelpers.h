@@ -12,6 +12,6 @@ CGRect CGRectOfSize(CGSize size);
 
 NSString *QMStringForTimeInterval(NSTimeInterval timeInterval);
 
-NSInteger iosMajorVersion();
+NSInteger iosMajorVersion(void);
 
 extern void removeControllerFromNavigationStack(UINavigationController *navC, UIViewController *vc);

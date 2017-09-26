@@ -246,9 +246,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             [self.chatService.chatAttachmentService removeAllMediaFiles];
             
             dispatch_group_enter(logoutGroup);
-            
             [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                
                 dispatch_group_leave(logoutGroup);
             }];
             
