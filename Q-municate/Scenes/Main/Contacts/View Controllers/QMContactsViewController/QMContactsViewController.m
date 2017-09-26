@@ -215,18 +215,6 @@ QMUsersServiceDelegate
         }];
     };
 }
-#ifdef __IPHONE_11_0
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        self.searchController.active = NO;
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        
-    }];
-    
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-}
-#endif
 
 //MARK: - Update items
 
