@@ -40,7 +40,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                 [source setResult:nil];
             }
             
-            return source.task;
+            return nil;
         }];
     }
     else {
@@ -50,7 +50,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     }
     
     return source.task;
-    
 }
 
 - (void)getDeviceTokenWithCompletion:(QBTokenCompletionBlock)tokenCompletionBlock {

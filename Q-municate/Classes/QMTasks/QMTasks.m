@@ -88,13 +88,25 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     if (core.isAuthorized) {
         
-        if (type == QMAccountTypeEmail) {
-            return [BFTask taskWithResult:currentProfile];
-        }
-        else if(type > QMAccountTypeEmail) {
-            //Use token as password
-            currentProfile.password = QBSession.currentSession.sessionDetails.token;
-            return [BFTask taskWithResult:currentProfile];
+        switch (type) {
+            case QMAccountTypeEmail:
+                return [BFTask taskWithResult:currentProfile];
+                
+            case QMAccountTypePhone: {
+                FIRUser *phoneUser = [[FIRAuth auth] currentUser];
+                if (phoneUser == nil) {
+                    NSError *error = [QMErrorsFactory errorNotLoggedInREST];
+                    return [BFTask taskWithError:error];
+                }
+            }
+            case QMAccountTypeFacebook:
+                currentProfile.password = QBSession.currentSession.sessionDetails.token;
+                return [BFTask taskWithResult:currentProfile];
+                
+            case QMAccountTypeNone: {
+                NSError *error = [QMErrorsFactory errorNotLoggedInREST];
+                return [BFTask taskWithError:error];
+            }
         }
     }
     
