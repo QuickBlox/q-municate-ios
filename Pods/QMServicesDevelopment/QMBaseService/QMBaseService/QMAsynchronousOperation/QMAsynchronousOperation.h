@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef  void(^QMAsyncOperationBlock)(dispatch_block_t finish);
-typedef  void(^QMCancellBlock)();
+typedef  void(^QMCancellBlock)(void);
 
 @protocol QMCancellableObject <NSObject>
 @required
