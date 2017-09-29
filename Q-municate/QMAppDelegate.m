@@ -78,7 +78,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     QMLogSetEnabled(YES);
 #endif
     
-    [[QMCore instance].authService addDelegate:self];
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
@@ -189,6 +188,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #else
     firTokenType = FIRAuthAPNSTokenTypeSandbox;
 #endif
+
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
