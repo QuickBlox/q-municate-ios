@@ -127,7 +127,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
     }
 }
 
-- (void)loadCachedMessagesWithDialogID:(NSString *)dialogID completion:(void(^)())completion {
+- (void)loadCachedMessagesWithDialogID:(NSString *)dialogID completion:(void(^)(void))completion {
     
     if ([self.cacheDataSource respondsToSelector:@selector(cachedMessagesWithDialogID:block:)]) {
         
