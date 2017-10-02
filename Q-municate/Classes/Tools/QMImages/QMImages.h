@@ -9,4 +9,4 @@
 #import <UIKit/UIKit.h>
 
 // status bar image
-UIImage *QMStatusBarBackgroundImage();
+UIImage *QMStatusBarBackgroundImage(void);

@@ -1,9 +1,0 @@
-framework module DigitsKit {
-    umbrella header "DigitsKit.h"
-    
-    export *
-    module * { export * }
-
-    link framework "AddressBook"
-    link framework "SafariServices"
-}

@@ -29,9 +29,9 @@ typedef NS_ENUM(NSInteger, QMAccountType) {
      */
     QMAccountTypeFacebook,
     /**
-     *  Account type is Twitter digits.
+     *  Account type is Phone number.
      */
-    QMAccountTypeDigits
+    QMAccountTypePhone
 };
 
 /**

@@ -7,18 +7,17 @@
 //
 
 #import "QMAppDelegate.h"
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "QMCore.h"
 #import "QMImages.h"
-#import "QMHelpers.h"
-
+#import "QMColors.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
-#import <DigitsKit/DigitsKit.h>
 #import <Flurry.h>
 #import <SVProgressHUD.h>
 #import <Intents/Intents.h>
-#import "QMColors.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
 
 #import "UIScreen+QMLock.h"
 #import "UIImage+Cropper.h"
@@ -100,7 +99,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     
     [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
     // Configuring external frameworks
-    [Fabric with:@[CrashlyticsKit, DigitsKit]];
+    [FIRApp configure];
+    [[FIRAuth auth] useAppLanguage];
+    [Fabric with:@[CrashlyticsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
@@ -131,6 +132,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         dispatch_async(dispatch_get_main_queue(), ^{
             [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
         });
+    }
+}
+
+- (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    if ([[FIRAuth auth] canHandleNotification:userInfo]) {
+        completionHandler(UIBackgroundFetchResultNoData);
+        return;
     }
 }
 
@@ -175,6 +183,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
+    FIRAuthAPNSTokenType firTokenType;
+#if DEVELOPMENT == 0
+    firTokenType = FIRAuthAPNSTokenTypeProd;
+#else
+    firTokenType = FIRAuthAPNSTokenTypeSandbox;
+#endif
+    [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
 - (void)application:(UIApplication *)__unused application

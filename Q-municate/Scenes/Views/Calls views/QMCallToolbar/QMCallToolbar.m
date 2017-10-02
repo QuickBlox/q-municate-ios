@@ -73,13 +73,40 @@
                action:@selector(pressButton:)
      forControlEvents:UIControlEventTouchUpInside];
     
+    if (iosMajorVersion() >= 11) {
+        
+        button.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:button
+                                                                      attribute:NSLayoutAttributeHeight
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:nil
+                                                                      attribute:NSLayoutAttributeNotAnAttribute
+                                                                     multiplier:1.0
+                                                                       constant:button.frame.size.height];
+        
+        [button addConstraint:heightConstraint];
+        
+        NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:button
+                                                                     attribute:NSLayoutAttributeWidth
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:nil
+                                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                                    multiplier:1.0
+                                                                      constant:button.frame.size.width];
+        
+        [button addConstraint:widthConstraint];
+    }
+    
     [self.buttons addObject:button];
     [self.actions addObject:[action copy]];
 }
+
 - (void)removeButton:(UIButton *)button {
      NSUInteger idx = [self.buttons indexOfObject:button];
     [self.buttons removeObjectAtIndex:idx];
 }
+
 - (void)updateItemsDisplay {
     
     NSMutableArray *items = [NSMutableArray arrayWithArray:self.items];

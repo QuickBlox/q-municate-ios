@@ -21,8 +21,10 @@
 #import "QBChatDialog+OpponentID.h"
 #import "QMSplitViewController.h"
 #import "QMNavigationController.h"
+#import "QMNavigationBar.h"
 
-static const NSInteger kQMUnAuthorizedErrorCode = -1011;
+static const NSInteger kQMNotAuthorizedInRest = -1000;
+static const NSInteger kQMUnauthorizedErrorCode = -1011;
 
 @interface QMDialogsViewController ()
 
@@ -136,10 +138,12 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
             
             [(QMNavigationController *)navigationController dismissNotificationPanel];
             
-            if (task.error.code == kQMUnAuthorizedErrorCode
-                || (task.error.code == kBFMultipleErrorsError
-                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnAuthorizedErrorCode
-                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnAuthorizedErrorCode))) {
+            NSInteger errorCode = task.error.code;
+            if (errorCode == kQMNotAuthorizedInRest
+                || errorCode == kQMUnauthorizedErrorCode
+                || (errorCode == kBFMultipleErrorsError
+                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
+                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
                         
                         return [QMCore.instance logout];
                     }
@@ -323,7 +327,18 @@ didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
     
     if (self.dialogsDataSource.items.count == 0) {
         self.tableView.backgroundView = self.placeholderView;
+        
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            self.navigationItem.searchController = nil;
+        }
+        else {
+            self.tableView.tableHeaderView = nil;
+        }
+#else
         self.tableView.tableHeaderView = nil;
+#endif
+        
     }
     
     [self.tableView reloadData];
@@ -476,8 +491,21 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 - (void)removePlaceholder {
     
     if (self.tableView.backgroundView) {
+        
         self.tableView.backgroundView = nil;
+        
+#ifdef __IPHONE_11_0
+        if (@available(iOS 11.0, *)) {
+            self.navigationItem.searchController = self.searchController;
+            [(QMNavigationBar *)self.navigationController.navigationBar setAdditionalBarShift:52.0f];
+            self.navigationItem.hidesSearchBarWhenScrolling = NO;
+        }
+        else {
+            self.tableView.tableHeaderView = self.searchController.searchBar;
+        }
+#else
         self.tableView.tableHeaderView = self.searchController.searchBar;
+#endif
     }
 }
 

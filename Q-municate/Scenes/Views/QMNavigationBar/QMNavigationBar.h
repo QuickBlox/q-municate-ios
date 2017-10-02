@@ -13,8 +13,10 @@
 
 @property (assign, nonatomic) QMNotificationPanelType notificationPanelType;
 @property (copy, nonatomic) NSString *message;
+@property (assign, nonatomic) NSUInteger restrictedLargeTitles;
+@property (assign, nonatomic) CGFloat additionalBarShift;
 
-- (void)showNotificationPanelView:(BOOL)show animation:(void (^)())animation;
+- (void)showNotificationPanelView:(BOOL)show animation:(dispatch_block_t)animation;
 - (void)shake;
 
 @end

@@ -84,8 +84,9 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_ROOT}/Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle"
   install_resource "${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
@@ -96,8 +97,9 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_ROOT}/Digits/iOS/DigitsKit.framework/Versions/A/Resources/DigitsKitResources.bundle"
   install_resource "${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle"
+  install_resource "$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle"
   install_resource "${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets"
   install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
@@ -126,5 +128,5 @@ then
     fi
   done <<<"$OTHER_XCASSETS"
 
-  printf "%s\0" "${XCASSET_FILES[@]}" | xargs -0 xcrun actool --output-format human-readable-text --notices --warnings --platform "${PLATFORM_NAME}" --minimum-deployment-target "${!DEPLOYMENT_TARGET_SETTING_NAME}" ${TARGET_DEVICE_ARGS} --compress-pngs --compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+  printf "%s\0" "${XCASSET_FILES[@]}" | xargs -0 xcrun actool --output-format human-readable-text --notices --warnings --platform "${PLATFORM_NAME}" --minimum-deployment-target "${!DEPLOYMENT_TARGET_SETTING_NAME}" ${TARGET_DEVICE_ARGS} --compress-pngs --compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"
 fi

@@ -8,7 +8,6 @@
 
 #import "QMPushNotificationManager.h"
 #import "QMCore.h"
-#import "QMHelpers.h"
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
@@ -41,7 +40,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                 [source setResult:nil];
             }
             
-            return source.task;
+            return nil;
         }];
     }
     else {
@@ -51,7 +50,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     }
     
     return source.task;
-    
 }
 
 - (void)getDeviceTokenWithCompletion:(QBTokenCompletionBlock)tokenCompletionBlock {
@@ -235,7 +233,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 - (void)handleActionWithIdentifier:(NSString *)identifier
                 remoteNotification:(NSDictionary *)userInfo
                       responseInfo:(NSDictionary *)responseInfo
-                 completionHandler:(void(^)())completionHandler {
+                 completionHandler:(dispatch_block_t)completionHandler {
     
     if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
    

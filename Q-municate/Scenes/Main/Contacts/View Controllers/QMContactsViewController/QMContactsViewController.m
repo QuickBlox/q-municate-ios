@@ -18,6 +18,7 @@
 #import "QMCore.h"
 #import "QMTasks.h"
 #import "QMAlert.h"
+#import "QMHelpers.h"
 
 #import "QMContactCell.h"
 #import "QMNoContactsCell.h"
@@ -86,7 +87,7 @@ QMUsersServiceDelegate
     // adding refresh control task
     if (self.refreshControl) {
         
-        self.refreshControl.backgroundColor = [UIColor whiteColor];
+        self.refreshControl.backgroundColor = [UIColor clearColor];
         [self.refreshControl addTarget:self
                                 action:@selector(updateContactsAndEndRefreshing)
                       forControlEvents:UIControlEventValueChanged];
@@ -129,10 +130,23 @@ QMUsersServiceDelegate
     self.searchController.searchBar.delegate = self;
     self.searchController.searchResultsUpdater = self;
     self.searchController.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO;
-    self.definesPresentationContext = YES;
+    self.searchController.searchBar.scopeButtonTitles = @[NSLocalizedString(@"QM_STR_LOCAL_SEARCH", nil), NSLocalizedString(@"QM_STR_GLOBAL_SEARCH", nil)];
     [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
+    
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
+    }
+    else {
+        self.tableView.tableHeaderView = self.searchController.searchBar;
+    }
+#else
     self.tableView.tableHeaderView = self.searchController.searchBar;
+#endif
+    
+    self.definesPresentationContext = YES;
 }
 
 - (void)configureDataSources {
@@ -396,5 +410,19 @@ QMUsersServiceDelegate
     
     [QMNoContactsCell registerForReuseInTableView:self.tableView];
 }
+
+#ifdef __IPHONE_11_0
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        if (@available(iOS 11.0, *)) {
+            self.searchController.active = NO;
+        }
+    } completion:nil];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+#endif
 
 @end

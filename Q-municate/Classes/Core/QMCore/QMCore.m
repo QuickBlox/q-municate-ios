@@ -16,7 +16,9 @@
 #import "QMCallManager.h"
 #import <Intents/Intents.h>
 #import "NSString+QMTransliterating.h"
-#import "QMHelpers.h"
+
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -224,9 +226,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
                 
                 [QMFacebook logout];
             }
-            else if (self.currentProfile.accountType == QMAccountTypeDigits) {
+            else if (self.currentProfile.accountType == QMAccountTypePhone) {
                 
-                [[Digits sharedInstance] logOut];
+                [[FIRAuth auth] signOut:nil];
             }
             // clearing contact list cache and memory storage
             [[QMContactListCache instance] deleteContactList:nil];
@@ -244,9 +246,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             [self.chatService.chatAttachmentService removeAllMediaFiles];
             
             dispatch_group_enter(logoutGroup);
-            
             [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                
                 dispatch_group_leave(logoutGroup);
             }];
             

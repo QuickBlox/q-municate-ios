@@ -15,6 +15,7 @@
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
 #import "QMImageLoader+QBChatAttachment.h"
+#import "UIImage+QM.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
 NYTPhotosViewControllerDelegate,
@@ -65,7 +66,7 @@ QMMediaHandler>
     if (!view.mediaHandler) {
         view.mediaHandler = self;
     }
-    if (attachment.contentType != QMAttachmentContentTypeAudio && attachment.ID) {
+    if (attachment.attachmentType != QMAttachmentContentTypeAudio && attachment.ID) {
         
         if (view.messageID != nil && ![view.messageID isEqualToString:message.ID]) {
             
@@ -75,7 +76,9 @@ QMMediaHandler>
         }
     }
     
-    [self updateView:view withAttachment:attachment message:message];
+    [self updateView:view
+      withAttachment:attachment
+             message:message];
 }
 
 
@@ -85,8 +88,8 @@ QMMediaHandler>
     
     view.messageID = message.ID;
     view.duration = attachment.duration;
-    view.playable = attachment.contentType == QMAttachmentContentTypeAudio ||  attachment.contentType == QMAttachmentContentTypeVideo;
-    view.cancellable = attachment.contentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
+    view.playable = attachment.attachmentType == QMAttachmentContentTypeAudio ||  attachment.attachmentType == QMAttachmentContentTypeVideo;
+    view.cancellable = attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
@@ -105,7 +108,7 @@ QMMediaHandler>
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
     
-        if (attachment.contentType == QMAttachmentContentTypeAudio) {
+        if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
             
             QMAudioPlayerStatus *status = [QMAudioPlayer audioPlayer].status;
             
@@ -123,7 +126,7 @@ QMMediaHandler>
         return;
     }
     
-    if (attachment.contentType != QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType != QMAttachmentContentTypeAudio) {
         [self loadAttachment:attachment
                   forMessage:message
                     withView:view];
@@ -134,7 +137,7 @@ QMMediaHandler>
             forMessage:(QBChatMessage *)message
               withView:(id<QMMediaViewDelegate>)view {
     
-    if (attachment.contentType == QMAttachmentContentTypeImage) {
+    if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
         CGSize targetSize  = ((QMBaseMediaCell*)view).previewImageView.bounds.size;
         QMImageTransform *transform = [QMImageTransform transformWithSize:targetSize
@@ -224,7 +227,7 @@ QMMediaHandler>
             }
         }
     }
-    else if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         UIImage *image = attachment.image;
         
@@ -281,7 +284,7 @@ QMMediaHandler>
             }
         }
     }
-    if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         __weak typeof(self) weakSelf = self;
         [self.attachmentsService attachmentWithID:attachment.ID message:message progressBlock:^(float progress) {
@@ -312,7 +315,7 @@ QMMediaHandler>
             }
         }];
     }
-    if (attachment.contentType == QMAttachmentContentTypeAudio || attachment.contentType == QMAttachmentContentTypeVideo) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         BOOL isReady = [self.attachmentsService attachmentIsReadyToPlay:attachment message:message];
         if (isReady) {
@@ -321,7 +324,7 @@ QMMediaHandler>
         
         if (isReady) {
             
-            if (attachment.contentType == QMAttachmentContentTypeAudio) {
+            if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
                 
                 QMAudioPlayerStatus *status = [QMAudioPlayer audioPlayer].status;
                 
@@ -467,7 +470,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     NSParameterAssert(attachment);
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
-    if (attachment.contentType == QMAttachmentContentTypeImage) {
+    if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
         QBUUser *user =
         [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
@@ -497,14 +500,14 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         
         [self presentViewControllerWithPhoto:photo];
     }
-    else if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         if (attachmentStatus == QMMessageAttachmentStatusPreparing || attachmentStatus == QMMessageAttachmentStatusError) {
             return;
         }
         [self playAttachment:attachment forMessage:message];
     }
-    else if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    else if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         if (attachmentStatus == QMMessageAttachmentStatusLoading) {
             view.viewState = QMMediaViewStateNotReady;
@@ -558,7 +561,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 - (void)playAttachment:(QBChatAttachment *)attachment
             forMessage:(QBChatMessage *)message {
     
-    if (attachment.contentType == QMAttachmentContentTypeAudio) {
+    if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
         
         NSURL *fileURL = [self.attachmentsService.storeService fileURLForAttachment:attachment
                                                                           messageID:message.ID
@@ -567,7 +570,7 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         [[QMAudioPlayer audioPlayer] playMediaAtURL:fileURL withID:message.ID];
     }
     
-    if (attachment.contentType == QMAttachmentContentTypeVideo) {
+    if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
         AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:attachment.remoteURL];
         
@@ -597,28 +600,6 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto {
-    
-    // clearing previous reference view
-    self.photoReferenceView = nil;
-    
-    QMPhoto *photo = [[QMPhoto alloc] init];
-    photo.image = pickedPhoto;
-    
-    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_DONE", nil)
-                                                                      style:UIBarButtonItemStyleDone
-                                                                     target:self
-                                                                     action:@selector(notifyAboutAcceptingPickedImage)];
-    
-    [self presentViewControllerWithPhoto:photo rightBarButtonItem:barButtonItem];
-}
-
-- (void)notifyAboutAcceptingPickedImage {
-    NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)_presentedViewController;
-    [_viewController sendAttachmentMessageWithImage:photosViewController.currentlyDisplayedPhoto.image];
-    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (QMChatAttachmentService *)attachmentsService {
     
     return QMCore.instance.chatService.chatAttachmentService;
@@ -642,17 +623,100 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     }
 }
 
-- (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
-    [self presentViewControllerWithPhoto:photo rightBarButtonItem:nil];
+//MARK:  - NYTPhotosViewController
+
+- (void)didFinishPickingPhoto:(UIImage *)pickedPhoto {
+    
+    // clearing previous reference view
+    self.photoReferenceView = nil;
+    
+    QMPhoto *photo = [[QMPhoto alloc] init];
+    photo.image = pickedPhoto;
+    
+    UIColor *darkColor = [UIColor colorWithWhite:0.0 alpha:0.6f];
+    UIImage *backgroundImage = [UIImage resizableImageWithColor:darkColor
+                                                   cornerRadius:10.0];
+    
+    UIBarButtonItem *rightBarButtonItem =
+    [self barButtonWithTitle:NSLocalizedString(@"QM_STR_SEND", nil)
+             backgroundImage:backgroundImage action:@selector(notifyAboutAcceptingPickedImage)];
+    
+    UIBarButtonItem *leftBarButtonItem =
+    [self barButtonWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
+             backgroundImage:backgroundImage action:@selector(notifyAboutCancellingPickedImage)];
+    
+    [self presentViewControllerWithPhoto:photo
+                      rightBarButtonItem:rightBarButtonItem
+                       leftBarButtonItem:leftBarButtonItem];
 }
 
-- (void)presentViewControllerWithPhoto:(QMPhoto *)photo rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem {
+- (UIBarButtonItem *)barButtonWithTitle:(NSString *)title
+                        backgroundImage:(UIImage *)backgroundImage
+                                 action:(SEL)action {
+    
+    UIButton *button = [[UIButton alloc] init];
+    
+    if (title) {
+        
+        CGSize textSize =
+        [title sizeWithAttributes:@{NSFontAttributeName : button.titleLabel.font}];
+        
+        button.frame = CGRectMake(0, 0, textSize.width + 20, 30);
+        
+        [button setTitle:title forState:UIControlStateNormal];
+    }
+    else {
+        button.frame = CGRectMake(0, 0, 30, 30);
+    }
+    
+    [button addTarget:self
+               action:action
+     forControlEvents:UIControlEventTouchDown];
+    
+    [button setBackgroundImage:backgroundImage
+                      forState:UIControlStateNormal];
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:button];
+}
+
+
+- (void)notifyAboutAcceptingPickedImage {
+    
+    NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)_presentedViewController;
+    [_viewController sendAttachmentMessageWithImage:photosViewController.currentlyDisplayedPhoto.image];
+    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)notifyAboutCancellingPickedImage {
+    
+    [_presentedViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
+    
+    [self presentViewControllerWithPhoto:photo
+                      rightBarButtonItem:nil
+                       leftBarButtonItem:nil];
+}
+
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo
+                    rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem
+                     leftBarButtonItem:(UIBarButtonItem *)leftBarButtonItem {
+    
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    
     if (rightBarButtonItem != nil) {
         photosViewController.rightBarButtonItem = rightBarButtonItem;
     }
+    
+    if (leftBarButtonItem != nil) {
+        photosViewController.leftBarButtonItem = leftBarButtonItem;
+    }
+    
     photosViewController.delegate = self;
+    
     
     [self.viewController.view endEditing:YES]; // hiding keyboard
     [self.viewController presentViewController:photosViewController

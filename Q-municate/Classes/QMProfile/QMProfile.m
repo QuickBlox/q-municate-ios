@@ -227,7 +227,7 @@ static NSString *const kQMLicenceAcceptedKey = @"licence_accepted";
     switch (type) {
         case QMAccountTypeNone: return @"None";
         case QMAccountTypeEmail: return @"Email";
-        case QMAccountTypeDigits: return @"Digits";
+        case QMAccountTypePhone: return @"Phone";
         case QMAccountTypeFacebook: return @"Facebook";
         default:
             break;

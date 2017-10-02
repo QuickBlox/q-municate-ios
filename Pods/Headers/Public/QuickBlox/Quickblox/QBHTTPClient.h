@@ -1,0 +1,1 @@
+../../../../QuickBlox/Quickblox.framework/Headers/QBHTTPClient.h

@@ -215,12 +215,12 @@ replacementString:(NSString *)string  {
     
     if (alreadyExpanded) {
         [self reloadExpandedCellForIndexPath:cellIndexPath
-                                    duration:duration
+                                    duration:(CGFloat)duration
                             withRowAnimation:UITableViewRowAnimationNone];
     }
     else {
         [self expandCellForIndexPath:cellIndexPath
-                            duration:duration
+                            duration:(CGFloat)duration
                     withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }

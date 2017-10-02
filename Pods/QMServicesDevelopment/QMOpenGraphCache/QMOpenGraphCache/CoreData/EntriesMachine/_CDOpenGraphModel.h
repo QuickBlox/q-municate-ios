@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface _CDOpenGraphModel : NSManagedObject
 + (instancetype)insertInManagedObjectContext:(NSManagedObjectContext *)moc_;
 + (NSString*)entityName;
-+ (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
++ (nullable NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 @property (nonatomic, readonly, strong) CDOpenGraphModelID *objectID;
 
 @property (nonatomic, strong, nullable) NSString* faviconURL;
@@ -48,11 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _CDOpenGraphModel (CoreDataGeneratedPrimitiveAccessors)
 
-- (NSString*)primitiveFaviconURL;
-- (void)setPrimitiveFaviconURL:(NSString*)value;
+- (nullable NSString*)primitiveFaviconURL;
+- (void)setPrimitiveFaviconURL:(nullable NSString*)value;
 
-- (NSNumber*)primitiveHeight;
-- (void)setPrimitiveHeight:(NSNumber*)value;
+- (nullable NSNumber*)primitiveHeight;
+- (void)setPrimitiveHeight:(nullable NSNumber*)value;
 
 - (int16_t)primitiveHeightValue;
 - (void)setPrimitiveHeightValue:(int16_t)value_;
@@ -60,20 +60,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString*)primitiveId;
 - (void)setPrimitiveId:(NSString*)value;
 
-- (NSString*)primitiveImageURL;
-- (void)setPrimitiveImageURL:(NSString*)value;
+- (nullable NSString*)primitiveImageURL;
+- (void)setPrimitiveImageURL:(nullable NSString*)value;
 
-- (NSString*)primitiveSiteDescription;
-- (void)setPrimitiveSiteDescription:(NSString*)value;
+- (nullable NSString*)primitiveSiteDescription;
+- (void)setPrimitiveSiteDescription:(nullable NSString*)value;
 
-- (NSString*)primitiveTitle;
-- (void)setPrimitiveTitle:(NSString*)value;
+- (nullable NSString*)primitiveTitle;
+- (void)setPrimitiveTitle:(nullable NSString*)value;
 
-- (NSString*)primitiveUrl;
-- (void)setPrimitiveUrl:(NSString*)value;
+- (nullable NSString*)primitiveUrl;
+- (void)setPrimitiveUrl:(nullable NSString*)value;
 
-- (NSNumber*)primitiveWidth;
-- (void)setPrimitiveWidth:(NSNumber*)value;
+- (nullable NSNumber*)primitiveWidth;
+- (void)setPrimitiveWidth:(nullable NSNumber*)value;
 
 - (int16_t)primitiveWidthValue;
 - (void)setPrimitiveWidthValue:(int16_t)value_;
