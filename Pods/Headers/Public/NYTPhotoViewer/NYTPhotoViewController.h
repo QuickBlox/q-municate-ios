@@ -1,1 +1,1 @@
-../../../NYTPhotoViewer/Pod/Classes/ios/NYTPhotoViewController.h
+../../../NYTPhotoViewer/NYTPhotoViewer/NYTPhotoViewController.h

@@ -61,13 +61,13 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - NYTPhotoViewer (1.1.0):
-    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
-    - NYTPhotoViewer/Core (= 1.1.0)
-  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
-    - FLAnimatedImage (~> 1.0.8)
+  - NYTPhotoViewer (1.2.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.2.0)
+    - NYTPhotoViewer/Core (= 1.2.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.2.0):
+    - FLAnimatedImage (~> 1.0.12)
     - NYTPhotoViewer/Core
-  - NYTPhotoViewer/Core (1.1.0)
+  - NYTPhotoViewer/Core (1.2.0)
   - QMCVDevelopment (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories (= 0.5.1)
@@ -124,11 +124,11 @@ PODS:
     - QuickBlox (>= 2.10)
   - QuickBlox (2.12)
   - Reachability (3.2)
+  - SAMKeychain (1.5.3)
   - SDWebImage (4.0.0):
     - SDWebImage/Core (= 4.0.0)
   - SDWebImage/Core (4.0.0)
-  - SSKeychain (1.2.3)
-  - SVProgressHUD (1.1.3)
+  - SVProgressHUD (2.2.1)
   - TTTAttributedLabel (2.0.0)
   - UIDevice-Hardware (0.1.10)
 
@@ -142,15 +142,15 @@ DEPENDENCIES:
   - Flurry-iOS-SDK/FlurrySDK
   - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
-  - NYTPhotoViewer (~> 1.1.0)
+  - NYTPhotoViewer (~> 1.2.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, tag `0.5.1`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, tag `0.5.3`)
   - Reachability (~> 3.2)
+  - SAMKeychain (~> 1.5.3)
   - SDWebImage (~> 4.0.0)
-  - SSKeychain (~> 1.2.2)
-  - SVProgressHUD (~> 1.0)
+  - SVProgressHUD (~> 2.2.1)
   - TTTAttributedLabel (~> 2.0)
-  - UIDevice-Hardware (~> 0.1.3)
+  - UIDevice-Hardware (~> 0.1.10)
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
@@ -188,17 +188,17 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
+  NYTPhotoViewer: 323217e4590a1586eb3c9674b3fefb0fb8b57896
   QMCVDevelopment: e5fd01fced818ca2e386c86bc954b2c69f91ca5d
   QMServicesDevelopment: 05d9ca5b5a1e1688b2c3dab8f87c9fa9568cddd4
   QuickBlox: 5c0b21dc44a94e4ffb2e8b8eb2db606a635d1931
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
-  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  SVProgressHUD: db27c54e6e18bc903341661fc9feb55e04905cc4
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: 2be8e52b3915e80b1f258f54fd714e6e72550426
+PODFILE CHECKSUM: d077b74d80ee46675592346292582dac2018c7f0
 
 COCOAPODS: 1.3.1

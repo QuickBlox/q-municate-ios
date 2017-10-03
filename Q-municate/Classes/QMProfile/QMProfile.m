@@ -9,7 +9,7 @@
 #import "QMProfile.h"
 #import "QMContent.h"
 #import "QMTasks.h"
-#import <SSKeychain.h>
+#import <SAMKeychain.h>
 #import "QMCore.h"
 
 static NSString * const kQMUserDataKey = @"userData";
@@ -61,7 +61,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
         __block NSError *error = nil;
         
         @weakify(self);
-        [self keychainQuery:^(SSKeychainQuery *query) {
+        [self keychainQuery:^(SAMKeychainQuery *query) {
             @strongify(self);
             NSCParameterAssert(self.userData.password);
             query.passwordObject = self;
@@ -107,7 +107,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     
     __block QMProfile *profile = nil;
     
-    [self keychainQuery:^(SSKeychainQuery *query) {
+    [self keychainQuery:^(SAMKeychainQuery *query) {
         NSError *error = nil;
         BOOL success = [query fetch:&error];
         
@@ -128,7 +128,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
     
     __block BOOL success = NO;
     
-    [self keychainQuery:^(SSKeychainQuery *query) {
+    [self keychainQuery:^(SAMKeychainQuery *query) {
         
         NSError *error = nil;
         success = [query deleteItem:&error];
@@ -150,13 +150,13 @@ static NSString * const kQMAppExists = @"QMAppExists";
 
 //MARK: - Keychain
 
-- (void)keychainQuery:(void(^)(SSKeychainQuery *query))keychainQueryBlock {
+- (void)keychainQuery:(void(^)(SAMKeychainQuery *query))keychainQueryBlock {
     
     NSString *bundleIdentifier = [NSBundle mainBundle].bundleIdentifier;
     NSString *service = [NSString stringWithFormat:@"%@.service", bundleIdentifier];
     NSString *account = [NSString stringWithFormat:@"%@.account", bundleIdentifier];
     
-    SSKeychainQuery *query = [[SSKeychainQuery alloc] init];
+    SAMKeychainQuery *query = [[SAMKeychainQuery alloc] init];
     query.service = service;
     query.account = account;
     

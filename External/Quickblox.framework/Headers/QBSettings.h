@@ -47,12 +47,12 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 @property (nonatomic, class) NSString *chatEndpoint;
 
 /**
- Load a default Quikckblox app settings from QBSettings-Info.plist.
+ Load QuickBlox application settings from QBSettings-Info.plist.
  
  @discussion Raises an exception if any configuration step fails.
  @note This method should be called after the app is launched and before using Quickblox services.
 */
-+ (void)load;
++ (void)settingsFromPlist;
 
 @end
 

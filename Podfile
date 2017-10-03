@@ -5,16 +5,16 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'Q-municate' do
     
-    pod 'UIDevice-Hardware', '~> 0.1.3'
-    pod 'SVProgressHUD', '~> 1.0'
-    pod 'SSKeychain', '~> 1.2.2'
+    pod 'UIDevice-Hardware', '~> 0.1.10'
+    pod 'SVProgressHUD', '~> 2.2.1'
+    pod 'SAMKeychain', '~> 1.5.3'
     pod 'SDWebImage', '~> 4.0.0'
     pod 'Reachability', '~> 3.2'
     pod 'TTTAttributedLabel', '~> 2.0'
     pod 'libextobjc/EXTScope', '~> 0.4.1'
     pod 'libextobjc/EXTKeyPathCoding', '~> 0.4.1'
     pod 'Flurry-iOS-SDK/FlurrySDK'
-    pod 'NYTPhotoViewer', '~> 1.1.0'
+    pod 'NYTPhotoViewer', '~> 1.2.0'
     #    pod 'QMChatViewController'
     #    pod 'QMServices'
     

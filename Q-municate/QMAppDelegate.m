@@ -36,7 +36,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     
     application.applicationIconBadgeNumber = 0;
     
-    [QBSettings load];
+    [QBSettings settingsFromPlist];
     
     [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
     [QBSettings setAutoReconnectEnabled:YES];
