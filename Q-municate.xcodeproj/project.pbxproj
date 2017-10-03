@@ -196,6 +196,7 @@
 		E3D2EEA41EF7C693002DC44E /* QMTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */; };
 		E3D2EEA81EF7E71C002DC44E /* QMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA71EF7E71C002DC44E /* QMViewController.m */; };
 		E3D2EEAB1EF7F6A2002DC44E /* QMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEAA1EF7F6A2002DC44E /* QMNavigationController.m */; };
+		FB2256D21F83C83100019047 /* QBSettings-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB2256D11F83C83100019047 /* QBSettings-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -578,6 +579,7 @@
 		E3D2EEA91EF7F6A2002DC44E /* QMNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNavigationController.h; path = QMNavigationController/QMNavigationController.h; sourceTree = "<group>"; };
 		E3D2EEAA1EF7F6A2002DC44E /* QMNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNavigationController.m; path = QMNavigationController/QMNavigationController.m; sourceTree = "<group>"; };
 		F334A9F28F73239275E50842 /* Pods-Q-municate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Q-municate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate.debug.xcconfig"; sourceTree = "<group>"; };
+		FB2256D11F83C83100019047 /* QBSettings-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "QBSettings-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1957,6 +1959,7 @@
 		69D57E4918ACC11C00A9900A = {
 			isa = PBXGroup;
 			children = (
+				FB2256D11F83C83100019047 /* QBSettings-Info.plist */,
 				55286995199131B5006F92CB /* Localizable.strings */,
 				584A6D931C9D9AA700B7D641 /* QMConstants.h */,
 				69D57E6418ACC11C00A9900A /* QMAppDelegate.h */,
@@ -2326,6 +2329,7 @@
 			files = (
 				E39BEBBA1F6BF04000F7D50F /* GoogleService-Info.plist in Resources */,
 				5868B06D1CE9C6ED004F9233 /* QMCallInfoView.xib in Resources */,
+				FB2256D21F83C83100019047 /* QBSettings-Info.plist in Resources */,
 				5868B07A1CE9E61E004F9233 /* QMNoContactsCell.xib in Resources */,
 				55A8B06F1965986A00B5D33B /* busy.wav in Resources */,
 				584277C71C3D46D000CDE35B /* Settings.storyboard in Resources */,

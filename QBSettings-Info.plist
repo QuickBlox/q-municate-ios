@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>applicationID</key>
+	<integer>36125</integer>
+	<key>authorizationKey</key>
+	<string>gOGVNO4L9cBwkPE</string>
+	<key>authorizationSecret</key>
+	<string>JdqsMHCjHVYkVxV</string>
+	<key>accountKey</key>
+	<string>6Qyiz3pZfNsex1Enqnp7</string>
+	<key>apiEndpoint</key>
+	<string>https://api.quickblox.com</string>
+	<key>chatEndpoint</key>
+	<string>chat.quickblox.com</string>
+</dict>
+</plist>
