@@ -54,6 +54,13 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 */
 + (void)settingsFromPlist;
 
+/**
+ Load QuickBlox application settings from specific plist with name.
+
+ @param name plist file name
+ */
++ (void)settingsFromPlistWithName:(NSString *)name;
+
 @end
 
 
@@ -139,12 +146,7 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 
 @interface QBSettings (Logging)
 
-/**
- Set SDK log level (by default: QBLogLevelDebug). Possible values: QBLogLevelDebug, QBLogLevelNothing.
- 
- @param logLevel New log level
- */
-
+/** Set SDK log level (by default: QBLogLevelDebug). Possible values: QBLogLevelDebug, QBLogLevelNothing. */
 @property (nonatomic, class) QBLogLevel logLevel;
 
 /** Enable full XMPP Framework logging to console. By default is disabled. */
@@ -181,8 +183,6 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 /**
  Set custom session configuration that will be used for REST API requests.
  '[NSURLSessionConfiguration defaultSessionConfiguration]' is used if nil is passed.
-
- @param configuration Your NSURLSessionConfiguration object.
  */
 
 @property (nonatomic, class, nullable) NSURLSessionConfiguration *sessionConfiguration;
