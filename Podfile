@@ -31,18 +31,23 @@ target 'Q-municate' do
     pod 'FirebaseUI/Phone', '~> 4.0'
     
     #For development pods
-    #    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    #    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    # pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+        pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
+    # pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
     
 end
 
 target 'QMSiriExtension' do
-    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    # pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
+ pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
     
+end
+
+target 'QMShareExtension' do
+    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
+     pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
 end
 
 post_install do |installer|
