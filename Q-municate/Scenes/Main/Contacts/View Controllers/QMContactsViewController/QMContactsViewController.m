@@ -173,7 +173,7 @@ QMUsersServiceDelegate
             return;
         }
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD show];
         
         NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
         QBUUser *user = self.globalSearchDataSource.items[indexPath.row];

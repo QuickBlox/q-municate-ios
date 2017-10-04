@@ -471,7 +471,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
                                         return nil;
                                     };
                                     
-                                    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+                                    [SVProgressHUD show];
                                     if (chatDialog.type == QBChatDialogTypeGroup) {
                                         
                                         chatDialog.occupantIDs = [QMCore.instance.contactManager occupantsWithoutCurrentUser:chatDialog.occupantIDs];

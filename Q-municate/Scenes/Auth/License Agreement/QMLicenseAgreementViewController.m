@@ -35,7 +35,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
         self.navigationItem.rightBarButtonItem = nil;
     }
     
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+    [SVProgressHUD show];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
     [self.webView loadRequest:request];
 }

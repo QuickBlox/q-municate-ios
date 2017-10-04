@@ -81,7 +81,7 @@ QMUsersServiceDelegate
             return;
         }
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD show];
         
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
