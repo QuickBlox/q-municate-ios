@@ -59,8 +59,11 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
+    
     [self configure];
+    
+    [super viewDidLoad];
+    
     self.tableView.tableFooterView = [UIView new];
     
     __weak typeof(self) weakSelf = self;
@@ -74,7 +77,6 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
         [strongSelf.tableView reloadData];
     }];
 }
-
 
 //MARK: - Table view data source
 
@@ -102,11 +104,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                 
                 if ([(id)item isKindOfClass:NSURL.class]) {
                     
-                    NSData *data = [NSData dataWithContentsOfURL:(NSURL *)item];
-                    if (data) {
-                        dataToSend = data;
-                    }
-                    NSLog(@"Item is URL = %@", item);
+                   dataToSend = [NSData dataWithContentsOfURL:(NSURL *)item];
+                   NSLog(@"Item is URL = %@", item);
                 }
                 else if ([(id)item isKindOfClass:UIImage.class]) {
                     NSLog(@"Item is image = %@", item);
@@ -128,6 +127,14 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                                  data:dataToSend];
                     
                 }
+                else {
+                    NSError *error =
+                    [NSError errorWithDomain:@""
+                                        code:0
+                                    userInfo:@{NSLocalizedDescriptionKey : @"Not supported share data"}];
+                    
+                    [self completeShare:error];
+                }
             }];
         }
     }
@@ -147,6 +154,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 - (void)completeShare:(nullable NSError *)error {
+    
     if (error) {
         [self.extensionContext cancelRequestWithError:error];
     }
