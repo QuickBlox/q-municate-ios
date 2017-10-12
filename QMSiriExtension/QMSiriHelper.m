@@ -9,7 +9,7 @@
 #import "QMSiriHelper.h"
 #import <Quickblox/Quickblox.h>
 #import <Intents/Intents.h>
-#import "QMSiriCache.h"
+#import "QMExtensionCache+QMSiriExtension.h"
 #import "QBUUser+INPerson.h"
 #import "QMINPersonProtocol.h"
 
@@ -34,12 +34,6 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 #endif
 
 static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
-
-@interface QMSiriHelper()
-
-@property (strong, nonatomic) QMSiriCache *siriCache;
-
-@end
 
 @implementation QMSiriHelper
 
@@ -67,8 +61,6 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
         [QBSettings setAccountKey:kQMAccountKey];
         [QBSettings setLogLevel:QBLogLevelNothing];
         [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
-        
-        _siriCache = [[QMSiriCache alloc] initWithApplicationGroupIdentifier:kQMAppGroupIdentifier];
     }
     
     return self;
@@ -88,7 +80,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     __block NSArray *dialogs = @[];
     
     dispatch_group_enter(group);
-    [self.siriCache allContactUsersWithCompletionBlock:^(NSArray *results, NSError *error) {
+    [QMExtensionCache allContactUsersWithCompletionBlock:^(NSArray *results, NSError *error) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
@@ -104,7 +96,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     
     
     dispatch_group_enter(group);
-    [self.siriCache allGroupDialogsWithCompletionBlock:^(NSArray<QBChatDialog *> *results) {
+    [QMExtensionCache allGroupDialogsWithCompletionBlock:^(NSArray<QBChatDialog *> *results) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
@@ -130,7 +122,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
 
 - (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion {
     
-    [self.siriCache dialogIDForUserWithID:userID completionBlock:completion];
+    [QMExtensionCache dialogIDForUserWithID:userID completionBlock:completion];
 }
 
 //MARK:- Helpers
