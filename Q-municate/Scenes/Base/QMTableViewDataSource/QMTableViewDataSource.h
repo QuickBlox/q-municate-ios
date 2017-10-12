@@ -7,19 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import "QMDataSource.h"
 
 @class QMSearchDataProvider;
 
-@interface QMTableViewDataSource : NSObject <UITableViewDataSource>
-
-@property (strong, nonatomic) NSMutableArray *items;
-
-- (id)objectAtIndexPath:(NSIndexPath *)indexPath;
-- (NSIndexPath *)indexPathForObject:(id)object;
+@interface QMTableViewDataSource : QMDataSource <UITableViewDataSource>
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-
-- (void)addItems:(NSArray *)items;
-- (void)replaceItems:(NSArray *)items;
 
 @end

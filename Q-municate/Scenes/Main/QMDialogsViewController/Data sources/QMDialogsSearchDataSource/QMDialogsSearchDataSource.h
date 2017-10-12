@@ -10,6 +10,6 @@
 #import "QMSearchProtocols.h"
 #import "QMSearchDataSource.h"
 
-@interface QMDialogsSearchDataSource : QMSearchDataSource <QMDialogsSearchDataSourceProtocol>
+@interface QMDialogsSearchDataSource : QMTableViewSearchDataSource <QMDialogsSearchDataSourceProtocol>
 
 @end

@@ -22,7 +22,7 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
         return;
     }
     
-    QMSearchDataSource <QMDialogsSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
+    QMTableViewSearchDataSource <QMDialogsSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
     
     if (searchText.length == 0) {
         

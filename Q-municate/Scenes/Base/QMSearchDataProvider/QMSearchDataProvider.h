@@ -41,9 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+
+
+
 @interface QMSearchDataProvider : NSObject
 
-@property (weak, nonatomic, nullable) QMSearchDataSource *dataSource;
+@property (weak, nonatomic, nullable) QMDataSource *dataSource;
 
 @property (weak, nonatomic, nullable) id<QMSearchDataProviderDelegate> delegate;
 

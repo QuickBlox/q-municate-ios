@@ -48,7 +48,7 @@
 
 //MARK: - QMSearchProtocol
 
-- (QMSearchDataSource *)searchDataSource {
+- (QMTableViewSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }
@@ -57,7 +57,7 @@
 
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
     
-    if ([self.tableView.dataSource isKindOfClass:[QMSearchDataSource class]]
+    if ([self.tableView.dataSource isKindOfClass:[QMTableViewSearchDataSource class]]
         && self.searchDataSource.searchDataProvider != searchDataProvider) {
         // search data provider is not visible right now
         // no need to reload current table view
@@ -69,7 +69,7 @@
 
 - (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)__unused data {
     
-    if ([self.tableView.dataSource isKindOfClass:[QMSearchDataSource class]]
+    if ([self.tableView.dataSource isKindOfClass:[QMTableViewSearchDataSource class]]
         && self.searchDataSource.searchDataProvider != searchDataProvider) {
         // search data provider is not visible right now
         // no need to reload current table view

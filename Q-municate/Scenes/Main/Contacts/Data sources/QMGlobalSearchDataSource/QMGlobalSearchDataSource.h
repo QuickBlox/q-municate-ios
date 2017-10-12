@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  QMGlobalSearchDataSource class interface.
  *  Used as data source for global search.
  */
-@interface QMGlobalSearchDataSource : QMSearchDataSource <QMGlobalSearchDataSourceProtocol, QMContactsSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol>
+@interface QMGlobalSearchDataSource : QMTableViewSearchDataSource <QMGlobalSearchDataSourceProtocol, QMContactsSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol>
 
 /**
  *  Add user block action.

@@ -9,7 +9,27 @@
 #import "QMSearchDataSource.h"
 #import "QMSearchDataProvider.h"
 
+
 @implementation QMSearchDataSource
+@synthesize searchDataProvider = _searchDataProvider;
+
+- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
+    
+    self = [super init];
+    
+    if (self) {
+        
+        _searchDataProvider = searchDataProvider;
+        _searchDataProvider.dataSource = self;
+    }
+    
+    return self;
+}
+
+@end
+
+@implementation QMTableViewSearchDataSource
+@synthesize searchDataProvider = _searchDataProvider;
 
 - (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
     

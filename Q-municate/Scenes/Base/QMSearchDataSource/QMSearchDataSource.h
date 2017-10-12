@@ -8,10 +8,21 @@
 
 #import "QMTableViewDataSource.h"
 
-@interface QMSearchDataSource : QMTableViewDataSource
+
+@protocol QMSearchDataSourceProtocol <NSObject>
 
 @property (strong, nonatomic) QMSearchDataProvider *searchDataProvider;
 
 - (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider;
+
+@end
+
+
+@interface QMSearchDataSource : QMDataSource <QMSearchDataSourceProtocol>
+
+@end
+
+
+@interface QMTableViewSearchDataSource : QMTableViewDataSource <QMSearchDataSourceProtocol>
 
 @end

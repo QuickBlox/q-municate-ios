@@ -11,15 +11,6 @@
 
 @implementation QMTableViewDataSource
 
-- (instancetype)init {
-    
-    self = [super init];
-    if (self) {
-        
-        _items = [NSMutableArray array];
-    }
-    return self;
-}
 
 - (id)objectAtIndexPath:(NSIndexPath *)__unused indexPath {
     
@@ -27,6 +18,7 @@
 }
 
 - (NSIndexPath *)indexPathForObject:(id)__unused object {
+    
     return nil;
 }
 
@@ -45,15 +37,5 @@
     return nil;
 }
 
-- (void)addItems:(NSArray *)items {
-    
-    [self.items addObjectsFromArray:items];
-}
-
-- (void)replaceItems:(NSArray *)items {
-    
-    [self.items removeAllObjects];
-    [self.items addObjectsFromArray:items];
-}
 
 @end

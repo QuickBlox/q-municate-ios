@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This class represent alphabetized data source using a specific key path of objects, set to items.
  *  It is also can be used as a search data source.
  */
-@interface QMAlphabetizedDataSource : QMSearchDataSource
+@interface QMAlphabetizedDataSource : QMTableViewSearchDataSource
 
 /**
  *  Determines whether data source is empty or not.
