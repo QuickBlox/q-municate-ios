@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMOpenGraphService/QMOpenGraphService/QMOpenGraphService.h
+../../../../../q-municate-services-ios/QMOpenGraphService/QMOpenGraphService/QMOpenGraphService.h

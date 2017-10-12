@@ -15,25 +15,25 @@ PODS:
   - FBSDKShareKit (4.27.0):
     - FBSDKCoreKit
   - FFCircularProgressView (0.5)
-  - Firebase/Auth (4.2.0):
+  - Firebase/Auth (4.3.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.2.0)
-  - Firebase/Core (4.2.0):
-    - FirebaseAnalytics (= 4.0.3)
-    - FirebaseCore (= 4.0.7)
-  - FirebaseAnalytics (4.0.3):
+    - FirebaseAuth (= 4.2.1)
+  - Firebase/Core (4.3.0):
+    - FirebaseAnalytics (= 4.0.4)
+    - FirebaseCore (= 4.0.8)
+  - FirebaseAnalytics (4.0.4):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.2.0):
+  - FirebaseAuth (4.2.1):
     - FirebaseAnalytics (~> 4.0)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.7):
+  - FirebaseCore (4.0.8):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseInstanceID (2.0.3)
+  - FirebaseInstanceID (2.0.4)
   - FirebaseUI/Auth (4.2.0):
     - Firebase/Auth (~> 4.0)
   - FirebaseUI/Phone (4.2.0):
@@ -144,9 +144,8 @@ DEPENDENCIES:
   - libextobjc/EXTScope (~> 0.4.1)
   - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, tag `0.5.1`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, tag `0.5.3`)
+  - QMServicesDevelopment (from `../q-municate-services-ios/`)
   - Reachability (~> 3.2)
-  - SDWebImage (~> 4.0.0)
   - SSKeychain (~> 1.2.2)
   - SVProgressHUD (~> 1.0)
   - TTTAttributedLabel (~> 2.0)
@@ -157,16 +156,12 @@ EXTERNAL SOURCES:
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
     :tag: 0.5.1
   QMServicesDevelopment:
-    :git: git@github.com:QuickBlox/q-municate-services-ios.git
-    :tag: 0.5.3
+    :path: ../q-municate-services-ios/
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
     :tag: 0.5.1
-  QMServicesDevelopment:
-    :git: git@github.com:QuickBlox/q-municate-services-ios.git
-    :tag: 0.5.3
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
@@ -176,11 +171,11 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 887be4b7452e1c5a3cc4485ce152529965a0c41e
   FBSDKShareKit: 4f83956d4ca2960730fe7588a168eb8d535c06dc
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
-  Firebase: 9548cae14d69718add12d75a5b312893f7ef89c7
-  FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
-  FirebaseAuth: 22f8a5170f31d1f111141950590f071f35df3229
-  FirebaseCore: 9a6cc1e3eaf75905390f9220596ad4fd8f92faee
-  FirebaseInstanceID: a4fc702b5a026f7322964376047f1a3f1f7cc6ff
+  Firebase: 83283761a1ef6dc9846e03d08059f51421afbd65
+  FirebaseAnalytics: 722b53c7b32bfc7806b06e0093a2f5180d4f2c5a
+  FirebaseAuth: d7f047fbeab98062b98ea933b8d934e0fb1190e2
+  FirebaseCore: 69b1a5ac5f857ba6d5fd9d5fe794f4786dd5e579
+  FirebaseInstanceID: 70c2b877e9338971b2429ea5a4293df6961aa44e
   FirebaseUI: 76877afa8aa122ea135aa51a10fc7d622a82d096
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: b0dcfbdb6e87c55b9e41ad4441945be492348132
@@ -199,6 +194,6 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
 
-PODFILE CHECKSUM: 2be8e52b3915e80b1f258f54fd714e6e72550426
+PODFILE CHECKSUM: a70c2e4ac68f81caa27caa6c5225f0b5770247f9
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.2.0
