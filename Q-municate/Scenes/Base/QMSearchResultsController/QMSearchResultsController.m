@@ -7,6 +7,7 @@
 //
 
 #import "QMSearchResultsController.h"
+#import "QMTableViewDataSource.h"
 
 @interface QMSearchResultsController ()
 
@@ -34,7 +35,7 @@
 }
 
 - (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     id obj = [self.searchDataSource objectAtIndexPath:indexPath];
     [self.delegate searchResultsController:self didSelectObject:obj];
 }
