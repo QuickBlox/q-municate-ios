@@ -9,8 +9,7 @@
 #import "QMShareCollectionViewCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "QMImageView.h"
-
-static const CGFloat kQMBaseAnimationDuration = 0.2f;
+#import "QMConstants.h"
 
 static UIImage *selectedCheckImage() {
     
@@ -44,7 +43,7 @@ static UIImage *deselectedCheckImage() {
     return image;
 }
 
-@interface QMShareCollectionViewCell()
+@interface QMShareCollectionViewCell() <QMImageViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *checkmarkImageView;
 @property (weak, nonatomic) IBOutlet QMImageView *avatarImage;
@@ -59,6 +58,7 @@ static UIImage *deselectedCheckImage() {
     
     [super awakeFromNib];
     
+    self.avatarImage.delegate = self;
     self.avatarImage.imageViewType = QMImageViewTypeCircle;
     self.checkmarkImageView.image = deselectedCheckImage();
     self.checkmarkImageView.hidden = YES;
@@ -84,6 +84,12 @@ static UIImage *deselectedCheckImage() {
                                 title:title
                        completedBlock:nil];
     
+}
+
+- (void)imageViewDidTap:(QMImageView *)__unused imageView {
+    if (self.tapBlock) {
+        self.tapBlock(self);
+    }
 }
 
 - (void)setChecked:(BOOL)checked animated:(BOOL)animated {
