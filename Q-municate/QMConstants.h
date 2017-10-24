@@ -25,6 +25,7 @@
 static NSString *const kQMMainStoryboard = @"Main";
 static NSString *const kQMChatStoryboard = @"Chat";
 static NSString *const kQMSettingsStoryboard = @"Settings";
+static NSString *const kQMShareStoryboard = @"ShareInterface";
 
 static NSString *const kQMPushNotificationDialogIDKey = @"dialog_id";
 static NSString *const kQMPushNotificationUserIDKey = @"user_id";
