@@ -8,8 +8,7 @@
 
 #import "QMShareTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
-
-static const CGFloat kQMBaseAnimationDuration = 0.2f;
+#import "QMConstants.h"
 
 static UIImage *selectedCheckImage() {
     
@@ -69,7 +68,7 @@ static UIImage *deselectedCheckImage() {
     if (_checked != checked) {
         
         _checked = checked;
-        self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
+             self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
     }
 }
 
@@ -87,12 +86,27 @@ static UIImage *deselectedCheckImage() {
             transition.type = kCATransitionFade;
             
             [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
+            
+            if (checked) {
+        
+                    [UIView animateWithDuration:0.2
+                                     animations:^{
+                                         self.checkmarkImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
+                                     }
+                                     completion:^(BOOL __unused finished) {
+                                         [UIView animateWithDuration:0.2
+                                                          animations:^{
+                                                              self.checkmarkImageView.transform = CGAffineTransformIdentity;
+                                                          }];
+                                     }];
+                
+            }
         }
     }
 }
 
 + (CGFloat)height {
-    return 50.0;
+    return 60.0;
 }
 
 
