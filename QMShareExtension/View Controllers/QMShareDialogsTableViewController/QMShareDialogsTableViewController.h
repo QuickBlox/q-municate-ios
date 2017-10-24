@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <BFTask.h>
+
+@class QBUUser;
+@class QBChatDialog;
+
 
 @interface QMShareDialogsTableViewController : UITableViewController
+
+@property (nonatomic, strong) NSArray <QBUUser *> *contactsToShare;
+@property (nonatomic, strong) NSArray <QBChatDialog *> *dialogsToShare;
 
 @end
