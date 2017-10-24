@@ -6,10 +6,10 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMAlphabetizedDataSource.h"
+#import "QMAlphabetizedTableViewDataSource.h"
 #import "QMAlphabetizer.h"
 
-@interface QMAlphabetizedDataSource ()
+@interface QMAlphabetizedTableViewDataSource ()
 
 @property (copy, nonatomic) NSString *keyPath;
 
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation QMAlphabetizedDataSource
+@implementation QMAlphabetizedTableViewDataSource
 
 //MARK: - Construction
 

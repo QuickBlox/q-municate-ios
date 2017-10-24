@@ -6,13 +6,15 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMTableViewDataSource.h"
+#import "QMDataSource.h"
 
+@class QMSearchDataProvider;
 
 @protocol QMSearchDataSourceProtocol <NSObject>
 
 @property (strong, nonatomic) QMSearchDataProvider *searchDataProvider;
 
+- (void)performSearch:(NSString *)searchText;
 - (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider;
 
 @end
@@ -23,6 +25,3 @@
 @end
 
 
-@interface QMTableViewSearchDataSource : QMTableViewDataSource <QMSearchDataSourceProtocol>
-
-@end

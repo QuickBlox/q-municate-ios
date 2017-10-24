@@ -22,8 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems
 alphabetizedDataSource:(BOOL)alphabetized;
 
-- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath
-                      forView:(id <QMShareViewProtocol>)view;
+- (void)selectItem:(id<QMShareItemProtocol>)item
+           forView:(nullable id <QMShareViewProtocol>)view;
 
 @end
 
@@ -34,6 +34,16 @@ alphabetizedDataSource:(BOOL)alphabetized;
 @interface QMShareDataSource (QMCollectionViewDataSource) <UICollectionViewDataSource>
 
 @end
+
+
+@interface QMShareSearchControllerDataSource : QMShareDataSource 
+
+@property (nonatomic, strong) QMShareDataSource<UICollectionViewDataSource> *contactsDataSource;
+
+@property (nonatomic, assign, readonly) BOOL showContactsSection;
+
+@end
+
 
 
 NS_ASSUME_NONNULL_END

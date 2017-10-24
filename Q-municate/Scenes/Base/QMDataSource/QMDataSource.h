@@ -10,12 +10,13 @@
 
 @interface QMDataSource : NSObject
 
-@property (strong, nonatomic) NSMutableArray *items;
+@property (strong, nonatomic, readonly) NSMutableArray *items;
 
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath;
 - (NSIndexPath *)indexPathForObject:(id)object;
 
 - (void)addItems:(NSArray *)items;
 - (void)replaceItems:(NSArray *)items;
+- (void)updateItems:(NSArray *)items;
 
 @end

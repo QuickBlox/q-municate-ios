@@ -57,4 +57,37 @@
     });
 }
 
+
+- (void)performSearch:(NSString *)searchText
+           dataSource:(QMDataSource *)dataSource {
+    
+    if (![_cachedSearchText isEqualToString:searchText]) {
+        
+        self.cachedSearchText = searchText;
+    }
+    
+    if (searchText.length == 0) {
+        
+        [dataSource replaceItems:self.shareItems];
+        [self.delegate searchDataProviderDidFinishDataFetching:self];
+        
+        return;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        NSPredicate *searchPredicate = [NSPredicate predicateWithFormat:@"SELF.title CONTAINS[cd] %@", searchText];
+        NSArray *searchResult = [self.shareItems filteredArrayUsingPredicate:searchPredicate];
+        
+        [dataSource replaceItems:searchResult];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.delegate searchDataProviderDidFinishDataFetching:self];
+        });
+    });
+    
+}
+
+
 @end

@@ -15,10 +15,14 @@
 #import "QMNoResultsCell.h"
 #import "QBUUser+QMShareItemProtocol.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
+#import "QMShareContactsTableViewCell.h"
+#import "QMShareCollectionViewCell.h"
+#import "QMSearchDataProvider.h"
+
+static const NSUInteger kContactsSection = 0;
 
 @interface QMShareDataSource()
 
-@property (nonatomic, strong) NSMutableArray *allItems;
 @property (nonatomic, assign) BOOL alphabetizedDataSource;
 
 @property (strong, nonatomic) NSDictionary *alphabetizedDictionary;
@@ -45,7 +49,7 @@
     
     NSUInteger itemsCount = self.alphabetizedDataSource ?
     self.sectionIndexTitles.count :
-    self.allItems.count;
+    self.items.count;
     
     return itemsCount == 0;
 }
@@ -53,16 +57,14 @@
 
 - (void)configureAlphabetizedDataSource {
     
-    self.alphabetizedDictionary = [QMAlphabetizer alphabetizedDictionaryFromObjects:_allItems
+    self.alphabetizedDictionary = [QMAlphabetizer alphabetizedDictionaryFromObjects:self.items
                                                                        usingKeyPath:@"title"];
     self.sectionIndexTitles = [QMAlphabetizer indexTitlesFromAlphabetizedDictionary:self.alphabetizedDictionary];
 }
 
 
-- (void)selectItemAtIndexPath:(NSIndexPath *)indexPath
-                      forView:(id <QMShareViewProtocol>)view {
-    
-    id <QMShareItemProtocol> item = [self objectAtIndexPath:indexPath];
+- (void)selectItem:(id<QMShareItemProtocol>)item
+           forView:(id <QMShareViewProtocol>)view {
     
     BOOL isSelected = [self.selectedItems containsObject:item];
     
@@ -70,7 +72,10 @@
     [self.selectedItems removeObject:item] :
     [self.selectedItems addObject:item];
     
-    view.checked = !isSelected;
+    view ?
+    [view setChecked:!isSelected
+            animated:YES]
+    : nil;
 }
 
 - (void)configureView:(id <QMShareViewProtocol>)shareView
@@ -78,7 +83,8 @@
     
     [shareView setTitle:item.title
               avatarUrl:item.imageURL];
-    shareView.checked = [self.selectedItems containsObject:item];
+    BOOL checked = [self.selectedItems containsObject:item];
+    [shareView setChecked:checked animated:NO];
 }
 
 - (id)objectAtIndexPath:(NSIndexPath *)indexPath {
@@ -88,7 +94,7 @@
         return self.alphabetizedDictionary[sectionIndexTitle][indexPath.row];
     }
     else {
-        return self.allItems[indexPath.row];
+        return self.items[indexPath.row];
     }
 }
 
@@ -106,7 +112,7 @@
         return nil;
     }
     else {
-        NSUInteger idx = [self.allItems indexOfObject:item];
+        NSUInteger idx = [self.items indexOfObject:item];
         if (idx != NSNotFound) {
             return [NSIndexPath indexPathForRow:idx inSection:0];
         }
@@ -137,12 +143,41 @@
     [self replaceItems:[items copy]];
 }
 
-- (NSMutableArray *)items {
+@end
+
+@implementation QMShareDataSource (QMCollectionViewDataSource)
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)__unused collectionView {
+    return 1;
+}
+
+
+- (NSInteger)collectionView:(UICollectionView *)__unused collectionView
+     numberOfItemsInSection:(NSInteger)__unused section {
     
-    return [self.alphabetizedDictionary.allValues mutableCopy];
+    return self.items.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    QMShareCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[QMShareCollectionViewCell cellIdentifier]
+                                                                                forIndexPath:indexPath];
+    
+    id <QMShareItemProtocol> item = [self objectAtIndexPath:indexPath];
+    
+    [self configureView:cell withItem:item];
+    
+    cell.tapBlock = ^(QMShareCollectionViewCell *__unused tappedCell) {
+        [collectionView.delegate collectionView:collectionView
+                       didSelectItemAtIndexPath:indexPath];
+    };
+    
+    return cell;
 }
 
 @end
+
 
 @implementation QMShareDataSource (QMTableViewDataSource)
 
@@ -162,11 +197,14 @@
         
         return 1;
     }
-    
-    NSString *sectionKey = self.sectionIndexTitles[section];
-    NSArray *contacts = self.alphabetizedDictionary[sectionKey];
-    
-    return contacts.count;
+    if (self.alphabetizedDataSource) {
+        NSString *sectionKey = self.sectionIndexTitles[section];
+        NSArray *contacts = self.alphabetizedDictionary[sectionKey];
+        return contacts.count;
+    }
+    else {
+        return self.items.count;
+    }
 }
 
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
@@ -192,6 +230,172 @@
     
     return cell;
     
+}
+
+@end
+
+@interface QMShareSearchControllerDataSource() <UICollectionViewDelegate>
+
+@end
+
+@implementation QMShareSearchControllerDataSource
+
+- (instancetype)initWithShareItems:(NSArray<id<QMShareItemProtocol>> *)shareItems
+            alphabetizedDataSource:(BOOL)alphabetized
+{
+    self = [super initWithShareItems:shareItems
+              alphabetizedDataSource:alphabetized];
+    
+    return self;
+}
+
+- (void)performSearch:(NSString *)searchText {
+    
+    [self.contactsDataSource performSearch:searchText];
+    [super performSearch:searchText];
+}
+
+- (BOOL)showContactsSection {
+    return self.contactsDataSource != nil;
+}
+
+- (NSString *)tableView:(UITableView *)__unused tableView
+titleForHeaderInSection:(NSInteger)section {
+    
+    if (self.showContactsSection) {
+        if (section == kContactsSection) {
+            return self.contactsDataSource.items.count > 0 ? @"Contacts" : @"";
+        }
+        //We use fisrt section for collection view
+        section--;
+    }
+    
+    return [super tableView:tableView titleForHeaderInSection:section];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)__unused tableView {
+    NSInteger numberOfSections = [super numberOfSectionsInTableView:tableView];
+    return self.showContactsSection ? numberOfSections + 1 : numberOfSections;
+}
+
+- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if (self.showContactsSection) {
+        if (section == kContactsSection) {
+            return 1;
+        }
+        
+        //We use fisrt section for collection view
+        section--;
+    }
+    
+    if (self.isEmpty) {
+        return 1;
+    }
+    
+    if (self.alphabetizedDataSource) {
+        NSString *sectionKey = self.sectionIndexTitles[section];
+        NSArray *contacts = self.alphabetizedDictionary[sectionKey];
+        return contacts.count;
+    }
+    else {
+        return self.items.count;
+    }
+}
+
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+    
+    if (self.showContactsSection &&
+        indexPath.section == kContactsSection) {
+        
+        return self.contactsDataSource.items.count > 0 ?
+        [QMShareContactsTableViewCell height] : 0;
+    }
+    return [QMShareTableViewCell height];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.showContactsSection) {
+        
+        if (indexPath.section == kContactsSection) {
+            
+            QMShareContactsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMShareContactsTableViewCell cellIdentifier]
+                                                                                 forIndexPath:indexPath];
+            
+            [self.contactsDataSource.selectedItems removeAllObjects];
+            
+            NSMutableSet *selectedContacts = [NSMutableSet setWithSet:self.selectedItems.copy];
+            NSMutableSet *allContacts = [NSMutableSet setWithArray:self.contactsDataSource.items];
+            
+            [selectedContacts intersectSet:allContacts];
+            
+            [self.contactsDataSource.selectedItems addObjectsFromArray:selectedContacts.allObjects];
+            
+            cell.contactsCollectionView.dataSource = self.contactsDataSource;
+            cell.contactsCollectionView.delegate = self;
+            
+            [cell.contactsCollectionView reloadData];
+            
+            return cell;
+        }
+    }
+    
+    if (self.isEmpty) {
+        
+        QMNoResultsCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMNoResultsCell cellIdentifier]
+                                                                forIndexPath:indexPath];
+        return cell;
+    }
+    
+    QMShareTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:[QMShareTableViewCell cellIdentifier]
+                                                                 forIndexPath:indexPath];
+    
+    id <QMShareItemProtocol> item = [self objectAtIndexPath:indexPath];
+    
+    [self configureView:cell withItem:item];
+    
+    return cell;
+}
+
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.showContactsSection) {
+        indexPath = [NSIndexPath indexPathForRow:indexPath.row
+                                       inSection:indexPath.section - 1];
+    }
+    
+    return [super objectAtIndexPath:indexPath];
+}
+
+- (NSIndexPath *)indexPathForObject:(id)object {
+    
+    NSIndexPath *indexPath = [super indexPathForObject:object];
+    
+    if (self.showContactsSection) {
+        indexPath = [NSIndexPath indexPathForRow:indexPath.row
+                                       inSection:indexPath.section + 1];
+    }
+    
+    return indexPath;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    id <QMShareItemProtocol> shareItem =  [self.contactsDataSource objectAtIndexPath:indexPath];
+    id <QMShareViewProtocol> shareView = (id <QMShareViewProtocol>) [collectionView cellForItemAtIndexPath:indexPath];
+    
+    [self.contactsDataSource selectItem:shareItem
+                                forView:shareView];
+    [self selectItem:shareItem forView:nil];
+}
+
+- (BOOL)collectionView:(UICollectionView *)__unused collectionView
+shouldSelectItemAtIndexPath:(NSIndexPath *)__unused indexPath {
+    return YES;
 }
 
 @end

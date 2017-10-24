@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "QMSearchProtocols.h"
-#import "QMSearchDataSource.h"
+#import "QMTableViewDataSource.h"
 
 @interface QMDialogsSearchDataSource : QMTableViewSearchDataSource <QMDialogsSearchDataSourceProtocol>
 

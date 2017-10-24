@@ -9,8 +9,8 @@
 #import "QMSearchDataSource.h"
 #import "QMSearchDataProvider.h"
 
-
 @implementation QMSearchDataSource
+
 @synthesize searchDataProvider = _searchDataProvider;
 
 - (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
@@ -26,22 +26,11 @@
     return self;
 }
 
-@end
-
-@implementation QMTableViewSearchDataSource
-@synthesize searchDataProvider = _searchDataProvider;
-
-- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
+- (void)performSearch:(NSString *)searchText {
     
-    self = [super init];
-    
-    if (self) {
-        
-        _searchDataProvider = searchDataProvider;
-        _searchDataProvider.dataSource = self;
-    }
-    
-    return self;
+    [self.searchDataProvider performSearch:searchText
+                                dataSource:self];
 }
+
 
 @end

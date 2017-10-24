@@ -6,7 +6,7 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMSearchDataSource.h"
+#import "QMTableViewDataSource.h"
 #import "QMSearchProtocols.h"
 #import "QMGlobalSearchDataProvider.h"
 

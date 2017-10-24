@@ -13,6 +13,7 @@
 - (instancetype)init {
     
     self = [super init];
+    
     if (self) {
         _items = [NSMutableArray array];
     }
@@ -35,10 +36,15 @@
     [self.items addObjectsFromArray:items];
 }
 
+- (void)updateItems:(NSArray *)__unused items {
+    NSAssert(NO, @"Should be implemented in subclass");
+}
+
 - (void)replaceItems:(NSArray *)items {
     
     [self.items removeAllObjects];
-    [self.items addObjectsFromArray:items];
+    
+    items == nil ?: [self.items addObjectsFromArray:items];
 }
 
 @end
