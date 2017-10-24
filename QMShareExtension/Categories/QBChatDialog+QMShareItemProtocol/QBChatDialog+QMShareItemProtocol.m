@@ -9,8 +9,10 @@
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import "QBUUser+QMShareItemProtocol.h"
 #import "QMExtensionCache+QMShareExtension.h"
+#import <objc/runtime.h>
 
 @implementation QBChatDialog (QMShareItemProtocol)
+@dynamic recipient;
 
 - (NSString *)title {
     
@@ -40,7 +42,11 @@
 }
 
 - (QBUUser *)recipient {
-    return [QMExtensionCache userWithID:[self opponentID]];
+    return objc_getAssociatedObject(self,@selector(recipient));
+}
+
+- (void)setRecipient:(QBUUser *)recipient {
+    objc_setAssociatedObject(self, @selector(recipient), recipient, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSUInteger)opponentID {

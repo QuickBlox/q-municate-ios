@@ -85,7 +85,8 @@
 }
 
 //MARK: - Helpers
-+ (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID completionBlock:(void(^)(QBChatDialog *createdDialog))completion {
++ (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID
+                        completionBlock:(void(^)(QBChatDialog *createdDialog))completion {
     
     QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypePrivate];
     chatDialog.occupantIDs = @[@(opponentID)];

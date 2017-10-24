@@ -11,4 +11,7 @@
 
 @interface QBChatDialog (QMShareItemProtocol) <QMShareItemProtocol>
 
+@property (nonatomic, strong) QBUUser *recipient;
+
 @end
+
