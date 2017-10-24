@@ -33,7 +33,7 @@ target 'Q-municate' do
     
     #For development pods
     # pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
     
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
     #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
@@ -50,13 +50,12 @@ end
 
 target 'QMSiriExtension' do
     #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-    
+    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
 end
 
 target 'QMShareExtension' do
     #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
     pod 'SVProgressHUD', '~> 1.0'
 end
