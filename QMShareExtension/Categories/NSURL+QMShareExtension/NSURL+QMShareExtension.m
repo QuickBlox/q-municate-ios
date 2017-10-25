@@ -48,31 +48,12 @@ NSString *const QMGoogleMapsProvider = @"google";
     
     else if ([self isGoogleMapURL]) {
         
-        if ([self isShortGoogleMapURL]) {
+        [[self locationFromGoogleURL:self] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull t) {
             
-            [[self getLongURL] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-                if (t.error) {
-                    [source setError:t.error];
-                    return nil;
-                }
-                else {
-                    return [[self locationFromGoogleURL:t.result] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull t) {
-                        
-                        t.error ? [source setError:t.error] : [source setResult:t.result];
-                        
-                        return nil;
-                    }];
-                }
-            }];
-        }
-        else {
-            [[self locationFromGoogleURL:self] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull t) {
-                
-                t.error ? [source setError:t.error] : [source setResult:t.result];
-                
-                return nil;
-            }];
-        }
+            t.error ? [source setError:t.error] : [source setResult:t.result];
+            
+            return nil;
+        }];
     }
     
     return source.task;
@@ -138,23 +119,41 @@ NSString *const QMGoogleMapsProvider = @"google";
 
 
 - (BFTask <CLLocation *> *)locationFromGoogleURL:(NSURL *)url {
-
-    NSString *longURL = url.absoluteString;
     
     BFTaskCompletionSource *source = [[BFTaskCompletionSource alloc] init];
     
-    NSString *pattern = @"([0-9.\\-]*),([0-9.\\-]*)";
-    NSError *regexError = nil;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&regexError];
-    if (!regexError) {
-        NSArray *matches = [regex matchesInString:longURL options:0 range:NSMakeRange(0, [longURL length])];
-        NSString *latitude = [longURL substringWithRange:[[matches objectAtIndex:0] rangeAtIndex:1]];
-        NSString *longitude = [longURL substringWithRange:[[matches objectAtIndex:0] rangeAtIndex:2]];
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue longitude:longitude.doubleValue];
-        [source setResult:location];
-    } else {
-        QMLog(@"REGEX error: %@", regexError);
-        [source setError:regexError];
+    void(^completionBlock)(NSString *longURL) = ^(NSString *longURL) {
+        
+        NSString *pattern = @"([0-9.\\-]*),([0-9.\\-]*)";
+        NSError *regexError = nil;
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&regexError];
+        if (!regexError) {
+            NSArray *matches = [regex matchesInString:longURL options:0 range:NSMakeRange(0, [longURL length])];
+            NSString *latitude = [longURL substringWithRange:[[matches objectAtIndex:0] rangeAtIndex:1]];
+            NSString *longitude = [longURL substringWithRange:[[matches objectAtIndex:0] rangeAtIndex:2]];
+            CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue longitude:longitude.doubleValue];
+            [source setResult:location];
+        } else {
+            QMLog(@"REGEX error: %@", regexError);
+            [source setError:regexError];
+        }
+    };
+    
+    
+    if ([self isShortGoogleMapURL]) {
+        
+        [[self getLongURL] continueWithExecutor:BFExecutor.mainThreadExecutor
+                                      withBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+                                          
+                                          t.error ?
+                                          [source setError:t.error] :
+                                          completionBlock(t.result.absoluteString);
+                                          
+                                          return nil;
+                                      }];
+    }
+    else {
+        completionBlock(url.absoluteString);
     }
     
     return source.task;
@@ -164,11 +163,15 @@ NSString *const QMGoogleMapsProvider = @"google";
     
     BFTaskCompletionSource *source = [[BFTaskCompletionSource alloc] init];
     
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSString *url = [NSString stringWithFormat:@"%@?fields=longUrl,status&shortUrl=%@&key=%@", QMGoogleMapsShortenerEndpointUrl, QMEncodedStringFromStringWithEncoding(self.absoluteString, NSUTF8StringEncoding), QMGoogleMapsAPIKey];
     
-    [[session dataTaskWithURL:[NSURL URLWithString:url]
-            completionHandler:
+    NSString *url =
+    [NSString stringWithFormat:@"%@?fields=longUrl,status&shortUrl=%@&key=%@",
+     QMGoogleMapsShortenerEndpointUrl,
+     QMEncodedStringFromStringWithEncoding(self.absoluteString, NSUTF8StringEncoding),
+     QMGoogleMapsAPIKey];
+    
+    [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:url]
+                               completionHandler:
       ^(NSData *data, NSURLResponse *response, NSError *error) {
           if (!error) {
               if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
