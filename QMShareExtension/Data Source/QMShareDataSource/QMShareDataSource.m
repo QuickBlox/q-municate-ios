@@ -303,6 +303,31 @@ titleForHeaderInSection:(NSInteger)section {
     }
 }
 
+- (void)updateItems:(NSArray *)items {
+    
+    for (id <QMShareItemProtocol> shareItem in items) {
+        
+        NSUInteger indexOfItem = [self.items indexOfObject:shareItem];
+        
+        if (indexOfItem != NSNotFound) {
+            [self.items replaceObjectAtIndex:indexOfItem withObject:shareItem];
+            
+        }
+        else{
+            [self addItems:@[shareItem]];
+        }
+    }
+    
+    [self sortDataSource];
+}
+
+- (void)sortDataSource {
+    
+    if (self.sortDescriptors.count > 0) {
+        [self.items sortUsingDescriptors:self.sortDescriptors];
+    }
+}
+
 - (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
     
     if (self.showContactsSection &&

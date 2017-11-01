@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMShareDataSource : QMSearchDataSource
 
 @property (nonatomic, readonly, strong) NSMutableSet <id<QMShareItemProtocol>>* selectedItems;
+@property (nonatomic, copy) NSArray <NSSortDescriptor *> *sortDescriptors;
 
 - (instancetype)initWithShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems
 alphabetizedDataSource:(BOOL)alphabetized;
