@@ -25,7 +25,22 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-			<string>TRUEPREDICATE</string>
+			<string>SUBQUERY (
+    extensionItems,
+    $extensionItem,
+    SUBQUERY (
+        $extensionItem.attachments,
+        $attachment,
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.file-url" OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.mpeg-4" OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.png" OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.jpg" OR
+		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR
+		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" OR
+		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.mpeg-4-audio" OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.data"
+    ).@count == 1
+).@count == 1</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>ShareInterface</string>
