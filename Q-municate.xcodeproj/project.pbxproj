@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3189B159CE55DB0F3EBFC36C /* libPods-QMSiriExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A2397F5EFA5645DE41214E7A /* libPods-QMSiriExtension.a */; };
+		22444B0BE36E2537ED2C970A /* Pods_QMShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 654B4F6329AEE0716FEFC4B9 /* Pods_QMShareExtension.framework */; };
 		55286996199131B5006F92CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 55286995199131B5006F92CB /* Localizable.strings */; };
 		559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 559BDFE619618D3D000588FE /* QMWelcomeScreenViewController.m */; };
 		55A8B06E1965986A00B5D33B /* QMSoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A8B05C1965986A00B5D33B /* QMSoundManager.m */; };
@@ -157,9 +157,9 @@
 		69D57E6618ACC11C00A9900A /* QMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D57E6518ACC11C00A9900A /* QMAppDelegate.m */; };
 		69D57E6818ACC11C00A9900A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 69D57E6718ACC11C00A9900A /* Images.xcassets */; };
 		69DB5EF518E31D6400277226 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69DB5EF418E31D6400277226 /* MessageUI.framework */; };
+		8626B54C0B96E1D66E4F9941 /* Pods_QMSiriExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 871D25E5AB7EB00A195ABC22 /* Pods_QMSiriExtension.framework */; };
 		86FD874D1982512000B6FA43 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86FD874C1982512000B6FA43 /* GLKit.framework */; };
-		99A5E84A53BB21FB0D8550B5 /* libPods-Q-municate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33BA7EF5A49BAE55875A140A /* libPods-Q-municate.a */; };
-		A2D8E38BC97E44B66C486A33 /* libPods-QMShareExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D52DB7A54C3A2ADB43E82C8 /* libPods-QMShareExtension.a */; };
+		9484178851435982546AC8D7 /* Pods_Q_municate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B070EBBB575A9EB05233609A /* Pods_Q_municate.framework */; };
 		E002F3F11F508CF90044B0B3 /* NSString+QMValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = E002F3F01F508CF90044B0B3 /* NSString+QMValidation.m */; };
 		E01A5DD91F93F1FB00A85EC8 /* ShareInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0CA1F4D1F84F78A00E9B293 /* ShareInterface.storyboard */; };
 		E01A5DDA1F93F20500A85EC8 /* QMShareTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E0A8A7951F8F7B0300382443 /* QMShareTableViewCell.m */; };
@@ -201,6 +201,8 @@
 		E063556E1E1D1D4F00BE9061 /* QMMessageIntentHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = E063556C1E1D1D4F00BE9061 /* QMMessageIntentHandler.m */; };
 		E06355721E1D1E3300BE9061 /* QBUUser+INPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E06355711E1D1E3300BE9061 /* QBUUser+INPerson.m */; };
 		E06355771E1D3CA800BE9061 /* QBChatDialog+INPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = E06355761E1D3CA800BE9061 /* QBChatDialog+INPerson.m */; };
+		E06B0D8D1FA7B5E9002E75D5 /* QMAttachmentProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E06B0D8C1FA7B5E9002E75D5 /* QMAttachmentProvider.m */; };
+		E06B0D8E1FA8CE02002E75D5 /* QMAttachmentProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = E06B0D8C1FA7B5E9002E75D5 /* QMAttachmentProvider.m */; };
 		E06F890B1E60FFF30017BBEC /* QMCallWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = E06F890A1E60FFF30017BBEC /* QMCallWindow.m */; };
 		E074459D1F87903200D12325 /* QMColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 581BAC8D1CAD8DD900E0567D /* QMColors.m */; };
 		E074459E1F87AD0000D12325 /* QMAlphabetizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792981C99941400CC6438 /* QMAlphabetizer.m */; };
@@ -294,7 +296,6 @@
 
 /* Begin PBXFileReference section */
 		269116E9D6D043D8FAC9E1D8 /* Pods-Q-municate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Q-municate.release.xcconfig"; path = "Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate.release.xcconfig"; sourceTree = "<group>"; };
-		33BA7EF5A49BAE55875A140A /* libPods-Q-municate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Q-municate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		380C6A0B58B1BD8187211951 /* Pods-QMShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QMShareExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QMShareExtension/Pods-QMShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		55286995199131B5006F92CB /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		559327A2199216FB001C4BF8 /* Q-municate Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Q-municate Tests-Info.plist"; sourceTree = "<group>"; };
@@ -540,6 +541,7 @@
 		58FD668D1CEF12D500B72425 /* QMAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAlert.m; sourceTree = "<group>"; };
 		58FD66951CEF378200B72425 /* QMChangePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMChangePasswordViewController.h; sourceTree = "<group>"; };
 		58FD66961CEF378200B72425 /* QMChangePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMChangePasswordViewController.m; sourceTree = "<group>"; };
+		654B4F6329AEE0716FEFC4B9 /* Pods_QMShareExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QMShareExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		690A271418CA0F35003D6B80 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		697E2D4A196EA82400CD2BDE /* QMLicenseAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMLicenseAgreementViewController.h; sourceTree = "<group>"; };
 		697E2D4B196EA82400CD2BDE /* QMLicenseAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLicenseAgreementViewController.m; sourceTree = "<group>"; };
@@ -567,11 +569,11 @@
 		69DB5EF418E31D6400277226 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		86FD874A1982510700B6FA43 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		86FD874C1982512000B6FA43 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		871D25E5AB7EB00A195ABC22 /* Pods_QMSiriExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QMSiriExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		914D22F55FCE43364D718A2A /* Pods-QMSiriExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QMSiriExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension.release.xcconfig"; sourceTree = "<group>"; };
-		9D52DB7A54C3A2ADB43E82C8 /* libPods-QMShareExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QMShareExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A2397F5EFA5645DE41214E7A /* libPods-QMSiriExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-QMSiriExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAF30F47522590E10692EA18 /* Pods-QMSiriExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QMSiriExtension.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		AD92D3E3278E539BF388354D /* Pods-QMShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QMShareExtension.release.xcconfig"; path = "Pods/Target Support Files/Pods-QMShareExtension/Pods-QMShareExtension.release.xcconfig"; sourceTree = "<group>"; };
+		B070EBBB575A9EB05233609A /* Pods_Q_municate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Q_municate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E002F3EF1F508CF90044B0B3 /* NSString+QMValidation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+QMValidation.h"; sourceTree = "<group>"; };
 		E002F3F01F508CF90044B0B3 /* NSString+QMValidation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMValidation.m"; sourceTree = "<group>"; };
 		E026A76C1E82B9A10054AD83 /* UIScreen+QMLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+QMLock.h"; sourceTree = "<group>"; };
@@ -611,6 +613,8 @@
 		E06355731E1D3B7D00BE9061 /* QMINPersonProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMINPersonProtocol.h; path = "Q-municate/Classes/Common/QMINPersonProtocol.h"; sourceTree = SOURCE_ROOT; };
 		E06355751E1D3CA800BE9061 /* QBChatDialog+INPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QBChatDialog+INPerson.h"; sourceTree = "<group>"; };
 		E06355761E1D3CA800BE9061 /* QBChatDialog+INPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QBChatDialog+INPerson.m"; sourceTree = "<group>"; };
+		E06B0D8B1FA7B5E9002E75D5 /* QMAttachmentProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMAttachmentProvider.h; sourceTree = "<group>"; };
+		E06B0D8C1FA7B5E9002E75D5 /* QMAttachmentProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMAttachmentProvider.m; sourceTree = "<group>"; };
 		E06F89091E60FFF30017BBEC /* QMCallWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallWindow.h; sourceTree = "<group>"; };
 		E06F890A1E60FFF30017BBEC /* QMCallWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCallWindow.m; sourceTree = "<group>"; };
 		E07BC21F1DDF5FD900B8D3B0 /* QMSiriExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QMSiriExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -707,7 +711,7 @@
 				69CF189518AE1C3C003262EF /* CFNetwork.framework in Frameworks */,
 				69D57E5A18ACC11C00A9900A /* UIKit.framework in Frameworks */,
 				69D57E5618ACC11C00A9900A /* Foundation.framework in Frameworks */,
-				99A5E84A53BB21FB0D8550B5 /* libPods-Q-municate.a in Frameworks */,
+				9484178851435982546AC8D7 /* Pods_Q_municate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -715,7 +719,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3189B159CE55DB0F3EBFC36C /* libPods-QMSiriExtension.a in Frameworks */,
+				8626B54C0B96E1D66E4F9941 /* Pods_QMSiriExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,7 +727,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A2D8E38BC97E44B66C486A33 /* libPods-QMShareExtension.a in Frameworks */,
+				22444B0BE36E2537ED2C970A /* Pods_QMShareExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2124,9 +2128,9 @@
 				69D57E5518ACC11C00A9900A /* Foundation.framework */,
 				69D57E5718ACC11C00A9900A /* CoreGraphics.framework */,
 				69D57E5918ACC11C00A9900A /* UIKit.framework */,
-				33BA7EF5A49BAE55875A140A /* libPods-Q-municate.a */,
-				A2397F5EFA5645DE41214E7A /* libPods-QMSiriExtension.a */,
-				9D52DB7A54C3A2ADB43E82C8 /* libPods-QMShareExtension.a */,
+				B070EBBB575A9EB05233609A /* Pods_Q_municate.framework */,
+				654B4F6329AEE0716FEFC4B9 /* Pods_QMShareExtension.framework */,
+				871D25E5AB7EB00A195ABC22 /* Pods_QMSiriExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2230,6 +2234,8 @@
 			children = (
 				E05AEC5C1F9A4AE8004D3274 /* QMShareTasks.h */,
 				E05AEC5D1F9A4AE8004D3274 /* QMShareTasks.m */,
+				E06B0D8B1FA7B5E9002E75D5 /* QMAttachmentProvider.h */,
+				E06B0D8C1FA7B5E9002E75D5 /* QMAttachmentProvider.m */,
 			);
 			path = "Common classes";
 			sourceTree = "<group>";
@@ -2797,15 +2803,15 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle,
+				"$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle",
 				"${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets",
-				$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle,
+				"$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
 				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -2873,10 +2879,10 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension-resources.sh",
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle,
-				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle,
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2973,6 +2979,7 @@
 				584A6DB31C9DB7DC00B7D641 /* QMTagFieldView.m in Sources */,
 				58FD66971CEF378200B72425 /* QMChangePasswordViewController.m in Sources */,
 				E0B5CEDD1F978689004CB06D /* QMActivityItem.m in Sources */,
+				E06B0D8E1FA8CE02002E75D5 /* QMAttachmentProvider.m in Sources */,
 				589D4CFD1C981D44005F1E76 /* QMContactCell.m in Sources */,
 				5806509D1D2AA0350013A5E8 /* QMMapView.m in Sources */,
 				69D57E6218ACC11C00A9900A /* main.m in Sources */,
@@ -3097,6 +3104,7 @@
 				E049C7651F8D160500CD0376 /* QMSearchDataSource.m in Sources */,
 				E0A8A7A31F8F7B0300382443 /* QMShareCollectionViewCell.m in Sources */,
 				E0A8A7A71F8F7B0300382443 /* QMShareDataSource.m in Sources */,
+				E06B0D8D1FA7B5E9002E75D5 /* QMAttachmentProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

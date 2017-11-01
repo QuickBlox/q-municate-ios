@@ -98,7 +98,7 @@ static NSString *typeIdentifierForActivityItem(id item) {
     else if ([item isKindOfClass:[UIImage class]]) {
         return (NSString *)kUTTypeImage;
     }
-    else if ([item isKindOfClass:NSData.class]) {
+    else if ([item isKindOfClass:[NSData class]]) {
         return (NSString *)kUTTypeData;
     }
     else {
