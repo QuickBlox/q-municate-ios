@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-#import <BFTask.h>
+#import <Bolts/BFTask.h>
 
 @class CLLocation;
 

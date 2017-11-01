@@ -15,7 +15,10 @@
 #import "NSURL+QMShareExtension.h"
 #import "QBChatMessage+QMCustomParameters.h"
 #import "QMBaseService.h"
+#import "QMAttachmentProvider.h"
 
+static const NSUInteger kQMMaxFileSize = 100; //in MBs
+static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
 @implementation QMShareTasks
 
@@ -38,84 +41,35 @@
             return nil;
         }];
     }
-    
-    if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
-        
-        [[self taskForMovieWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
-                QBChatAttachment *videoAttachment =
-                [QBChatAttachment videoAttachmentWithFileURL:t.result];
-                
-                AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:t.result options:nil];
-                NSInteger duration = lround(CMTimeGetSeconds(audioAsset.duration));
-                videoAttachment.duration = duration;
-                
-                message.attachments = @[videoAttachment];
-                message.text = @"Video attachment";
-                
-                [source setResult:message];
-            }
-            
-            return nil;
-        }];
-    }
-    
-    if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-        
-        [[self taskForImageWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull t) {
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
-                QBChatAttachment *imageAttachment =  [QBChatAttachment imageAttachmentWithImage:t.result];
-                message.attachments = @[imageAttachment];
-                message.text = @"Image attachment";
-                [source setResult:message];
-            }
-            
-            return nil;
-        }];
-    }
-    
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
-        
-        [[self taskForFileURLWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
-                NSURL *fileURL = t.result;
-                
-                NSString *fileName = [[fileURL pathComponents] lastObject];
-                NSString *extension = [fileName pathExtension];
-                NSString *mimeType = [self attachmentMIMETypeFromFileName:fileName];
-                NSLog(@"fileName: %@, extension :%@,mimeType:%@", fileName, extension, mimeType);
-            }
-            
-            return nil;
-        }];
-    }
-    
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
-        [[self taskForTextWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull t) {
-            message.text = t.result;
-            [source setResult:message];
-            return nil;
-        }];
-    }
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
         
-        [[self taskForURLWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-            NSURL *URL = t.result;
+        [[self taskForURLWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull urlTask) {
+            NSURL *URL = urlTask.result;
             
-            if (URL.isLocationURL) {
-                message.text = @"Location";
+            if (URL.isFileURL) {
+                QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
+                settings.maxImageSize = kQMMaxImageSize;
+                settings.maxFileSize = kQMMaxFileSize;
                 
-                [[URL location] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull t) {
-                    message.locationCoordinate = t.result.coordinate;
+                [[QMAttachmentProvider attachmentWithFileURL:URL settings:settings] continueWithBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask) {
+                    if (attachmentTask.error) {
+                        [source setError:attachmentTask.error];
+                    }
+                    else {
+                        QBChatAttachment *attachment = attachmentTask.result;
+                        message.attachments = @[attachment];
+                        message.text =
+                        [NSString stringWithFormat:@"%@ attachment",
+                         attachment.type.capitalizedString];
+                        [source setResult:message];
+                    }
+                    return nil;
+                }];
+            }
+            else if (URL.isLocationURL) {
+                message.text = @"Location";
+                [[URL location] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
+                    message.locationCoordinate = locationTask.result.coordinate;
                     [source setResult:message];
                     return nil;
                 }];
@@ -128,6 +82,55 @@
             return nil;
         }];
     }
+   else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie] ||
+            [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
+            [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
+       
+       [[self taskForProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+           if (t.error) {
+               [source setError:t.error];
+           }
+           else {
+               
+               QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
+               settings.maxImageSize = kQMMaxImageSize;
+               settings.maxFileSize = kQMMaxFileSize;
+               
+               [[QMAttachmentProvider attachmentWithFileURL:t.result settings:settings] continueWithBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask) {
+                   if (attachmentTask.error) {
+                       [source setError:attachmentTask.error];
+                   }
+                   else {
+                       QBChatAttachment *attachment = attachmentTask.result;
+                       message.attachments = @[attachment];
+                       message.text =
+                       [NSString stringWithFormat:@"%@ attachment",
+                        attachment.type.capitalizedString];
+                       [source setResult:message];
+                   }
+                   return nil;
+               }];
+           }
+           return nil;
+       }];
+   }
+   else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+        
+        [[self taskForImageWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull t) {
+            if (t.error) {
+                [source setError:t.error];
+            }
+            else {
+                QBChatAttachment *imageAttachment =  [QBChatAttachment imageAttachmentWithImage:t.result];
+                message.attachments = @[imageAttachment];
+                message.text = @"Image attachment";
+                [source setResult:message];
+            }
+        
+            return nil;
+        }];
+    }
+
     
     return source.task;
 }
@@ -164,10 +167,9 @@
     });
 }
 
-
 + (BFTask <UIImage *>*)taskForImageWithProvider:(NSItemProvider *)provider {
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeData
+        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeImage
                                     options:nil
                           completionHandler:^(UIImage * _Nullable image, NSError * _Nullable error) {
                               if (error) {
@@ -180,83 +182,15 @@
     });
 }
 
-+ (BFTask <QBChatAttachment *> *)taskForAudioWithProvider:(NSItemProvider *)provider {
++ (BFTask <NSURL *> *)taskForProvider:(NSItemProvider *)provider {
     
-    return [make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeAudio
-                                    options:nil
-                          completionHandler:^(NSURL *url, NSError *error)
-         {
-             if (error)
-                 [source setError:error];
-             else
-             {
-                 [source setResult:url];
-             }
-         }];
-    }) continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
-        
-        NSURL *audioURL = t.result;
-        if (!audioURL) {
-            return nil;
-        }
-        
-        return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
-                AVURLAsset *audioAsset = [AVURLAsset URLAssetWithURL:audioURL options:nil];
-                NSInteger duration = lround(CMTimeGetSeconds(audioAsset.duration));
-                NSString *mimeType = [self attachmentMIMETypeFromFileName:audioURL.absoluteString];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    QBChatAttachment *audioAttachment = [[QBChatAttachment alloc] initWithName:@"Voice Message"
-                                                                                       fileURL:audioURL
-                                                                                   contentType:mimeType
-                                                                                attachmentType:@"audio"];
-                    
-                    audioAttachment.duration = duration;
-                    [source setResult:audioAttachment];
-                });
-            });
-        });
-    }];
-}
-
-+ (BFTask <NSURL *> *)taskForMovieWithProvider:(NSItemProvider *)provider {
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeMovie
+        [provider loadItemForTypeIdentifier:(NSString *)provider.registeredTypeIdentifiers.firstObject
                                     options:nil
                           completionHandler:^(NSURL *url, NSError *error) {
                               error ? [source setError:error] : [source setResult:url];
                           }];
     });
-}
-
-+ (BFTask <NSURL *> *)taskForFileURLWithProvider:(NSItemProvider *)provider {
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeFileURL
-                                    options:nil
-                          completionHandler:^(NSURL *url, NSError *error) {
-                              error ? [source setError:error] : [source setResult:url];
-                              
-                          }];
-    });
-}
-
-
-+ (NSString *)attachmentMIMETypeFromFileName:(NSString *)fileName {
-    
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
-    CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
-    CFRelease(UTI);
-    if (!MIMEType) {
-        return @"application/octet-stream";
-    }
-    
-    return (__bridge NSString *)(MIMEType);
 }
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <BFTask.h>
+#import <Bolts/BFTask.h>
 
 @class QBChatMessage;
 @class QBChatAttachment;
