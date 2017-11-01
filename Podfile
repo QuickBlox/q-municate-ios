@@ -3,7 +3,13 @@ platform :ios, '8.1'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
+use_frameworks!
 
+def common_pods
+    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
+    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    #pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
+end
 
 target 'Q-municate' do
     
@@ -31,37 +37,24 @@ target 'Q-municate' do
     #Firebase
     pod 'FirebaseUI/Phone', '~> 4.0'
     
-    #For development pods
-    # pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
-    
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
-    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
     
-    #        installer.aggregate_targets.each do |target|
-    #            copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
-    #            string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
-    #            assets_compile_with_app_icon_arguments = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" --app-icon "${ASSETCATALOG_COMPILER_APPICON_NAME}" --output-partial-info-plist "${BUILD_DIR}/assetcatalog_generated_info.plist"'
-    #            text = File.read(copy_pods_resources_path)
-    #            new_contents = text.gsub(string_to_replace, assets_compile_with_app_icon_arguments)
-    #            File.open(copy_pods_resources_path, "w") {|file| file.puts new_contents }
-    #        end
+    common_pods
+    
 end
 
 target 'QMSiriExtension' do
-    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
+    common_pods
 end
 
 target 'QMShareExtension' do
-    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
+    common_pods
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
     pod 'SVProgressHUD', '~> 1.0'
 end
 
 post_install do |installer|
-    
+    #Settings for extensions
     installer.pods_project.targets.each do |target|
         case target.name
             when 'Bolts','QMCVDevelopment','SVProgressHUD'
