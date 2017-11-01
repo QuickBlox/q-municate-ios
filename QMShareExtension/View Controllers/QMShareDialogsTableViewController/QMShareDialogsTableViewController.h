@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <BFTask.h>
 
 @class QBUUser;
 @class QBChatDialog;
