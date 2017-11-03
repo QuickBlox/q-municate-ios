@@ -69,7 +69,6 @@ QMShareEtxentionOperationDelegate>
 
 @property (strong, nonatomic) QMShareEtxentionOperation *shareOperation;
 
-@property (weak, nonatomic) BFTask *shareTask;
 @property (strong, nonatomic) id logoutObserver;
 
 @end
