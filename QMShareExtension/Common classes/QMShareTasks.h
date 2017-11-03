@@ -15,5 +15,6 @@
 @interface QMShareTasks : NSObject
 
 + (BFTask <QBChatMessage *> *)messageForItemProvider:(NSItemProvider *)provider;
++ (BFTask *)taskFetchAllDialogsFromDate:(NSDate *)date;
 
 @end
