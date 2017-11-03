@@ -31,14 +31,15 @@
     SUBQUERY (
         $extensionItem.attachments,
         $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.file-url" OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.mpeg-4" OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.png" OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.jpg" OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.mpeg-4-audio" OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.data"
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.file-url&quot; OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mpeg-4&quot; OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.png&quot; OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.jpg&quot; OR
+		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot; OR
+		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.text&quot; OR
+		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mpeg-4-audio&quot; OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mp3&quot; OR
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.data&quot;
     ).@count == 1
 ).@count == 1</string>
 		</dict>
