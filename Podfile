@@ -7,8 +7,8 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 def common_pods
     #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-    #pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
+    #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
 end
 
 target 'Q-municate' do
