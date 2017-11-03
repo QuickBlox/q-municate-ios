@@ -54,6 +54,27 @@ static const NSUInteger kContactsSection = 0;
     return itemsCount == 0;
 }
 
+- (void)updateItems:(NSArray *)items {
+    
+    for (id <QMShareItemProtocol> shareItem in items) {
+        
+        NSUInteger indexOfItem = [self.items indexOfObject:shareItem];
+        
+        if (indexOfItem != NSNotFound) {
+            [self.items replaceObjectAtIndex:indexOfItem withObject:shareItem];
+            
+        }
+    }
+    
+    [self sortDataSource];
+}
+
+- (void)sortDataSource {
+    
+    if (self.sortDescriptors.count > 0) {
+        [self.items sortUsingDescriptors:self.sortDescriptors];
+    }
+}
 
 - (void)configureAlphabetizedDataSource {
     
@@ -120,11 +141,6 @@ static const NSUInteger kContactsSection = 0;
     }
 }
 //MARK: - setters
-
-- (void)addItems:(NSArray *)items {
-    
-    [self replaceItems:items];
-}
 
 - (void)replaceItems:(NSArray *)items {
     
@@ -300,31 +316,6 @@ titleForHeaderInSection:(NSInteger)section {
     }
     else {
         return self.items.count;
-    }
-}
-
-- (void)updateItems:(NSArray *)items {
-    
-    for (id <QMShareItemProtocol> shareItem in items) {
-        
-        NSUInteger indexOfItem = [self.items indexOfObject:shareItem];
-        
-        if (indexOfItem != NSNotFound) {
-            [self.items replaceObjectAtIndex:indexOfItem withObject:shareItem];
-            
-        }
-        else{
-            [self addItems:@[shareItem]];
-        }
-    }
-    
-    [self sortDataSource];
-}
-
-- (void)sortDataSource {
-    
-    if (self.sortDescriptors.count > 0) {
-        [self.items sortUsingDescriptors:self.sortDescriptors];
     }
 }
 
