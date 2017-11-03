@@ -58,16 +58,14 @@ QMSearchDataProviderDelegate,
 QMSearchResultsControllerDelegate,
 UISearchControllerDelegate,
 UISearchResultsUpdating,
-UISearchBarDelegate>
+UISearchBarDelegate,
+QMShareEtxentionOperationDelegate>
 
 @property (strong, nonatomic) QMShareDataSource *tableViewDataSource;
 @property (strong, nonatomic) QMShareSearchControllerDataSource *searchDataSource;
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
-
-
-
 
 @property (strong, nonatomic) QMShareEtxentionOperation *shareOperation;
 
@@ -204,6 +202,8 @@ UISearchBarDelegate>
          
          if (t.result) {
              
+             __weak typeof(self) weakSelf = self;
+         
              self.shareOperation =
              [QMShareEtxentionOperation operationWithID:@"ShareOperation"
                                                    text:t.result.text
@@ -214,11 +214,12 @@ UISearchBarDelegate>
                   [alertController dismissViewControllerAnimated:YES
                                                       completion:nil];
                   if (completed) {
-                      [self completeShare:error];
+                      [weakSelf completeShare:error];
                   }
                   NSLog(@"Error = %@, completed = %@", error, completed ? @"YES" : @"NO");
               }];
              
+             self.shareOperation.operationDelegate = self;
              [self.shareOperation start];
          }
          else {
@@ -336,8 +337,11 @@ UISearchBarDelegate>
     //Main data source
     self.tableViewDataSource = [[QMShareDataSource alloc] initWithShareItems:sortedByDateDialogs
                                                       alphabetizedDataSource:NO];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"updateDate"
-                                                                   ascending:NO];;
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES comparator:^NSComparisonResult(id <QMShareItemProtocol> _Nonnull obj1, id  <QMShareItemProtocol>_Nonnull obj2) {
+        return [obj2.updateDate compare:obj1.updateDate];
+    }];
+    
     self.tableViewDataSource.sortDescriptors = @[sortDescriptor];
     self.tableView.dataSource = self.tableViewDataSource;
     

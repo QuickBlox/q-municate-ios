@@ -89,6 +89,9 @@
         }
         // For each item, extend the task with a function to delete the item.
         task = [task continueWithBlock:^id(BFTask __unused *t) {
+            if (self.isCancelled) {
+                return [BFTask cancelledTask];
+            }
             return [self shareTaskWithMessage:message shareItem:shareItem];
         }];
     }
@@ -170,6 +173,7 @@ static inline NSData * __nullable imageData(UIImage * __nonnull image) {
 }
 
 - (BFTask <QBChatAttachment *> *)uploadAttachment:(QBChatAttachment *)attatchment {
+    
     if (self.isCancelled) {
         NSLog(@"Cancelled task");
         return [BFTask cancelledTask];
