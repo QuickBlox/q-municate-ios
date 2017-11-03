@@ -13,33 +13,31 @@
 
 @implementation QMAttachmentProviderSettings @end
 
-@interface QMVideoConverter : NSObject
+@interface QMAssetConverter : NSObject
 
 @end
 
-@interface QMVideoConverter()
+@interface QMAssetConverter()
 
 @end
 
-@implementation QMVideoConverter
+@implementation QMAssetConverter
 
 + (BFTask <NSURL *> *)taskConvertToOtputFileType:(AVFileType)fileType
-                                           atURL:(NSURL*)fileURL
+                                           inputURL:(NSURL *)inputFileURL
+                                       outputURL: (NSURL *)outputFileURL
                                   withPresetName:(nullable NSString *)presetName
                      shouldOptimizeForNetworkUse:(BOOL)shouldOptimizeForNetworkUse {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
-    
-    NSURL *fileOutput = uniqueOutputFileURL();
-    NSURL *fileInput = fileURL;
-    
-    AVAsset *asset = [AVAsset assetWithURL:fileInput];
+
+    AVAsset *asset = [AVAsset assetWithURL:inputFileURL];
     if (!presetName) {
         presetName = AVAssetExportPresetMediumQuality;
     }
     AVAssetExportSession *exportSession = [AVAssetExportSession exportSessionWithAsset:asset
                                                                             presetName:presetName];
-    exportSession.outputURL = fileOutput;
+    exportSession.outputURL = outputFileURL;
     
     exportSession.shouldOptimizeForNetworkUse = shouldOptimizeForNetworkUse;
     exportSession.outputFileType = fileType;
@@ -48,7 +46,7 @@
         switch (exportSession.status) {
                 
             case AVAssetExportSessionStatusCompleted:
-                [source setResult:fileOutput];
+                [source setResult:outputFileURL];
                 break;
             case AVAssetExportSessionStatusFailed:
             case AVAssetExportSessionStatusCancelled:
@@ -65,31 +63,35 @@
 
 + (BFTask <NSURL *> *)taskConvertAudioToM4AFormatAtUrl:(NSURL *)audioFileURL {
     
+    NSURL *fileOutput = uniqueOutputFileURLWithFileExtension(@".m4a");
+    
     return [self taskConvertToOtputFileType:AVFileTypeAppleM4A
-                                      atURL:audioFileURL
-                             withPresetName:AVAssetExportPresetAppleM4A
+                                   inputURL:audioFileURL
+                                  outputURL:fileOutput
+                             withPresetName:AVAssetExportPresetPassthrough
                 shouldOptimizeForNetworkUse:YES];
 }
-
+    
 + (BFTask <NSURL *> *)taskConvertVideoToMpeg4FormatAtUrl:(NSURL *)videoFileURL {
     
+    NSURL *fileOutput = uniqueOutputFileURLWithFileExtension(@".mp4");
+
     return [self taskConvertToOtputFileType:AVFileTypeMPEG4
-                                      atURL:videoFileURL
-                             withPresetName:nil
+                                      inputURL:videoFileURL
+                                  outputURL:fileOutput
+                             withPresetName:AVAssetExportPresetPassthrough
                 shouldOptimizeForNetworkUse:YES];
 }
 
-static inline NSURL *uniqueOutputFileURL() {
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *cacheDirectory = [paths objectAtIndex:0];
+static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtension) {
     
     NSString *uniqueFileName = [[NSUUID UUID] UUIDString];
     NSString *outputFilePath =
-    [cacheDirectory stringByAppendingFormat:@"/output_%@", uniqueFileName];
+    [NSTemporaryDirectory() stringByAppendingFormat:@"output_%@%@", uniqueFileName, fileExtension];
     
     return [NSURL fileURLWithPath:outputFilePath];
 }
+
 @end
 
 @implementation QMAttachmentProvider
@@ -98,44 +100,69 @@ static inline NSURL *uniqueOutputFileURL() {
 + (BFTask <QBChatAttachment *>*)attachmentWithFileURL:(NSURL *)fileURL
                                              settings:(nullable QMAttachmentProviderSettings *)providerSettings {
     
+    if (providerSettings.maxFileSize > 0) {
+        
+        NSError *attributesError = nil;
+        
+        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURL.path
+                                                                                        error:&attributesError];
+        if (attributesError) {
+            NSLog(@"Error occurred while getting file attributes = %@", attributesError);
+            return [BFTask taskWithError:attributesError];
+        }
+        
+        NSNumber *fileSizeNumber = fileAttributes[NSFileSize];
+        CGFloat fileSize = fileSizeNumber.longLongValue/1024.0f/1024.0f;
+        
+        if (fileSize > providerSettings.maxFileSize) {
+            
+            NSString *localizedDescription =
+            [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil), providerSettings.maxFileSize];
+            NSError *error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
+                                                 code:0
+                                             userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+            return [BFTask taskWithError:error];
+        }
+    }
+    
     NSString *fileName = [[fileURL pathComponents] lastObject];
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
     
     if (UTTypeConformsTo(UTI, kUTTypeMovie)) {
+        
         //We should convert all video formats to mp4 format.
         if (UTTypeConformsTo(UTI, kUTTypeMPEG4)) {
             QBChatAttachment *attachment =  [QBChatAttachment videoAttachmentWithFileURL:fileURL];
             return [self taskLoadValuesForAttachment:attachment];
         }
         else {
-            
-            return [[QMVideoConverter taskConvertVideoToMpeg4FormatAtUrl:fileURL] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+
+            return [[QMAssetConverter taskConvertVideoToMpeg4FormatAtUrl:fileURL] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
                 if (t.error) {
-                    [BFTask taskWithError:t.error];
+                    return [BFTask taskWithError:t.error];
                 }
                 else {
-                    QBChatAttachment *attachment = [QBChatAttachment videoAttachmentWithFileURL:t.result];
+        
+                    QBChatAttachment *attachment = [[QBChatAttachment alloc] initWithName:@"Video attachment"
+                                                                      fileURL:t.result
+                                         contentType:(__bridge NSString *)MIMEType
+                                                               attachmentType:kQMAttachmentTypeVideo];
                     return [self taskLoadValuesForAttachment:attachment];
-                }
-                
-                return nil;
+                  }
             }];
         }
     }
     else if (UTTypeConformsTo(UTI, kUTTypeAudio)) {
-        if (UTTypeConformsTo(UTI, kUTTypeMPEG4Audio)) {
-            QBChatAttachment *attachment =  [QBChatAttachment audioAttachmentWithFileURL:fileURL];
+        
+        if (UTTypeConformsTo(UTI, kUTTypeMPEG4Audio)
+            || UTTypeConformsTo(UTI, kUTTypeMP3)) {
+            
+            QBChatAttachment *attachment = [[QBChatAttachment alloc] initWithName:@"Audio attachment"
+                                                                           fileURL:fileURL
+                                                                       contentType:(__bridge NSString *)MIMEType
+                                                                    attachmentType:kQMAttachmentTypeAudio];
             return [self taskLoadValuesForAttachment:attachment];
-        }
-        else {
-            return [[QMVideoConverter taskConvertAudioToM4AFormatAtUrl:fileURL] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-                if (t.error) {
-                    [BFTask taskWithError:t.error];
-                }
-                QBChatAttachment *attachment =  [QBChatAttachment audioAttachmentWithFileURL:t.result];
-                return  [self taskLoadValuesForAttachment:attachment];
-            }];
         }
     }
     else if (UTTypeConformsTo(UTI, kUTTypeImage)) {
@@ -172,8 +199,9 @@ static inline NSURL *uniqueOutputFileURL() {
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         return [BFTask taskWithResult:attachment];
     }
-    
-    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:attachment.localFileURL options:nil];
+    NSDictionary *options = @{AVURLAssetPreferPreciseDurationAndTimingKey : @YES};
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:attachment.localFileURL
+                                               options:options];
     
     NSTimeInterval durationSeconds = CMTimeGetSeconds(urlAsset.duration);
     attachment.duration = lround(durationSeconds);
