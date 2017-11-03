@@ -24,8 +24,8 @@
 #import "QMShareTasks.h"
 #import <SVProgressHUD/SVProgressHUD.h>
 #import "QMLog.h"
-#import <Quickblox/QBDarwinNotificationCenter.h>
 #import <QMServicesDevelopment/QMServices.h>
+#import "QMShareEtxentionOperation.h"
 
 //SVProgressHUD for extension
 #define SV_APP_EXTENSIONS 1
@@ -52,6 +52,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
 
+
 @interface QMShareDialogsTableViewController () <
 QMSearchDataProviderDelegate,
 QMSearchResultsControllerDelegate,
@@ -64,13 +65,59 @@ UISearchBarDelegate>
 
 @property (strong, nonatomic) UISearchController *searchController;
 @property (strong, nonatomic) QMSearchResultsController *searchResultsController;
-@property (strong, nonatomic) BFCancellationTokenSource *cancellationTokenSource;
-@property (weak, nonatomic) id observer;
+
+
+
+
+@property (strong, nonatomic) QMShareEtxentionOperation *shareOperation;
+
 @property (weak, nonatomic) BFTask *shareTask;
+@property (strong, nonatomic) id logoutObserver;
 
 @end
 
 @implementation QMShareDialogsTableViewController
+
+- (BFTask <NSString*> *)dialogIDForUser:(QBUUser *)user {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*_Nullable dialog, NSDictionary<NSString *,id> * _Nullable __unused bindings) {
+        return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(user.ID)];
+    }];
+    
+    QBChatDialog *dialog = [[QMExtensionCache.chatCache.allDialogs filteredArrayUsingPredicate:predicate] firstObject];
+    
+    if (dialog) {
+        return [BFTask taskWithResult:dialog.ID];
+    }
+    else {
+        return [[self createPrivateChatWithOpponentID:user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+            if (t.error) {
+                return [BFTask taskWithError:t.error];
+            }
+            else {
+                return [BFTask taskWithResult:t.result.ID];
+            }
+        }];
+    }
+}
+
+- (BFTask <QBChatDialog *>*)createPrivateChatWithOpponentID:(NSUInteger)opponentID {
+    
+    QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil
+                                                                 type:QBChatDialogTypePrivate];
+    chatDialog.occupantIDs = @[@(opponentID)];
+    
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        
+        [QBRequest createDialog:chatDialog successBlock:^(QBResponse *__unused response, QBChatDialog *createdDialog) {
+            [source setResult:createdDialog];
+            
+        } errorBlock:^(QBResponse *__unused response) {
+            [source setError:response.error.error];
+        }];
+    });
+}
+
 
 - (void)configure {
     // Quickblox settings
@@ -81,9 +128,7 @@ UISearchBarDelegate>
     [QBSettings setLogLevel:QBLogLevelNothing];
     [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
     
-   self.observer = [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQBResetSessionNotification usingBlock:^{
-       NSLog(@"RESET SESSION");
-    }];
+    
     QMLogSetEnabled(YES);
     QMLog(@"Configure extension");
     [[UISearchBar appearance] setBarTintColor:QMSecondaryApplicationColor()];
@@ -107,7 +152,7 @@ UISearchBarDelegate>
     [[UIBarButtonItem alloc] initWithTitle:@"Share"
                                      style:UIBarButtonItemStylePlain
                                     target:self
-                                    action:@selector(share)];
+                                    action:@selector(shareAction)];
     self.navigationItem.rightBarButtonItem.tintColor = QMSecondaryApplicationColor();
     
     [SVProgressHUD setViewForExtension:self.navigationController.view];
@@ -116,113 +161,34 @@ UISearchBarDelegate>
 }
 
 - (void)dismiss {
-    [self completeShare:nil];
-}
-
-//MARK: - Helpers
-
-- (BFTask <QBChatDialog *>*)createPrivateChatWithOpponentID:(NSUInteger)opponentID {
     
-    QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypePrivate];
-    chatDialog.occupantIDs = @[@(opponentID)];
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        
-        [QBRequest createDialog:chatDialog successBlock:^(QBResponse *__unused response, QBChatDialog *createdDialog) {
-            [source setResult:createdDialog];
-            
-        } errorBlock:^(QBResponse *__unused response) {
-            [source setError:response.error.error];
+    if (self.extensionContext) {
+        [self hideExtensionControllerWithCompletion:^{
+            [self.extensionContext completeRequestReturningItems:nil
+                                               completionHandler:nil];
         }];
-    });
-}
-
-
-- (BFTask <NSString *> *)dialogIDForUser:(QBUUser *)user {
-    
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*_Nullable dialog, NSDictionary<NSString *,id> * _Nullable __unused bindings) {
-        return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(user.ID)];
-    }];
-    
-    QBChatDialog *dialog = [[self.dialogsToShare filteredArrayUsingPredicate:predicate] firstObject];
-    
-    if (dialog) {
-        return [BFTask taskWithResult:dialog.ID];
     }
     else {
-        return [[self createPrivateChatWithOpponentID:user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
-            if (t.error) {
-                return [BFTask taskWithError:t.error];
-            }
-            else {
-                return [BFTask taskWithResult:t.result.ID];
-            }
-        }];
+        [self dismissViewControllerAnimated:YES
+                                 completion:NULL];
     }
 }
 
-- (BFTask <NSString *>*)dialogIDForShareItem:(id <QMShareItemProtocol>)shareItem {
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        if ([shareItem isKindOfClass:QBChatDialog.class]) {
-            [source setResult:((QBChatDialog *)shareItem).ID];
-        }
-        else {
-            [[self dialogIDForUser:(QBUUser *)shareItem] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull t) {
-                t.error ? [source setError:t.error] : [source setResult:t.result];
-                return nil;
-            }];
-        }
-    });
-}
-
-- (BFTask *)shareTaskWithMessage:(QBChatMessage *)message
-                       shareItem:(id<QMShareItemProtocol>)shareItem {
-    
-    return [[self dialogIDForShareItem:shareItem] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull dialogTask) {
-        NSLog(@"dialogTask = %@", dialogTask);
-        NSString *dialogID = dialogTask.result;
-        if (self.cancellationTokenSource.cancellationRequested) {
-            NSLog(@"Cancelled");
-            return [BFTask cancelledTask];
-        }
-        
-        NSUInteger senderID = QBSession.currentSession.currentUser.ID;
-        message.senderID = senderID;
-        message.markable = YES;
-        message.deliveredIDs = @[@(senderID)];
-        message.readIDs = @[@(senderID)];
-        message.dialogID = dialogID;
-        message.dateSent = [NSDate date];
-        
-        return [[self sendMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull sendMessageTask)  {
-            NSLog(@"sendMessageTask = %@", sendMessageTask);
-            if (sendMessageTask.error) {
-                return [BFTask taskWithError:sendMessageTask.error];
-            }
-            
-            return [BFTask taskWithResult:nil];
-            
-        } cancellationToken:self.cancellationTokenSource.token];
-    }];
-}
 
 
-
-- (void)share {
+- (void)shareAction {
     
-    [self updateShareButton];
-    
-    if (self.shareTask) {
+    if (self.shareOperation.isSending) {
         return;
     }
-
+    
     __weak typeof(self) weakSelf = self;
     
-    [self showActivityAlertControllerWithStatus:@"Sharing..." cancelAction:^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf cancelSharing];
-    }];
+    UIAlertController *alertController = [self ativityAlertControllerWithStatus:@"Sharing..."
+                                                                   cancelAction:^{
+                                                                       [SVProgressHUD showInfoWithStatus:@"Cancelled"];
+                                                                       [weakSelf.shareOperation cancel];
+                                                                   }];
     
     NSItemProvider *provider;
     for (NSExtensionItem *extensionItem in self.extensionContext.inputItems) {
@@ -231,139 +197,48 @@ UISearchBarDelegate>
         }
     }
     
-   
     
-
-    self.cancellationTokenSource = [[BFCancellationTokenSource alloc] init];
-    
-    [self.cancellationTokenSource.token registerCancellationObserverWithBlock:^{
-        [SVProgressHUD showSuccessWithStatus:@"Cancelled"];
-        
-    }];
-    
- self.shareTask = [[QMShareTasks messageForItemProvider:provider] continueWithBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull messageTask) {
-     
-        if (messageTask.result) {
-            
-            NSSet *itemsToShare = self.tableViewDataSource.selectedItems.copy;
-            NSMutableArray *tasks = [NSMutableArray arrayWithCapacity:itemsToShare.count];
-            
-            for (id <QMShareItemProtocol> shareItem in itemsToShare) {
-                QBChatMessage *message =  [QBChatMessage new];
-                message.text = messageTask.result.text;
-                message.attachments = messageTask.result.attachments;
-                [tasks addObject:[self shareTaskWithMessage:message shareItem:shareItem]];
-            }
-            
-            return  [[BFTask taskForCompletionOfAllTasks:tasks] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-                
-                if (t.isCompleted) {
-                    self.cancellationTokenSource = nil;
-                    [SVProgressHUD showSuccessWithStatus:@"Completed"];
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [self completeShare:nil];
-                    });
-                }
-
-                return nil;
-                
-            } cancellationToken:self.cancellationTokenSource.token];
-        }
-        else if (messageTask.error) {
-            [SVProgressHUD showErrorWithStatus:messageTask.error.localizedDescription];
-        }
-        return nil;
-    }];
-    
-}
-
-- (BFTask *)sendMessage:(QBChatMessage *)message {
-    
-    if (message.attachments > 0 && !message.isLocationMessage) {
-        QBChatAttachment *attachment = message.attachments.firstObject;
-        
-        return [[self uploadAttachment:attachment] continueWithBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
-            
-            message.attachments = @[t.result];
-            return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-                [QBRequest sendMessage:message
-                          successBlock:^(QBResponse * _Nonnull __unused response, QBChatMessage * _Nonnull __unused tMessage) {
-                              [source setResult:tMessage];
-                          }
-                            errorBlock:^(QBResponse * _Nonnull response) {
-                                [source setError:response.error.error];
-                            }];
-            });
-        }];
-    }
-    else {
-        return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-            [QBRequest sendMessage:message
-                      successBlock:^(QBResponse * _Nonnull __unused response, QBChatMessage * _Nonnull __unused tMessage) {
-                          [source setResult:tMessage];
-                      }
-                        errorBlock:^(QBResponse * _Nonnull response) {
-                            [source setError:response.error.error];
-                        }];
-        });
-    }
-}
-
-- (BFTask <QBChatAttachment *>*)uploadAttachment:(QBChatAttachment *)attatchment {
-    
-    NSData *dataToSend = ^NSData *{
-        
-        if (attatchment.attachmentType == QMAttachmentContentTypeImage) {
-            return imageData(attatchment.image);
-        }
-        
-        return nil;
-        
-    }();
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        if (dataToSend) {
-            [QBRequest TUploadFile:dataToSend
-                          fileName:attatchment.name
-                       contentType:attatchment.contentType
-                          isPublic:NO
-                      successBlock:^(QBResponse * __unused  _Nonnull response,
-                                     QBCBlob * _Nonnull tBlob)
-             {
-                 attatchment.ID = tBlob.UID;
-                 [source setResult:attatchment];
-             }
-                       statusBlock:nil
+    [[QMShareTasks messageForItemProvider:provider] continueWithExecutor:BFExecutor.mainThreadExecutor
+                                                               withBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull t)
+     {
+         
+         if (t.result) {
              
-                        errorBlock:^(QBResponse * _Nonnull response)
-             {
-                 [source setError:response.error.error];
-             }];
-        }
-        else if (attatchment.localFileURL) {
-            [QBRequest uploadFileWithUrl:attatchment.localFileURL
-                                fileName:attatchment.name
-                             contentType:attatchment.contentType
-                                isPublic:NO
-                            successBlock:^(QBResponse * _Nonnull __unused response,
-                                           QBCBlob * _Nonnull tBlob)
-             {
-                 attatchment.ID = tBlob.UID;
-                 [source setResult:attatchment];
-             }
-                             statusBlock:nil
-                              errorBlock:^(QBResponse * _Nonnull response)
-             {
-                 [source setError:response.error.error];
-             }];
-        }
-    });
+             self.shareOperation =
+             [QMShareEtxentionOperation operationWithID:@"ShareOperation"
+                                                   text:t.result.text
+                                             attachment:t.result.attachments.firstObject
+                                             recipients:self.tableViewDataSource.selectedItems.allObjects
+                                             completion:^(NSError *error, BOOL completed)
+              {
+                  [alertController dismissViewControllerAnimated:YES
+                                                      completion:nil];
+                  if (completed) {
+                      [self completeShare:error];
+                  }
+                  NSLog(@"Error = %@, completed = %@", error, completed ? @"YES" : @"NO");
+              }];
+             
+             [self.shareOperation start];
+         }
+         else {
+             NSString *errorText = t.error.localizedDescription ?: @"Something went wrong";
+             NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier code:0 userInfo:@{NSLocalizedDescriptionKey : errorText}];
+             [alertController dismissViewControllerAnimated:YES
+                                                 completion:^{
+                                                     [self completeShare:error];
+                                                 }];
+         }
+         return nil;
+     }];
 }
+
+//MARK: - Helpers
 
 - (void)updateShareButton {
     
     self.navigationItem.rightBarButtonItem.enabled =
-    self.tableViewDataSource.selectedItems.count > 0 && !self.shareTask;
+    self.tableViewDataSource.selectedItems.count > 0;
 }
 
 - (void)configureSearch {
@@ -397,8 +272,6 @@ UISearchBarDelegate>
     self.searchController.dimsBackgroundDuringPresentation = NO;
     self.definesPresentationContext = YES;
 }
-
-
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleDefault;
@@ -510,41 +383,48 @@ UISearchBarDelegate>
     
     [QMShareTableViewCell registerForReuseInView:self.tableView];
     [QMNoResultsCell registerForReuseInTableView:self.tableView];
-
+    
     self.tableView.tableFooterView = [UIView new];
+    
+    [self configureDataSource];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    [super viewWillAppear:animated];
-    
     self.view.transform = CGAffineTransformMakeTranslation(0, self.view.frame.size.height);
+    
+    [super viewWillAppear:animated];
     
     [UIView animateWithDuration:0.25 animations:^{
         self.view.transform = CGAffineTransformIdentity;
     }];
     
+    [self updateDataSource];
     [self setNeedsStatusBarAppearanceUpdate];
+    
+    __weak typeof(self) weakSelf = self;
+    self.logoutObserver = [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQBResetSessionNotification
+                                                                              usingBlock:^{
+                                                                                  [weakSelf completeShare:nil];
+                                                                              }];
     
     if (!QBSession.currentSession.currentUser.ID) {
         
-        [SVProgressHUD showErrorWithStatus:@"You should be logged in to Q-Municate"
-                                  maskType:SVProgressHUDMaskTypeBlack];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self completeShare:nil];
-        });
-        
+        NSString *errorText = @"You should be logged in to Q-Municate";
+        NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
+                                             code:0
+                                         userInfo:@{NSLocalizedDescriptionKey : errorText}];
+        [self completeShare:error];
         return;
     }
-    
-    [self configureDataSource];
-    [self updateDataSource];
 }
 
 - (void)updateDataSource {
-    
-
+    [[QMShareTasks taskFetchAllDialogsFromDate:nil] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
+        [self.tableViewDataSource updateItems:t.result];
+        [self.tableView reloadData];
+        return nil;
+    }];
 }
 
 //MARK: - UITableViewDelegate
@@ -568,33 +448,19 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self updateShareButton];
 }
 
-- (void)cancelSharing {
-    
-    if (self.cancellationTokenSource) {
-        NSLog(@"cancellationTokenSource cancel");
-        [self.cancellationTokenSource cancel];
-    }
-}
 - (void)completeShare:(nullable NSError *)error {
     
-    if (self.extensionContext) {
-        [self hideExtensionControllerWithCompletion:^{
-            
-            if (error) {
-                [self.extensionContext cancelRequestWithError:error];
-            }
-            else {
-                [self.extensionContext completeRequestReturningItems:nil
-                                                   completionHandler:nil];
-            }
-        }];
+    if (error) {
+        [SVProgressHUD showErrorWithStatus:error.localizedDescription];
     }
     else {
-        [self dismissViewControllerAnimated:YES
-                                 completion:NULL];
+        [SVProgressHUD showInfoWithStatus:@"Sucessfully sent"];
     }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self dismiss];
+    });
 }
-
 
 - (void)hideExtensionControllerWithCompletion:(dispatch_block_t)completion {
     [UIView animateWithDuration:0.2 animations:^{
@@ -605,21 +471,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         completion ? completion() : nil;
     }];
     
-}
-
-static inline NSData * __nullable imageData(UIImage * __nonnull image) {
-    
-    int alphaInfo = CGImageGetAlphaInfo(image.CGImage);
-    BOOL hasAlpha = !(alphaInfo == kCGImageAlphaNone ||
-                      alphaInfo == kCGImageAlphaNoneSkipFirst ||
-                      alphaInfo == kCGImageAlphaNoneSkipLast);
-    
-    if (hasAlpha) {
-        return UIImagePNGRepresentation(image);
-    }
-    else {
-        return UIImageJPEGRepresentation(image, 1.0f);
-    }
 }
 
 //MARK: - UISearchControllerDelegate
@@ -655,6 +506,7 @@ static inline NSData * __nullable imageData(UIImage * __nonnull image) {
              didUpdateData:(NSArray *)__unused data {
     
 }
+
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
     if (self.searchDataSource.showContactsSection) {
@@ -699,8 +551,8 @@ static inline NSData * __nullable imageData(UIImage * __nonnull image) {
 }
 
 
-- (void)showActivityAlertControllerWithStatus:(NSString *)status
-                                 cancelAction:(dispatch_block_t)cancelAction {
+- (UIAlertController *)ativityAlertControllerWithStatus:(NSString *)status
+                                           cancelAction:(dispatch_block_t)cancelAction {
     
     NSString *message = [NSString stringWithFormat:@"%@\n",status];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
@@ -737,6 +589,7 @@ static inline NSData * __nullable imageData(UIImage * __nonnull image) {
     [self presentViewController:alertController
                        animated:YES
                      completion:nil];
+    return alertController;
 }
 
 @end
