@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXPORT NSNotificationName const kQBResetSessionNotification;
+
 /**
  *  QBSession class interface.
  *  This class represents session information.
@@ -21,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly, class) QBSession *currentSession;
 
+
+/**
+ Returns YES if token has expired
+ */
 @property (assign, nonatomic, readonly) BOOL tokenHasExpired;
 
 /**
