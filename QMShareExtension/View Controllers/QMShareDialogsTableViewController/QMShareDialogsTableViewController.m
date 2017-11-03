@@ -26,32 +26,12 @@
 #import "QMLog.h"
 #import <QMServicesDevelopment/QMServices.h>
 #import "QMShareEtxentionOperation.h"
+#import <Reachability/Reachability.h>
+#import "QBSettings+Qmunicate.h"
+
 
 //SVProgressHUD for extension
 #define SV_APP_EXTENSIONS 1
-
-#define DEVELOPMENT 1
-
-#if DEVELOPMENT == 0
-
-// Production
-static const NSUInteger kQMApplicationID = 13318;
-static NSString * const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
-static NSString * const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#else
-
-// Development
-static const NSUInteger kQMApplicationID = 36125;
-static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
-static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#endif
-
-static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
-
 
 @interface QMShareDialogsTableViewController () <
 QMSearchDataProviderDelegate,
@@ -70,6 +50,8 @@ QMShareEtxentionOperationDelegate>
 @property (strong, nonatomic) QMShareEtxentionOperation *shareOperation;
 
 @property (strong, nonatomic) id logoutObserver;
+
+@property (strong, nonatomic) Reachability *internetConnection;
 
 @end
 
@@ -117,14 +99,9 @@ QMShareEtxentionOperationDelegate>
 
 
 - (void)configure {
-    // Quickblox settings
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthKey:kQMAuthorizationKey];
-    [QBSettings setAuthSecret:kQMAuthorizationSecret];
-    [QBSettings setAccountKey:kQMAccountKey];
-    [QBSettings setLogLevel:QBLogLevelNothing];
-    [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
     
+    // Quickblox settings
+    [QBSettings setQmunicateSettings];
     
     QMLogSetEnabled(YES);
     QMLog(@"Configure extension");
@@ -155,6 +132,25 @@ QMShareEtxentionOperationDelegate>
     [SVProgressHUD setViewForExtension:self.navigationController.view];
     
     [self updateShareButton];
+    
+    
+    [self configureReachability];
+}
+
+- (void)configureReachability {
+    
+    _internetConnection = [Reachability reachabilityForInternetConnection];
+    
+    // setting unreachable block
+    [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // reachability block could possibly be called in background thread
+            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)];
+        });
+    }];
+    
+    [_internetConnection startNotifier];
 }
 
 - (void)dismiss {
@@ -174,6 +170,11 @@ QMShareEtxentionOperationDelegate>
 
 
 - (void)shareAction {
+    
+    if (!self.internetConnection.isReachable) {
+         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)];
+          return;
+    }
     
     if (self.shareOperation.isSending) {
         return;
@@ -201,8 +202,6 @@ QMShareEtxentionOperationDelegate>
          
          if (t.result) {
              
-             __weak typeof(self) weakSelf = self;
-         
              self.shareOperation =
              [QMShareEtxentionOperation operationWithID:@"ShareOperation"
                                                    text:t.result.text

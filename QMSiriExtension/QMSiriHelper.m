@@ -12,28 +12,7 @@
 #import "QMExtensionCache+QMSiriExtension.h"
 #import "QBUUser+INPerson.h"
 #import "QMINPersonProtocol.h"
-
-#define DEVELOPMENT 1
-
-#if DEVELOPMENT == 0
-
-// Production
-static const NSUInteger kQMApplicationID = 13318;
-static NSString * const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
-static NSString * const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#else
-
-// Development
-static const NSUInteger kQMApplicationID = 36125;
-static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
-static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#endif
-
-static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
+#import "QBSettings+Qmunicate.h"
 
 @implementation QMSiriHelper
 
@@ -55,12 +34,7 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
     
     if (self) {
         // Quickblox settings
-        [QBSettings setApplicationID:kQMApplicationID];
-        [QBSettings setAuthKey:kQMAuthorizationKey];
-        [QBSettings setAuthSecret:kQMAuthorizationSecret];
-        [QBSettings setAccountKey:kQMAccountKey];
-        [QBSettings setLogLevel:QBLogLevelNothing];
-        [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
+        [QBSettings setQmunicateSettings];
     }
     
     return self;

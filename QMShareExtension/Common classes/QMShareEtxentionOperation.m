@@ -14,7 +14,6 @@
 
 @interface QMShareEtxentionOperation()
 
-@property (weak, nonatomic) BFTask *sendMessageTask;
 @property (nonatomic, strong, readwrite) NSArray *recipients;
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, strong) QBChatAttachment *attachment;
@@ -61,7 +60,7 @@
 
 - (void)start {
     
-    self.sendMessageTask = [[self sendTextToRecipients:self.text withAttachment:self.attachment] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+    [[self sendTextToRecipients:self.text withAttachment:self.attachment] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
         if (self.isCancelled) {
             self.shareOperationCompletionBlock(nil, NO);
         }
@@ -80,7 +79,6 @@
     NSArray *itemsToShare = self.recipients;
     
     BFTask *task = [BFTask taskWithResult:nil];
-    
     for (id <QMShareItemProtocol> shareItem in itemsToShare) {
         QBChatMessage *message = [QBChatMessage new];
         message.text = text;
@@ -228,7 +226,6 @@ static inline NSData * __nullable imageData(UIImage * __nonnull image) {
 }
 
 - (BFTask <NSString *> *)dialogIDForUser:(QBUUser *)user {
-    
     return [self.operationDelegate dialogIDForUser:user];
 }
 

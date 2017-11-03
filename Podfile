@@ -49,6 +49,7 @@ end
 
 target 'QMShareExtension' do
     common_pods
+    pod 'Reachability', '~> 3.2'
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
     pod 'SVProgressHUD', '~> 1.0'
 end
