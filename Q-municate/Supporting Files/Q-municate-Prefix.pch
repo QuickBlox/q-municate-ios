@@ -25,9 +25,9 @@
 
         #import "SegueIdentifiers.h"
         #import "QMConstants.h"
-        #import <QMServices.h>
-        #import <EXTScope.h>
-        #import <EXTKeyPathCoding.h>
+        #import <QMServicesDevelopment/QMServices.h>
+        #import <libextobjc/EXTScope.h>
+        #import <libextobjc/EXTKeyPathCoding.h>
         #import "QMLog.h"
         #import "QMHelpers.h"
 
