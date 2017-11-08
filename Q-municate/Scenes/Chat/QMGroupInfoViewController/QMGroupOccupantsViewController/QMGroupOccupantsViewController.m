@@ -115,10 +115,12 @@ QMUsersServiceDelegate
     [[QMCore.instance.usersService getUsersWithIDs:self.chatDialog.occupantIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
         if (t.result) {
             
-            self.dataSource.items = [[t.result sortedArrayUsingComparator:^NSComparisonResult(QBUUser *u1, QBUUser *u2) {
-                return [u1.fullName caseInsensitiveCompare:u2.fullName];
-            }] mutableCopy];
+            NSArray *sortedItems = [t.result sortedArrayUsingComparator:
+                                     ^NSComparisonResult(QBUUser *u1, QBUUser *u2) {
+                                         return [u1.fullName caseInsensitiveCompare:u2.fullName];
+                                     }];
             
+            [self.dataSource replaceItems:sortedItems];
             [self.tableView reloadData];
         }
         

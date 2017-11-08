@@ -390,7 +390,7 @@ QMUsersServiceDelegate
 
 //MARK: - QMSearchProtocol
 
-- (QMSearchDataSource *)searchDataSource {
+- (QMTableViewSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }

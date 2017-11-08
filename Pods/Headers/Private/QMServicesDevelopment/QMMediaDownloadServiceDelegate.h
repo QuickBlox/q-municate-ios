@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMChatService/QMChatService/QMAttachmentService/QMAttachmentContentService/QMMediaDownloadSevice/QMMediaDownloadServiceDelegates/QMMediaDownloadServiceDelegate.h
+../../../../../q-municate-services-ios/QMChatService/QMChatService/QMAttachmentService/QMAttachmentContentService/QMMediaDownloadSevice/QMMediaDownloadServiceDelegates/QMMediaDownloadServiceDelegate.h
