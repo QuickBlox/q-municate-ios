@@ -168,7 +168,7 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     else if (UTTypeConformsTo(UTI, kUTTypeImage)) {
         
         BFExecutor *backgroundExecutor =
-        [BFExecutor executorWithDispatchQueue:dispatch_queue_create(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
         return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
             
             NSData *imageData = [NSData dataWithContentsOfURL:fileURL];

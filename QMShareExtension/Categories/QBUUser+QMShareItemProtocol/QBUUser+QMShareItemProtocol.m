@@ -26,7 +26,7 @@
 }
 
 - (NSDate *)updateDate {
-    return self.lastRequestAt;
+    return self.updatedAt;
 }
 
 @end

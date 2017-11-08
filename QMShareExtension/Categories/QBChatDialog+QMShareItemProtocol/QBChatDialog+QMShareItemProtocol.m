@@ -19,7 +19,6 @@
     if (self.type == QBChatDialogTypePrivate) {
         
         QBUUser *recipient = [self recipient];
-        
         return recipient.title;
     }
     else {
