@@ -198,6 +198,11 @@ QMUsersServiceDelegate
     
     [super viewDidLoad];
     
+    [QMChatCell registerMenuAction:@selector(share)];
+    UIMenuItem *shareItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_SHARE", nil)
+                                                       action:@selector(share)];
+    [UIMenuController sharedMenuController].menuItems = @[shareItem];
+    
     self.navigationItem.titleView = self.onlineTitleView;
     
     if (iosMajorVersion() >= 10) {
@@ -1154,7 +1159,13 @@ QMUsersServiceDelegate
     QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
     //allow action performing only for image attachments
     if (message.isMediaMessage) {
-        return message.isImageAttachment;
+        
+        BOOL canPerformAction =
+        message.isImageAttachment &&
+        (action == @selector(copy:) ||
+         action == @selector(share));
+        
+        return canPerformAction;
     }
     // disabling action performing for specific cells
     if (viewClass == [QMChatLocationIncomingCell class]
@@ -1169,6 +1180,67 @@ QMUsersServiceDelegate
               forItemAtIndexPath:indexPath
                       withSender:sender];
 }
+
+
+- (BOOL)canPerformAction:(SEL)action
+              withSender:(id)sender {
+    
+    //Prevent showing custom menu items for other views
+    for (UIMenuItem *item in UIMenuController.sharedMenuController.menuItems) {
+        if (item.action == action) {
+            return NO;
+        }
+    }
+    
+    return [super canPerformAction:action
+                        withSender:sender];
+}
+
+- (void)chatCell:(QMChatCell *)cell
+didPerformAction:(SEL)action
+      withSender:(id)__unused sender {
+    
+    if (action != @selector(share)) {
+        return;
+    }
+    
+    NSIndexPath *indexPath =  [self.collectionView indexPathForCell:cell];
+    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
+    
+    if ([message isImageAttachment]) {
+        
+        QBChatAttachment *attachment = message.attachments.firstObject;
+        UIImage *image =
+        [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
+        
+        if (image) {
+            
+            UIActivityViewController *activityViewController =
+            [[UIActivityViewController alloc] initWithActivityItems:@[image]
+                                              applicationActivities:nil];
+            
+            [self displayActivityViewController:activityViewController
+                                     withSender:cell
+                                       animated:YES];
+        }
+    }
+}
+
+- (void)displayActivityViewController:(UIActivityViewController *)controller
+                           withSender:(UIView *)sender
+                             animated:(BOOL)animated {
+    
+    if (controller.popoverPresentationController) {
+        // iPad support
+        controller.popoverPresentationController.sourceView = sender;
+        controller.popoverPresentationController.sourceRect = sender.bounds;
+    }
+    
+    [self presentViewController:controller animated:animated completion:nil];
+    
+}
+
+
 
 - (void)collectionView:(UICollectionView *)__unused collectionView
          performAction:(SEL)action
@@ -2299,6 +2371,9 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
         [self updateGroupAvatarFrameForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation];
     } completion:nil];
+}
+
+- (void)share {
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
