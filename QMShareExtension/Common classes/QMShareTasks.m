@@ -16,6 +16,7 @@
 #import "QBChatMessage+QMCustomParameters.h"
 #import "QMBaseService.h"
 #import "QMAttachmentProvider.h"
+#import "QMExtensionCache+QMShareExtension.h"
 
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
 static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
@@ -257,7 +258,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
              BOOL cancel = NO;
              page.skip += dialogs.count;
              
-             if (page.totalEntries <= page.skip) {
+             if (page.totalEntries <= (NSUInteger)page.skip) {
                  
                  cancel = YES;
              }
@@ -293,6 +294,47 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     
     t_request = [request copy];
     request([QBResponsePage responsePageWithLimit:limit]);
+}
+
++ (BFTask <NSString*> *)dialogIDForUser:(QBUUser *)user {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*_Nullable dialog, NSDictionary<NSString *,id> * _Nullable __unused bindings) {
+        return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(user.ID)];
+    }];
+    
+    QBChatDialog *dialog = [[QMExtensionCache.chatCache.allDialogs filteredArrayUsingPredicate:predicate] firstObject];
+    
+    if (dialog) {
+        return [BFTask taskWithResult:dialog.ID];
+    }
+    else {
+        return [[self createPrivateChatWithOpponentID:user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+            if (t.error) {
+                return [BFTask taskWithError:t.error];
+            }
+            else {
+                return [BFTask taskWithResult:t.result.ID];
+            }
+        }];
+    }
+}
+
+
++ (BFTask <QBChatDialog *>*)createPrivateChatWithOpponentID:(NSUInteger)opponentID {
+    
+    QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil
+                                                                 type:QBChatDialogTypePrivate];
+    chatDialog.occupantIDs = @[@(opponentID)];
+    
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        
+        [QBRequest createDialog:chatDialog successBlock:^(QBResponse *__unused response, QBChatDialog *createdDialog) {
+            [source setResult:createdDialog];
+            
+        } errorBlock:^(QBResponse *__unused response) {
+            [source setError:response.error.error];
+        }];
+    });
 }
 
 @end
