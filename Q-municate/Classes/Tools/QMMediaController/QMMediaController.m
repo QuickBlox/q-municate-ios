@@ -19,7 +19,8 @@
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
 NYTPhotosViewControllerDelegate,
-QMMediaHandler>
+QMMediaHandler,
+QMAttachmentContentServiceDelegate>
 
 @property (weak, nonatomic) UIViewController <QMMediaControllerDelegate> *viewController;
 @property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
@@ -40,6 +41,8 @@ QMMediaHandler>
         
         _viewController = viewController;
         [QMAudioPlayer audioPlayer].playerDelegate = self;
+        self.attachmentsService.contentService.delegate = self;
+        
     }
     
     return self;
@@ -730,6 +733,20 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 - (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     return self.photoReferenceView;
 }
+
+
+//MARK: - QMAttachmentContentServiceDelegate
+- (BOOL)attachmentContentService:(QMAttachmentContentService *)__unused contentService
+        shouldDownloadAttachment:(QBChatAttachment *)attachment
+                       messageID:(NSString *)__unused messageID {
+    
+    return attachment.attachmentType == QMAttachmentContentTypeImage ||
+    attachment.attachmentType == QMAttachmentContentTypeAudio;
+}
+
+
+
+
 
 @end
 
