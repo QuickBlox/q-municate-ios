@@ -1,58 +1,37 @@
 //
-//  QMSiriCache.m
-//  Q-municate
+//  QMExtensionCache+QMSiriExtension.m
+//  QMSiriExtension
 //
-//  Created by Vitaliy Gurkovsky on 12/1/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Vitaliy Gurkovsky on 10/12/17.
+//  Copyright © 2017 Quickblox. All rights reserved.
 //
 
-#import "QMSiriCache.h"
+#import "QMExtensionCache+QMSiriExtension.h"
 
-static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
-static NSString *const kQMChatCacheNameKey = @"sample-cache";
-static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
+@implementation QMExtensionCache (QMSiriExtension)
 
-@implementation QMSiriCache
-
-
-- (instancetype)initWithApplicationGroupIdentifier:(NSString *)appGroupIdentifier {
-    
-    self = [super init];
-    
-    if (self) {
-        
-        [QMChatCache setupDBWithStoreNamed:kQMChatCacheNameKey applicationGroupIdentifier:appGroupIdentifier];
-        [QMUsersCache setupDBWithStoreNamed:kQMUsersCacheNameKey applicationGroupIdentifier:appGroupIdentifier];
-        
-        // Contact list service init
-        [QMContactListCache setupDBWithStoreNamed:kQMContactListCacheNameKey applicationGroupIdentifier:appGroupIdentifier];
-        
-    }
-    return self;
++ (void)allDialogsWithCompletionBlock:(void(^)(NSArray<QBChatDialog *> *results))completion {
+    [self.chatCache allDialogsWithCompletion:completion];
 }
 
-
-//MARK: - Public Methods
-
-- (void)allGroupDialogsWithCompletionBlock:(void (^)(NSArray<QBChatDialog *> *)) completion {
++ (void)allGroupDialogsWithCompletionBlock:(void (^)(NSArray<QBChatDialog *> *results)) completion {
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.dialogType == %@ AND SELF.name.length > 0", @(QBChatDialogTypeGroup)];
-    
-    [QMChatCache.instance dialogsSortedBy:@"name" ascending:YES withPredicate:predicate completion:^(NSArray<QBChatDialog *> * _Nullable dialogs) {
-
+    [self.chatCache dialogsSortedBy:@"name" ascending:YES withPredicate:predicate completion:^(NSArray<QBChatDialog *> * _Nullable dialogs) {
+        
         if (completion) {
             completion(dialogs);
         }
     }];
 }
 
-- (void)allContactUsersWithCompletionBlock:(void(^)(NSArray<QBUUser *> *results,NSError *error))completion {
++ (void)allContactUsersWithCompletionBlock:(void(^)(NSArray<QBUUser *> *results,NSError *error))completion {
     
     NSMutableArray *userIDs = [NSMutableArray array];
     dispatch_group_t group = dispatch_group_create();
     
     dispatch_group_enter(group);
-    [[QMContactListCache instance] contactListItems:^(NSArray<QBContactListItem *> * _Nonnull contactListItems) {
+    [self.contactsCache contactListItems:^(NSArray<QBContactListItem *> * _Nonnull contactListItems) {
         
         for (QBContactListItem *item in contactListItems) {
             if (item.subscriptionState != QBPresenceSubscriptionStateNone) {
@@ -66,7 +45,7 @@ static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.id IN %@",userIDs];
         
-        [[[QMUsersCache instance] usersWithPredicate:predicate sortedBy:@"fullName" ascending:YES] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+        [[self.usersCache usersWithPredicate:predicate sortedBy:@"fullName" ascending:YES] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
             if (t.faulted) {
                 completion(@[],t.error);
             }
@@ -75,14 +54,13 @@ static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
             }
             return  nil;
         }];
-        
-  
     });
 }
 
-- (void)dialogIDForUserWithID:(NSInteger)userID completionBlock:(void(^)(NSString *dialogID))completion {
++ (void)dialogIDForUserWithID:(NSInteger)userID
+              completionBlock:(void(^)(NSString *dialogID))completion {
     
-    [QMChatCache.instance allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
+    [self.chatCache allDialogsWithCompletion:^(NSArray <QBChatDialog *> * _Nullable dialogs) {
         
         NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*  _Nullable dialog, NSDictionary<NSString *,id> * _Nullable bindings) {
             return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(userID)];
@@ -106,9 +84,9 @@ static NSString *const kQMUsersCacheNameKey = @"qb-users-cache";
     }];
 }
 
-
 //MARK: - Helpers
-- (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID completionBlock:(void(^)(QBChatDialog *createdDialog))completion {
++ (void)createPrivateChatWithOpponentID:(NSUInteger)opponentID
+                        completionBlock:(void(^)(QBChatDialog *createdDialog))completion {
     
     QBChatDialog *chatDialog = [[QBChatDialog alloc] initWithDialogID:nil type:QBChatDialogTypePrivate];
     chatDialog.occupantIDs = @[@(opponentID)];
