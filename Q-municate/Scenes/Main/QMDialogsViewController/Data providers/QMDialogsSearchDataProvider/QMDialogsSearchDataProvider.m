@@ -9,6 +9,8 @@
 #import "QMDialogsSearchDataProvider.h"
 #import "QMDialogsSearchDataSource.h"
 #import "QMSearchProtocols.h"
+#import "QMTableViewDataSource.h"
+
 #import "QMCore.h"
 
 static NSString *const kQMDialogsSearchDescriptorKey = @"name";
@@ -22,7 +24,7 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
         return;
     }
     
-    QMSearchDataSource <QMDialogsSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
+    QMTableViewSearchDataSource <QMDialogsSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
     
     if (searchText.length == 0) {
         
@@ -43,7 +45,7 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
         NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];
         NSMutableArray *dialogsSearchResult = [NSMutableArray arrayWithArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
         
-        [dataSource setItems:dialogsSearchResult];
+        [dataSource replaceItems:dialogsSearchResult];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
