@@ -213,3 +213,12 @@
 "QM_STR_BUG" = "Bug";
 "QM_STR_IMPROVEMENT" = "Improvement";
 "QM_STR_SUGGESTION" = "Suggestion";
+
+// *********** EXTENSIONS ***********
+// *********** Share extension ***********
+"QM_EXT_SHARE_PROCESS_TITLE" = "Processing...";
+"QM_EXT_SHARE_SHARING_TITLE" = "Sharing...";
+"QM_EXT_SHARE_BAR_BUTTON_TITLE" = "Share";
+"QM_EXT_SHARE_COMMON_ERROR" = "Something went wrong";
+"QM_EXT_SHARE_SUCESS_MESSAGE" = "Successfully sent";
+"QM_EXT_SHARE_NOT_LOGGED_IN_ERROR" = "In order to share you should be logged in to Q-Municate";
