@@ -33,12 +33,15 @@ static const NSUInteger kContactsSection = 0;
 @implementation QMShareDataSource
 
 - (instancetype)initWithShareItems:(NSArray<id<QMShareItemProtocol>> *)shareItems
+                   sortDescriptors:(NSArray <NSSortDescriptor *> *)sortDescriptors
             alphabetizedDataSource:(BOOL)alphabetized {
     
     if (self = [super init]) {
         
         _alphabetizedDataSource = alphabetized;
         _selectedItems = [NSMutableSet set];
+        _sortDescriptors = sortDescriptors;
+        
         [self addItems:shareItems];
     }
     
@@ -62,7 +65,6 @@ static const NSUInteger kContactsSection = 0;
         
         if (indexOfItem != NSNotFound) {
             [self.items replaceObjectAtIndex:indexOfItem withObject:shareItem];
-            
         }
     }
     
@@ -75,6 +77,7 @@ static const NSUInteger kContactsSection = 0;
         [self.items sortUsingDescriptors:self.sortDescriptors];
     }
 }
+
 
 - (void)configureAlphabetizedDataSource {
     
@@ -119,6 +122,12 @@ static const NSUInteger kContactsSection = 0;
     }
 }
 
+- (void)addItems:(NSArray *)items {
+    
+    [super addItems:items];
+    [self sortDataSource];
+}
+
 - (NSIndexPath *)indexPathForObject:(id<QMShareItemProtocol>)item {
     
     if (self.alphabetizedDataSource) {
@@ -151,6 +160,15 @@ static const NSUInteger kContactsSection = 0;
     }
     else {
         [super replaceItems:items];
+    }
+    
+    [self sortDataSource];
+}
+
+- (void)setSortDescriptors:(NSArray<NSSortDescriptor *> *)sortDescriptors {
+    _sortDescriptors = sortDescriptors;
+    if (sortDescriptors) {
+        [self sortDataSource];
     }
 }
 
@@ -257,9 +275,11 @@ static const NSUInteger kContactsSection = 0;
 @implementation QMShareSearchControllerDataSource
 
 - (instancetype)initWithShareItems:(NSArray<id<QMShareItemProtocol>> *)shareItems
-            alphabetizedDataSource:(BOOL)alphabetized
-{
+                   sortDescriptors:(nullable NSArray<NSSortDescriptor *> *)sortDescriptors
+            alphabetizedDataSource:(BOOL)alphabetized {
+    
     self = [super initWithShareItems:shareItems
+                     sortDescriptors:sortDescriptors
               alphabetizedDataSource:alphabetized];
     
     return self;

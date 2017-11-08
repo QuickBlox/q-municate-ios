@@ -17,11 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QMShareDataSource : QMSearchDataSource
 
-@property (nonatomic, readonly, strong) NSMutableSet <id<QMShareItemProtocol>>* selectedItems;
+@property (nonatomic, strong, readonly) NSMutableSet <id<QMShareItemProtocol>>* selectedItems;
 @property (nonatomic, copy) NSArray <NSSortDescriptor *> *sortDescriptors;
 
-- (instancetype)initWithShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems
-alphabetizedDataSource:(BOOL)alphabetized;
+- (instancetype)initWithShareItems:(NSArray<id<QMShareItemProtocol>> *)shareItems
+                   sortDescriptors:(nullable NSArray <NSSortDescriptor *> *)sortDescriptors
+            alphabetizedDataSource:(BOOL)alphabetized;
 
 - (void)selectItem:(id<QMShareItemProtocol>)item
            forView:(nullable id <QMShareViewProtocol>)view;
@@ -35,7 +36,6 @@ alphabetizedDataSource:(BOOL)alphabetized;
 @interface QMShareDataSource (QMCollectionViewDataSource) <UICollectionViewDataSource>
 
 @end
-
 
 @interface QMShareSearchControllerDataSource : QMShareDataSource 
 
