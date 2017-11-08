@@ -11,10 +11,13 @@
 
 @class QBChatMessage;
 @class QBChatAttachment;
+@class QBChatDialog;
+@class QBUUser;
 
 @interface QMShareTasks : NSObject
 
 + (BFTask <QBChatMessage *> *)messageForItemProvider:(NSItemProvider *)provider;
-+ (BFTask *)taskFetchAllDialogsFromDate:(NSDate *)date;
++ (BFTask <NSArray <QBChatDialog *> *> *)taskFetchAllDialogsFromDate:(NSDate *)date;
++ (BFTask <NSString*> *)dialogIDForUser:(QBUUser *)user;
 
 @end
