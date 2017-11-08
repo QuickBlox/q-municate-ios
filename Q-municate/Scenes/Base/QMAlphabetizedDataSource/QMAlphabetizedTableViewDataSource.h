@@ -6,7 +6,8 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMSearchDataSource.h"
+
+#import "QMTableViewDataSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  This class represent alphabetized data source using a specific key path of objects, set to items.
  *  It is also can be used as a search data source.
  */
-@interface QMAlphabetizedDataSource : QMSearchDataSource
+@interface QMAlphabetizedTableViewDataSource : QMTableViewSearchDataSource
 
 /**
  *  Determines whether data source is empty or not.
