@@ -30,15 +30,16 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 @implementation QBSettings (Qmunicate)
 
 
-+ (void)setQmunicateSettings {
-    // Quickblox settings
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthKey:kQMAuthorizationKey];
-    [QBSettings setAuthSecret:kQMAuthorizationSecret];
-    [QBSettings setAccountKey:kQMAccountKey];
-    [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
++ (void)configureForQmunicate {
     
-    [QBSettings setAutoReconnectEnabled:YES];
-    [QBSettings setCarbonsEnabled:YES];
+    // Quickblox settings
+    QBSettings.applicationID = kQMApplicationID;
+    QBSettings.authKey = kQMAuthorizationKey;
+    QBSettings.authSecret = kQMAuthorizationSecret;
+    QBSettings.accountKey = kQMAccountKey;
+    QBSettings.applicationGroupIdentifier = kQMAppGroupIdentifier;
+    QBSettings.autoReconnectEnabled = YES;
+    QBSettings.carbonsEnabled = YES;
 }
+
 @end

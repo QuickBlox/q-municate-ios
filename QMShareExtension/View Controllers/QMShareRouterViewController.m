@@ -46,7 +46,7 @@ QMShareEtxentionOperationDelegate>
     [super viewDidLoad];
     
     // Quickblox settings
-    [QBSettings setQmunicateSettings];
+    [QBSettings configureForQmunicate];
     
     [self configureAppereance];
     [self configureReachability];

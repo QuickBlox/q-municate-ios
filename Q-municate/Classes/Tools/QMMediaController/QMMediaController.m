@@ -743,9 +743,4 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     attachment.attachmentType == QMAttachmentContentTypeAudio;
 }
 
-
-
-
-
 @end
-

@@ -12,6 +12,6 @@
 
 @interface QBSettings (Qmunicate)
 
-+ (void)setQmunicateSettings;
++ (void)configureForQmunicate;
 
 @end

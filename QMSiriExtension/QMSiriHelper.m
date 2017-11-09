@@ -34,7 +34,7 @@
     
     if (self) {
         // Quickblox settings
-        [QBSettings setQmunicateSettings];
+        [QBSettings configureForQmunicate];
     }
     
     return self;

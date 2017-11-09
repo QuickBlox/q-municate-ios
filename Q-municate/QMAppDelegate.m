@@ -34,7 +34,7 @@
     application.applicationIconBadgeNumber = 0;
     
     // Quickblox settings
-    [QBSettings setQmunicateSettings];
+    [QBSettings configureForQmunicate];
     
 #if DEVELOPMENT == 0
     [QBSettings setLogLevel:QBLogLevelNothing];
