@@ -188,7 +188,7 @@ static inline NSData * __nullable imageData(UIImage * __nonnull image) {
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         if (dataToSend) {
-            self.currentRequest =  [QBRequest TUploadFile:dataToSend
+            self.currentRequest = [QBRequest TUploadFile:dataToSend
                                                  fileName:attatchment.name
                                               contentType:attatchment.contentType
                                                  isPublic:NO

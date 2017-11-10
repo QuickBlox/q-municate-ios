@@ -111,8 +111,8 @@ QMShareEtxentionOperationDelegate>
     
     [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
     
-    [[QMShareTasks messageForItemProvider:provider] continueWithExecutor:BFExecutor.mainThreadExecutor
-                                                               withBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull t)
+    [[QMShareTasks loadItemsForItemProvider:provider] continueWithExecutor:BFExecutor.mainThreadExecutor
+                                                               withBlock:^id _Nullable(BFTask<QMItemProviderResult *> * _Nonnull t)
      {
          [SVProgressHUD dismiss];
          
@@ -121,7 +121,7 @@ QMShareEtxentionOperationDelegate>
          }
          else {
              
-             self.attachment = t.result.attachments.firstObject;
+             self.attachment = t.result.attachment;
              self.shareText = t.result.text;
              
              dispatch_async(dispatch_queue_create("ShareDataSourceQueue", DISPATCH_QUEUE_CONCURRENT), ^{
