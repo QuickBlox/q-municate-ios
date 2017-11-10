@@ -21,177 +21,149 @@
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
 static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
+
+@interface QMItemProviderLoader<__covariant ResultType> : NSObject
+
+@property (strong, nonatomic, readonly) NSItemProvider *itemProvider;
+
+- (instancetype)initWithProvider:(NSItemProvider *)provider;
+
+- (void)loadItemForTypeIdentifier:(NSString *)typeIdentifier
+                completionHandler:(void(^)(ResultType item , NSError * __null_unspecified error))completionHandler;
+- (BFTask <ResultType> *)taskLoadItem;
+
+
+@end
+
+@implementation QMItemProviderLoader
+
+- (instancetype)initWithProvider:(NSItemProvider *)provider {
+    if (self = [super init]) {
+        _itemProvider = provider;
+    }
+    return self;
+}
+
+- (void)loadItemForTypeIdentifier:(NSString *)typeIdentifier
+                completionHandler:(void(^)(id item , NSError * __null_unspecified error))completionHandler {
+    [self.itemProvider loadItemForTypeIdentifier:typeIdentifier options:nil completionHandler:completionHandler];
+}
+
+- (BFTask *)taskLoadItem {
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        
+        NSString *typeIdentifier = self.itemProvider.registeredTypeIdentifiers.firstObject;
+        
+        [self loadItemForTypeIdentifier:typeIdentifier completionHandler:^(id item, NSError * _Null_unspecified error) {
+            if (error) {
+                [source setError:error];
+            }
+            else {
+                [source setResult:item];
+            }
+        }];
+    });
+}
+
+@end
+
 @implementation QMShareTasks
 
-+ (BFTask <QBChatMessage*> *)messageForItemProvider:(NSItemProvider *)provider {
++ (BFTask <QMItemProviderResult*> *)loadItemsForItemProvider:(NSItemProvider *)provider {
     
-    BFTaskCompletionSource *source = [BFTaskCompletionSource new];
+    QMItemProviderResult *result = [QMItemProviderResult new];
     
-    QBChatMessage *message = [QBChatMessage message];
+    NSParameterAssert(provider.registeredTypeIdentifiers.count > 1);
     
     if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
         
-        [[self taskForTextWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull t) {
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
-                message.text = t.result;
-                [source setResult:message];
-            }
-            return nil;
+        QMItemProviderLoader<NSString *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSString *> * _Nonnull t) {
+            result.text = t.result;
+            return [BFTask taskWithResult:result];
         }];
     }
+    
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
         
-        [[self taskForURLWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull urlTask) {
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull urlTask) {
+            
             NSURL *URL = urlTask.result;
             
             if (URL.isFileURL) {
+                
                 QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
                 settings.maxImageSize = kQMMaxImageSize;
                 settings.maxFileSize = kQMMaxFileSize;
                 
-                [[QMAttachmentProvider attachmentWithFileURL:URL settings:settings] continueWithBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask) {
-                    if (attachmentTask.error) {
-                        [source setError:attachmentTask.error];
-                    }
-                    else {
-                        QBChatAttachment *attachment = attachmentTask.result;
-                        message.attachments = @[attachment];
-                        message.text =
-                        [NSString stringWithFormat:@"%@ attachment",
-                         attachment.type.capitalizedString];
-                        [source setResult:message];
-                    }
-                    return nil;
-                }];
+                return [[QMAttachmentProvider attachmentWithFileURL:URL
+                                                           settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+                        {
+                            QBChatAttachment *attachment = attachmentTask.result;
+                            result.attachment = attachment;
+                            result.text =
+                            [NSString stringWithFormat:@"%@ attachment",
+                             attachment.type.capitalizedString];
+                            
+                            return [BFTask taskWithResult:result];
+                        }];
             }
             else if (URL.isLocationURL) {
-                message.text = @"Location";
-                [[URL location] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
-                    message.locationCoordinate = locationTask.result.coordinate;
-                    [source setResult:message];
-                    return nil;
+                result.text = @"Location";
+                
+                return [[URL location] continueWithSuccessBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
+                    
+                    QBChatAttachment *locationAttachment =
+                    [QBChatAttachment locationAttachmentWithCoordinate:locationTask.result.coordinate];
+                    result.attachment = locationAttachment;
+                    return [BFTask taskWithResult:result];
                 }];
             }
             else {
-                message.text = URL.absoluteString;
-                [source setResult:message];
+                result.text = URL.absoluteString;
+                return [BFTask taskWithResult:result];
             }
-            
-            return nil;
         }];
     }
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie] ||
              [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
              [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
         
-        [[self taskForProvider:provider] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+            
+            QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
+            settings.maxImageSize = kQMMaxImageSize;
+            settings.maxFileSize = kQMMaxFileSize;
+            
+            return [[QMAttachmentProvider attachmentWithFileURL:t.result
+                                                       settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask) {
                 
-                QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-                settings.maxImageSize = kQMMaxImageSize;
-                settings.maxFileSize = kQMMaxFileSize;
+                QBChatAttachment *attachment = attachmentTask.result;
+                result.attachment = attachment;
+                result.text =
+                [NSString stringWithFormat:@"%@ attachment",
+                 attachment.type.capitalizedString];
                 
-                [[QMAttachmentProvider attachmentWithFileURL:t.result settings:settings] continueWithBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask) {
-                    if (attachmentTask.error) {
-                        [source setError:attachmentTask.error];
-                    }
-                    else {
-                        QBChatAttachment *attachment = attachmentTask.result;
-                        message.attachments = @[attachment];
-                        message.text =
-                        [NSString stringWithFormat:@"%@ attachment",
-                         attachment.type.capitalizedString];
-                        [source setResult:message];
-                    }
-                    return nil;
-                }];
-            }
-            return nil;
+                return [BFTask taskWithResult:result];
+            }];
         }];
     }
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
         
-        [[self taskForImageWithProvider:provider] continueWithBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull t) {
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
-                QBChatAttachment *imageAttachment =  [QBChatAttachment imageAttachmentWithImage:t.result];
-                message.attachments = @[imageAttachment];
-                message.text = @"Image attachment";
-                [source setResult:message];
-            }
+        QMItemProviderLoader<UIImage *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull t) {
             
-            return nil;
+            QBChatAttachment *imageAttachment = [QBChatAttachment imageAttachmentWithImage:t.result];
+            result.attachment = imageAttachment;
+            result.text = @"Image attachment";
+            return [BFTask taskWithResult:result];
         }];
     }
     
-    
-    return source.task;
-}
-
-+ (BFTask <NSString *>*)taskForTextWithProvider:(NSItemProvider *)provider {
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeText
-                                    options:nil
-                          completionHandler:^(NSString * _Nullable text, NSError * _Nullable error) {
-                              if (error) {
-                                  [source setError:error];
-                              }
-                              else {
-                                  [source setResult:text];
-                              }
-                          }];
-    });
-}
-
-+ (BFTask <NSURL *>*)taskForURLWithProvider:(NSItemProvider *)provider {
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeURL
-                                    options:nil
-                          completionHandler:^(NSURL * _Nullable url, NSError * _Nullable error) {
-                              if (error) {
-                                  [source setError:error];
-                              }
-                              else {
-                                  [source setResult:url];
-                              }
-                          }];
-    });
-}
-
-+ (BFTask <UIImage *>*)taskForImageWithProvider:(NSItemProvider *)provider {
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        [provider loadItemForTypeIdentifier:(NSString *)kUTTypeImage
-                                    options:nil
-                          completionHandler:^(UIImage * _Nullable image, NSError * _Nullable error) {
-                              if (error) {
-                                  [source setError:error];
-                              }
-                              else {
-                                  [source setResult:image];
-                              }
-                          }];
-    });
-}
-
-+ (BFTask <NSURL *> *)taskForProvider:(NSItemProvider *)provider {
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        [provider loadItemForTypeIdentifier:(NSString *)provider.registeredTypeIdentifiers.firstObject
-                                    options:nil
-                          completionHandler:^(NSURL *url, NSError *error) {
-                              error ? [source setError:error] : [source setResult:url];
-                          }];
-    });
+    return [BFTask cancelledTask];
 }
 
 + (BFTask *)taskFetchAllDialogsFromDate:(NSDate *)date {

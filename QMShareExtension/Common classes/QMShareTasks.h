@@ -14,9 +14,17 @@
 @class QBChatDialog;
 @class QBUUser;
 
+
+@interface QMItemProviderResult : NSObject
+
+@property (copy, nonatomic) NSString *text;
+@property (strong, nonatomic) QBChatAttachment *attachment;
+
+@end
+
 @interface QMShareTasks : NSObject
 
-+ (BFTask <QBChatMessage *> *)messageForItemProvider:(NSItemProvider *)provider;
++ (BFTask <QMItemProviderResult *> *)loadItemsForItemProvider:(NSItemProvider *)provider;
 + (BFTask <NSArray <QBChatDialog *> *> *)taskFetchAllDialogsFromDate:(NSDate *)date;
 + (BFTask <NSString*> *)dialogIDForUser:(QBUUser *)user;
 
