@@ -96,6 +96,24 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
 
 @implementation QMAttachmentProvider
 
++ (BFTask <QBChatAttachment *>*)imageAttachmentWithData:(NSData *)imageData
+                                               settings:(nullable QMAttachmentProviderSettings *)providerSettings {
+
+    BFExecutor *backgroundExecutor =
+    [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
+    return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
+        
+        UIImage *image = [UIImage imageWithData:imageData];
+        UIImage *resizedImage = [self resizedImageFromImage:image
+                                           withMaxImageSize:providerSettings.maxImageSize];
+        
+        QBChatAttachment *attachment = [QBChatAttachment imageAttachmentWithImage:resizedImage];
+        return [BFTask taskFromExecutor:BFExecutor.mainThreadExecutor withBlock:^id _Nonnull{
+            return [BFTask taskWithResult:attachment];
+        }];
+    }];
+    
+}
 
 + (BFTask <QBChatAttachment *>*)attachmentWithFileURL:(NSURL *)fileURL
                                              settings:(nullable QMAttachmentProviderSettings *)providerSettings {
@@ -167,31 +185,52 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     }
     else if (UTTypeConformsTo(UTI, kUTTypeImage)) {
         
-        BFExecutor *backgroundExecutor =
-        [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
-        return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
-            
-            NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
-            UIImage *image = [UIImage imageWithData:imageData];
-            UIImage *resizedImage = [self resizedImageFromImage:image
-                                               withMaxImageSize:providerSettings.maxImageSize];
-            
-            QBChatAttachment *attachment = [QBChatAttachment imageAttachmentWithImage:resizedImage];
-            return [BFTask taskFromExecutor:BFExecutor.mainThreadExecutor withBlock:^id _Nonnull{
-                return [BFTask taskWithResult:attachment];
-            }];
-        }];
+        NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
+        return [self imageAttachmentWithData:imageData
+                                    settings:providerSettings];
     }
     
     NSString *localizedDescription =
-    [NSString stringWithFormat:@"Attachment with type identifier:%@ and mimeType:%@ is not supported",
-     (__bridge NSString *)UTI,
-     (__bridge NSString *)MIMEType];
+    [NSString stringWithFormat:@"Attachment with name %@ not supported",fileName];
+    
     NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
                                          code:0
                                      userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
     
     return [BFTask taskWithError:error];
+}
+
++ (NSString *)mimeTypeForData:(NSData *)data {
+    
+    uint8_t c;
+    [data getBytes:&c length:1];
+    
+    switch (c) {
+        case 0xFF:
+            return @"image/jpeg";
+            break;
+        case 0x89:
+            return @"image/png";
+            break;
+        case 0x47:
+            return @"image/gif";
+            break;
+        case 0x49:
+        case 0x4D:
+            return @"image/tiff";
+            break;
+        case 0x25:
+            return @"application/pdf";
+            break;
+        case 0xD0:
+            return @"application/vnd";
+            break;
+        case 0x46:
+            return @"text/plain";
+            break;
+        default:
+            return @"application/octet-stream";
+    }
 }
 
 + (BFTask <QBChatAttachment *> *)taskLoadValuesForAttachment:(QBChatAttachment *)attachment {
