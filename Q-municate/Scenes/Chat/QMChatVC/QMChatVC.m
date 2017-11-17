@@ -23,6 +23,7 @@
 #import "QMHelpers.h"
 #import "QMSplitViewController.h"
 #import "QMMessagesHelper.h"
+#import "NSURL+QMShareExtension.h"
 
 // helpers
 #import "QMChatButtonsFactory.h"
@@ -37,6 +38,9 @@
 #import "QMPermissions.h"
 #import "UIScreen+QMLock.h"
 #import "QMImageBarButtonItem.h"
+#import "QMShareTableViewController.h"
+#import "QMActivityItem.h"
+#import "QMShareHelper.h"
 
 // external
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -83,7 +87,10 @@ QMImagePickerResultHandler,
 QMMediaControllerDelegate,
 QMCallManagerDelegate,
 QMOpenGraphServiceDelegate,
-QMUsersServiceDelegate
+QMUsersServiceDelegate,
+QMShareControllerDelegate,
+QMPlaceHolderTextViewPasteDelegate,
+TTTAttributedLabelDelegate
 >
 /**
  *  Detailed cells set.
@@ -139,6 +146,11 @@ QMUsersServiceDelegate
  *  Group avatar bar button item. Is used for right bar button item.
  */
 @property (strong, nonatomic)  QMImageBarButtonItem *imageBarButtonItem;
+
+@property (strong, nonatomic) NSIndexPath *indexPathToForward;
+@property (weak, nonatomic) QMShareTableViewController *shareTableViewController;
+
+@property (strong, nonatomic) QMShareHelper *shareHelper;
 
 @end
 
@@ -198,10 +210,18 @@ QMUsersServiceDelegate
     
     [super viewDidLoad];
     
+    self.collectionView.delegate = self;
+    
     [QMChatCell registerMenuAction:@selector(share)];
+    [QMChatCell registerMenuAction:@selector(forward)];
+    
     UIMenuItem *shareItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_SHARE", nil)
                                                        action:@selector(share)];
-    [UIMenuController sharedMenuController].menuItems = @[shareItem];
+    UIMenuItem *forwardItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_FORWARD", nil)
+                                                         action:@selector(forward)];
+    
+    [UIMenuController sharedMenuController].menuItems = @[shareItem, forwardItem];
+    [[UIMenuController sharedMenuController] update];
     
     self.navigationItem.titleView = self.onlineTitleView;
     
@@ -319,6 +339,7 @@ QMUsersServiceDelegate
     [self refreshMessages];
     
     self.inputToolbar.audioRecordingEnabled = YES;
+    self.inputToolbar.contentView.textView.qm_placeholderTextViewPasteDelegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(navigationBarHeightChanged)
@@ -356,6 +377,7 @@ QMUsersServiceDelegate
      }];
 }
 
+
 - (void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
@@ -381,23 +403,6 @@ QMUsersServiceDelegate
 
 - (void)navigationBarHeightChanged {
     self.additionalNavigationBarHeight = [(QMNavigationController *)self.navigationController currentAdditionalNavigationBarHeight];
-}
-
-//MARK: - Deferred queue management
-
-- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager
-        didAddMessageLocally:(QBChatMessage *)addedMessage {
-    
-    if ([addedMessage.dialogID isEqualToString:self.chatDialog.ID]) {
-        
-        [self.chatDataSource addMessage:addedMessage];
-    }
-}
-
-- (void)deferredQueueManager:(QMDeferredQueueManager *)__unused queueManager
-     didUpdateMessageLocally:(QBChatMessage *)updatedMessage {
-    
-    [self.chatDataSource updateMessage:updatedMessage];
 }
 
 - (id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message {
@@ -1150,29 +1155,65 @@ QMUsersServiceDelegate
     return size;
 }
 
+
+- (BOOL)menuIsAvailableForCellAtIndexPath:(NSIndexPath *)indexPath {
+    
+    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
+    
+    BOOL isAvailable = NO;
+    
+    if (message) {
+        if (message.isMediaMessage) {
+            QBChatAttachment *attachment = message.attachments.firstObject;
+            if (message.isImageAttachment) {
+                UIImage *image =
+                [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
+                isAvailable = image != nil;
+            }
+            else if (message.isAudioAttachment) {
+                isAvailable =
+                [QMCore.instance.chatService.chatAttachmentService attachmentStatusForMessage:message] == QMMessageAttachmentStatusLoaded;
+            }
+            else if (message.isLocationMessage) {
+                isAvailable = YES;
+            }
+            else  {
+                isAvailable = NO;
+            }
+        }
+        else {
+            return YES;
+        }
+    }
+    
+    return isAvailable;
+}
+
+
+- (BOOL)collectionView:(UICollectionView *)__unused collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+    return [self menuIsAvailableForCellAtIndexPath:indexPath];
+}
+- (BOOL)collectionView:(UICollectionView *)__unused collectionView shouldShowMenuForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    return [self menuIsAvailableForCellAtIndexPath:indexPath];
+}
+
 - (BOOL)collectionView:(UICollectionView *)collectionView
       canPerformAction:(SEL)action
     forItemAtIndexPath:(NSIndexPath *)indexPath
             withSender:(id)sender {
     
-    Class viewClass = [self viewClassForItem:[self.chatDataSource messageForIndexPath:indexPath]];
-    QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
-    //allow action performing only for image attachments
-    if (message.isMediaMessage) {
+    if (action == @selector(forward) ||
+        action == @selector(share) ||
+        action == @selector(copy:)) {
         
-        BOOL canPerformAction =
-        message.isImageAttachment &&
-        (action == @selector(copy:) ||
-         action == @selector(share));
-        
-        return canPerformAction;
-    }
-    // disabling action performing for specific cells
-    if (viewClass == [QMChatLocationIncomingCell class]
-        || viewClass == [QMChatLocationOutgoingCell class]
-        || viewClass == [QMChatNotificationCell class]
-        || viewClass == [QMChatContactRequestCell class]) {
-        return NO;
+        Class viewClass = [self viewClassForItem:[self.chatDataSource messageForIndexPath:indexPath]];
+        if ([self class:viewClass
+     canPerformSelector:action]) {
+            return [self menuIsAvailableForCellAtIndexPath:indexPath];
+        }
+        else {
+            return NO;
+        }
     }
     
     return [super collectionView:collectionView
@@ -1180,6 +1221,45 @@ QMUsersServiceDelegate
               forItemAtIndexPath:indexPath
                       withSender:sender];
 }
+
+- (BOOL)class:(Class)class
+canPerformSelector:(SEL)selector {
+    
+    NSString *selectorKey = NSStringFromSelector(selector);
+    NSArray *deniedClasses = QMDeniedClassesDictionary()[selectorKey];
+    BOOL canPerform = ![deniedClasses containsObject:class];
+    return canPerform;
+}
+
+NSDictionary *QMDeniedClassesDictionary() {
+    
+    static NSDictionary *deniedClassesDictionary = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        NSArray *copySelectorDeniedClasses = @[[QMChatLocationIncomingCell class],
+                                                [QMChatLocationOutgoingCell class],
+                                                [QMChatNotificationCell class],
+                                                [QMAudioIncomingCell class],
+                                                [QMAudioOutgoingCell class],
+                                                [QMVideoIncomingCell class],
+                                                [QMVideoOutgoingCell class]];
+        
+        NSArray *forwardSelectorDeniedClasses = @[[QMChatNotificationCell class]];
+        
+        NSArray *shareSelectorDeniedClasses = @[[QMChatNotificationCell class],
+                                                [QMVideoIncomingCell class],
+                                                [QMVideoOutgoingCell class]];
+        
+        deniedClassesDictionary = @{NSStringFromSelector(@selector(copy:)) : copySelectorDeniedClasses,
+                                    NSStringFromSelector(@selector(share)) : shareSelectorDeniedClasses,
+                                    NSStringFromSelector(@selector(forward)) : forwardSelectorDeniedClasses};
+    });
+    
+    return deniedClassesDictionary;
+}
+
 
 
 - (BOOL)canPerformAction:(SEL)action
@@ -1196,33 +1276,77 @@ QMUsersServiceDelegate
                         withSender:sender];
 }
 
+- (QMActivityItem *)activityItemForMessage:(QBChatMessage *)message {
+    
+    if (message.isMediaMessage) {
+        QBChatAttachment *attachment = message.attachments.firstObject;
+        
+        if ([message isImageAttachment]) {
+            NSString *imageCacheKey = [attachment remoteURLWithToken:NO].absoluteString;
+            UIImage *image =
+            [QMImageLoader.instance.imageCache imageFromCacheForKey:imageCacheKey];
+            if (!image) {
+                return nil;
+            }
+            
+            return [[QMActivityItem alloc] initWithImage:image];
+        }
+        else if (message.isAudioAttachment) {
+            NSURL *localURL = [QMCore.instance.chatService.chatAttachmentService.storeService fileURLForAttachment:attachment messageID:message.ID dialogID:message.dialogID];
+            if (!localURL) {
+                return nil;
+            }
+            return [[QMActivityItem alloc] initWithURL:localURL];
+        }
+        else if (message.isLocationMessage) {
+            return [[QMActivityItem alloc] initWithURL:[NSURL appleMapsURLForLocationCoordinate:message.locationCoordinate]];
+        }
+        else {
+            return nil;
+        }
+    }
+    else {
+        return [[QMActivityItem alloc] initWithString:message.text];
+    }
+}
+
+
 - (void)chatCell:(QMChatCell *)cell
 didPerformAction:(SEL)action
       withSender:(id)__unused sender {
     
-    if (action != @selector(share)) {
-        return;
-    }
-    
+    //Forward
     NSIndexPath *indexPath =  [self.collectionView indexPathForCell:cell];
     QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
     
-    if ([message isImageAttachment]) {
-        
-        QBChatAttachment *attachment = message.attachments.firstObject;
-        UIImage *image =
-        [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
-        
-        if (image) {
-            
-            UIActivityViewController *activityViewController =
-            [[UIActivityViewController alloc] initWithActivityItems:@[image]
-                                              applicationActivities:nil];
-            
-            [self displayActivityViewController:activityViewController
-                                     withSender:cell
-                                       animated:YES];
+    if (action == @selector(share)) {
+        QMActivityItem *item = [self activityItemForMessage:message];
+        if (item) {
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[item] applicationActivities:nil];
+        activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop, UIActivityTypeCopyToPasteboard];
+        [self displayActivityViewController:activityViewController
+                                 withSender:cell
+                                   animated:YES];
         }
+    }
+    else if(action == @selector(forward)) {
+
+            NSArray *dialogs = QMCore.instance.chatService.dialogsMemoryStorage.unsortedDialogs;
+            NSArray *friends = [QMCore.instance.contactManager friends];
+            
+            QMShareTableViewController *shareTableViewController=
+            [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogs contacts:friends];
+            
+            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:shareTableViewController];
+            
+            [self presentViewController:navigationController
+                               animated:YES
+                             completion:nil];
+            
+            self.indexPathToForward = indexPath;
+            
+            shareTableViewController.shareControllerDelegate = self;
+            self.shareTableViewController = shareTableViewController;
     }
 }
 
@@ -1237,10 +1361,7 @@ didPerformAction:(SEL)action
     }
     
     [self presentViewController:controller animated:animated completion:nil];
-    
 }
-
-
 
 - (void)collectionView:(UICollectionView *)__unused collectionView
          performAction:(SEL)action
@@ -1260,7 +1381,6 @@ didPerformAction:(SEL)action
             }
         }
         else {
-            
             [[UIPasteboard generalPasteboard] setString:message.text];
         }
     }
@@ -1367,6 +1487,7 @@ didPerformAction:(SEL)action
     return layoutModel;
 }
 
+
 - (void)collectionView:(QMChatCollectionView *)collectionView
          configureCell:(UICollectionViewCell *)cell
           forIndexPath:(NSIndexPath *)indexPath {
@@ -1407,6 +1528,7 @@ didPerformAction:(SEL)action
         
         currentCell.textView.linkAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
                                                 NSUnderlineStyleAttributeName : @(YES)};
+        currentCell.textView.delegate = self;
     }
     else if ([cell isKindOfClass:[QMChatIncomingCell class]]
              || [cell isKindOfClass:[QMChatAttachmentIncomingCell class]]
@@ -1451,6 +1573,8 @@ didPerformAction:(SEL)action
     }
     
     if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
+       
+        currentCell.textView.delegate = self;
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         
@@ -1841,7 +1965,14 @@ didPerformAction:(SEL)action
         [self.chatDataSource addMessages:messages];
     }
 }
-
+- (void)chatService:(QMChatService *)__unused chatService
+didDeleteMessageFromMemoryStorage:(QBChatMessage *)message
+        forDialogID:(NSString *)dialogID {
+     if ([self.chatDialog.ID isEqualToString:dialogID]) {
+       [self.chatDataSource deleteMessage:message];
+     }
+}
+    
 - (void)chatService:(QMChatService *)__unused chatService
 didAddMessageToMemoryStorage:(QBChatMessage *)message
         forDialogID:(NSString *)dialogID {
@@ -1874,6 +2005,9 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
 - (void)chatService:(QMChatService *)__unused chatService
 didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
+    [self.shareTableViewController.shareDataSource
+     updateItems:@[chatDialog]];
+    
     if (self.chatDialog.type != QBChatDialogTypePrivate && [self.chatDialog.ID isEqualToString:chatDialog.ID]) {
         
         [self.onlineTitleView setTitle:self.chatDialog.name];
@@ -1884,6 +2018,9 @@ didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
 
 - (void)chatService:(QMChatService *)__unused chatService
 didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+    
+    [self.shareTableViewController.shareDataSource
+     updateItems:@[dialogs]];
     
     QBChatDialog *updatedDialog = nil;
     
@@ -2068,12 +2205,16 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
 }
 
 //MARK: QMChatCellDelegate
+//- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+//    NSLog(@"Did select");
+//}
 
 - (void)chatCellDidTapContainer:(QMChatCell *)cell {
     
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    //Forward
+    NSIndexPath *indexPath =  [self.collectionView indexPathForCell:cell];
     QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
-    
+
     QMMessageStatus status = [self.deferredQueueManager statusForMessage:message];
     
     if (status == QMMessageStatusNotSent && message.senderID == self.senderID) {
@@ -2375,6 +2516,8 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 
 - (void)share {
 }
+- (void)forward {
+}
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)__unused scrollView {
     
@@ -2395,6 +2538,51 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
         [[QMAudioPlayer audioPlayer] pause];
         [self cancellAudioRecording];
     }
+}
+
+- (void)didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
+    
+    NSParameterAssert(self.indexPathToForward);
+    
+    QBChatMessage *messageToForward = [self.chatDataSource messageForIndexPath:self.indexPathToForward];
+    NSParameterAssert(messageToForward);
+    
+    [self.shareTableViewController showLoadingAlertControllerWithStatus:@"Forwarding"
+                                                               animated:YES
+                                                         withCompletion:nil];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [self.shareHelper forwardMessage:messageToForward
+                        toRecipients:selectedItems
+                 withCompletionBlock:^(NSError *error,
+                                       BOOL completed) {
+                     if (error) {
+                         NSLog(@"Error = %@", error);
+                     }
+                     else if (completed) {
+                         [weakSelf.shareTableViewController dismissViewControllerAnimated:YES
+                                                                               completion:nil];
+                     }
+                 }];
+}
+
+
+- (void)didTapCancelBarButton {
+    
+    [self.shareTableViewController dismissViewControllerAnimated:YES
+                                                      completion:nil];
+}
+
+- (void)didCancelSharing {
+    [self.shareHelper cancelForwarding];
+}
+
+- (QMShareHelper *)shareHelper {
+    if (!_shareHelper) {
+        _shareHelper = [[QMShareHelper alloc] init];
+    }
+    return _shareHelper;
 }
 
 @end
