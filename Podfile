@@ -36,8 +36,8 @@ target 'Q-municate' do
     
     #Firebase
     pod 'FirebaseUI/Phone', '~> 4.0'
-    
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
+    #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QMShareExtension'
     
     common_pods
     
@@ -50,7 +50,8 @@ end
 target 'QMShareExtension' do
     common_pods
     pod 'Reachability', '~> 3.2'
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :tag => '0.5.1'
+    #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QMShareExtension'
     pod 'SVProgressHUD', '~> 1.0'
 end
 
