@@ -15,10 +15,7 @@
 @interface NSURL (QMShareExtension)
 
 - (BOOL)isLocationURL;
-
-- (CLLocationCoordinate2D)locationCoordinate;
-
 - (BFTask <CLLocation *>*)location;
-
++ (NSURL *)appleMapsURLForLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate;
 
 @end

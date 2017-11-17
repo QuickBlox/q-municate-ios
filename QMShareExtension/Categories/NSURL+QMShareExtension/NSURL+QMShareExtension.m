@@ -31,10 +31,6 @@ NSString *const QMGoogleMapsProvider = @"google";
     return [self isAppleMapURL] ||[self isGoogleMapURL];
 }
 
-
-
-
-
 - (BFTask <CLLocation *>*)location {
     BFTaskCompletionSource *source = [[BFTaskCompletionSource alloc] init];
     
@@ -59,7 +55,12 @@ NSString *const QMGoogleMapsProvider = @"google";
     return source.task;
 }
 
-
++ (NSURL *)appleMapsURLForLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
+    
+    NSString *coordinates = [NSString stringWithFormat:@"%lf,%lf", locationCoordinate.latitude, locationCoordinate.longitude];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://maps.apple.com/maps?ll=%@&q=%@&t=m", coordinates, coordinates]];
+    return url;
+}
 
 - (CLLocationCoordinate2D)locationCoordinate {
     
@@ -170,6 +171,8 @@ NSString *const QMGoogleMapsProvider = @"google";
      QMEncodedStringFromStringWithEncoding(self.absoluteString, NSUTF8StringEncoding),
      QMGoogleMapsAPIKey];
     
+    
+    
     [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:url]
                                completionHandler:
       ^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -178,17 +181,19 @@ NSString *const QMGoogleMapsProvider = @"google";
                   NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
                   if (statusCode != 200) {
                       QMLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
-                      NSError *error =
+                      NSError *responseError =
                       [NSError errorWithDomain:@"QMShareExtension"
                                           code:0
                                       userInfo:nil];
                       
-                      [source setError:error];
+                      [source setError:responseError];
                   }
               }
               
               NSError *jsonParseError = nil;
-              NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonParseError];
+              NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                   options:0
+                                                                     error:&jsonParseError];
               
               if (!jsonParseError) {
                   NSString *longUrl = [json objectForKey:@"longUrl"];
