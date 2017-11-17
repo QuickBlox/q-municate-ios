@@ -20,6 +20,9 @@
 #import <Reachability/Reachability.h>
 #import "QBUUser+QMShareItemProtocol.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
+#import "UIImage+QM.h"
+#import "QBChatAttachment+QMCustomParameters.h"
+
 
 static const CGFloat kDismissTimeOut = 1.5;
 
@@ -112,7 +115,7 @@ QMShareEtxentionOperationDelegate>
     [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
     
     [[QMShareTasks loadItemsForItemProvider:provider] continueWithExecutor:BFExecutor.mainThreadExecutor
-                                                               withBlock:^id _Nullable(BFTask<QMItemProviderResult *> * _Nonnull t)
+                                                                 withBlock:^id _Nullable(BFTask<QMItemProviderResult *> * _Nonnull t)
      {
          [SVProgressHUD dismiss];
          
@@ -125,6 +128,7 @@ QMShareEtxentionOperationDelegate>
              self.shareText = t.result.text;
              
              dispatch_async(dispatch_queue_create("ShareDataSourceQueue", DISPATCH_QUEUE_CONCURRENT), ^{
+                 
                  NSArray *dialogsToShare = [self dialogsForDataSource];
                  NSArray *contactsToShare = [self contactsForDataSource];
                  
@@ -157,21 +161,14 @@ QMShareEtxentionOperationDelegate>
 }
 
 - (void)completeShare:(nullable NSError *)error {
-    __weak typeof(self) weakSelf = self;
+    //[SVProgressHUD  setViewForExtension:self.view];
+    error ?
+    [SVProgressHUD showErrorWithStatus:error.localizedDescription] :
+    [SVProgressHUD showInfoWithStatus:NSLocalizedString(@"QM_EXT_SHARE_SUCESS_MESSAGE", nil)];
     
-    [self.shareTableViewController
-     dismissLoadingAlertControllerAnimated:NO
-     withCompletion:^{
-         
-         error ?
-         [SVProgressHUD showErrorWithStatus:error.localizedDescription] :
-         [SVProgressHUD showInfoWithStatus:NSLocalizedString(@"QM_EXT_SHARE_SUCESS_MESSAGE", nil)];
-         
-         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kDismissTimeOut * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-             __strong typeof(weakSelf) strongSelf = weakSelf;
-             [strongSelf dismiss];
-         });
-     }];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kDismissTimeOut * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self dismiss];
+    });
 }
 
 
@@ -281,18 +278,107 @@ QMShareEtxentionOperationDelegate>
 }
 
 - (void)didTapCancelBarButton {
-    
-    [self.extensionContext completeRequestReturningItems:nil
-                                       completionHandler:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kDismissTimeOut * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self dismiss];
+    });
 }
 
 
 //MARK: - QMShareEtxentionOperationDelegate
 
-- (BFTask <NSString *> *)dialogIDForUser:(QBUUser *)user {
-    return [QMShareTasks dialogIDForUser:user];
+- (BFTask <QBChatDialog *> *)taskForOperation:(QMShareEtxentionOperation *)operation
+                                dialogForUser:(QBUUser *)user {
+    
+    return [QMShareTasks dialogForUser:user];
 }
 
+- (BFTask *)taskForOperation:(QMShareEtxentionOperation *)operation
+                 sendMessage:(QBChatMessage *)message {
+    
+        return [self taskSendMessageViaRest:message];
+}
+
+- (BFTask<QBChatAttachment *> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
+                                      uploadAttachment:(QBChatAttachment *)attachment
+                                         progressBlock:(QMAttachmentProgressBlock)progressBlock {
+  
+    if ([attachment.type isEqualToString:kQMAttachmentTypeLocation]) {
+        return [BFTask taskWithResult:attachment];
+    }
+    return [self uploadAttachment:attachment progressBlock:progressBlock];
+}
+
+- (BFTask *)taskSendMessageViaRest:(QBChatMessage *)message {
+    
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        self.shareOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest sendMessage:message
+                                                                                 successBlock:^(QBResponse * _Nonnull __unused response, QBChatMessage * _Nonnull __unused tMessage) {
+                                                                                     [QMExtensionCache.chatCache insertOrUpdateMessage:tMessage withDialogId:message.dialogID completion:nil];
+                                                                                     [source setResult:tMessage];
+                                                                                 }
+                                                                                   errorBlock:^(QBResponse * _Nonnull response) {
+                                                                                       [source setError:response.error.error];
+                                                                                   }];
+    });
+}
+
+- (BFTask <QBChatAttachment *> *)uploadAttachment:(QBChatAttachment *)attatchment progressBlock:(QMAttachmentProgressBlock)progressBlock {
+    
+    NSData *dataToSend = ^NSData *{
+        
+        if (attatchment.attachmentType == QMAttachmentContentTypeImage) {
+            return attatchment.image.dataRepresentation;
+        }
+        
+        return nil;
+        
+    }();
+    
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        if (dataToSend) {
+            self.shareOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest TUploadFile:dataToSend
+                                                                                         fileName:attatchment.name
+                                                                                      contentType:attatchment.contentType
+                                                                                         isPublic:NO
+                                                                                     successBlock:^(QBResponse * __unused  _Nonnull response,
+                                                                                                    QBCBlob * _Nonnull tBlob)
+                                                                            {
+                                                                                attatchment.ID = tBlob.UID;
+                                                                                [source setResult:attatchment];
+                                                                            }
+                                                                                      statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nonnull status) {
+                                                                                          if (progressBlock) {
+                                                                                              progressBlock(status.percentOfCompletion);
+                                                                                          }
+                                                                                      }
+                                                                            
+                                                                                       errorBlock:^(QBResponse * _Nonnull response)
+                                                                            {
+                                                                                [source setError:response.error.error];
+                                                                            }];
+        }
+        else if (attatchment.localFileURL) {
+            self.shareOperation.objectToCancel = (id <QMCancellableObject>) [QBRequest uploadFileWithUrl:attatchment.localFileURL
+                                                                                                fileName:attatchment.name
+                                                                                             contentType:attatchment.contentType
+                                                                                                isPublic:NO
+                                                                                            successBlock:^(QBResponse * _Nonnull __unused response,
+                                                                                                           QBCBlob * _Nonnull tBlob)
+                                                                             {
+                                                                                 attatchment.ID = tBlob.UID;
+                                                                                 [source setResult:attatchment];
+                                                                             }
+                                                                                             statusBlock:nil
+                                                                                              errorBlock:^(QBResponse * _Nonnull response)
+                                                                             {
+                                                                                 [source setError:response.error.error];
+                                                                             }];
+        }
+        else {
+            NSAssert(NO, @"Should be set data or local URL");
+        }
+    });
+}
 
 //MARK: - Helpers
 - (void)updateDataSource {
