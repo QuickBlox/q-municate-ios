@@ -83,26 +83,33 @@
 }
 
 static NSString *typeIdentifierForActivityItem(id item) {
+    
     if ([item isKindOfClass:[NSURL class]]) {
         NSURL *URL = (NSURL *)item;
         
         if (URL.isFileURL) {
              return (NSString *)kUTTypeFileURL;
         }
-        
-        return (NSString *)kUTTypeURL;
     }
-    else if ([item isKindOfClass:[NSString class]]) {
-        return (NSString *)kUTTypePlainText;
-    }
-    else if ([item isKindOfClass:[UIImage class]]) {
-        return (NSString *)kUTTypeImage;
-    }
-    else if ([item isKindOfClass:[NSData class]]) {
-        return (NSString *)kUTTypeData;
-    }
-    else {
-        return nil;
-    }
+    
+     return QMTypeIdentifiersDictionary()[[item class]];
 }
+
+NSDictionary *QMTypeIdentifiersDictionary() {
+    
+    static NSDictionary *typeIdentifiers = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        typeIdentifiers = @{(id)[NSURL class] : (NSString *)kUTTypeURL,
+                            (id)[NSData class] : (NSString *)kUTTypeData,
+                            (id)[NSString class] : (NSString *)kUTTypePlainText,
+                            (id)[UIImage class] : (NSString *)kUTTypeImage
+                            };
+    });
+    
+    return typeIdentifiers;
+}
+
 @end
