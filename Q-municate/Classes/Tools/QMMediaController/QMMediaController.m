@@ -473,7 +473,9 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
-        
+        if (attachmentStatus == QMMessageAttachmentStatusUploading) {
+            return;
+        }
         QBUUser *user =
         [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
         
