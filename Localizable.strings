@@ -119,6 +119,7 @@
 "QM_STR_MESSAGE_DIDNT_SEND" = "Message wasn't sent";
 "QM_STR_TRY_AGAIN" = "Try again";
 "QM_STR_SHARE" = "Share";
+"QM_STR_FORWARD" = "Forward";
 
 // *********** User Status ***********
 "QM_STR_ONLINE" = "Online";
