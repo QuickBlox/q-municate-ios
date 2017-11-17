@@ -12,13 +12,14 @@
 #import <Quickblox/Quickblox.h>
 #import <QMServices.h>
 
+
+
 @interface QMShareEtxentionOperation()
 
 @property (nonatomic, strong, readwrite) NSArray *recipients;
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, strong) QBChatAttachment *attachment;
 @property (nonatomic, copy) QMShareOperationCompletionBlock shareOperationCompletionBlock;
-@property (nonatomic, strong) QBRequest *currentRequest;
 
 @end
 
@@ -36,7 +37,7 @@
     if (operation) {
         operation.operationID = ID;
         operation.recipients = recipients;
-        operation.text = [text copy];
+        operation.text = text;
         operation.attachment = attachment;
         operation.shareOperationCompletionBlock = [shareOperationCompletionBlock copy];
     }
@@ -44,76 +45,124 @@
     return operation;
 }
 
-- (instancetype)init {
+- (void)asyncTask {
     
-    if (self = [super init]) {
-        return self;
-    }
-    return nil;
-}
-
-- (void)cancel {
-    
-    [self.currentRequest cancel];
-    [super cancel];
-}
-
-- (void)start {
-    
-    [[self sendTextToRecipients:self.text withAttachment:self.attachment] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+    [[self taskSendTextToRecipients] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
         if (self.isCancelled) {
             self.shareOperationCompletionBlock(nil, NO);
         }
         else {
+            [self finish];
             self.shareOperationCompletionBlock(t.error, YES);
         }
         return nil;
     }];
 }
 
-- (BFTask *)sendTextToRecipients:(NSString *)text
-                  withAttachment:(QBChatAttachment *)attachment {
+- (void)dealloc {
+    NSLog(@"Deallock = %@",self.operationID);
+}
+
+- (BFTask *)taskSendTextToRecipients {
+    
     if (self.isCancelled) {
         return [BFTask cancelledTask];
     }
+    
     NSArray *itemsToShare = self.recipients;
     
     BFTask *task = [BFTask taskWithResult:nil];
+    
     for (id <QMShareItemProtocol> shareItem in itemsToShare) {
-        QBChatMessage *message = [QBChatMessage new];
-        message.text = text;
-        if (attachment) {
-            message.attachments = @[attachment];
-        }
-        // For each item, extend the task with a function to delete the item.
+        
+        // For each item, extend the task with a function to share with the item.
         task = [task continueWithBlock:^id(BFTask __unused *t) {
             if (self.isCancelled) {
                 return [BFTask cancelledTask];
             }
-            return [self shareTaskWithMessage:message shareItem:shareItem];
+            return [self taskSendMessageToRecipient:shareItem];
         }];
     }
     
     return task;
 }
 
-- (BFTask *)shareTaskWithMessage:(QBChatMessage *)message
-                       shareItem:(id<QMShareItemProtocol>)shareItem {
+- (BFTask <QBChatMessage *> *)taskMessageForRecipient:(id<QMShareItemProtocol>)recipient {
+    
+    if (self.isCancelled) {
+        return [BFTask cancelledTask];
+    }
+    
+    return [[self dialogForShareItem:recipient] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull dialogTask) {
+        
+        if (self.isCancelled) {
+            return [BFTask cancelledTask];
+        }
+        
+        QBChatMessage *message = [QBChatMessage new];
+        message.text = self.text;
+        
+        
+        BFTask *(^sucessBlock)(QBChatMessage *message, QBChatAttachment *attachment) =^(QBChatMessage *msg, QBChatAttachment *att) {
+            NSLog(@"dialogTask = %@", dialogTask);
+            if (att) {
+                msg.attachments = @[att];
+            }
+            
+            QBChatDialog *dialog = dialogTask.result;
+            NSUInteger senderID = QBSession.currentSession.currentUser.ID;
+            msg.senderID = senderID;
+            msg.markable = YES;
+            msg.deliveredIDs = @[@(senderID)];
+            msg.readIDs = @[@(senderID)];
+            msg.dialogID = dialog.ID;
+            msg.dateSent = [NSDate date];
+            
+            return [BFTask taskWithResult:msg];
+        };
+        
+        
+        if (self.attachment) {
+            return  [[self taskUploadAttachment:self.attachment] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
+                if (self.isCancelled) {
+                    return [BFTask cancelledTask];
+                }
+                return sucessBlock(message, t.result);
+            }];
+        }
+        
+        return sucessBlock(message,nil);
+    }];
+}
+
+
+- (BFTask <QBChatAttachment *>*)taskUploadAttachment:(QBChatAttachment *)attachment {
+    
+    if (self.isCancelled) {
+        return [BFTask cancelledTask];
+    }
+    
+    if ([self.operationDelegate respondsToSelector:@selector(customTaskForOperation:
+                                                             uploadAttachment:
+                                                             progressBlock:)]) {
+        return [self.operationDelegate customTaskForOperation:self
+                                             uploadAttachment:attachment
+                                                progressBlock:self.progressBlock];
+    }
+    
+    return [BFTask taskWithResult:attachment];
+}
+
+
+
+- (BFTask *)taskSendMessageToRecipient:(id<QMShareItemProtocol>)recipient {
+    
     if (self.isCancelled) {
         NSLog(@"if (self.isCancelled) ");
     }
-    return [[self dialogIDForShareItem:shareItem] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull dialogTask) {
-        NSLog(@"dialogTask = %@", dialogTask);
-        NSString *dialogID = dialogTask.result;
-        NSUInteger senderID = QBSession.currentSession.currentUser.ID;
-        message.senderID = senderID;
-        message.markable = YES;
-        message.deliveredIDs = @[@(senderID)];
-        message.readIDs = @[@(senderID)];
-        message.dialogID = dialogID;
-        message.dateSent = [NSDate date];
-        
-        return [self sendMessage:message];
+    
+    return [[self taskMessageForRecipient:recipient] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull messageTask) {
+        return [self sendMessage:messageTask.result];
     }];
 }
 
@@ -121,122 +170,32 @@
 - (BOOL)isSending {
     return self.isExecuting;
 }
-static inline NSData * __nullable imageData(UIImage * __nonnull image) {
-    
-    int alphaInfo = CGImageGetAlphaInfo(image.CGImage);
-    BOOL hasAlpha = !(alphaInfo == kCGImageAlphaNone ||
-                      alphaInfo == kCGImageAlphaNoneSkipFirst ||
-                      alphaInfo == kCGImageAlphaNoneSkipLast);
-    
-    if (hasAlpha) {
-        return UIImagePNGRepresentation(image);
-    }
-    else {
-        return UIImageJPEGRepresentation(image, 1.0f);
-    }
-}
 
 - (BFTask *)sendMessage:(QBChatMessage *)message {
     
-    if (message.attachments > 0 && !message.isLocationMessage) {
-        QBChatAttachment *attachment = message.attachments.firstObject;
-        
-        return [[self uploadAttachment:attachment] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
-            NSLog(@"Upload Task: %@",t);
-            message.attachments = @[t.result];
-            return [self taskRestSendMessage:message];
-        }];
+    if (self.isCancelled) {
+        return [BFTask cancelledTask];
     }
     else {
-        return [self taskRestSendMessage:message];
+        return [self.operationDelegate taskForOperation:self
+                                            sendMessage:message];
     }
 }
 
-- (BFTask *)taskRestSendMessage:(QBChatMessage *)message {
-    
-    if (self.isCancelled) {
-        NSLog(@"Cancelled task");
-        return [BFTask cancelledTask];
-    }
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        NSLog(@"taskRestSendMessage Task");
-        self.currentRequest = [QBRequest sendMessage:message
-                                        successBlock:^(QBResponse * _Nonnull __unused response, QBChatMessage * _Nonnull __unused tMessage) {
-                                            [source setResult:tMessage];
-                                        }
-                                          errorBlock:^(QBResponse * _Nonnull response) {
-                                              [source setError:response.error.error];
-                                          }];
-    });
+
+- (BFTask <QBChatDialog *> *)dialogForUser:(QBUUser *)user {
+    return [self.operationDelegate taskForOperation:self
+                                      dialogForUser:user];
 }
 
-- (BFTask <QBChatAttachment *> *)uploadAttachment:(QBChatAttachment *)attatchment {
-    
-    if (self.isCancelled) {
-        NSLog(@"Cancelled task");
-        return [BFTask cancelledTask];
-    }
-    NSData *dataToSend = ^NSData *{
-        
-        if (attatchment.attachmentType == QMAttachmentContentTypeImage) {
-            return imageData(attatchment.image);
-        }
-        
-        return nil;
-        
-    }();
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        if (dataToSend) {
-            self.currentRequest = [QBRequest TUploadFile:dataToSend
-                                                 fileName:attatchment.name
-                                              contentType:attatchment.contentType
-                                                 isPublic:NO
-                                             successBlock:^(QBResponse * __unused  _Nonnull response,
-                                                            QBCBlob * _Nonnull tBlob)
-                                    {
-                                        attatchment.ID = tBlob.UID;
-                                        [source setResult:attatchment];
-                                    }
-                                              statusBlock:nil
-                                    
-                                               errorBlock:^(QBResponse * _Nonnull response)
-                                    {
-                                        [source setError:response.error.error];
-                                    }];
-        }
-        else if (attatchment.localFileURL) {
-            self.currentRequest = [QBRequest uploadFileWithUrl:attatchment.localFileURL
-                                                      fileName:attatchment.name
-                                                   contentType:attatchment.contentType
-                                                      isPublic:NO
-                                                  successBlock:^(QBResponse * _Nonnull __unused response,
-                                                                 QBCBlob * _Nonnull tBlob)
-                                   {
-                                       attatchment.ID = tBlob.UID;
-                                       [source setResult:attatchment];
-                                   }
-                                                   statusBlock:nil
-                                                    errorBlock:^(QBResponse * _Nonnull response)
-                                   {
-                                       [source setError:response.error.error];
-                                   }];
-        }
-    });
-}
-
-- (BFTask <NSString *> *)dialogIDForUser:(QBUUser *)user {
-    return [self.operationDelegate dialogIDForUser:user];
-}
-
-- (BFTask <NSString *>*)dialogIDForShareItem:(id <QMShareItemProtocol>)shareItem {
+- (BFTask <QBChatDialog *>*)dialogForShareItem:(id <QMShareItemProtocol>)shareItem {
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         if ([shareItem isKindOfClass:QBChatDialog.class]) {
-            [source setResult:((QBChatDialog *)shareItem).ID];
+            [source setResult:((QBChatDialog *)shareItem)];
         }
         else {
-            [[self dialogIDForUser:(QBUUser *)shareItem] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull t) {
+            [[self dialogForUser:(QBUUser *)shareItem] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
                 t.error ? [source setError:t.error] : [source setResult:t.result];
                 return nil;
             }];

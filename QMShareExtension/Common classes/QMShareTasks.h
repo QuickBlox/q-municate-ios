@@ -26,6 +26,6 @@
 
 + (BFTask <QMItemProviderResult *> *)loadItemsForItemProvider:(NSItemProvider *)provider;
 + (BFTask <NSArray <QBChatDialog *> *> *)taskFetchAllDialogsFromDate:(NSDate *)date;
-+ (BFTask <NSString*> *)dialogIDForUser:(QBUUser *)user;
++ (BFTask <QBChatDialog*> *)dialogForUser:(QBUUser *)user;
 
 @end

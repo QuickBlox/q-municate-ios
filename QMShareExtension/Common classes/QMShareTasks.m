@@ -17,10 +17,12 @@
 #import "QMBaseService.h"
 #import "QMAttachmentProvider.h"
 #import "QMExtensionCache+QMShareExtension.h"
+#import "UIImage+QM.h"
 
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
 static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
+@implementation QMItemProviderResult @end
 
 @interface QMItemProviderLoader<__covariant ResultType> : NSObject
 
@@ -73,7 +75,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     
     QMItemProviderResult *result = [QMItemProviderResult new];
     
-    NSParameterAssert(provider.registeredTypeIdentifiers.count > 1);
+    NSParameterAssert(provider.registeredTypeIdentifiers.count == 1);
     
     if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
         
@@ -92,22 +94,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
             NSURL *URL = urlTask.result;
             
             if (URL.isFileURL) {
-                
-                QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-                settings.maxImageSize = kQMMaxImageSize;
-                settings.maxFileSize = kQMMaxFileSize;
-                
-                return [[QMAttachmentProvider attachmentWithFileURL:URL
-                                                           settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
-                        {
-                            QBChatAttachment *attachment = attachmentTask.result;
-                            result.attachment = attachment;
-                            result.text =
-                            [NSString stringWithFormat:@"%@ attachment",
-                             attachment.type.capitalizedString];
-                            
-                            return [BFTask taskWithResult:result];
-                        }];
+                return [self taskProvideResultWithAttachmentForFileURL:URL];
             }
             else if (URL.isLocationURL) {
                 result.text = @"Location";
@@ -126,6 +113,32 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
             }
         }];
     }
+    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+        
+        QMItemProviderLoader *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
+            
+            if ([t.result isKindOfClass:[NSURL class]]) {
+                NSURL *fileURL = t.result;
+                return [self taskProvideResultWithAttachmentForFileURL:fileURL];
+            }
+            else if ([t.result isKindOfClass:[UIImage class]]) {
+                UIImage *image = t.result;
+                return [self taskProvideResultWithAttachmentForData:image.dataRepresentation];
+            }
+            
+            NSString *errorDescription =
+            [NSString stringWithFormat:@"Item tagged as image has unsupported type:%@",
+             NSStringFromClass([t.result class])];
+            
+            NSError *error =
+            [[NSError alloc] initWithDomain:NSBundle.mainBundle.bundleIdentifier
+                                       code:0
+                                   userInfo:@{NSLocalizedDescriptionKey : errorDescription }];
+            return [BFTask taskWithError:error];
+        }];
+    }
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie] ||
              [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
              [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
@@ -134,13 +147,27 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
         
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
             
-            QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-            settings.maxImageSize = kQMMaxImageSize;
-            settings.maxFileSize = kQMMaxFileSize;
+            NSAssert([t.result isKindOfClass:NSURL.class], @"");
             
-            return [[QMAttachmentProvider attachmentWithFileURL:t.result
-                                                       settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask) {
-                
+            return [self taskProvideResultWithAttachmentForFileURL:t.result];
+        }];
+    }
+    
+    return [BFTask cancelledTask];
+}
+
+
++ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForFileURL:(NSURL *)fileURL {
+    
+    QMItemProviderResult *result = [QMItemProviderResult new];
+    
+    QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
+    settings.maxImageSize = kQMMaxImageSize;
+    settings.maxFileSize = kQMMaxFileSize;
+    
+    return [[QMAttachmentProvider attachmentWithFileURL:fileURL
+                                               settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+            {
                 QBChatAttachment *attachment = attachmentTask.result;
                 result.attachment = attachment;
                 result.text =
@@ -149,21 +176,27 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
                 
                 return [BFTask taskWithResult:result];
             }];
-        }];
-    }
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-        
-        QMItemProviderLoader<UIImage *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
-        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<UIImage *> * _Nonnull t) {
-            
-            QBChatAttachment *imageAttachment = [QBChatAttachment imageAttachmentWithImage:t.result];
-            result.attachment = imageAttachment;
-            result.text = @"Image attachment";
-            return [BFTask taskWithResult:result];
-        }];
-    }
+}
+
++ (BFTask <QMItemProviderResult *> *)taskProvideResultWithAttachmentForData:(NSData *)data {
     
-    return [BFTask cancelledTask];
+    QMItemProviderResult *result = [QMItemProviderResult new];
+    
+    QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
+    settings.maxImageSize = kQMMaxImageSize;
+    settings.maxFileSize = kQMMaxFileSize;
+    
+    return [[QMAttachmentProvider imageAttachmentWithData:data
+                                                 settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+            {
+                QBChatAttachment *attachment = attachmentTask.result;
+                result.attachment = attachment;
+                result.text =
+                [NSString stringWithFormat:@"%@ attachment",
+                 attachment.type.capitalizedString];
+                
+                return [BFTask taskWithResult:result];
+            }];
 }
 
 + (BFTask *)taskFetchAllDialogsFromDate:(NSDate *)date {
@@ -268,7 +301,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     request([QBResponsePage responsePageWithLimit:limit]);
 }
 
-+ (BFTask <NSString*> *)dialogIDForUser:(QBUUser *)user {
++ (BFTask <QBChatDialog*> *)dialogForUser:(QBUUser *)user {
     
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*_Nullable dialog, NSDictionary<NSString *,id> * _Nullable __unused bindings) {
         return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(user.ID)];
@@ -277,7 +310,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     QBChatDialog *dialog = [[QMExtensionCache.chatCache.allDialogs filteredArrayUsingPredicate:predicate] firstObject];
     
     if (dialog) {
-        return [BFTask taskWithResult:dialog.ID];
+        return [BFTask taskWithResult:dialog];
     }
     else {
         return [[self createPrivateChatWithOpponentID:user.ID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
@@ -285,7 +318,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
                 return [BFTask taskWithError:t.error];
             }
             else {
-                return [BFTask taskWithResult:t.result.ID];
+                return [BFTask taskWithResult:t.result];
             }
         }];
     }

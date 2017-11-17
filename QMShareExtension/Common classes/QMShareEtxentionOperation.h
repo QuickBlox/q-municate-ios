@@ -9,17 +9,45 @@
 #import <Foundation/Foundation.h>
 #import <Bolts/BFTask.h>
 #import <QMServicesDevelopment/QMServices.h>
-
+#import <QMServicesDevelopment/QMChatTypes.h>
+#import <QMServicesDevelopment/QMMediaBlocks.h>
 
 @class QBChatAttachment;
 @class QBUUser;
+@class QMShareEtxentionOperation;
+
 @protocol QMShareItemProtocol;
 
 NS_ASSUME_NONNULL_BEGIN
 typedef void(^QMShareOperationCompletionBlock)(NSError *_Nullable error, BOOL completed);
 
 @protocol QMShareEtxentionOperationDelegate <NSObject>
-- (BFTask <NSString *> *)dialogIDForUser:(QBUUser *)user;
+
+@required
+- (BFTask <QBChatDialog *> *)taskForOperation:(QMShareEtxentionOperation *)operation
+                                dialogForUser:(QBUUser *)user;
+
+- (BFTask *)taskForOperation:(QMShareEtxentionOperation *)operation
+                 sendMessage:(QBChatMessage *)message;
+
+@optional
+
+- (BFTask <QBChatAttachment*> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
+                                     uploadAttachment:(QBChatAttachment *)attachment
+                                        progressBlock:(QMAttachmentProgressBlock)progressBlock;
+
+- (BFTask <NSURL *>*)customTaskForOperation:(QMShareEtxentionOperation *)operation
+                             saveAttachment:(QBChatAttachment *)attachment
+                                  cacheType:(QMAttachmentCacheType)cacheType;
+
+- (BFTask <QBChatAttachment*> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
+                                    downloadAttachment:(QBChatAttachment *)attachment
+                                         progressBlock:(QMAttachmentProgressBlock)progressBlock;
+
+- (BOOL)operation:(QMShareEtxentionOperation *)operation
+shouldUploadAttachment:(QBChatAttachment *)attachment
+ forMessageWithID:(NSString *)messageID;
+
 @end
 
 @interface QMShareEtxentionOperation : QMAsynchronousOperation
@@ -28,12 +56,14 @@ typedef void(^QMShareOperationCompletionBlock)(NSError *_Nullable error, BOOL co
 + (QMShareEtxentionOperation *)operationWithID:(NSString *)ID
                                           text:(NSString *)text
                                     attachment:(QBChatAttachment * _Nullable )attachment
-                                    recipients:(NSArray <id<QMShareItemProtocol>> *)recipients
-                                    completion:(QMShareOperationCompletionBlock)completionBlock;
+                                    recipients:(NSArray *)recipients
+                                    completion:(QMShareOperationCompletionBlock)shareOperationCompletionBlock;
 
-@property (assign, nonatomic, readonly) BOOL isSending;
-@property (weak, nonatomic) id <QMShareEtxentionOperationDelegate> operationDelegate;
-@property (strong, nonatomic, readonly) NSArray <id<QMShareItemProtocol>> *recipients;
+@property (nonatomic, assign, readonly) BOOL isSending;
+
+@property (nonatomic, weak) id <QMShareEtxentionOperationDelegate> operationDelegate;
+@property (nonatomic, strong, readonly) NSArray <id<QMShareItemProtocol>> *recipients;
+@property (nonatomic, copy, readonly, nullable) QMAttachmentProgressBlock progressBlock;
 
 @end
 
