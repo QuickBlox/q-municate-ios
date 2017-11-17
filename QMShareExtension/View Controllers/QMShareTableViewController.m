@@ -400,4 +400,25 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     return alertController;
 }
 
+- (void)dismissViewControllerAnimated:(BOOL)flag
+                           completion:(void (^)(void))completion {
+    
+    dispatch_block_t alertControllerCompletion = ^{
+          [super dismissViewControllerAnimated:flag completion:completion];
+    };
+    
+    if (self.alertController) {
+        [self dismissLoadingAlertControllerAnimated:NO
+                                     withCompletion:alertControllerCompletion];
+    }
+    else {
+        alertControllerCompletion();
+    }
+}
+
+
+- (void)dealloc {
+    [self.searchController.view removeFromSuperview];
+}
+
 @end
