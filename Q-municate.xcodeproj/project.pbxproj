@@ -189,6 +189,8 @@
 		E03AF8151FACDE5E00DFEE7A /* QBSettings+Qmunicate.m in Sources */ = {isa = PBXBuildFile; fileRef = E03AF8121FACDE5E00DFEE7A /* QBSettings+Qmunicate.m */; };
 		E03F3D351E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
 		E03F3D361E1C724E00A46884 /* NSString+QMTransliterating.m in Sources */ = {isa = PBXBuildFile; fileRef = E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */; };
+		E0425AB81FC37B1800CD8A58 /* UIAlertController+QM.m in Sources */ = {isa = PBXBuildFile; fileRef = E0425AB71FC37B1800CD8A58 /* UIAlertController+QM.m */; };
+		E0425AB91FC399C600CD8A58 /* UIAlertController+QM.m in Sources */ = {isa = PBXBuildFile; fileRef = E0425AB71FC37B1800CD8A58 /* UIAlertController+QM.m */; };
 		E043459C1F29545F0066851D /* QMAttachmentController.m in Sources */ = {isa = PBXBuildFile; fileRef = E043459B1F29545F0066851D /* QMAttachmentController.m */; };
 		E04878211E8006C60008F497 /* QMAudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = E048781F1E8006C60008F497 /* QMAudioRecorder.m */; };
 		E049C7641F8D00BC00CD0376 /* QMSearchResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A639281CEB5C7200D682C4 /* QMSearchResultsController.m */; };
@@ -607,6 +609,8 @@
 		E03C83151E61F9E30039A9D0 /* QMCallViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCallViewDelegate.h; sourceTree = "<group>"; };
 		E03F3D331E1C724E00A46884 /* NSString+QMTransliterating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QMTransliterating.h"; sourceTree = "<group>"; };
 		E03F3D341E1C724E00A46884 /* NSString+QMTransliterating.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QMTransliterating.m"; sourceTree = "<group>"; };
+		E0425AB61FC37B1800CD8A58 /* UIAlertController+QM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIAlertController+QM.h"; sourceTree = "<group>"; };
+		E0425AB71FC37B1800CD8A58 /* UIAlertController+QM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIAlertController+QM.m"; sourceTree = "<group>"; };
 		E043459A1F29545F0066851D /* QMAttachmentController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMAttachmentController.h; sourceTree = "<group>"; };
 		E043459B1F29545F0066851D /* QMAttachmentController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMAttachmentController.m; sourceTree = "<group>"; };
 		E048781F1E8006C60008F497 /* QMAudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMAudioRecorder.m; sourceTree = "<group>"; };
@@ -2041,6 +2045,7 @@
 		6943848C18E42691001E08A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				E0425AB51FC37AF200CD8A58 /* UIAlertViewController */,
 				E0D9ED131F9E384E00EF6043 /* QBSettings */,
 				E002F3EE1F508CE20044B0B3 /* NSString */,
 				E026A76B1E82B98C0054AD83 /* UIScreen */,
@@ -2238,6 +2243,15 @@
 				E08441D81E1E611D00B87D0F /* NSString+QMSiriUtils.m */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		E0425AB51FC37AF200CD8A58 /* UIAlertViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E0425AB61FC37B1800CD8A58 /* UIAlertController+QM.h */,
+				E0425AB71FC37B1800CD8A58 /* UIAlertController+QM.m */,
+			);
+			path = UIAlertViewController;
 			sourceTree = "<group>";
 		};
 		E05AEC571F9A0E10004D3274 /* NSURL+QMShareExtension */ = {
@@ -2993,6 +3007,7 @@
 				58D847811C871469000C40BA /* QMSearchDataProvider.m in Sources */,
 				E03AF8041FACDC6400DFEE7A /* NSError+QMShareExtension.m in Sources */,
 				E06F890B1E60FFF30017BBEC /* QMCallWindow.m in Sources */,
+				E0425AB81FC37B1800CD8A58 /* UIAlertController+QM.m in Sources */,
 				559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */,
 				E08ADF5E1F8CCD6D0099CF99 /* QMDataSource.m in Sources */,
 				5868B06C1CE9C6ED004F9233 /* QMCallInfoView.m in Sources */,
@@ -3133,6 +3148,7 @@
 				E03AF8051FACDC6400DFEE7A /* NSError+QMShareExtension.m in Sources */,
 				E04D268E1F8E4408005CB2FD /* QMNoResultsCell.m in Sources */,
 				E049C7641F8D00BC00CD0376 /* QMSearchResultsController.m in Sources */,
+				E0425AB91FC399C600CD8A58 /* UIAlertController+QM.m in Sources */,
 				E049C7651F8D160500CD0376 /* QMSearchDataSource.m in Sources */,
 				E0A8A7A31F8F7B0300382443 /* QMShareCollectionViewCell.m in Sources */,
 				E0A8A7A71F8F7B0300382443 /* QMShareDataSource.m in Sources */,
@@ -3492,6 +3508,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 8885H5G2YX;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"COCOAPODS=1",

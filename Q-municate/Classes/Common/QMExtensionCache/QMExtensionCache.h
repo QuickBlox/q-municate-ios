@@ -12,6 +12,8 @@
 
 @interface QMExtensionCache : NSObject
 
++ (void)setLogsEnabled:(BOOL)enabled;
+
 @property (class, readonly) QMContactListCache *contactsCache;
 @property (class, readonly) QMChatCache *chatCache;
 @property (class, readonly) QMUsersCache *usersCache;

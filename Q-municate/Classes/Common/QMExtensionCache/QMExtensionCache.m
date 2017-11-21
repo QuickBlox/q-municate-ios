@@ -16,6 +16,12 @@ static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate"
 
 @implementation QMExtensionCache
 
++ (void)setLogsEnabled:(BOOL)enabled {
+    enabled ?
+    [QMCDRecord setLoggingLevel:QMCDRecordLoggingLevelVerbose] :
+    [QMCDRecord setLoggingLevel:QMCDRecordLoggingLevelOff];
+}
+
 + (NSString *)appGroupIdentifier {
     return kQMAppGroupIdentifier;
 }
