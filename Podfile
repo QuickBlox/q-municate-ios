@@ -4,7 +4,6 @@ xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
 
-
 def common_pods
     #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
     #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
@@ -29,7 +28,7 @@ target 'Q-municate' do
     pod 'FBSDKCoreKit'
     pod 'FBSDKShareKit'
     pod 'FBSDKLoginKit'
-    
+
     #Twitter
     pod 'Fabric'
     pod 'Crashlytics'
@@ -37,6 +36,7 @@ target 'Q-municate' do
     #Firebase
     pod 'FirebaseUI/Phone', '~> 4.0'
     #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+    
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QMShareExtension'
     
     common_pods
