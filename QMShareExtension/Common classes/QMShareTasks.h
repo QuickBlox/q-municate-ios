@@ -24,6 +24,8 @@
 
 @interface QMShareTasks : NSObject
 
++ (BFTask <NSArray<QMItemProviderResult *>*> *)loadItemsForItemProviders:(NSArray <NSItemProvider *> *)providers;
+
 + (BFTask <QMItemProviderResult *> *)loadItemsForItemProvider:(NSItemProvider *)provider;
 + (BFTask <NSArray <QBChatDialog *> *> *)taskFetchAllDialogsFromDate:(NSDate *)date;
 + (BFTask <QBChatDialog*> *)dialogForUser:(QBUUser *)user;

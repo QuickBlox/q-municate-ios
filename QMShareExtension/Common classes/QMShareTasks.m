@@ -22,7 +22,19 @@
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
 static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
-@implementation QMItemProviderResult @end
+@implementation QMItemProviderResult
+
+- (NSString *)description {
+    
+    NSMutableString *result = [NSMutableString stringWithString:[super description]];
+     [result appendFormat:@"\n"];
+    [result appendFormat:@"Text == %@", _text];
+    [result appendFormat:@"\n"];
+    [result appendFormat:@"Attachment = %@",_attachment];
+    
+    return result.copy;
+}
+@end
 
 @interface QMItemProviderLoader<__covariant ResultType> : NSObject
 
@@ -71,11 +83,51 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
 @implementation QMShareTasks
 
+
++ (BFTask <NSArray<QMItemProviderResult *>*> *)loadItemsForItemProviders:(NSArray <NSItemProvider *> *)providers {
+    
+    NSMutableArray *availableProviders = [NSMutableArray arrayWithCapacity:providers.count];
+    
+    for (NSItemProvider *provider in providers) {
+        
+        if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
+            [availableProviders addObject:provider];
+        }
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio]) {
+            [availableProviders addObject:provider];
+        }
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+            [availableProviders addObject:provider];
+        }
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
+            [availableProviders addObject:provider];
+        }
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
+            [availableProviders removeAllObjects];
+            [availableProviders addObject:provider];
+            break;
+        }
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
+            [availableProviders addObject:provider];
+        }
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeData]) {
+            [availableProviders addObject:provider];
+        }
+    }
+    
+    NSMutableArray *tasks = [NSMutableArray array];
+    
+    for (NSItemProvider *provider in availableProviders) {
+          [tasks addObject:[self loadItemsForItemProvider:provider]];
+    }
+    
+    return [BFTask taskForCompletionOfAllTasksWithResults:tasks];
+}
+
+
 + (BFTask <QMItemProviderResult*> *)loadItemsForItemProvider:(NSItemProvider *)provider {
     
     QMItemProviderResult *result = [QMItemProviderResult new];
-    
-    NSParameterAssert(provider.registeredTypeIdentifiers.count == 1);
     
     if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
         
