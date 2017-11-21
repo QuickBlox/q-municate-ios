@@ -1239,12 +1239,12 @@ NSDictionary *QMDeniedClassesDictionary() {
     dispatch_once(&onceToken, ^{
         
         NSArray *copySelectorDeniedClasses = @[[QMChatLocationIncomingCell class],
-                                                [QMChatLocationOutgoingCell class],
-                                                [QMChatNotificationCell class],
-                                                [QMAudioIncomingCell class],
-                                                [QMAudioOutgoingCell class],
-                                                [QMVideoIncomingCell class],
-                                                [QMVideoOutgoingCell class]];
+                                               [QMChatLocationOutgoingCell class],
+                                               [QMChatNotificationCell class],
+                                               [QMAudioIncomingCell class],
+                                               [QMAudioOutgoingCell class],
+                                               [QMVideoIncomingCell class],
+                                               [QMVideoOutgoingCell class]];
         
         NSArray *forwardSelectorDeniedClasses = @[[QMChatNotificationCell class]];
         
@@ -1322,31 +1322,32 @@ didPerformAction:(SEL)action
     if (action == @selector(share)) {
         QMActivityItem *item = [self activityItemForMessage:message];
         if (item) {
-        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[item] applicationActivities:nil];
-        activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop, UIActivityTypeCopyToPasteboard];
-        [self displayActivityViewController:activityViewController
-                                 withSender:cell
-                                   animated:YES];
+            UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[item] applicationActivities:nil];
+            activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop, UIActivityTypeCopyToPasteboard];
+            [self displayActivityViewController:activityViewController
+                                     withSender:cell
+                                       animated:YES];
         }
     }
     else if(action == @selector(forward)) {
-
-            NSArray *dialogs = QMCore.instance.chatService.dialogsMemoryStorage.unsortedDialogs;
-            NSArray *friends = [QMCore.instance.contactManager friends];
-            
-            QMShareTableViewController *shareTableViewController=
-            [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogs contacts:friends];
-            
-            UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:shareTableViewController];
-            
-            [self presentViewController:navigationController
-                               animated:YES
-                             completion:nil];
-            
-            self.indexPathToForward = indexPath;
-            
-            shareTableViewController.shareControllerDelegate = self;
-            self.shareTableViewController = shareTableViewController;
+        
+        NSArray *dialogs = QMCore.instance.chatService.dialogsMemoryStorage.unsortedDialogs;
+        NSArray *friends = [QMCore.instance.contactManager friends];
+        
+        QMShareTableViewController *shareTableViewController=
+        [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogs contacts:friends];
+        shareTableViewController.title = NSLocalizedString(@"QM_STR_FORWARD", nil);
+        
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:shareTableViewController];
+        
+        [self presentViewController:navigationController
+                           animated:YES
+                         completion:nil];
+        
+        self.indexPathToForward = indexPath;
+        
+        shareTableViewController.shareControllerDelegate = self;
+        self.shareTableViewController = shareTableViewController;
     }
 }
 
@@ -1573,7 +1574,7 @@ didPerformAction:(SEL)action
     }
     
     if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
-       
+        
         currentCell.textView.delegate = self;
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
@@ -1968,37 +1969,51 @@ didPerformAction:(SEL)action
 - (void)chatService:(QMChatService *)__unused chatService
 didDeleteMessageFromMemoryStorage:(QBChatMessage *)message
         forDialogID:(NSString *)dialogID {
-     if ([self.chatDialog.ID isEqualToString:dialogID]) {
-       [self.chatDataSource deleteMessage:message];
-     }
+    if ([self.chatDialog.ID isEqualToString:dialogID]) {
+        [self.chatDataSource deleteMessage:message];
+    }
 }
+
+-(void)chatService:(QMChatService *)chatService
+didAddMessagesToMemoryStorage:(nonnull NSArray<QBChatMessage *> *)messages
+       forDialogID:(nonnull NSString *)dialogID {
     
+    if ([self.chatDialog.ID isEqualToString:dialogID]) {
+        for (QBChatMessage *message in messages) {
+            [self handleAddedMessage:message];
+        }
+    }
+}
 - (void)chatService:(QMChatService *)__unused chatService
 didAddMessageToMemoryStorage:(QBChatMessage *)message
         forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
-        
-        if (self.chatDialog.type == QBChatDialogTypePrivate
-            && [QMMessagesHelper isContactRequestMessage:message]) {
-            // check whether contact request message was sent previously
-            // in order to reload it and remove buttons for accept and deny
-            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            QBChatMessage *lastMessage = [self.chatDataSource messageForIndexPath:indexPath];
-            if (lastMessage.messageType == QMMessageTypeContactRequest) {
-                
-                [self.chatDataSource updateMessage:lastMessage];
-            }
-        }
-        
-        // Inserting or updating message received from XMPP or sent by self
-        if ([self.chatDataSource messageExists:message]) {
+        [self handleAddedMessage:message];
+    }
+}
+
+- (void)handleAddedMessage:(QBChatMessage *)message {
+    
+    if (self.chatDialog.type == QBChatDialogTypePrivate
+        && [QMMessagesHelper isContactRequestMessage:message]) {
+        // check whether contact request message was sent previously
+        // in order to reload it and remove buttons for accept and deny
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+        QBChatMessage *lastMessage = [self.chatDataSource messageForIndexPath:indexPath];
+        if (lastMessage.messageType == QMMessageTypeContactRequest) {
             
-            [self.chatDataSource updateMessage:message];
+            [self.chatDataSource updateMessage:lastMessage];
         }
-        else {
-            [self.chatDataSource addMessage:message];
-        }
+    }
+    
+    // Inserting or updating message received from XMPP or sent by self
+    if ([self.chatDataSource messageExists:message]) {
+        
+        [self.chatDataSource updateMessage:message];
+    }
+    else {
+        [self.chatDataSource addMessage:message];
     }
 }
 
@@ -2214,7 +2229,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     //Forward
     NSIndexPath *indexPath =  [self.collectionView indexPathForCell:cell];
     QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
-
+    
     QMMessageStatus status = [self.deferredQueueManager statusForMessage:message];
     
     if (status == QMMessageStatusNotSent && message.senderID == self.senderID) {
@@ -2547,9 +2562,9 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
     QBChatMessage *messageToForward = [self.chatDataSource messageForIndexPath:self.indexPathToForward];
     NSParameterAssert(messageToForward);
     
-    [self.shareTableViewController showLoadingAlertControllerWithStatus:@"Forwarding"
-                                                               animated:YES
-                                                         withCompletion:nil];
+    [self.shareTableViewController presentLoadingAlertControllerWithStatus:@"Forwarding"
+                                                                  animated:YES
+                                                            withCompletion:nil];
     
     __weak typeof(self) weakSelf = self;
     
