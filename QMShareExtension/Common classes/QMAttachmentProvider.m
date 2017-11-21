@@ -24,13 +24,13 @@
 @implementation QMAssetConverter
 
 + (BFTask <NSURL *> *)taskConvertToOtputFileType:(AVFileType)fileType
-                                           inputURL:(NSURL *)inputFileURL
+                                        inputURL:(NSURL *)inputFileURL
                                        outputURL: (NSURL *)outputFileURL
                                   withPresetName:(nullable NSString *)presetName
                      shouldOptimizeForNetworkUse:(BOOL)shouldOptimizeForNetworkUse {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
-
+    
     AVAsset *asset = [AVAsset assetWithURL:inputFileURL];
     if (!presetName) {
         presetName = AVAssetExportPresetMediumQuality;
@@ -71,13 +71,13 @@
                              withPresetName:AVAssetExportPresetPassthrough
                 shouldOptimizeForNetworkUse:YES];
 }
-    
+
 + (BFTask <NSURL *> *)taskConvertVideoToMpeg4FormatAtUrl:(NSURL *)videoFileURL {
     
     NSURL *fileOutput = uniqueOutputFileURLWithFileExtension(@".mp4");
-
+    
     return [self taskConvertToOtputFileType:AVFileTypeMPEG4
-                                      inputURL:videoFileURL
+                                   inputURL:videoFileURL
                                   outputURL:fileOutput
                              withPresetName:AVAssetExportPresetPassthrough
                 shouldOptimizeForNetworkUse:YES];
@@ -98,7 +98,7 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
 
 + (BFTask <QBChatAttachment *>*)imageAttachmentWithData:(NSData *)imageData
                                                settings:(nullable QMAttachmentProviderSettings *)providerSettings {
-
+    
     BFExecutor *backgroundExecutor =
     [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
     return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
@@ -133,7 +133,6 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
         CGFloat fileSize = fileSizeNumber.longLongValue/1024.0f/1024.0f;
         
         if (fileSize > providerSettings.maxFileSize) {
-            
             NSString *localizedDescription =
             [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil), providerSettings.maxFileSize];
             NSError *error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
@@ -155,19 +154,19 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
             return [self taskLoadValuesForAttachment:attachment];
         }
         else {
-
+            
             return [[QMAssetConverter taskConvertVideoToMpeg4FormatAtUrl:fileURL] continueWithBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
                 if (t.error) {
                     return [BFTask taskWithError:t.error];
                 }
                 else {
-        
+                    
                     QBChatAttachment *attachment = [[QBChatAttachment alloc] initWithName:@"Video attachment"
-                                                                      fileURL:t.result
-                                         contentType:(__bridge NSString *)MIMEType
-                                                               attachmentType:kQMAttachmentTypeVideo];
+                                                                                  fileURL:t.result
+                                                                              contentType:(__bridge NSString *)MIMEType
+                                                                           attachmentType:kQMAttachmentTypeVideo];
                     return [self taskLoadValuesForAttachment:attachment];
-                  }
+                }
             }];
         }
     }
@@ -177,9 +176,9 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
             || UTTypeConformsTo(UTI, kUTTypeMP3)) {
             
             QBChatAttachment *attachment = [[QBChatAttachment alloc] initWithName:@"Audio attachment"
-                                                                           fileURL:fileURL
-                                                                       contentType:(__bridge NSString *)MIMEType
-                                                                    attachmentType:kQMAttachmentTypeAudio];
+                                                                          fileURL:fileURL
+                                                                      contentType:(__bridge NSString *)MIMEType
+                                                                   attachmentType:kQMAttachmentTypeAudio];
             return [self taskLoadValuesForAttachment:attachment];
         }
     }
