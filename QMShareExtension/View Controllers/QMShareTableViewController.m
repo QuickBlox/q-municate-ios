@@ -21,13 +21,15 @@
 #import "QMShareContactsTableViewCell.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import <Quickblox/QBDarwinNotificationCenter.h>
+#import "UIAlertController+QM.h"
 
 @interface QMShareTableViewController () <
 QMSearchDataProviderDelegate,
 QMSearchResultsControllerDelegate,
 UISearchControllerDelegate,
 UISearchResultsUpdating,
-UISearchBarDelegate>
+UISearchBarDelegate,
+QMShareContactsDelegate>
 
 @property (strong, nonatomic, readwrite) QMShareDataSource *shareDataSource;
 @property (strong, nonatomic, readwrite) QMShareSearchControllerDataSource *searchDataSource;
@@ -70,19 +72,6 @@ UISearchBarDelegate>
     self.tableView.tableFooterView = [UIView new];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
-    self.view.transform = CGAffineTransformMakeTranslation(0, self.view.frame.size.height);
-    
-    [super viewWillAppear:animated];
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        self.view.transform = CGAffineTransformIdentity;
-    }];
-    
-    [self setNeedsStatusBarAppearanceUpdate];
-}
-
 - (void)configureAppereance {
     
     [[UISearchBar appearance] setBarTintColor:QMSecondaryApplicationColor()];
@@ -116,24 +105,30 @@ UISearchBarDelegate>
     [self updateShareButton];
 }
 
+
 - (void)dismiss {
+    
     [self.shareControllerDelegate didTapCancelBarButton];
 }
 
 
-- (void)showLoadingAlertControllerWithStatus:(NSString *)status
-                                    animated:(BOOL)animated
-                              withCompletion:(dispatch_block_t)completionBlock {
+- (void)presentLoadingAlertControllerWithStatus:(NSString *)status
+                                       animated:(BOOL)animated
+                                 withCompletion:(dispatch_block_t)completionBlock {
+
     __weak typeof(self) weakSelf = self;
     
-    self.alertController = [self loadingAlertControllerWithStatus:status
-                                                      cancelBlock:^{
-                                                          __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                          [strongSelf.shareControllerDelegate didCancelSharing];
-                                                      }];
-    [self presentViewController:self.alertController
+    UIAlertController *alertController = [UIAlertController qm_loadingAlertControllerWithStatus:status
+                                                                                    cancelBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.shareControllerDelegate didCancelSharing];
+    }];
+    
+    [self presentViewController:alertController
                        animated:animated
                      completion:completionBlock];
+    
+    self.alertController = alertController;
 }
 
 - (void)dismissLoadingAlertControllerAnimated:(BOOL)animated
@@ -236,7 +231,7 @@ UISearchBarDelegate>
         QMShareItemsDataProvider *itemsSearchProvider = [[QMShareItemsDataProvider alloc] initWithShareItems:groupDialogs];
         itemsSearchProvider.delegate = self.searchResultsController;
         searchDataSource.searchDataProvider = itemsSearchProvider;
-        
+        searchDataSource.contactsDelegate = self;
         searchDataSource;
     });
     
@@ -247,10 +242,9 @@ UISearchBarDelegate>
         contactsProvider.delegate = self;
         
         QMShareDataSource *contactsDataSource = [[QMShareDataSource alloc] initWithShareItems:(NSArray <id <QMShareItemProtocol>> *)self.contactsToShare.copy
-                                                 sortDescriptors:@[sortDescriptor]
-                                                   alphabetizedDataSource:NO];
+                                                                              sortDescriptors:@[sortDescriptor]
+                                                                       alphabetizedDataSource:NO];
         contactsDataSource.searchDataProvider = contactsProvider;
-        
         contactsDataSource;
     });
     
@@ -317,8 +311,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
     
     if (self.searchDataSource.showContactsSection) {
-        QMShareContactsTableViewCell *contactsCell = [self.searchResultsController.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0
-                                                                                                                                      inSection:0]];
+        QMShareContactsTableViewCell *contactsCell =
+        [self.searchResultsController.tableView cellForRowAtIndexPath:
+         [NSIndexPath indexPathForRow:0
+                            inSection:0]];
         contactsCell ? [contactsCell.contactsCollectionView reloadData] : nil;
     }
 }
@@ -356,55 +352,16 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
                              forView:[self.tableView cellForRowAtIndexPath:[self.shareDataSource indexPathForObject:object]]];
     [self updateShareButton];
     
-    [self.searchController.searchBar endEditing:YES];
+    self.searchController.active = NO;
 }
 
-
-- (UIAlertController *)loadingAlertControllerWithStatus:(NSString *)status
-                                            cancelBlock:(dispatch_block_t)cancelBlock {
-    
-    NSString *message = [NSString stringWithFormat:@"%@\n",status];
-    UIAlertController *alertController =
-    [UIAlertController alertControllerWithTitle:nil
-                                        message:message
-                                 preferredStyle:UIAlertControllerStyleAlert];
-    
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
-                                                        style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action)
-                                {
-                                    cancelBlock ? cancelBlock() : nil;
-                                }]];
-    
-    
-    UIActivityIndicatorView *indicator =
-    [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [indicator setUserInteractionEnabled:NO];
-    [indicator startAnimating];
-    indicator.color = QMSecondaryApplicationColor();
-    
-    indicator.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    [alertController.view addSubview:indicator];
-    
-    NSDictionary *views = @{@"alertController" : alertController.view,
-                            @"indicator" : indicator};
-    
-    NSArray *constraintsVertical = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[indicator]-(45)-|" options:0 metrics:nil views:views];
-    NSArray *constraintsHorizontal = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[indicator]|" options:0 metrics:nil views:views];
-    NSArray *constraints = [constraintsVertical arrayByAddingObjectsFromArray:constraintsHorizontal];
-    
-    [alertController.view addConstraints:constraints];
-    
-    
-    return alertController;
-}
 
 - (void)dismissViewControllerAnimated:(BOOL)flag
                            completion:(void (^)(void))completion {
     
     dispatch_block_t alertControllerCompletion = ^{
-          [super dismissViewControllerAnimated:flag completion:completion];
+        [super dismissViewControllerAnimated:flag
+                                  completion:completion];
     };
     
     if (self.alertController) {
@@ -419,6 +376,14 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)dealloc {
     [self.searchController.view removeFromSuperview];
+}
+
+//MARK: - QMShareContactsDelegate
+
+- (void)contactsDataSource:(nonnull QMShareDataSource *)__unused contactsDataSource
+        didSelectRecipient:(nonnull id<QMShareItemProtocol>)__unused recipient {
+    
+        self.searchController.active = NO;
 }
 
 @end

@@ -37,10 +37,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol QMShareContactsDelegate <NSObject>
+
+- (void)contactsDataSource:(QMShareDataSource *)contactsDataSource
+        didSelectRecipient:(id<QMShareItemProtocol>)recipient;
+
+@end
+
+
 @interface QMShareSearchControllerDataSource : QMShareDataSource 
 
 @property (nonatomic, strong) QMShareDataSource<UICollectionViewDataSource> *contactsDataSource;
-
+@property (nonatomic, weak) id <QMShareContactsDelegate> contactsDelegate;
 @property (nonatomic, assign, readonly) BOOL showContactsSection;
 
 @end

@@ -29,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)qm_shareTableViewControllerWithDialogs:(NSArray *)dialogs
                                               contacts:(NSArray * _Nullable )contacts;
 
-- (void)showLoadingAlertControllerWithStatus:(NSString *)status
+
+- (void)presentLoadingAlertControllerWithStatus:(NSString *)status
                                     animated:(BOOL)animated
                               withCompletion:(_Nullable dispatch_block_t)completion;
 
@@ -41,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) QMShareSearchControllerDataSource *searchDataSource;
 
 @property (nonatomic, weak) id <QMShareControllerDelegate> shareControllerDelegate;
+
+
 
 @end
 

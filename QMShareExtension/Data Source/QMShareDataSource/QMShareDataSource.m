@@ -149,6 +149,7 @@ static const NSUInteger kContactsSection = 0;
         return nil;
     }
 }
+
 //MARK: - setters
 
 - (void)replaceItems:(NSArray *)items {
@@ -303,7 +304,7 @@ titleForHeaderInSection:(NSInteger)section {
             return self.contactsDataSource.items.count > 0 ? @"Contacts" : @"";
         }
         //We use fisrt section for collection view
-        section--;
+        section = section - 1;
     }
     
     return [super tableView:tableView titleForHeaderInSection:section];
@@ -322,7 +323,7 @@ titleForHeaderInSection:(NSInteger)section {
         }
         
         //We use fisrt section for collection view
-        section--;
+        section = section - 1;
     }
     
     if (self.isEmpty) {
@@ -422,11 +423,18 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     id <QMShareItemProtocol> shareItem =  [self.contactsDataSource objectAtIndexPath:indexPath];
-    id <QMShareViewProtocol> shareView = (id <QMShareViewProtocol>) [collectionView cellForItemAtIndexPath:indexPath];
+    id <QMShareViewProtocol> shareView = (id <QMShareViewProtocol>)[collectionView cellForItemAtIndexPath:indexPath];
     
     [self.contactsDataSource selectItem:shareItem
                                 forView:shareView];
-    [self selectItem:shareItem forView:nil];
+    [self selectItem:shareItem
+             forView:nil];
+    
+    if (self.contactsDelegate) {
+        [self.contactsDelegate contactsDataSource:self.contactsDataSource
+                               didSelectRecipient:shareItem];
+    }
+    
 }
 
 - (BOOL)collectionView:(UICollectionView *)__unused collectionView

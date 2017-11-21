@@ -22,18 +22,18 @@
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import "UIImage+QM.h"
 #import "QBChatAttachment+QMCustomParameters.h"
+#import "UIAlertController+QM.h"
 
-
-static const CGFloat kDismissTimeOut = 1.5;
+static const NSUInteger kQMUnauthorizedErrorCode = 401;
 
 @interface QMShareRouterViewController()
 
 <QMShareControllerDelegate,
 QMShareEtxentionOperationDelegate>
 
-@property (nonatomic, strong) QMShareEtxentionOperation *shareOperation;
+@property (nonatomic, weak) QMShareEtxentionOperation *shareOperation;
 @property (nonatomic, strong) QMShareTableViewController *shareTableViewController;
-
+@property (nonatomic, weak) UIView *blurView;
 @property (strong, nonatomic) id logoutObserver;
 
 @property (nonatomic, copy) NSString *shareText;
@@ -45,16 +45,23 @@ QMShareEtxentionOperationDelegate>
 @implementation QMShareRouterViewController
 
 - (void)viewDidLoad {
-    
+   
     [super viewDidLoad];
     
     // Quickblox settings
     [QBSettings configureForQmunicate];
+    [QBSettings setLogLevel:QBLogLevelDebug];
     
     [self configureAppereance];
+    
+    if (!QBSession.currentSession.currentUser.ID) {
+        return;
+    }
+    
     [self configureReachability];
     
-    [self loadAttachments];
+    // [self loadAttachments];
+    [QMExtensionCache setLogsEnabled:NO];
     
     __weak typeof(self) weakSelf = self;
     self.logoutObserver =
@@ -68,13 +75,14 @@ QMShareEtxentionOperationDelegate>
     
     [super viewWillAppear:animated];
     
+    NSLog(@"current user = %@", QBSession.currentSession.currentUser);
     if (!QBSession.currentSession.currentUser.ID) {
         
         dispatch_block_t completion = ^{
             
             NSString *errorText = NSLocalizedString(@"QM_EXT_SHARE_NOT_LOGGED_IN_ERROR", nil);
             NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
-                                                 code:0
+                                                 code:kQMUnauthorizedErrorCode
                                              userInfo:@{NSLocalizedDescriptionKey : errorText}];
             [self completeShare:error];
         };
@@ -88,14 +96,30 @@ QMShareEtxentionOperationDelegate>
         }
     }
     else {
+        [self loadAttachments];
         [self updateDataSource];
     }
 }
 
 - (void)configureAppereance {
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.view.alpha = 0.6;
+    if (!UIAccessibilityIsReduceTransparencyEnabled()) {
+        
+        self.view.backgroundColor = [UIColor clearColor];
+        
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        blurEffectView.frame = self.view.bounds;
+        blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        blurEffectView.alpha = 0.6f;
+        
+        [self.view addSubview:blurEffectView];
+        
+        self.blurView = blurEffectView;
+    }
+    else {
+        self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    }
     
     [SVProgressHUD setViewForExtension:self.view];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
@@ -105,53 +129,55 @@ QMShareEtxentionOperationDelegate>
 
 - (void)loadAttachments {
     
-    NSItemProvider *provider;
-    for (NSExtensionItem *extensionItem in self.extensionContext.inputItems) {
-        for (NSItemProvider *itemProvider in extensionItem.attachments) {
-            provider = itemProvider;
-        }
+    NSArray *inputItems = self.extensionContext.inputItems;
+    NSLog(@"Input items = %@", inputItems);
+    NSMutableArray *providers  = [NSMutableArray array];
+    for (NSExtensionItem *item in inputItems) {
+        [providers addObjectsFromArray:item.attachments];
     }
+    NSLog(@"providers = %@", providers);
     
     [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
     
-    [[QMShareTasks loadItemsForItemProvider:provider] continueWithExecutor:BFExecutor.mainThreadExecutor
-                                                                 withBlock:^id _Nullable(BFTask<QMItemProviderResult *> * _Nonnull t)
-     {
+    [[QMShareTasks loadItemsForItemProviders:providers] continueWithExecutor:BFExecutor.mainThreadExecutor
+                                                                   withBlock:
+     ^id _Nullable(BFTask<NSArray<QMItemProviderResult *> *> * _Nonnull t) {
+         
          [SVProgressHUD dismiss];
          
          if (t.error) {
              [self completeShare:t.error];
          }
          else {
+             NSLog(@"QMItemProviderResults = %@", t.result);
              
-             self.attachment = t.result.attachment;
-             self.shareText = t.result.text;
+             QMItemProviderResult *result = t.result.firstObject;
              
-             dispatch_async(dispatch_queue_create("ShareDataSourceQueue", DISPATCH_QUEUE_CONCURRENT), ^{
-                 
-                 NSArray *dialogsToShare = [self dialogsForDataSource];
-                 NSArray *contactsToShare = [self contactsForDataSource];
-                 
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     
-                     self.shareTableViewController =
-                     [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogsToShare
-                                                                               contacts:contactsToShare];
-                     
-                     UINavigationController *navigationController =
-                     [[UINavigationController alloc] initWithRootViewController:self.shareTableViewController];
-                     
-                     navigationController.modalPresentationStyle = UIModalPresentationOverFullScreen;
-                     
-                     [SVProgressHUD setViewForExtension:navigationController.view];
-                     
-                     [self presentViewController:navigationController
-                                        animated:YES
-                                      completion:nil];
-                     
-                     self.shareTableViewController.shareControllerDelegate = self;
-                 });
-             });
+             self.attachment = result.attachment;
+             self.shareText = result.text;
+             
+             NSArray *dialogsToShare = [self dialogsForDataSource];
+             NSArray *contactsToShare = [self contactsForDataSource];
+             
+             self.shareTableViewController =
+             [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogsToShare
+                                                                       contacts:contactsToShare];
+             
+             self.shareTableViewController.title = NSLocalizedString(@"QM_STR_SHARE", nil);
+             
+             UINavigationController *navigationController =
+             [[UINavigationController alloc] initWithRootViewController:self.shareTableViewController];
+             
+             navigationController.modalPresentationStyle = UIModalPresentationOverFullScreen;
+             
+             [SVProgressHUD setViewForExtension:navigationController.view];
+             
+             [self presentViewController:navigationController
+                                animated:YES
+                              completion:nil];
+             
+             
+             self.shareTableViewController.shareControllerDelegate = self;
          }
          
          [SVProgressHUD dismiss];
@@ -161,35 +187,68 @@ QMShareEtxentionOperationDelegate>
 }
 
 - (void)completeShare:(nullable NSError *)error {
-    //[SVProgressHUD  setViewForExtension:self.view];
-    error ?
-    [SVProgressHUD showErrorWithStatus:error.localizedDescription] :
-    [SVProgressHUD showInfoWithStatus:NSLocalizedString(@"QM_EXT_SHARE_SUCESS_MESSAGE", nil)];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kDismissTimeOut * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self dismiss];
-    });
+    NSString *status =
+    error ?
+    error.localizedDescription :
+    NSLocalizedString(@"QM_EXT_SHARE_SUCESS_MESSAGE", nil);
+    
+    __weak typeof(self) weakSelf = self;
+    
+    [self presentAlertControllerWithStatus:status
+                         withButtonHandler:^{
+                             
+                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                             
+                             if (QBSession.currentSession.currentUser.ID &&
+                                 error.code == kQMUnauthorizedErrorCode) {
+                                 [strongSelf loadAttachments];
+                             }
+                             else {
+
+                                 [strongSelf dismiss];
+                             }
+                         }];
 }
 
 
 - (void)dismiss {
     
-    if (self.extensionContext) {
-        [self.extensionContext completeRequestReturningItems:nil
-                                           completionHandler:nil];
+    if (_blurView) {
+        [_blurView removeFromSuperview];
+    }
+    
+    self.view.backgroundColor = [UIColor clearColor];
+    
+    __weak typeof(self) weakSelf = self;
+    
+    dispatch_block_t completion = ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.extensionContext completeRequestReturningItems:nil
+                                                 completionHandler:nil];
+    };
+    
+    if (self.presentedViewController) {
+        [self.presentedViewController dismissViewControllerAnimated:YES
+                                                         completion:completion];
+    }
+    else {
+        completion();
     }
 }
 
 - (void)configureReachability {
     
     _internetConnection = [Reachability reachabilityForInternetConnection];
+    __weak typeof(self) weakSelf = self;
     
     // setting unreachable block
     [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // reachability block could possibly be called in background thread
-            [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                                      maskType:SVProgressHUDMaskTypeNone];
+            [weakSelf cancelShare];
+            [weakSelf presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
+                                     withButtonHandler:nil];
         });
     }];
     
@@ -226,18 +285,19 @@ QMShareEtxentionOperationDelegate>
     }
     
     if (!self.internetConnection.isReachable) {
-        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                                  maskType:SVProgressHUDMaskTypeNone];
+        [self presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
+                             withButtonHandler:nil];
         return;
     }
     
     [self.shareTableViewController
-     showLoadingAlertControllerWithStatus:NSLocalizedString(@"QM_EXT_SHARE_SHARING_TITLE", nil)
+     presentLoadingAlertControllerWithStatus:NSLocalizedString(@"QM_EXT_SHARE_SHARING_TITLE", nil)
      animated:YES
      withCompletion:nil];
     
     __weak typeof(self) weakSelf = self;
-    self.shareOperation =
+    
+    QMShareEtxentionOperation *shareOperation =
     [QMShareEtxentionOperation operationWithID:NSBundle.mainBundle.bundleIdentifier
                                           text:self.shareText
                                     attachment:self.attachment
@@ -245,19 +305,17 @@ QMShareEtxentionOperationDelegate>
                                     completion:^(NSError * _Nullable error,
                                                  BOOL completed)
      {
-         
          __strong typeof(weakSelf) strongSelf = weakSelf;
          [strongSelf.shareTableViewController
           dismissLoadingAlertControllerAnimated:YES
           withCompletion:^{
               if (error) {
-                  
                   NSString *errorText =
                   error.localizedDescription ?:
                   error.description ?:
                   NSLocalizedString(@"QM_EXT_SHARE_COMMON_ERROR", nil);
-                  
-                  [SVProgressHUD showErrorWithStatus:errorText];
+                  [strongSelf presentAlertControllerWithStatus:errorText
+                                             withButtonHandler:nil];
               }
               else if (completed) {
                   [strongSelf completeShare:nil];
@@ -266,23 +324,19 @@ QMShareEtxentionOperationDelegate>
          
      }];
     
-    self.shareOperation.operationDelegate = self;
-    [self.shareOperation start];
+    shareOperation.operationDelegate = self;
+    [shareOperation start];
+    
+    self.shareOperation = shareOperation;
 }
 
 - (void)didCancelSharing {
-    
-    [self.shareTableViewController dismissLoadingAlertControllerAnimated:YES
-                                                          withCompletion:nil];
-    [self.shareOperation cancel];
+    [self cancelShare];
 }
 
 - (void)didTapCancelBarButton {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kDismissTimeOut * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self dismiss];
-    });
+    [self dismiss];
 }
-
 
 //MARK: - QMShareEtxentionOperationDelegate
 
@@ -295,34 +349,38 @@ QMShareEtxentionOperationDelegate>
 - (BFTask *)taskForOperation:(QMShareEtxentionOperation *)operation
                  sendMessage:(QBChatMessage *)message {
     
-        return [self taskSendMessageViaRest:message];
+    return [self taskSendMessageViaRest:message];
 }
 
 - (BFTask<QBChatAttachment *> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
                                       uploadAttachment:(QBChatAttachment *)attachment
                                          progressBlock:(QMAttachmentProgressBlock)progressBlock {
-  
+    
     if ([attachment.type isEqualToString:kQMAttachmentTypeLocation]) {
         return [BFTask taskWithResult:attachment];
     }
     return [self uploadAttachment:attachment progressBlock:progressBlock];
 }
 
+
 - (BFTask *)taskSendMessageViaRest:(QBChatMessage *)message {
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        self.shareOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest sendMessage:message
-                                                                                 successBlock:^(QBResponse * _Nonnull __unused response, QBChatMessage * _Nonnull __unused tMessage) {
-                                                                                     [QMExtensionCache.chatCache insertOrUpdateMessage:tMessage withDialogId:message.dialogID completion:nil];
-                                                                                     [source setResult:tMessage];
-                                                                                 }
-                                                                                   errorBlock:^(QBResponse * _Nonnull response) {
-                                                                                       [source setError:response.error.error];
-                                                                                   }];
+        self.shareOperation.objectToCancel =
+        (id <QMCancellableObject>)[QBRequest sendMessage:message
+                                            successBlock:^(QBResponse * _Nonnull __unused response, QBChatMessage * _Nonnull __unused tMessage) {
+                                                [QMExtensionCache.chatCache insertOrUpdateMessage:tMessage withDialogId:message.dialogID completion:^{
+                                                    [source setResult:tMessage];
+                                                }];
+                                            }
+                                              errorBlock:^(QBResponse * _Nonnull response) {
+                                                  [source setError:response.error.error];
+                                              }];
     });
 }
 
-- (BFTask <QBChatAttachment *> *)uploadAttachment:(QBChatAttachment *)attatchment progressBlock:(QMAttachmentProgressBlock)progressBlock {
+- (BFTask <QBChatAttachment *> *)uploadAttachment:(QBChatAttachment *)attatchment
+                                    progressBlock:(QMAttachmentProgressBlock)progressBlock {
     
     NSData *dataToSend = ^NSData *{
         
@@ -336,43 +394,45 @@ QMShareEtxentionOperationDelegate>
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         if (dataToSend) {
-            self.shareOperation.objectToCancel = (id <QMCancellableObject>)[QBRequest TUploadFile:dataToSend
-                                                                                         fileName:attatchment.name
-                                                                                      contentType:attatchment.contentType
-                                                                                         isPublic:NO
-                                                                                     successBlock:^(QBResponse * __unused  _Nonnull response,
-                                                                                                    QBCBlob * _Nonnull tBlob)
-                                                                            {
-                                                                                attatchment.ID = tBlob.UID;
-                                                                                [source setResult:attatchment];
-                                                                            }
-                                                                                      statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nonnull status) {
-                                                                                          if (progressBlock) {
-                                                                                              progressBlock(status.percentOfCompletion);
-                                                                                          }
-                                                                                      }
-                                                                            
-                                                                                       errorBlock:^(QBResponse * _Nonnull response)
-                                                                            {
-                                                                                [source setError:response.error.error];
-                                                                            }];
+            self.shareOperation.objectToCancel =
+            (id <QMCancellableObject>)[QBRequest TUploadFile:dataToSend
+                                                    fileName:attatchment.name
+                                                 contentType:attatchment.contentType
+                                                    isPublic:NO
+                                                successBlock:^(QBResponse * __unused  _Nonnull response,
+                                                               QBCBlob * _Nonnull tBlob)
+                                       {
+                                           attatchment.ID = tBlob.UID;
+                                           [source setResult:attatchment];
+                                       }
+                                                 statusBlock:^(QBRequest * _Nonnull request, QBRequestStatus * _Nonnull status) {
+                                                     if (progressBlock) {
+                                                         progressBlock(status.percentOfCompletion);
+                                                     }
+                                                 }
+                                       
+                                                  errorBlock:^(QBResponse * _Nonnull response)
+                                       {
+                                           [source setError:response.error.error];
+                                       }];
         }
         else if (attatchment.localFileURL) {
-            self.shareOperation.objectToCancel = (id <QMCancellableObject>) [QBRequest uploadFileWithUrl:attatchment.localFileURL
-                                                                                                fileName:attatchment.name
-                                                                                             contentType:attatchment.contentType
-                                                                                                isPublic:NO
-                                                                                            successBlock:^(QBResponse * _Nonnull __unused response,
-                                                                                                           QBCBlob * _Nonnull tBlob)
-                                                                             {
-                                                                                 attatchment.ID = tBlob.UID;
-                                                                                 [source setResult:attatchment];
-                                                                             }
-                                                                                             statusBlock:nil
-                                                                                              errorBlock:^(QBResponse * _Nonnull response)
-                                                                             {
-                                                                                 [source setError:response.error.error];
-                                                                             }];
+            self.shareOperation.objectToCancel =
+            (id <QMCancellableObject>)[QBRequest uploadFileWithUrl:attatchment.localFileURL
+                                                          fileName:attatchment.name
+                                                       contentType:attatchment.contentType
+                                                          isPublic:NO
+                                                      successBlock:^(QBResponse * _Nonnull __unused response,
+                                                                     QBCBlob * _Nonnull tBlob)
+                                       {
+                                           attatchment.ID = tBlob.UID;
+                                           [source setResult:attatchment];
+                                       }
+                                                       statusBlock:nil
+                                                        errorBlock:^(QBResponse * _Nonnull response)
+                                       {
+                                           [source setError:response.error.error];
+                                       }];
         }
         else {
             NSAssert(NO, @"Should be set data or local URL");
@@ -381,6 +441,7 @@ QMShareEtxentionOperationDelegate>
 }
 
 //MARK: - Helpers
+
 - (void)updateDataSource {
     
     [[QMShareTasks taskFetchAllDialogsFromDate:self.lastDialogsUpdateDate] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
@@ -391,6 +452,30 @@ QMShareEtxentionOperationDelegate>
         [self.shareTableViewController.tableView reloadData];
         return nil;
     }];
+}
+
+- (void)presentAlertControllerWithStatus:(NSString *)errorStatus
+                       withButtonHandler:(dispatch_block_t)buttonTapBlock {
+    
+    UIAlertController *alertController = [UIAlertController qm_infoAlertControllerWithStatus:errorStatus
+                                                                              buttonTapBlock:buttonTapBlock];
+    
+    if (self.presentedViewController) {
+        [self.presentedViewController presentViewController:alertController
+                                                   animated:YES
+                                                 completion:nil];
+    }
+    else {
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+
+- (void)cancelShare {
+    
+    [self.shareTableViewController dismissLoadingAlertControllerAnimated:YES
+                                                          withCompletion:nil];
+    [self.shareOperation cancel];
 }
 
 @end
