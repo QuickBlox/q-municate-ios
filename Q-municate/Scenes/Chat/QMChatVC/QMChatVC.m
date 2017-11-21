@@ -1974,7 +1974,7 @@ didDeleteMessageFromMemoryStorage:(QBChatMessage *)message
     }
 }
 
--(void)chatService:(QMChatService *)chatService
+-(void)chatService:(QMChatService *)__unused chatService
 didAddMessagesToMemoryStorage:(nonnull NSArray<QBChatMessage *> *)messages
        forDialogID:(nonnull NSString *)dialogID {
     
