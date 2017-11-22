@@ -68,7 +68,7 @@ static UIImage *deselectedCheckImage() {
     if (_checked != checked) {
         
         _checked = checked;
-             self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
+        self.checkmarkImageView.image = checked ? selectedCheckImage() : deselectedCheckImage();
     }
 }
 
@@ -88,17 +88,17 @@ static UIImage *deselectedCheckImage() {
             [self.checkmarkImageView.layer addAnimation:transition forKey:nil];
             
             if (checked) {
-        
-                    [UIView animateWithDuration:0.2
-                                     animations:^{
-                                         self.checkmarkImageView.transform = CGAffineTransformMakeScale(1.2, 1.2);
-                                     }
-                                     completion:^(BOOL __unused finished) {
-                                         [UIView animateWithDuration:0.2
-                                                          animations:^{
-                                                              self.checkmarkImageView.transform = CGAffineTransformIdentity;
-                                                          }];
-                                     }];
+                
+                [UIView animateWithDuration:0.2
+                                 animations:^{
+                                     self.checkmarkImageView.transform = CGAffineTransformMakeScale(1.2f, 1.2f);
+                                 }
+                                 completion:^(BOOL __unused finished) {
+                                     [UIView animateWithDuration:0.2
+                                                      animations:^{
+                                                          self.checkmarkImageView.transform = CGAffineTransformIdentity;
+                                                      }];
+                                 }];
                 
             }
         }
