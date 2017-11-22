@@ -102,7 +102,7 @@ static const NSUInteger kContactsSection = 0;
     : nil;
 }
 
-- (void)configureView:(id <QMShareViewProtocol>)shareView
+- (void)configureView:(id<QMShareViewProtocol>)shareView
              withItem:(id<QMShareItemProtocol>)item {
     
     [shareView setTitle:item.title
@@ -372,7 +372,7 @@ titleForHeaderInSection:(NSInteger)section {
             
             cell.contactsCollectionView.dataSource = self.contactsDataSource;
             cell.contactsCollectionView.delegate = self;
-            
+
             [cell.contactsCollectionView reloadData];
             
             return cell;
