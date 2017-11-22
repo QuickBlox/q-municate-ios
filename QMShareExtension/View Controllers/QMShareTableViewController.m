@@ -383,7 +383,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)contactsDataSource:(nonnull QMShareDataSource *)__unused contactsDataSource
         didSelectRecipient:(nonnull id<QMShareItemProtocol>)__unused recipient {
     
+    if (self.searchController.active) {
         self.searchController.active = NO;
+    }
 }
 
 @end
