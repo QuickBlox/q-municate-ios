@@ -27,10 +27,8 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 - (NSString *)description {
     
     NSMutableString *result = [NSMutableString stringWithString:[super description]];
-     [result appendFormat:@"\n"];
-    [result appendFormat:@"Text == %@", _text];
-    [result appendFormat:@"\n"];
-    [result appendFormat:@"Attachment = %@",_attachment];
+    [result appendFormat:@"Text: %@\n", _text];
+    [result appendFormat:@"Attachment: %@",_attachment];
     
     return result.copy;
 }
@@ -263,11 +261,12 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
         return [BFTask taskWithResult:dialogs.copy];
     };
     
-    NSMutableDictionary *extendedRequest = nil;
+    NSDictionary *extendedRequest = nil;
     
     if (date) {
         NSTimeInterval timeInterval = [date timeIntervalSince1970];
-        extendedRequest = @{@"updated_at[gte]":@(timeInterval)}.mutableCopy;
+        extendedRequest = @{@"updated_at[gte]" : @(timeInterval),
+                            @"sort_desc" :  @"lastMessageDate"};
     }
     
     return [[self taskAllDialogsWithPageLimit:100

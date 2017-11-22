@@ -98,17 +98,31 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
 
 + (BFTask <QBChatAttachment *>*)imageAttachmentWithData:(NSData *)imageData
                                                settings:(nullable QMAttachmentProviderSettings *)providerSettings {
+    if (providerSettings.maxFileSize > 0) {
+        
+        CGFloat fileSize = imageData.length/1024.0f/1024.0f;
+        
+        if (fileSize > providerSettings.maxFileSize) {
+            NSString *localizedDescription =
+            [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil), providerSettings.maxFileSize];
+            NSError *error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
+                                                 code:0
+                                             userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+            return [BFTask taskWithError:error];
+        }
+    }
     
     BFExecutor *backgroundExecutor =
     [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
+    
     return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
-        
         UIImage *image = [UIImage imageWithData:imageData];
         UIImage *resizedImage = [self resizedImageFromImage:image
                                            withMaxImageSize:providerSettings.maxImageSize];
         
         QBChatAttachment *attachment = [QBChatAttachment imageAttachmentWithImage:resizedImage];
         return [BFTask taskFromExecutor:BFExecutor.mainThreadExecutor withBlock:^id _Nonnull{
+            
             return [BFTask taskWithResult:attachment];
         }];
     }];
