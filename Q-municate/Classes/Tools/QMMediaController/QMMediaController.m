@@ -475,7 +475,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
-         NSURL *remoteURL = [attachment remoteURLWithToken:NO];
+        NSURL *remoteURL = [attachment remoteURLWithToken:NO];
+        
         if (attachmentStatus == QMMessageAttachmentStatusUploading ||
             [QMImageLoader.instance hasImageOperationWithURL:remoteURL]) {
             return;

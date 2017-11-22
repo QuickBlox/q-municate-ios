@@ -1166,13 +1166,9 @@ static NSString * const kQMTextAttachmentSpacing = @"  ";
         if (message.isMediaMessage) {
             QBChatAttachment *attachment = message.attachments.firstObject;
             if (message.isImageAttachment) {
-                NSURL *remoteURL = [attachment remoteURLWithToken:NO];
-                NSString *key = [QMImageLoader.instance cacheKeyForURL:remoteURL];
-                NSString *path = [QMImageLoader.instance.imageCache defaultCachePathForKey:key];
-        
-               BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
 
-                isAvailable = exists;
+                isAvailable =
+                [QMImageLoader.instance hasOriginalImageWithURL:[attachment remoteURLWithToken:NO]];
             }
             else if (message.isAudioAttachment) {
                 isAvailable =
