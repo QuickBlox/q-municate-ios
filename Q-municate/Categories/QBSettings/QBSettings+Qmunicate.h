@@ -10,8 +10,11 @@
 
 #define DEVELOPMENT 1
 
+#define CUSTOMSERVER 1
+
 @interface QBSettings (Qmunicate)
 
 + (void)configureForQmunicate;
++ (void)configureForTestServer;
 
 @end

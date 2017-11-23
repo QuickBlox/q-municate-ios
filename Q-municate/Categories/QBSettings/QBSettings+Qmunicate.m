@@ -33,6 +33,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 + (void)configureForQmunicate {
     
     // Quickblox settings
+#if CUSTOMSERVER == 1
+    [self configureForTestServer];
+#else
     QBSettings.applicationID = kQMApplicationID;
     QBSettings.authKey = kQMAuthorizationKey;
     QBSettings.authSecret = kQMAuthorizationSecret;
@@ -40,6 +43,20 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     QBSettings.applicationGroupIdentifier = kQMAppGroupIdentifier;
     QBSettings.autoReconnectEnabled = YES;
     QBSettings.carbonsEnabled = YES;
+#endif
+}
+
++ (void)configureForTestServer {
+    // Quickblox settings
+    QBSettings.applicationID = 47;
+    QBSettings.authKey = @"7JE5cmpMwLd2S22";
+    QBSettings.authSecret = @"cB4kZeJE7Cbhvg-";
+    QBSettings.accountKey = @"QmXcTtxj8tTc9y3dJxRo";
+    QBSettings.applicationGroupIdentifier = kQMAppGroupIdentifier;
+    QBSettings.autoReconnectEnabled = YES;
+    QBSettings.carbonsEnabled = YES;
+    QBSettings.apiEndpoint = @"https://apistage1.quickblox.com";
+    QBSettings.chatEndpoint = @"chatstage1.quickblox.com";
 }
 
 @end
