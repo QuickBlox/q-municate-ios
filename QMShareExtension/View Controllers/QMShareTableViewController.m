@@ -329,7 +329,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     
     searchController.searchResultsController.view.hidden = NO;
-    [self.searchDataSource performSearch:searchController.searchBar.text];
+    
+    if (searchController.isActive) {
+        [self.searchDataSource performSearch:searchController.searchBar.text];
+    }
 }
 
 //MARK: - QMSearchResultsControllerDelegate

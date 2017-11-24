@@ -388,7 +388,8 @@ titleForHeaderInSection:(NSInteger)section {
             cell.contactsCollectionView.dataSource = self.contactsDataSource;
             cell.contactsCollectionView.delegate = self;
 
-            [cell.contactsCollectionView reloadData];
+            [cell.contactsCollectionView performBatchUpdates:nil
+                                                  completion:nil];
             
             return cell;
         }
