@@ -57,19 +57,18 @@ QMShareEtxentionOperationDelegate>
     [QBSettings setLogLevel:QBLogLevelDebug];
     
     [self configureAppereance];
+    [self configureReachability];
     
+    __weak typeof(self) weakSelf = self;
+    self.logoutObserver =
+    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQBLogoutNotification
+                                                        usingBlock:^{
+                                                            [weakSelf dismiss];
+                                                        }];
+
     if (QBSession.currentSession.currentUser.ID) {
         
-        [self configureReachability];
-        
         [QMExtensionCache setLogsEnabled:NO];
-        
-        __weak typeof(self) weakSelf = self;
-        self.logoutObserver =
-        [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQBLogoutNotification
-                                                            usingBlock:^{
-                                                                [weakSelf dismiss];
-                                                            }];
         [self configureAndPresentShareTableViewController];
     }
 }
@@ -79,7 +78,7 @@ QMShareEtxentionOperationDelegate>
     [super viewWillAppear:animated];
     
     NSLog(@"current user = %@", QBSession.currentSession.currentUser);
-    if (QBSession.currentSession.tokenHasExpired) {
+    if (QBSession.currentSession.currentUser.ID == 0) {
         
         dispatch_block_t completion = ^{
             
@@ -431,7 +430,7 @@ QMShareEtxentionOperationDelegate>
         [self updateDialogsDataSource];
     }
     else {
-        
+    
         [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
         
         dispatch_block_t presentShareController = ^{
