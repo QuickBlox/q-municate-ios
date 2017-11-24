@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QMShareTableViewController : UITableViewController
 
-+ (instancetype)qm_shareTableViewControllerWithDialogs:(NSArray *)dialogs
-                                              contacts:(NSArray * _Nullable )contacts;
++ (instancetype)qm_shareTableViewControllerWithDialogs:(NSArray<QBChatDialog*> *)dialogs
+                                              contacts:(NSArray<QBUUser *> * _Nullable )contacts;
 
 
 - (void)presentLoadingAlertControllerWithStatus:(NSString *)status

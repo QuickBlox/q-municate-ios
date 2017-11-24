@@ -10,6 +10,6 @@
 
 @property (nonatomic, copy, nullable, readonly) NSString *title;
 @property (nonatomic, copy, nullable, readonly) NSString *imageURL;
-@property (nonatomic, strong, nullable, readonly) NSDate *updateDate;
+@property (nonatomic, strong, nullable, readonly) NSDate *updatedAt;
 
 @end

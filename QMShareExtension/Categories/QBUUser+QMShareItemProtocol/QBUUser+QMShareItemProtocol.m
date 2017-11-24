@@ -25,8 +25,4 @@
     }
 }
 
-- (NSDate *)updateDate {
-    return self.updatedAt;
-}
-
 @end

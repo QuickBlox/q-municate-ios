@@ -34,13 +34,11 @@
     
     QMShareEtxentionOperation *operation = [[QMShareEtxentionOperation alloc] init];
     
-    if (operation) {
-        operation.operationID = ID;
-        operation.recipients = recipients;
-        operation.text = text;
-        operation.attachment = attachment;
-        operation.shareOperationCompletionBlock = [shareOperationCompletionBlock copy];
-    }
+    operation.operationID = ID;
+    operation.recipients = recipients;
+    operation.text = text;
+    operation.attachment = attachment;
+    operation.shareOperationCompletionBlock = [shareOperationCompletionBlock copy];
     
     return operation;
 }
@@ -117,6 +115,7 @@
             msg.readIDs = @[@(senderID)];
             msg.dialogID = dialog.ID;
             msg.dateSent = [NSDate date];
+            msg.saveToHistory = @"1";
             
             return [BFTask taskWithResult:msg];
         };

@@ -66,8 +66,4 @@
     return NSNotFound;
 }
 
-- (NSDate *)updateDate {
-    return self.updatedAt;
-}
-
 @end

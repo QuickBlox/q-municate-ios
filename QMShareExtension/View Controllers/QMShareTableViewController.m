@@ -198,6 +198,7 @@ QMShareContactsDelegate>
     for (QBChatDialog *dialog in privateDialogs) {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID == %@",@(dialog.recipientID)];
         QBUUser *recipient = [self.contactsToShare filteredArrayUsingPredicate:predicate].firstObject;
+        
         if (recipient) {
             recipient.updatedAt = dialog.updatedAt;
             [dialogsDataSource addObject:recipient];
@@ -210,7 +211,7 @@ QMShareContactsDelegate>
     [dialogsDataSource addObjectsFromArray:groupDialogs];
     
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES comparator:^NSComparisonResult(id <QMShareItemProtocol> _Nonnull obj1, id  <QMShareItemProtocol>_Nonnull obj2) {
-        return [obj2.updateDate compare:obj1.updateDate];
+        return [obj2.updatedAt compare:obj1.updatedAt];
     }];
     
     

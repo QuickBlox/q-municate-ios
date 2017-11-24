@@ -64,9 +64,9 @@
     }
     
     NSString *sectionKey = self.sectionIndexTitles[section];
-    NSArray *contacts = self.alphabetizedDictionary[sectionKey];
+    NSArray *itemsForSection = self.alphabetizedDictionary[sectionKey];
     
-    return contacts.count;
+    return itemsForSection.count;
 }
 
 //MARK: - methods

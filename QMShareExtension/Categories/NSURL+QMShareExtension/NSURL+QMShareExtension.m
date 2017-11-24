@@ -27,8 +27,16 @@ NSString *const QMGoogleMapsProvider = @"google";
 
 @implementation NSURL (QMShareExtension)
 
+//MARK: - Public methods
+
 - (BOOL)isLocationURL {
-    return [self isAppleMapURL] ||[self isGoogleMapURL];
+    
+    BOOL isAppleMapURL = [self isAppleMapURL] ;
+    BOOL isGoogleMapURL = [self isGoogleMapURL];
+    
+    BOOL isLocationURL = isAppleMapURL || isGoogleMapURL;
+    
+    return isLocationURL;
 }
 
 - (BFTask <CLLocation *>*)location {
@@ -62,27 +70,29 @@ NSString *const QMGoogleMapsProvider = @"google";
     return url;
 }
 
+//MARK: - Private methods
+
 - (CLLocationCoordinate2D)locationCoordinate {
     
     NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:false];
     NSArray *queryItems = urlComponents.queryItems;
     
-    NSString *latLon = nil;
+    NSString *coordinateItem = nil;
     
     for (NSURLQueryItem *queryItem in queryItems)
     {
         if ([queryItem.name isEqualToString:QMAppleMapsLatLonKey])
         {
-            latLon = queryItem.value;
+            coordinateItem = queryItem.value;
         }
     }
     
-    if (latLon == nil) {
+    if (coordinateItem == nil) {
         return kCLLocationCoordinate2DInvalid;
     }
     
     
-    NSArray *coordComponents = [latLon componentsSeparatedByString:@","];
+    NSArray *coordComponents = [coordinateItem componentsSeparatedByString:@","];
     if (coordComponents.count != 2) {
         return kCLLocationCoordinate2DInvalid;
     }
@@ -118,7 +128,6 @@ NSString *const QMGoogleMapsProvider = @"google";
     
 }
 
-
 - (BFTask <CLLocation *> *)locationFromGoogleURL:(NSURL *)url {
     
     BFTaskCompletionSource *source = [[BFTaskCompletionSource alloc] init];
@@ -128,11 +137,28 @@ NSString *const QMGoogleMapsProvider = @"google";
         NSString *pattern = @"([0-9.\\-]*),([0-9.\\-]*)";
         NSError *regexError = nil;
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&regexError];
+        
         if (!regexError) {
-            NSArray *matches = [regex matchesInString:longURL options:0 range:NSMakeRange(0, [longURL length])];
-            NSString *latitude = [longURL substringWithRange:[[matches objectAtIndex:0] rangeAtIndex:1]];
-            NSString *longitude = [longURL substringWithRange:[[matches objectAtIndex:0] rangeAtIndex:2]];
-            CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue longitude:longitude.doubleValue];
+            
+            NSArray *matches = [regex matchesInString:longURL
+                                              options:0
+                                                range:NSMakeRange(0, [longURL length])];
+            NSTextCheckingResult *mathResult = matches.firstObject;
+            
+            if (!mathResult) {
+                
+                NSError *matchError =
+                [NSError errorWithDomain:@"QMShareExtension"
+                                    code:0
+                                userInfo:nil];
+                [source setError:matchError];
+            }
+            
+            NSString *latitude = [longURL substringWithRange:[mathResult rangeAtIndex:1]];
+            NSString *longitude = [longURL substringWithRange:[mathResult rangeAtIndex:2]];
+            CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
+                                                              longitude:longitude.doubleValue];
+            
             [source setResult:location];
         } else {
             QMLog(@"REGEX error: %@", regexError);
@@ -172,10 +198,10 @@ NSString *const QMGoogleMapsProvider = @"google";
      QMGoogleMapsAPIKey];
     
     
-    
     [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:url]
                                completionHandler:
       ^(NSData *data, NSURLResponse *response, NSError *error) {
+          
           if (!error) {
               if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
                   NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
@@ -226,6 +252,5 @@ static inline NSString * QMEncodedStringFromStringWithEncoding(NSString *string,
     
     return (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)string, NULL, (__bridge CFStringRef)kAFLegalCharactersToBeEscaped, CFStringConvertNSStringEncodingToEncoding(encoding));
 }
-
 
 @end

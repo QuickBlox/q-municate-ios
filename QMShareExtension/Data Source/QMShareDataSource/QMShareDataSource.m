@@ -96,10 +96,8 @@ static const NSUInteger kContactsSection = 0;
     [self.selectedItems removeObject:item] :
     [self.selectedItems addObject:item];
     
-    view ?
     [view setChecked:!isSelected
-            animated:YES]
-    : nil;
+            animated:YES];
 }
 
 - (void)configureView:(id<QMShareViewProtocol>)shareView
@@ -167,9 +165,13 @@ static const NSUInteger kContactsSection = 0;
 }
 
 - (void)setSortDescriptors:(NSArray<NSSortDescriptor *> *)sortDescriptors {
-    _sortDescriptors = sortDescriptors;
-    if (sortDescriptors) {
-        [self sortDataSource];
+    
+    if (![_sortDescriptors isEqualToArray:sortDescriptors]) {
+        
+        _sortDescriptors = sortDescriptors;
+        if (sortDescriptors) {
+            [self sortDataSource];
+        }
     }
 }
 
@@ -218,7 +220,19 @@ static const NSUInteger kContactsSection = 0;
 
 - (NSString *)tableView:(UITableView *)__unused tableView titleForHeaderInSection:(NSInteger)section {
     
-    return self.isEmpty ? @"" : (self.alphabetizedDataSource ? self.sectionIndexTitles[section] : @"");
+    NSString *titleForHeader;
+    
+    if (self.isEmpty) {
+        titleForHeader = @"";
+    }
+    else if (self.alphabetizedDataSource) {
+        titleForHeader = self.sectionIndexTitles[section];
+    }
+    else {
+        titleForHeader = @"";
+    }
+    
+    return titleForHeader;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)__unused tableView {
@@ -229,13 +243,12 @@ static const NSUInteger kContactsSection = 0;
 - (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)section {
     
     if (self.isEmpty) {
-        
         return 1;
     }
     if (self.alphabetizedDataSource) {
         NSString *sectionKey = self.sectionIndexTitles[section];
-        NSArray *contacts = self.alphabetizedDictionary[sectionKey];
-        return contacts.count;
+        NSArray *itemsForSection = self.alphabetizedDictionary[sectionKey];
+        return itemsForSection.count;
     }
     else {
         return self.items.count;
@@ -332,8 +345,8 @@ titleForHeaderInSection:(NSInteger)section {
     
     if (self.alphabetizedDataSource) {
         NSString *sectionKey = self.sectionIndexTitles[section];
-        NSArray *contacts = self.alphabetizedDictionary[sectionKey];
-        return contacts.count;
+        NSArray *itemsForSection = self.alphabetizedDictionary[sectionKey];
+        return itemsForSection.count;
     }
     else {
         return self.items.count;
@@ -345,8 +358,10 @@ titleForHeaderInSection:(NSInteger)section {
     if (self.showContactsSection &&
         indexPath.section == kContactsSection) {
         
-        return self.contactsDataSource.items.count > 0 ?
-        [QMShareContactsTableViewCell height] : 0;
+        return
+        self.contactsDataSource.items.count > 0 ?
+        [QMShareContactsTableViewCell height] :
+        0;
     }
     return [QMShareTableViewCell height];
 }
@@ -422,6 +437,7 @@ titleForHeaderInSection:(NSInteger)section {
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    
     id <QMShareItemProtocol> shareItem =  [self.contactsDataSource objectAtIndexPath:indexPath];
     id <QMShareViewProtocol> shareView = (id <QMShareViewProtocol>)[collectionView cellForItemAtIndexPath:indexPath];
     
