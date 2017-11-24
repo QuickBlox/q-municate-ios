@@ -13,7 +13,6 @@ end
 target 'Q-municate' do
     
     pod 'UIDevice-Hardware', '~> 0.1.3'
-    pod 'SVProgressHUD', '~> 1.0'
     pod 'SSKeychain', '~> 1.2.2'
     pod 'Reachability', '~> 3.2'
     pod 'TTTAttributedLabel', '~> 2.0'
@@ -52,7 +51,7 @@ target 'QMShareExtension' do
     pod 'Reachability', '~> 3.2'
     #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
     pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QMShareExtension'
-    pod 'SVProgressHUD', '~> 1.0'
+    pod 'SVProgressHUD'
 end
 
 post_install do |installer|
