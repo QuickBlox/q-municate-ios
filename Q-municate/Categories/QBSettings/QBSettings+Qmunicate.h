@@ -10,7 +10,7 @@
 
 #define DEVELOPMENT 1
 
-#define CUSTOMSERVER 1
+#define CUSTOMSERVER 0
 
 @interface QBSettings (Qmunicate)
 
