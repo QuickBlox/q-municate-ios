@@ -40,27 +40,22 @@ NSString *const QMGoogleMapsProvider = @"google";
 }
 
 - (BFTask <CLLocation *>*)location {
-    BFTaskCompletionSource *source = [[BFTaskCompletionSource alloc] init];
     
     if ([self isAppleMapURL]) {
         
         CLLocationCoordinate2D coordinates = [self locationCoordinate];
         CLLocation *location = [[CLLocation alloc] initWithLatitude:coordinates.latitude
                                                           longitude:coordinates.longitude];
-        [source setResult:location];
+        return [BFTask taskWithResult:location];
     }
     
     else if ([self isGoogleMapURL]) {
-        
-        [[self locationFromGoogleURL:self] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull t) {
-            
-            t.error ? [source setError:t.error] : [source setResult:t.result];
-            
-            return nil;
-        }];
+        return [self locationFromGoogleURL:self];
     }
-    
-    return source.task;
+    else {
+        NSParameterAssert(NO);
+        return nil;
+    }
 }
 
 + (NSURL *)appleMapsURLForLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate {
@@ -79,10 +74,8 @@ NSString *const QMGoogleMapsProvider = @"google";
     
     NSString *coordinateItem = nil;
     
-    for (NSURLQueryItem *queryItem in queryItems)
-    {
-        if ([queryItem.name isEqualToString:QMAppleMapsLatLonKey])
-        {
+    for (NSURLQueryItem *queryItem in queryItems) {
+        if ([queryItem.name isEqualToString:QMAppleMapsLatLonKey]) {
             coordinateItem = queryItem.value;
         }
     }
@@ -105,14 +98,13 @@ NSString *const QMGoogleMapsProvider = @"google";
 
 - (BOOL)isAppleMapURL {
     
-    return ([self.host isEqualToString:QMAppleMapsHost]
-            && [self.path isEqualToString:QMAppleMapsPath]);
+    return ([self.host isEqualToString:QMAppleMapsHost] &&
+            [self.path isEqualToString:QMAppleMapsPath]);
 }
 
 - (BOOL)isGoogleMapURL {
     return [self isShortGoogleMapURL] || [self isLongGoogleMapURL];
 }
-
 
 - (BOOL)isShortGoogleMapURL {
     return
@@ -125,7 +117,6 @@ NSString *const QMGoogleMapsProvider = @"google";
     [self.host isEqualToString:QMGoogleMapsHost] &&
     ([self.path hasPrefix:QMGoogleMapsSearchPath] ||
      [self.path hasPrefix:QMGoogleMapsPlacePath]);
-    
 }
 
 - (BFTask <CLLocation *> *)locationFromGoogleURL:(NSURL *)url {
@@ -134,38 +125,18 @@ NSString *const QMGoogleMapsProvider = @"google";
     
     void(^completionBlock)(NSString *longURL) = ^(NSString *longURL) {
         
-        NSString *pattern = @"([0-9.\\-]*),([0-9.\\-]*)";
-        NSError *regexError = nil;
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&regexError];
-        
-        if (!regexError) {
-            
-            NSArray *matches = [regex matchesInString:longURL
-                                              options:0
-                                                range:NSMakeRange(0, [longURL length])];
-            NSTextCheckingResult *mathResult = matches.firstObject;
-            
-            if (!mathResult) {
-                
-                NSError *matchError =
-                [NSError errorWithDomain:@"QMShareExtension"
-                                    code:0
-                                userInfo:nil];
-                [source setError:matchError];
-            }
-            
-            NSString *latitude = [longURL substringWithRange:[mathResult rangeAtIndex:1]];
-            NSString *longitude = [longURL substringWithRange:[mathResult rangeAtIndex:2]];
-            CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
-                                                              longitude:longitude.doubleValue];
-            
+        CLLocation *location = [self parseGoogleURL:longURL];
+        if (location) {
             [source setResult:location];
-        } else {
-            QMLog(@"REGEX error: %@", regexError);
-            [source setError:regexError];
+        }
+        else {
+            NSError *error =
+            [NSError errorWithDomain:@"QMShareExtension"
+                                code:0
+                            userInfo:nil];
+            [source setError:error];
         }
     };
-    
     
     if ([self isShortGoogleMapURL]) {
         
@@ -186,17 +157,52 @@ NSString *const QMGoogleMapsProvider = @"google";
     return source.task;
 }
 
+- (CLLocation *)parseGoogleURL:(NSString *)googleURL {
+    
+    CLLocation *location = nil;
+    
+    NSString *pattern = @"([0-9.\\-]*),([0-9.\\-]*)";
+    NSError *regexError = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&regexError];
+    
+    if (!regexError) {
+        
+        NSArray *matches = [regex matchesInString:googleURL
+                                          options:0
+                                            range:NSMakeRange(0, [googleURL length])];
+
+        NSTextCheckingResult *mathResult = matches.firstObject;
+        
+        if (mathResult.numberOfRanges > 2) {
+            NSString *latitude = [googleURL substringWithRange:[mathResult rangeAtIndex:1]];
+            NSString *longitude = [googleURL substringWithRange:[mathResult rangeAtIndex:2]];
+            
+            if (fabs(latitude.doubleValue) > DBL_EPSILON &&
+                fabs(longitude.doubleValue) > DBL_EPSILON) {
+                
+                  location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
+                                                              longitude:longitude.doubleValue];
+            }
+        }
+        NSLog(@"location = %@", location);
+    }
+    else {
+        QMLog(@"REGEX error: %@", regexError);
+    }
+    
+    return location;
+}
+
+
 - (BFTask <NSURL*> *)getLongURL {
     
     BFTaskCompletionSource *source = [[BFTaskCompletionSource alloc] init];
-    
     
     NSString *url =
     [NSString stringWithFormat:@"%@?fields=longUrl,status&shortUrl=%@&key=%@",
      QMGoogleMapsShortenerEndpointUrl,
      QMEncodedStringFromStringWithEncoding(self.absoluteString, NSUTF8StringEncoding),
      QMGoogleMapsAPIKey];
-    
     
     [[NSURLSession.sharedSession dataTaskWithURL:[NSURL URLWithString:url]
                                completionHandler:
