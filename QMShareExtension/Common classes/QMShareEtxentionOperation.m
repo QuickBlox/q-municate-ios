@@ -100,8 +100,9 @@
         QBChatMessage *message = [QBChatMessage new];
         message.text = self.text;
         
-        
-        BFTask *(^sucessBlock)(QBChatMessage *message, QBChatAttachment *attachment) =^(QBChatMessage *msg, QBChatAttachment *att) {
+        BFTask *(^sucessBlock)(QBChatMessage *message,
+                               QBChatAttachment *attachment) =
+        ^(QBChatMessage *msg, QBChatAttachment *att) {
             NSLog(@"dialogTask = %@", dialogTask);
             if (att) {
                 msg.attachments = @[att];
@@ -116,7 +117,7 @@
             msg.dialogID = dialog.ID;
             msg.dateSent = [NSDate date];
             msg.saveToHistory = @"1";
-            
+           
             return [BFTask taskWithResult:msg];
         };
         

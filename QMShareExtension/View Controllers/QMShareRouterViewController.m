@@ -32,7 +32,7 @@ static const NSUInteger kQMUnauthorizedErrorCode = 401;
 QMShareEtxentionOperationDelegate>
 
 @property (nonatomic, weak) QMShareEtxentionOperation *shareOperation;
-@property (nonatomic, strong) QMShareTableViewController *shareTableViewController;
+@property (nonatomic, weak) QMShareTableViewController *shareTableViewController;
 @property (nonatomic, weak) UIView *blurView;
 @property (nonatomic, strong) id logoutObserver;
 
@@ -64,7 +64,7 @@ QMShareEtxentionOperationDelegate>
                                                         usingBlock:^{
                                                             [weakSelf dismiss];
                                                         }];
-
+    
     if (QBSession.currentSession.currentUser.ID) {
         
         [QMExtensionCache setLogsEnabled:NO];
@@ -185,14 +185,14 @@ QMShareEtxentionOperationDelegate>
                                      contacts:(NSArray *)contactsToShare
                                    completion:(dispatch_block_t)completion {
     
-    self.shareTableViewController =
+    QMShareTableViewController *shareTableViewController =
     [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogsToShare
                                                               contacts:contactsToShare];
     
-    self.shareTableViewController.title = NSLocalizedString(@"QM_STR_SHARE", nil);
+    shareTableViewController.title = NSLocalizedString(@"QM_STR_SHARE", nil);
     
     UINavigationController *navigationController =
-    [[UINavigationController alloc] initWithRootViewController:self.shareTableViewController];
+    [[UINavigationController alloc] initWithRootViewController:shareTableViewController];
     
     navigationController.modalPresentationStyle = UIModalPresentationOverFullScreen;
     
@@ -202,7 +202,8 @@ QMShareEtxentionOperationDelegate>
                      completion:completion];
     
     
-    self.shareTableViewController.shareControllerDelegate = self;
+    shareTableViewController.shareControllerDelegate = self;
+    self.shareTableViewController = shareTableViewController;
 }
 
 //MARK: - QMShareControllerDelegate
@@ -302,11 +303,10 @@ QMShareEtxentionOperationDelegate>
                                             successBlock:^(QBResponse * _Nonnull __unused response,
                                                            QBChatMessage * _Nonnull __unused tMessage)
                                    {
-                                       [QMExtensionCache.chatCache insertOrUpdateMessage:tMessage
-                                                                            withDialogId:message.dialogID
-                                                                              completion:^{
-                                                                                  [source setResult:tMessage];
-                                                                              }];
+                                       [[self qmTaskSaveChangesToDiskForMessage:tMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+                                           [source setResult:tMessage];
+                                           return nil;
+                                       }];
                                    }
                                               errorBlock:^(QBResponse * _Nonnull response) {
                                                   [source setError:response.error.error];
@@ -429,7 +429,7 @@ QMShareEtxentionOperationDelegate>
         [self updateDialogsDataSource];
     }
     else {
-    
+        
         [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
         
         dispatch_block_t presentShareController = ^{
@@ -465,6 +465,27 @@ QMShareEtxentionOperationDelegate>
 }
 
 //MARK: - Helpers
+
+- (BFTask *)qmTaskSaveChangesToDiskForMessage:(QBChatMessage *)message {
+    NSParameterAssert(message.dialogID);
+    
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        
+        [QMExtensionCache.chatCache insertOrUpdateMessage:message
+                                             withDialogId:message.dialogID
+                                               completion:
+         ^{
+             QBChatDialog *dialog =
+             [QMExtensionCache.chatCache dialogByID:message.dialogID];
+             dialog.updatedAt = message.dateSent;
+             
+             [QMExtensionCache.chatCache insertOrUpdateDialog:dialog completion:^{
+                 [source setResult:message];
+             }];
+         }];
+    });
+}
+
 
 - (BFTask *)qmTaskGetShareItem {
     
