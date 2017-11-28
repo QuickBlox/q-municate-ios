@@ -677,8 +677,10 @@
     }
     else {
         
-        if ([self.multicastDelegate respondsToSelector:@selector(usersService:didAddUsers:)]) {
-            [self.multicastDelegate usersService:self didAddUsers:loadedUsers];
+        if (loadedUsers.count > 0) {
+            if ([self.multicastDelegate respondsToSelector:@selector(usersService:didAddUsers:)]) {
+                [self.multicastDelegate usersService:self didAddUsers:loadedUsers];
+            }
         }
         
         result = [foundUsers arrayByAddingObjectsFromArray:result];

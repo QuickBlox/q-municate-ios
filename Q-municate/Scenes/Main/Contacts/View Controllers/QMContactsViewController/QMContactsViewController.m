@@ -376,14 +376,20 @@ QMUsersServiceDelegate
 - (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
+    
     NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
+    
     for (QBUUser *user in users) {
+        
         NSIndexPath *indexPath = [self.dataSource indexPathForObject:user];
-        if (indexPath != nil) {
+        if (indexPath != nil &&
+            [self.tableView.indexPathsForVisibleRows containsObject:indexPath]) {
             [indexPaths addObject:indexPath];
         }
     }
+    
     if (indexPaths.count > 0) {
+    
         [self.tableView reloadRowsAtIndexPaths:[indexPaths copy] withRowAnimation:UITableViewRowAnimationNone];
     }
 }

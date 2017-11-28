@@ -180,6 +180,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
     dispatch_once(&onceToken, ^{
         
         SDImageCache *qmCache = [[SDImageCache alloc] initWithNamespace:@"default"];
+        qmCache.maxMemoryCost = 25 * 1024 * 1024;
         
         SDWebImageDownloader *qmDownloader = [SDWebImageDownloader sharedDownloader];
         
