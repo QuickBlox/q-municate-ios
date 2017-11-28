@@ -69,6 +69,8 @@
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
     [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+    
     // Configuring external frameworks
     [FIRApp configure];
     [[FIRAuth auth] useAppLanguage];

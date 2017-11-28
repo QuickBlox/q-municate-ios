@@ -20,6 +20,7 @@
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
+#import "SVProgressHUD.h"
 
 static const CGFloat kQMDefaultSectionHeaderHeight = 24.0f;
 static const CGFloat kQMStatusSectionHeaderHeight = 40.0f;
@@ -195,9 +196,7 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleCancel
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                       }]];
-    
-    __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
-    
+
     @weakify(self);
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil)
                                                         style:UIAlertActionStyleDestructive
@@ -209,11 +208,9 @@ NYTPhotosViewControllerDelegate
                                                               return;
                                                           }
                                                           
-                                                          [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-                                                          
+                                                          [SVProgressHUD show];
                                                           self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                                                              
-                                                              [navigationController dismissNotificationPanel];
+                                                              [SVProgressHUD dismiss];
                                                               [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
                                                               return nil;
                                                           }];
