@@ -5,51 +5,50 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - Crashlytics (3.8.6):
-    - Fabric (~> 1.6.3)
-  - Fabric (1.6.13)
-  - FBSDKCoreKit (4.27.0):
+  - Crashlytics (3.9.3):
+    - Fabric (~> 1.7.2)
+  - Fabric (1.7.2)
+  - FBSDKCoreKit (4.28.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.27.0):
+  - FBSDKLoginKit (4.28.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.27.0):
+  - FBSDKShareKit (4.28.0):
     - FBSDKCoreKit
   - FFCircularProgressView (0.5)
-  - Firebase/Auth (4.2.0):
+  - Firebase/Auth (4.6.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.2.0)
-  - Firebase/Core (4.2.0):
-    - FirebaseAnalytics (= 4.0.3)
-    - FirebaseCore (= 4.0.7)
-  - FirebaseAnalytics (4.0.3):
+    - FirebaseAuth (= 4.3.2)
+  - Firebase/Core (4.6.0):
+    - FirebaseAnalytics (= 4.0.5)
+    - FirebaseCore (= 4.0.11)
+  - FirebaseAnalytics (4.0.5):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.2.0):
+  - FirebaseAuth (4.3.2):
     - FirebaseAnalytics (~> 4.0)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.7):
+  - FirebaseCore (4.0.11):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-    - nanopb (~> 0.3)
-  - FirebaseInstanceID (2.0.3)
-  - FirebaseUI/Auth (4.2.0):
-    - Firebase/Auth (~> 4.0)
-  - FirebaseUI/Phone (4.2.0):
+  - FirebaseInstanceID (2.0.6)
+  - FirebaseUI/Auth (4.5.0):
+    - Firebase/Auth (~> 4.2)
+  - FirebaseUI/Phone (4.5.0):
     - FirebaseUI/Auth
   - FLAnimatedImage (1.0.12)
-  - Flurry-iOS-SDK/FlurrySDK (8.2.1)
-  - GoogleToolboxForMac/DebugUtils (2.1.1):
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/Defines (2.1.1)
-  - GoogleToolboxForMac/NSData+zlib (2.1.1):
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.1):
-    - GoogleToolboxForMac/DebugUtils (= 2.1.1)
-    - GoogleToolboxForMac/Defines (= 2.1.1)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.1)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.1)
+  - Flurry-iOS-SDK/FlurrySDK (8.3.1)
+  - GoogleToolboxForMac/DebugUtils (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/Defines (2.1.3)
+  - GoogleToolboxForMac/NSData+zlib (2.1.3):
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
+    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
+    - GoogleToolboxForMac/Defines (= 2.1.3)
+    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
+  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
   - GTMSessionFetcher/Core (1.1.12)
   - libextobjc/EXTKeyPathCoding (0.4.1):
     - libextobjc/RuntimeExtensions
@@ -78,59 +77,57 @@ PODS:
     - QMCVDevelopment/Utils (= 0.5.1)
     - QMCVDevelopment/ViewModels (= 0.5.1)
     - QMCVDevelopment/Views (= 0.5.1)
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/Categories (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatLocationSnapshotter
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/Protocols (0.5.1):
     - FFCircularProgressView
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/QMChatDataSource (0.5.1):
     - FFCircularProgressView
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/QMChatLocationSnapshotter (0.5.1):
     - FFCircularProgressView
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/Sections (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatDataSource
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/Utils (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/ViewModels (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
+    - SDWebImage
+    - TTTAttributedLabel
   - QMCVDevelopment/Views (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - QMCVDevelopment/Utils
-    - SDWebImage (~> 4.0.0)
-    - TTTAttributedLabel (> 1.13)
-  - QMServicesDevelopment (0.5.3):
+    - SDWebImage
+    - TTTAttributedLabel
+  - QMServicesDevelopment (0.5.5):
     - Bolts (>= 1.8.4)
-    - QuickBlox (>= 2.10)
-  - QuickBlox (2.12)
   - Reachability (3.2)
-  - SDWebImage (4.0.0):
-    - SDWebImage/Core (= 4.0.0)
-  - SDWebImage/Core (4.0.0)
+  - SDWebImage (4.2.2):
+    - SDWebImage/Core (= 4.2.2)
+  - SDWebImage/Core (4.2.2)
   - SSKeychain (1.2.3)
-  - SVProgressHUD (1.1.3)
+  - SVProgressHUD (2.2.2)
   - TTTAttributedLabel (2.0.0)
-  - UIDevice-Hardware (0.1.10)
+  - UIDevice-Hardware (0.1.11)
 
 DEPENDENCIES:
   - Crashlytics
@@ -139,66 +136,64 @@ DEPENDENCIES:
   - FBSDKLoginKit
   - FBSDKShareKit
   - FirebaseUI/Phone (~> 4.0)
-  - Flurry-iOS-SDK/FlurrySDK
+  - Flurry-iOS-SDK/FlurrySDK (<= 8.3.1)
   - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
   - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, tag `0.5.1`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, tag `0.5.3`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `feature/QMShareExtension`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `feature/IQMUNICATE-650`)
   - Reachability (~> 3.2)
-  - SDWebImage (~> 4.0.0)
   - SSKeychain (~> 1.2.2)
-  - SVProgressHUD (~> 1.0)
+  - SVProgressHUD
   - TTTAttributedLabel (~> 2.0)
   - UIDevice-Hardware (~> 0.1.3)
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
+    :branch: feature/QMShareExtension
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
-    :tag: 0.5.1
   QMServicesDevelopment:
+    :branch: feature/IQMUNICATE-650
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
-    :tag: 0.5.3
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
+    :commit: b132ba5231fe381d82720de1d841ac6c9d2b121f
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
-    :tag: 0.5.1
   QMServicesDevelopment:
+    :commit: 43bf8e42dfe0a19c287af36ab8a04fb1080ab128
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
-    :tag: 0.5.3
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
-  Fabric: 2fb5676bc811af011a04513451f463dac6803206
-  FBSDKCoreKit: ebc6c5f5b3f0e72396041050e2266781a38ac587
-  FBSDKLoginKit: 887be4b7452e1c5a3cc4485ce152529965a0c41e
-  FBSDKShareKit: 4f83956d4ca2960730fe7588a168eb8d535c06dc
+  Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
+  Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
+  FBSDKCoreKit: ca961e279113f691fd83dc634c0bbad9d4e3f370
+  FBSDKLoginKit: b077381c27d800f21661757e8140cf2c80a91e4a
+  FBSDKShareKit: 4f525556e0df4cf0f574cb3f01c675434f29d477
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
-  Firebase: 9548cae14d69718add12d75a5b312893f7ef89c7
-  FirebaseAnalytics: 76f754d37ca5b04f36856729b6af3ca0152d1069
-  FirebaseAuth: 22f8a5170f31d1f111141950590f071f35df3229
-  FirebaseCore: 9a6cc1e3eaf75905390f9220596ad4fd8f92faee
-  FirebaseInstanceID: a4fc702b5a026f7322964376047f1a3f1f7cc6ff
-  FirebaseUI: 76877afa8aa122ea135aa51a10fc7d622a82d096
+  Firebase: 27321a925aa85520618255a7c630859e0502ccbd
+  FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
+  FirebaseAuth: e58563adb207a43910a2ed87fecb9fa7d556df5a
+  FirebaseCore: 2a946ece8fbe3ce1fdeeb55324f273caade22df9
+  FirebaseInstanceID: 24958382a1011bba5aaff37e334e7a650b9118f5
+  FirebaseUI: 883482fea73b73bbb488c55176f4c6ad128957eb
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  Flurry-iOS-SDK: b0dcfbdb6e87c55b9e41ad4441945be492348132
-  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
+  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
-  QMCVDevelopment: e5fd01fced818ca2e386c86bc954b2c69f91ca5d
-  QMServicesDevelopment: 05d9ca5b5a1e1688b2c3dab8f87c9fa9568cddd4
-  QuickBlox: 5c0b21dc44a94e4ffb2e8b8eb2db606a635d1931
+  QMCVDevelopment: f459cc40e4dce463d7fd9092504e9a9aa49aa7a8
+  QMServicesDevelopment: 0416865882789f2f6deec8f49c2868c7d82da100
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+  SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  SVProgressHUD: 59b2d3dabacbd051576d21d32293ca7228dc18b0
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
-  UIDevice-Hardware: 4bb15b9bd9878762ab879ac86185baad17b6c3ff
+  UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05
 
-PODFILE CHECKSUM: 2be8e52b3915e80b1f258f54fd714e6e72550426
+PODFILE CHECKSUM: 58b460697da54ed58f8db2736e4f5b98fd23e40a
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0.beta.1

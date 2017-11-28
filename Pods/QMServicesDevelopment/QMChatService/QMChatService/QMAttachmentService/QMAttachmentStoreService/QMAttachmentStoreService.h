@@ -31,6 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMAttachmentStoreService : NSObject <QMCancellableService>
 
 /**
+ The quality of the resulting JPEG image, expressed as a value from 0.0 to 1.0. The value 0.0 represents the maximum compression (or lowest quality) while the value 1.0 represents the least compression (or best quality). Default value - 1.0.
+ */
+@property (nonatomic) CGFloat jpegCompressionQuality;
+
+/**
  Memory storage for attachments.
  */
 @property (strong, nonatomic, readonly) QMAttachmentsMemoryStorage *attachmentsMemoryStorage;
@@ -102,14 +107,14 @@ NS_ASSUME_NONNULL_BEGIN
  @param cacheType Type of the cache.
  @param messageID The message ID that contains attachment.
  @param dialogID The dialog ID.
- @param completion The block to be invoked when finishes the storing.
+ @param completion The block to be invoked when finishes the storing with file URL.
  */
 - (void)storeAttachment:(QBChatAttachment *)attachment
               withData:(nullable NSData *)data
              cacheType:(QMAttachmentCacheType)cacheType
              messageID:(NSString *)messageID
               dialogID:(NSString *)dialogID
-            completion:(nullable dispatch_block_t)completion;
+            completion:(void(^)(NSURL *_Nullable fileURL))completion;
 
 /**
  Gets file URL for saved attachment.

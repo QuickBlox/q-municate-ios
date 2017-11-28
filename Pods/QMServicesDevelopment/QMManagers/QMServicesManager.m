@@ -95,6 +95,12 @@
             dispatch_group_leave(logoutGroup);
         }];
         
+        dispatch_group_enter(logoutGroup);
+        [[QMUsersCache.instance  deleteAllUsers] continueWithBlock:^id _Nullable(BFTask * __unused _Nonnull t) {
+            dispatch_group_leave(logoutGroup);
+            return nil;
+        }];
+        
         dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
             
             if (completion) {

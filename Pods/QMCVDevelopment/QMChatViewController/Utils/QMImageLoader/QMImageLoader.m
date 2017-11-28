@@ -64,7 +64,7 @@
 }
 
 - (void)applyTransformForImage:(UIImage *)image completionBlock:(void(^)(UIImage *transformedImage))transformCompletionBlock {
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
         UIImage *transformed = [self imageManager:nil transformDownloadedImage:image withURL:nil];
@@ -468,7 +468,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                          }
                      }];
                     operation.cancelBlock = ^{
-
+                        
                         [self.imageDownloader cancel:subOperation];
                         __strong __typeof(weakOperation) strongOperation = weakOperation;
                         [self safelyRemoveOperationFromRunning:strongOperation];
@@ -594,7 +594,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                              forKey:transformKey
                              toDisk:YES
                          completion:nil];
-
+        
         return transformedImage;
     }
     
@@ -621,6 +621,19 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
 - (BOOL)hasImageOperationWithURL:(NSURL *)url {
     
     return [self operationWithURL:url] != nil;
+}
+
+- (BOOL)hasOriginalImageWithURL:(NSURL *)url {
+    
+    BOOL exists = NO;
+    
+    NSString *key = [self cacheKeyForURL:url];
+    NSString *path = [self.imageCache defaultCachePathForKey:key];
+    if (path) {
+        exists = [[NSFileManager defaultManager] fileExistsAtPath:path];
+    }
+    
+    return exists;
 }
 
 @end

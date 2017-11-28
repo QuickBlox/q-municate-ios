@@ -465,6 +465,7 @@ static NSString *const kQMChatServiceDomain = @"com.q-municate.chatservice";
     });
 }
 
+
 - (BFTask *)loadDialogWithID:(NSString *)dialogID {
     
     QBResponsePage *responsePage = [QBResponsePage responsePageWithLimit:1 skip:0];
@@ -480,22 +481,28 @@ static NSString *const kQMChatServiceDomain = @"com.q-municate.chatservice";
                                     NSSet *dialogsUsersIDs,
                                     QBResponsePage *page)
          {
-             QBChatDialog *dialog = [dialogObjects firstObject];
+             QBChatDialog *dialog = dialogObjects.firstObject;
              
              if (dialog) {
                  
+                 __weak __typeof(self)weakSelf = self;
                  [self.dialogsMemoryStorage addChatDialog:dialog
                                                   andJoin:YES
-                                               completion:nil];
-                 if ([self.multicastDelegate
-                      respondsToSelector:@selector(chatService:
-                                                   didAddChatDialogToMemoryStorage:)]) {
-                          [self.multicastDelegate chatService:self
-                              didAddChatDialogToMemoryStorage:dialog];
-                      }
+                                               completion:^(QBChatDialog *addedDialog,
+                                                            NSError *error)
+                  {
+                      
+                      if ([weakSelf.multicastDelegate
+                           respondsToSelector:@selector(chatService:
+                                                        didAddChatDialogToMemoryStorage:)]) {
+                               
+                               [weakSelf.multicastDelegate chatService:weakSelf
+                                       didAddChatDialogToMemoryStorage:addedDialog];
+                           }
+                      
+                      [source setResult:addedDialog];
+                  }];
              }
-             
-             [source setResult:dialog];
              
          } errorBlock:^(QBResponse *response) {
              
@@ -741,6 +748,23 @@ static NSString *const kQMChatServiceDomain = @"com.q-municate.chatservice";
                              else {
                                  [source setResult:nil];
                              }
+                         }];
+    });
+}
+
+- (BFTask *)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
+                         toDialog:(QBChatDialog *)dialog
+                   withAttachment:(QBChatAttachment *)attachment {
+    
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        
+        [self sendAttachmentMessage:attachmentMessage
+                           toDialog:dialog
+                     withAttachment:attachment
+                         completion:^(NSError * _Nullable error) {
+                             error ?
+                             [source setError:error] :
+                             [source setResult:nil];
                          }];
     });
 }

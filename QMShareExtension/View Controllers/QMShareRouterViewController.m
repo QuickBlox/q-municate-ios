@@ -53,8 +53,7 @@ QMShareEtxentionOperationDelegate>
     [super viewDidLoad];
     
     // Quickblox settings
-    [QBSettings configureForQmunicate];
-    [QBSettings setLogLevel:QBLogLevelDebug];
+    [QBSettings configure];
     
     [self configureAppereance];
     [self configureReachability];
