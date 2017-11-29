@@ -114,8 +114,6 @@
 //MARK: - Get users by ID
 
 - (BFTask *)getUserWithID:(NSUInteger)userID {
-    
-    if (userID == 0) return nil;
     return [self getUserWithID:userID
                      forceLoad:NO];
 }
@@ -125,8 +123,7 @@
     return [[self getUsersWithIDs:@[@(userID)]
                              page:[self pageForCount:1]
                         forceLoad:forceLoad]
-            continueWithBlock:^id(BFTask *task)
-            {
+            continueWithSuccessBlock:^id(BFTask *task) {
                 return [BFTask taskWithResult:[task.result firstObject]];
             }];
 }
@@ -639,8 +636,10 @@
 // MARK: Public users management
 
 - (void)updateUsers:(NSArray *)users {
+    
     [self.usersMemoryStorage addUsers:users];
     [self notifyListenersAboutUsersUpdate:users];
+    
     if ([self.multicastDelegate respondsToSelector:@selector(usersService:didUpdateUsers:)]) {
         [self.multicastDelegate usersService:self didUpdateUsers:users];
     }
@@ -678,8 +677,10 @@
     }
     else {
         
-        if ([self.multicastDelegate respondsToSelector:@selector(usersService:didAddUsers:)]) {
-            [self.multicastDelegate usersService:self didAddUsers:loadedUsers];
+        if (loadedUsers.count > 0) {
+            if ([self.multicastDelegate respondsToSelector:@selector(usersService:didAddUsers:)]) {
+                [self.multicastDelegate usersService:self didAddUsers:loadedUsers];
+            }
         }
         
         result = [foundUsers arrayByAddingObjectsFromArray:result];

@@ -1,3 +1,24 @@
+# v4.3.2
+- Improves error handling for the phone number sign-in reCAPTCHA flow.
+- Improves error handling for phone number linking flow.
+- Fixes issue where after linking an anonymous user to a phone number the user remained
+  anonymous.
+
+# v4.3.1
+- Internal clean up.
+
+# v4.3.0
+- Provides account creation and last sign-in dates as metadata to the user
+  object.
+- Returns more descriptive errors for some error cases of the phone number
+  sign-in reCAPTCHA flow.
+- Fixes an issue that invalid users were not automatically signed out earlier.
+- Fixes an issue that ID token listeners were not fired in some cases.
+
+# v4.2.1
+- Fixes a threading issue in phone number auth that completion block was not
+  executed on the main thread in some error cases.
+
 # v4.2.0
 - Adds new phone number verification API which makes use of an intelligent reCAPTCHA to verify the application.
 

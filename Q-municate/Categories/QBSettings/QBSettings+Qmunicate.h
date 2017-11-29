@@ -8,13 +8,16 @@
 
 #import <Quickblox/Quickblox.h>
 
-#define DEVELOPMENT 1
+typedef NS_ENUM(NSUInteger, QMApplicationZone) {
+    QMApplicationZoneDevelopment,
+    QMApplicationZoneProduction,
+    QMApplicationZoneQA,
+};
 
-#define CUSTOMSERVER 0
+static const QMApplicationZone QMCurrentApplicationZone = QMApplicationZoneDevelopment;
 
 @interface QBSettings (Qmunicate)
 
-+ (void)configureForQmunicate;
-+ (void)configureForTestServer;
++ (void)configure;
 
 @end

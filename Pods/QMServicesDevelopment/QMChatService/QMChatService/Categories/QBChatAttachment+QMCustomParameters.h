@@ -16,6 +16,13 @@ typedef NS_ENUM(NSInteger, QMAttachmentType) {
     QMAttachmentContentTypeCustom = 999
 };
 
+
+extern NSString *const kQMAttachmentTypeAudio;
+extern NSString *const kQMAttachmentTypeImage;
+extern NSString *const kQMAttachmentTypeVideo;
+extern NSString *const kQMAttachmentTypeLocation;
+
+
 @interface QBChatAttachment (QMCustomParameters)
 
 @property (assign, nonatomic) QMAttachmentType attachmentType;

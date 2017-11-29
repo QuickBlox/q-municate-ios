@@ -34,21 +34,8 @@
     application.applicationIconBadgeNumber = 0;
     
     // Quickblox settings
-    [QBSettings configureForQmunicate];
-    
-#if DEVELOPMENT == 0
-    [QBSettings setLogLevel:QBLogLevelNothing];
-    [QBSettings disableXMPPLogging];
-    [QMServicesManager enableLogging:NO];
-    
-    QMLogSetEnabled(NO);
-#else
-    [QBSettings setLogLevel:QBLogLevelDebug];
-    [QBSettings enableXMPPLogging];
-    [QMServicesManager enableLogging:YES];
-    
-    QMLogSetEnabled(YES);
-#endif
+    [QBSettings configure];
+    [QMServicesManager enableLogging:QMCurrentApplicationZone != QMApplicationZoneProduction];
     
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
@@ -157,11 +144,13 @@
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
     FIRAuthAPNSTokenType firTokenType;
-#if DEVELOPMENT == 0
-    firTokenType = FIRAuthAPNSTokenTypeProd;
-#else
-    firTokenType = FIRAuthAPNSTokenTypeSandbox;
-#endif
+
+    if (QMCurrentApplicationZone == QMApplicationZoneProduction) {
+        firTokenType = FIRAuthAPNSTokenTypeProd;
+    }
+    else {
+        firTokenType = FIRAuthAPNSTokenTypeSandbox;
+    }
 
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }

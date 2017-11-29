@@ -92,6 +92,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)contactListItems:(nullable void(^)(NSArray<QBContactListItem *> *contactListItems))completion;
 
+
+/**
+ *  Fetch all contact list items (Fetch in Main Queue context)
+ *
+ *  @return Returns an array of QBContactListItem instances
+ */
+- (NSArray<QBContactListItem *> *)allContactListItems;
+
 /**
  *  Fetch contact list item wiht user ID
  *

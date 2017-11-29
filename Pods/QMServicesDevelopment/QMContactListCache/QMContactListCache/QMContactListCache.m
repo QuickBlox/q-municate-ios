@@ -126,6 +126,18 @@ static QMContactListCache *_chatCacheInstance = nil;
     } finish:completion];
 }
 
+
+- (NSArray<QBContactListItem *> *)allContactListItems {
+    
+    __block NSArray<QBContactListItem *> *result = nil;
+    [self performMainQueue:^(NSManagedObjectContext *ctx) {
+        result = [[CDContactListItem QM_findAllInContext:ctx] toQBContactListItems];
+    }];
+    
+    return result;
+}
+
+
 - (void)contactListItems:(void(^)(NSArray<QBContactListItem *> *contactListItems))completion {
     
     [self performBackgroundQueue:^(NSManagedObjectContext *ctx) {

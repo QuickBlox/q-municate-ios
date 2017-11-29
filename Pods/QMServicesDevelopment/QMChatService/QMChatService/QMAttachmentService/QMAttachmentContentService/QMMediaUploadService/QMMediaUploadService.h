@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface QMUploadOperation : QMAsynchronousOperation
+@interface QMUploadOperation : QMAsynchronousBlockOperation
 
 @property (nonatomic, strong) NSError *error;
 @property (nonatomic, copy) NSString *attachmentID;

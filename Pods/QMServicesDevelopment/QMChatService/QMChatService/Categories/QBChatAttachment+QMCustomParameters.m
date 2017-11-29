@@ -11,6 +11,12 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "QMSLog.h"
 
+
+NSString *const kQMAttachmentTypeAudio = @"audio";
+NSString *const kQMAttachmentTypeImage = @"image";
+NSString *const kQMAttachmentTypeVideo = @"video";
+NSString *const kQMAttachmentTypeLocation = @"location";
+
 /**
  *  Attachment keys
  */
