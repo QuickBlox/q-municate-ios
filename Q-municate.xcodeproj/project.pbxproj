@@ -193,6 +193,7 @@
 		E333FBA91F5461FA0095F224 /* QuickbloxWebRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E333FBA51F5461FA0095F224 /* QuickbloxWebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E3826B8E1F73CAB3009DB491 /* MPGNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = E3826B8D1F73CAB3009DB491 /* MPGNotification.m */; };
 		E39BEBBA1F6BF04000F7D50F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E39BEBB91F6BF02700F7D50F /* GoogleService-Info.plist */; };
+		E3A99BCF1FD00C8F00D0907B /* QMCallKitAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A99BCE1FD00C8F00D0907B /* QMCallKitAdapter.m */; };
 		E3D2EEA41EF7C693002DC44E /* QMTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */; };
 		E3D2EEA81EF7E71C002DC44E /* QMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA71EF7E71C002DC44E /* QMViewController.m */; };
 		E3D2EEAB1EF7F6A2002DC44E /* QMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEAA1EF7F6A2002DC44E /* QMNavigationController.m */; };
@@ -571,6 +572,8 @@
 		E3826B8C1F73CAB3009DB491 /* MPGNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGNotification.h; sourceTree = "<group>"; };
 		E3826B8D1F73CAB3009DB491 /* MPGNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGNotification.m; sourceTree = "<group>"; };
 		E39BEBB91F6BF02700F7D50F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E3A99BCD1FD00C8F00D0907B /* QMCallKitAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMCallKitAdapter.h; sourceTree = "<group>"; };
+		E3A99BCE1FD00C8F00D0907B /* QMCallKitAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMCallKitAdapter.m; sourceTree = "<group>"; };
 		E3D2EEA21EF7C693002DC44E /* QMTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMTableViewController.h; path = QMTableViewController/QMTableViewController.h; sourceTree = "<group>"; };
 		E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMTableViewController.m; path = QMTableViewController/QMTableViewController.m; sourceTree = "<group>"; };
 		E3D2EEA61EF7E71C002DC44E /* QMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMViewController.h; path = QMViewController/QMViewController.h; sourceTree = "<group>"; };
@@ -1924,6 +1927,7 @@
 		695F4B2118B60A62006C9DA5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				E3A99BCC1FD00C7800D0907B /* QMCallKitAdapter */,
 				E3826B8B1F73CAB3009DB491 /* MPGNotification */,
 				E0921D911F6FEE11005961CF /* QMImageBarButtonItem */,
 				E03AD8EB1F556D6100F411CE /* QMExpandableTableViewController */,
@@ -2178,6 +2182,15 @@
 				E3826B8D1F73CAB3009DB491 /* MPGNotification.m */,
 			);
 			path = MPGNotification;
+			sourceTree = "<group>";
+		};
+		E3A99BCC1FD00C7800D0907B /* QMCallKitAdapter */ = {
+			isa = PBXGroup;
+			children = (
+				E3A99BCD1FD00C8F00D0907B /* QMCallKitAdapter.h */,
+				E3A99BCE1FD00C8F00D0907B /* QMCallKitAdapter.m */,
+			);
+			path = QMCallKitAdapter;
 			sourceTree = "<group>";
 		};
 		E3D2EE9D1EF42D7C002DC44E /* QMNavigationController */ = {
@@ -2560,6 +2573,7 @@
 				69D57E6618ACC11C00A9900A /* QMAppDelegate.m in Sources */,
 				5877D6CA1C466DE600938E5D /* QMDialogsViewController.m in Sources */,
 				58D847811C871469000C40BA /* QMSearchDataProvider.m in Sources */,
+				E3A99BCF1FD00C8F00D0907B /* QMCallKitAdapter.m in Sources */,
 				E06F890B1E60FFF30017BBEC /* QMCallWindow.m in Sources */,
 				559BDFEA19618D3D000588FE /* QMWelcomeScreenViewController.m in Sources */,
 				5868B06C1CE9C6ED004F9233 /* QMCallInfoView.m in Sources */,
