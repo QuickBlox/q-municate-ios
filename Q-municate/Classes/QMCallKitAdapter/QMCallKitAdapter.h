@@ -17,8 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- CallKitManager class interface.
- Used as manager of Apple CallKit.
+ QMCallKitAdapter class interface.
+ Used as adapter of Apple CallKit.
  */
 @interface QMCallKitAdapter : NSObject
 
