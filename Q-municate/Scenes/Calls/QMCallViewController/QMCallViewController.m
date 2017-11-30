@@ -43,6 +43,9 @@ QBRTCClientDelegate,
 QMCallManagerDelegate,
 QBRTCAudioSessionDelegate
 >
+{
+    id _didBecomeActiveObserver;
+}
 
 @property (assign, nonatomic) QMCallState callState;
 
@@ -92,7 +95,7 @@ QBRTCAudioSessionDelegate
 //MARK: - Life cycle
 
 - (void)dealloc {
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -137,6 +140,20 @@ QBRTCAudioSessionDelegate
         self.localVideoView.autoresizingMask = self.opponentVideoView.autoresizingMask;
         
         [self.view addSubview:self.localVideoView];
+        
+        @weakify(self);
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification
+                                                          object:nil
+                                                           queue:nil
+                                                      usingBlock:^(NSNotification * __unused note) {
+                                                          @strongify(self);
+                                                          if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+                                                              QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+                                                              if (audioSession.currentAudioDevice != QBRTCAudioDeviceSpeaker) {
+                                                                  audioSession.currentAudioDevice = QBRTCAudioDeviceSpeaker;
+                                                              }
+                                                          }
+                                                      }];
     }
     
     [self configureCallController];
@@ -780,7 +797,12 @@ QBRTCAudioSessionDelegate
     
     [[QMCore instance].callManager stopAllSounds];
     
-    [[QBRTCAudioSession instance] deinitialize];
+    QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+    if (audioSession.isInitialized
+        && ![audioSession audioSessionIsActivatedOutside:[AVAudioSession sharedInstance]]) {
+        QMLog(@"Deinitializing QBRTCAudioSession in CallViewController.");
+        [audioSession deinitialize];
+    }
     
     if (self.isVideoCall) {
         
@@ -802,7 +824,10 @@ QBRTCAudioSessionDelegate
 }
 
 - (void)callManager:(nonnull QMCallManager *)__unused callManager willChangeActiveCallState:(BOOL)__unused willHaveActiveCall {
-    
+}
+
+- (void)callManagerDidChangeMicrophoneState:(QMCallManager *)__unused callManager {
+    self.muteButton.selected ^= 1;
 }
 
 // MARK: - QBRTCAudioSessionDelegate

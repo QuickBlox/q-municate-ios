@@ -7,20 +7,24 @@
 //
 
 #import "QMCallManager.h"
+
 #import "QMCore.h"
 #import "QMCallViewController.h"
 #import "QMSoundManager.h"
 #import "QMPermissions.h"
 #import "QMNotification.h"
+#import "QMCallKitAdapter.h"
 
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
+NSString * const QMVoipCallEventKey = @"VOIPCall";
 
 @interface QMCallManager ()
 
 <
-QBRTCClientDelegate
+QBRTCClientDelegate,
+QMCallKitAdapterUsersStorageProtocol
 >
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
@@ -32,11 +36,19 @@ QBRTCClientDelegate
 
 @property (strong, nonatomic) UIWindow *callWindow;
 
+@property (strong, nonatomic) QMCallKitAdapter *callKitAdapter;
+@property (strong, nonatomic, readwrite) NSUUID *callUUID;
+@property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+
 @end
 
 @implementation QMCallManager
 
 @dynamic serviceManager;
+
++ (BOOL)isCallKitAvailable {
+    return QMCallKitAdapter.isCallKitAvailable;
+}
 
 - (void)serviceWillStart {
     
@@ -46,6 +58,15 @@ QBRTCClientDelegate
     _multicastDelegate = (id<QMCallManagerDelegate>)[[QBMulticastDelegate alloc] init];
     
     [[QBRTCClient instance] addDelegate:self];
+    
+    if (QMCallKitAdapter.isCallKitAvailable) {
+        _callKitAdapter = [[QMCallKitAdapter alloc] initWithUsersStorage:self];
+        @weakify(self);
+        [_callKitAdapter setOnMicrophoneMuteAction:^{
+            @strongify(self);
+            [self.multicastDelegate callManagerDidChangeMicrophoneState:self];
+        }];
+    }
 }
 
 //MARK: - Call managing
@@ -75,6 +96,11 @@ QBRTCClientDelegate
             return;
         }
         
+        if (QMCallKitAdapter.isCallKitAvailable) {
+            self.callUUID = [NSUUID UUID];
+            [self.callKitAdapter startCallWithUserID:@(userID) session:self.session uuid:self.callUUID];
+        }
+        
         [self startPlayingCallingSound];
         
         // instantiating view controller
@@ -86,8 +112,12 @@ QBRTCClientDelegate
         NSString *callerName = currentUser.fullName ?: [NSString stringWithFormat:@"%tu", currentUser.ID];
         NSString *pushText = [NSString stringWithFormat:@"%@ %@", callerName, NSLocalizedString(@"QM_STR_IS_CALLING_YOU", nil)];
         
-        [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
-        
+        [QMNotification sendPushNotificationToUser:opponentUser
+                                          withText:pushText
+                                       extraParams:@{
+                                                     QMVoipCallEventKey : @"1",
+                                                     }
+                                            isVoip:YES];
         
         [self prepareCallWindow];
         
@@ -95,6 +125,10 @@ QBRTCClientDelegate
         
         [self.session startCall:nil];
         self.hasActiveCall = YES;
+        
+        if (QMCallKitAdapter.isCallKitAvailable) {
+            [self.callKitAdapter updateCallWithUUID:self.callUUID connectingAtDate:[NSDate date]];
+        }
     }];
 }
 
@@ -156,6 +190,22 @@ QBRTCClientDelegate
     return opponentUser;
 }
 
+// MARK: - Methods
+
+- (void)performCallKitPreparations {
+    UIApplication *application = [UIApplication sharedApplication];
+    if (application.applicationState == UIApplicationStateBackground
+        && _backgroundTask == UIBackgroundTaskInvalid) {
+        _backgroundTask = [application beginBackgroundTaskWithExpirationHandler:^{
+            [application endBackgroundTask:self.backgroundTask];
+            self.backgroundTask = UIBackgroundTaskInvalid;
+        }];
+    }
+    if (![QBChat instance].isConnected) {
+        [self.serviceManager login];
+    }
+}
+
 //MARK: - QBRTCClientDelegate
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)__unused userInfo {
@@ -177,16 +227,32 @@ QBRTCClientDelegate
     self.session = session;
     self.hasActiveCall = YES;
     
-    [self startPlayingRingtoneSound];
-    
-    // initializing controller
-    QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
-    
-    [self prepareCallWindow];
-    self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+    if (QMCallKitAdapter.isCallKitAvailable) {
+        self.callUUID = [NSUUID UUID];
+        
+        @weakify(self);
+        [_callKitAdapter reportIncomingCallWithUserID:session.initiatorID session:session uuid:self.callUUID onAcceptAction:^{
+            @strongify(self);
+            // initializing controller
+            QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
+            
+            [self prepareCallWindow];
+            self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+            
+        } completion:nil];
+    }
+    else {
+        [self startPlayingRingtoneSound];
+        
+        // initializing controller
+        QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
+        
+        [self prepareCallWindow];
+        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+    }
 }
 
-- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)__unused report forUserID:(NSNumber *)__unused userID {
+- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
     
     ILog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
 }
@@ -196,6 +262,11 @@ QBRTCClientDelegate
     if (self.session == session) {
         // stopping calling sounds
         [self stopAllSounds];
+        
+        if (QMCallKitAdapter.isCallKitAvailable
+            && [session.initiatorID unsignedIntegerValue] == self.serviceManager.currentProfile.userData.ID) {
+            [_callKitAdapter updateCallWithUUID:_callUUID connectedAtDate:[NSDate date]];
+        }
     }
 }
 
@@ -207,7 +278,26 @@ QBRTCClientDelegate
         return;
     }
     
-    self.hasActiveCall = NO;
+    if (QMCallKitAdapter.isCallKitAvailable) {
+        [self.callKitAdapter endCallWithUUID:self.callUUID completion:nil];
+        self.callUUID = nil;
+    }
+    
+    if (_backgroundTask != UIBackgroundTaskInvalid) {
+        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
+            && self.backgroundTask == UIBackgroundTaskInvalid) {
+            // dispatching chat disconnect in 1 second so message about call end
+            // from webrtc does not cut mid sending
+            // checking for background task being invalid though, to avoid disconnecting
+            // from chat when another call has already being received in background
+            [QBChat.instance disconnectWithCompletionBlock:nil];
+        }
+    });
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMCallViewControllerEndScreenDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
@@ -219,6 +309,7 @@ QBRTCClientDelegate
         self.callWindow = nil;
         
         self.session = nil;
+        self.hasActiveCall = NO;
     });
 }
 
@@ -390,6 +481,17 @@ QBRTCClientDelegate
     }
     
     [self _sendNotificationMessage:message];
+}
+
+// MARK: - QMCallKitAdapterUsersStorageProtocol protocol impl
+
+- (void)userWithID:(NSUInteger)userID completion:(void (^)(QBUUser * _Nonnull))completion {
+    [[self.serviceManager.usersService getUserWithID:userID] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull t) {
+        if (completion != nil) {
+            completion(t.result);
+        }
+        return nil;
+    }];
 }
 
 //MARK: - Helpers

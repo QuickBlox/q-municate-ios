@@ -10,6 +10,7 @@
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QMColors.h"
+
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Flurry.h>
@@ -37,9 +38,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 #else
 
 // Development
-static const NSUInteger kQMApplicationID = 36125;
-static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
-static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
+static const NSUInteger kQMApplicationID = 63068;
+static NSString * const kQMAuthorizationKey = @"BkWsMWL3XUqJdNr";
+static NSString * const kQMAuthorizationSecret = @"bG8PFjwAx3JKFfS";
 static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 #endif
