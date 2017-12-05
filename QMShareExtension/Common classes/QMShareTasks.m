@@ -116,7 +116,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     NSMutableArray *tasks = [NSMutableArray array];
     
     for (NSItemProvider *provider in availableProviders) {
-          [tasks addObject:[self loadItemsForItemProvider:provider]];
+        [tasks addObject:[self loadItemsForItemProvider:provider]];
     }
     
     return [BFTask taskForCompletionOfAllTasksWithResults:tasks];
@@ -147,13 +147,19 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
                 return [self taskProvideResultWithAttachmentForFileURL:URL];
             }
             else if (URL.isLocationURL) {
-                result.text = @"Location";
                 
-                return [[URL location] continueWithSuccessBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
+                return [[URL location] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
                     
-                    QBChatAttachment *locationAttachment =
-                    [QBChatAttachment locationAttachmentWithCoordinate:locationTask.result.coordinate];
-                    result.attachment = locationAttachment;
+                    if (locationTask.error) {
+                        result.text = URL.absoluteString;
+                    }
+                    else {
+                        result.text = @"Location";
+                        QBChatAttachment *locationAttachment =
+                        [QBChatAttachment locationAttachmentWithCoordinate:locationTask.result.coordinate];
+                        result.attachment = locationAttachment;
+                    }
+                    
                     return [BFTask taskWithResult:result];
                 }];
             }
