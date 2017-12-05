@@ -30,7 +30,8 @@ static const NSInteger kQMUnauthorizedErrorCode = -1011;
 
 <QMUsersServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate,
 UITableViewDelegate, UISearchControllerDelegate, UISearchResultsUpdating,
-QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsControllerDelegate>
+QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate,
+QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *placeholderView;
 @property (strong, nonatomic) UISearchController *searchController;
@@ -63,6 +64,7 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
     // Subscribing delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
+    [QMCore.instance.contactListService addDelegate:self];
     // search implementation
     [self configureSearch];
     // Data sources init
@@ -274,7 +276,6 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 //MARK: - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    
     [self.dialogsSearchDataSource.searchDataProvider performSearch:searchController.searchBar.text];
 }
 
@@ -376,30 +377,33 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 
 //MARK: - QMChatConnectionDelegate
 
+- (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
+    [QMTasks taskFetchAllData];
+}
+
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
-    [QMTasks taskFetchAllData];
-    [QMTasks taskUpdateContacts];
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
-                                                                          message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
-                                                                         duration:kQMDefaultNotificationDismissTime];
+    [(QMNavigationController *)self.navigationController
+     showNotificationWithType:QMNotificationPanelTypeSuccess
+     message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
+     duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
     [QMTasks taskFetchAllData];
-    [QMTasks taskUpdateContacts];
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
-                                                                          message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
-                                                                         duration:kQMDefaultNotificationDismissTime];
+    
+    [(QMNavigationController *)self.navigationController
+     showNotificationWithType:QMNotificationPanelTypeSuccess
+     message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
+     duration:kQMDefaultNotificationDismissTime];
 }
-/*
- - (void)chatService:(QMChatService *)__unused chatService
- chatDidNotConnectWithError:(NSError *)error {
- 
- [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
- }
- */
+
+- (void)contactListService:(QMContactListService *)__unused contactListService
+      contactListDidChange:(QBContactList *)contactList {
+    
+    [QMTasks taskUpdateContacts];
+}
 
 //MARK: - QMUsersServiceDelegate
 
@@ -407,16 +411,14 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
-        
         [self.tableView reloadData];
     }
 }
 
 - (void)usersService:(QMUsersService *)__unused usersService
-         didAddUsers:(NSArray<QBUUser *> *)__unused user {
+         didAddUsers:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
-        
         [self.tableView reloadData];
     }
 }

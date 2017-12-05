@@ -2166,52 +2166,32 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
-        @weakify(self);
-        self.contactRequestTask = [[QMCore.instance.contactManager addUserToContactList:opponentUser]
-                                   continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-                                       
-                                       @strongify(self);
-                                       [navigationController dismissNotificationPanel];
-                                       
-                                       if (!task.isFaulted) {
-                                           [self.chatDataSource updateMessage:currentMessage];
-                                       }
-                                       
-                                       return nil;
-                                   }];
+        self.contactRequestTask =
+        [[QMCore.instance.contactManager addUserToContactList:opponentUser] successComplete:^{
+             [navigationController dismissNotificationPanel];
+             [self.chatDataSource updateMessage:currentMessage];
+        }];
     }
     else {
         
-        __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
-        
-        @weakify(self);
-        self.contactRequestTask = [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-            @strongify(self);
-            if (!task.isFaulted) {
-                
-                return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
-            }
+        self.contactRequestTask =
+        [[[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser]
+           continueSuccess:^BFTask * _Nullable {
+               
+               return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
+               
+           }] successComplete:^{
+               
+               if (self.splitViewController.isCollapsed) {
+                   [self.navigationController popViewControllerAnimated:YES];
+               }
+               else {
+                   [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+               }
+               
+           }] complete:^{
             
-            return [BFTask cancelledTask];
-            
-        }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-            
-            @strongify(self);
-            [navigationController dismissNotificationPanel];
-            
-            if (!task.isCancelled && !task.isFaulted) {
-                
-                if (self.splitViewController.isCollapsed) {
-                    
-                    [self.navigationController popViewControllerAnimated:YES];
-                }
-                else {
-                    
-                    [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-                }
-            }
-            
-            return nil;
+            [(QMNavigationController *)self.navigationController dismissNotificationPanel];
         }];
     }
 }

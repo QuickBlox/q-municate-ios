@@ -206,58 +206,55 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 - (BFTask *)login {
     
-    return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
-        return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
-    }];
+    return [[QMTasks taskAutoLogin]
+            continueWithSuccessBlock:^id(BFTask<QBUUser *> *task) {
+                return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
+            }];
 }
 
 - (BFTask *)logout {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
-    @weakify(self);
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-    
-        [super logoutWithCompletion:^{
-            
-            @strongify(self);
-            if (self.currentProfile.accountType == QMAccountTypeFacebook) {
-                
-                [QMFacebook logout];
-            }
-            else if (self.currentProfile.accountType == QMAccountTypePhone) {
-                
-                [[FIRAuth auth] signOut:nil];
-            }
-            // clearing contact list cache and memory storage
-            [[QMContactListCache instance] deleteContactList:nil];
-            [self.contactListService.contactListMemoryStorage free];
-            [self.openGraphService.memoryStorage free];
-            
-            dispatch_group_t logoutGroup = dispatch_group_create();
-            
-            dispatch_group_enter(logoutGroup);
-            [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
-                [[QMImageLoader instance].imageCache clearMemory];
-                dispatch_group_leave(logoutGroup);
-            }];
-            
-            [self.chatService.chatAttachmentService removeAllMediaFiles];
-            
-            dispatch_group_enter(logoutGroup);
-            [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                dispatch_group_leave(logoutGroup);
-            }];
-            
-            dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
-                [self.currentProfile clearProfile];
-                [source setResult:nil];
-            });
-        }];
-        
-        return nil;
-    }];
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] complete:^{
+         
+         [super logoutWithCompletion:^{
+             
+             if (self.currentProfile.accountType == QMAccountTypeFacebook) {
+                 
+                 [QMFacebook logout];
+             }
+             else if (self.currentProfile.accountType == QMAccountTypePhone) {
+                 
+                 [[FIRAuth auth] signOut:nil];
+             }
+             // Clearing contact list cache and memory storage
+             [[QMContactListCache instance] deleteContactList:nil];
+             [self.contactListService.contactListMemoryStorage free];
+             [self.openGraphService.memoryStorage free];
+             [self.chatService.chatAttachmentService removeAllMediaFiles];
+             
+             dispatch_group_t logoutGroup = dispatch_group_create();
+             
+             dispatch_group_enter(logoutGroup);
+             [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
+                 [[QMImageLoader instance].imageCache clearMemory];
+                 dispatch_group_leave(logoutGroup);
+             }];
+             
+             dispatch_group_enter(logoutGroup);
+             [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
+                 dispatch_group_leave(logoutGroup);
+             }];
+             
+             dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
+                 [self.currentProfile clearProfile];
+                 [source setResult:nil];
+             });
+         }];
+         
+     }];
     
     return source.task;
 }
@@ -314,21 +311,25 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
       contactListDidChange:(QBContactList *)contactList {
     
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
-    
     // load users if needed
-    [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
+    NSArray<NSNumber *> *IDs = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
     
-    NSPredicate *predicate =
-    [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
-        return user.fullName.length > 0;
+    [[self.usersService getUsersWithIDs:IDs] successResult:^(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+        
+        NSParameterAssert(IDs.count == t.result.count);
+
+        NSPredicate *predicate =
+        [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
+            return user.fullName.length > 0;
+        }];
+        
+        NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
+        
+        if (friendNames.count) {
+            [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
+            [self updateVocabulary];
+        }
     }];
-    
-    NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
-    
-    if (friendNames.count) {
-        [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
-        [self updateVocabulary];
-    }
 }
 
 //MARK: QMOpenGraphCacheDataSource
@@ -419,7 +420,9 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 }
 
 - (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
-
+    
+    NSParameterAssert(QBSession.currentSession.tokenHasExpired == YES);
+    NSParameterAssert(QBSession.currentSession.sessionDetails.token == nil);
 }
 
 - (void)authService:(QMAuthService *)__unused authService
