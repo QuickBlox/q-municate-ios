@@ -681,13 +681,15 @@ QBRTCAudioSessionDelegate
     [QMCore.instance.callManager stopAllSounds];
     
     if (![self.session.initiatorID isEqualToNumber:userID]) {
-        // there is QBRTC bug, when userID is always opponents iD
+        // there is QBRTC bug, when userID is always opponents ID
         // even  for user, who did not answer, this delegate will be called
         // with opponent user ID
         [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+        self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
     }
-    
-    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
+    else {
+        self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil);
+    }
 }
 
 - (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
