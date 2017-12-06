@@ -166,6 +166,12 @@ QBRTCAudioSessionDelegate
     
     [self configureCallInfoView];
     [self configureToolbar];
+    
+    if (self.isVideoCall
+        && self.callState == QMCallStateActiveVideoCall) {
+        // configuring active video call
+        [self configureVideoCall];
+    }
 }
 
 - (void)configureCallInfoView {
@@ -369,8 +375,6 @@ QBRTCAudioSessionDelegate
                 [self configureCallController];
                 
                 [self.session acceptCall:nil];
-                
-                [self configureVideoCall];
             }];
             
             break;
@@ -725,11 +729,6 @@ QBRTCAudioSessionDelegate
     
     self.callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
     [self configureCallController];
-    
-    if (self.isVideoCall) {
-        // configuring video call
-        [self configureVideoCall];
-    }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
