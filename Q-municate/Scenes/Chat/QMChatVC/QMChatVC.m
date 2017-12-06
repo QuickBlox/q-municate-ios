@@ -2539,7 +2539,6 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
     [self.shareTableViewController presentLoadingAlertControllerWithStatus:@"Forwarding"
                                                                   animated:YES
                                                             withCompletion:nil];
-    
     __weak typeof(self) weakSelf = self;
     
     [self.shareHelper forwardMessage:messageToForward
