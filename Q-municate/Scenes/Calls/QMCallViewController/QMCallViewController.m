@@ -337,6 +337,9 @@ QBRTCAudioSessionDelegate
                 sender.userInteractionEnabled = NO;
                 [QMCore.instance.callManager stopAllSounds];
                 
+                self.callState = QMCallStateActiveAudioCall;
+                [self configureCallController];
+                
                 [self.session acceptCall:nil];
             }];
             
@@ -362,7 +365,12 @@ QBRTCAudioSessionDelegate
                 sender.userInteractionEnabled = NO;
                 [QMCore.instance.callManager stopAllSounds];
                 
+                self.callState = QMCallStateActiveVideoCall;
+                [self configureCallController];
+                
                 [self.session acceptCall:nil];
+                
+                [self configureVideoCall];
             }];
             
             break;
@@ -714,6 +722,14 @@ QBRTCAudioSessionDelegate
     }
     
     [[QMCore instance].callManager stopAllSounds];
+    
+    self.callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
+    [self configureCallController];
+    
+    if (self.isVideoCall) {
+        // configuring video call
+        [self configureVideoCall];
+    }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
@@ -742,14 +758,6 @@ QBRTCAudioSessionDelegate
     if (self.session != session) {
         
         return;
-    }
-    
-    BOOL isVideo = session.conferenceType == QBRTCConferenceTypeVideo;
-    self.callState = isVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
-    [self configureCallController];
-    
-    if (isVideo) {
-        [self configureVideoCall];
     }
     
     // starting timer
