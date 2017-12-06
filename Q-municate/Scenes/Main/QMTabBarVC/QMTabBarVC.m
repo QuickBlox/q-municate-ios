@@ -78,7 +78,9 @@ QMChatConnectionDelegate
         return;
     }
     
-    [QMSoundManager playMessageReceivedSound];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMSoundManager playMessageReceivedSound];
+    }
     
     MPGNotificationButtonHandler buttonHandler = nil;
     UIViewController *hvc = nil;

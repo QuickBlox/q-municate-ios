@@ -166,6 +166,12 @@ QBRTCAudioSessionDelegate
     
     [self configureCallInfoView];
     [self configureToolbar];
+    
+    if (self.isVideoCall
+        && self.callState == QMCallStateActiveVideoCall) {
+        // configuring active video call
+        [self configureVideoCall];
+    }
 }
 
 - (void)configureCallInfoView {
@@ -369,8 +375,6 @@ QBRTCAudioSessionDelegate
                 [self configureCallController];
                 
                 [self.session acceptCall:nil];
-                
-                [self configureVideoCall];
             }];
             
             break;
@@ -689,13 +693,15 @@ QBRTCAudioSessionDelegate
     [QMCore.instance.callManager stopAllSounds];
     
     if (![self.session.initiatorID isEqualToNumber:userID]) {
-        // there is QBRTC bug, when userID is always opponents iD
+        // there is QBRTC bug, when userID is always opponents ID
         // even  for user, who did not answer, this delegate will be called
         // with opponent user ID
         [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+        self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
     }
-    
-    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
+    else {
+        self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil);
+    }
 }
 
 - (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
@@ -723,11 +729,6 @@ QBRTCAudioSessionDelegate
     
     self.callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
     [self configureCallController];
-    
-    if (self.isVideoCall) {
-        // configuring video call
-        [self configureVideoCall];
-    }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {

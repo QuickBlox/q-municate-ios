@@ -154,7 +154,10 @@ QMCallKitAdapterUsersStorageProtocol
         
         _hasActiveCall = hasActiveCall;
         
-        if (self.session.conferenceType == QBRTCConferenceTypeAudio) {
+        if (!QMCallKitAdapter.isCallKitAvailable
+            && self.session.conferenceType == QBRTCConferenceTypeAudio) {
+            // enabling proximity sensor only if call kit is not available
+            // as callkit handling this by default
             [UIDevice currentDevice].proximityMonitoringEnabled = hasActiveCall;
         }
         
@@ -301,7 +304,9 @@ QMCallKitAdapterUsersStorageProtocol
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMCallViewControllerEndScreenDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        [QMSoundManager playEndOfCallSound];
+        if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+            [QMSoundManager playEndOfCallSound];
+        }
         
         [self.multicastDelegate callManager:self willCloseCurrentSession:session];
         
