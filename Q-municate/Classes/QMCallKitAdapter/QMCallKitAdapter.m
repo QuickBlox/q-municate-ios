@@ -251,13 +251,16 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
         audioSession.audioEnabled = NO;
         audioSession.useManualAudio = NO;
         
-        if (weakSelf.callStarted) {
-            [session hangUp:nil];
-            weakSelf.callStarted = NO;
+        if (session.state != QBRTCSessionStateClosed) {
+            if (weakSelf.callStarted) {
+                [session hangUp:nil];
+            }
+            else {
+                [session rejectCall:nil];
+            }
         }
-        else {
-            [session rejectCall:nil];
-        }
+        
+        weakSelf.callStarted = NO;
         
         [action fulfillWithDateEnded:[NSDate date]];
         
