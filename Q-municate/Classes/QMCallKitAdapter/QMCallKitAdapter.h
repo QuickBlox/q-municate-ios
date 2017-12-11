@@ -33,6 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic) dispatch_block_t onMicrophoneMuteAction;
 
 /**
+ Action that will be executed if call was ended by call kit.
+ */
+@property (copy, nonatomic) dispatch_block_t onCallEndedByCallKitAction;
+
+/**
  Init with users storage.
 
  @param usersStorage class that corresponds to QMCallKitAdapterUsersStorageProtocol protocol

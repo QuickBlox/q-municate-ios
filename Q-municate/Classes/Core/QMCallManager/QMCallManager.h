@@ -74,7 +74,7 @@ extern NSString * const QMVoipCallEventKey;
 /**
  *  Determines whether callkit is available or not.
  */
-@property (class, getter=isCallKitAvailable) BOOL callKitAvailable;
+@property (class, readonly, getter=isCallKitAvailable) BOOL callKitAvailable;
 
 /**
  *  Current session.

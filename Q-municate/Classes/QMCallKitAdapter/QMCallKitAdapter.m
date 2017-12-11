@@ -258,6 +258,10 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
             else {
                 [session rejectCall:nil];
             }
+            
+            if (weakSelf.onCallEndedByCallKitAction != nil) {
+                weakSelf.onCallEndedByCallKitAction();
+            }
         }
         
         weakSelf.callStarted = NO;

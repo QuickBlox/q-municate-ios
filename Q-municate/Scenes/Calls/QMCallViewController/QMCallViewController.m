@@ -142,18 +142,19 @@ QBRTCAudioSessionDelegate
         [self.view addSubview:self.localVideoView];
         
         @weakify(self);
-        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification
-                                                          object:nil
-                                                           queue:nil
-                                                      usingBlock:^(NSNotification * __unused note) {
-                                                          @strongify(self);
-                                                          if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
-                                                              QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
-                                                              if (audioSession.currentAudioDevice != QBRTCAudioDeviceSpeaker) {
-                                                                  audioSession.currentAudioDevice = QBRTCAudioDeviceSpeaker;
-                                                              }
-                                                          }
-                                                      }];
+        _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
+                                    addObserverForName:UIApplicationDidBecomeActiveNotification
+                                    object:nil
+                                    queue:nil
+                                    usingBlock:^(NSNotification * __unused note) {
+                                        @strongify(self);
+                                        if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+                                            QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+                                            if (audioSession.currentAudioDevice != QBRTCAudioDeviceSpeaker) {
+                                                audioSession.currentAudioDevice = QBRTCAudioDeviceSpeaker;
+                                            }
+                                        }
+                                    }];
     }
     
     [self configureCallController];
@@ -178,7 +179,8 @@ QBRTCAudioSessionDelegate
     
     QBUUser *opponentUser = [QMCore.instance.callManager opponentUser];
     
-    if (self.callInfoView == nil) {
+    if (self.callInfoView == nil
+        && self.callState != QMCallStateActiveVideoCall) {
         // base call info view configuration
         self.callInfoView = [QMCallInfoView callInfoViewWithUser:opponentUser];
         
@@ -420,9 +422,6 @@ QBRTCAudioSessionDelegate
             
             bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) ,
                           QMStringForTimeInterval(self.callDuration)];
-            
-            [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
-                                                                     duration:self.callDuration];
         }
         else {
             
@@ -791,6 +790,13 @@ QBRTCAudioSessionDelegate
 - (void)sessionDidClose:(QBRTCSession *)session {
     if (self.session != session) {
         return;
+    }
+    
+    if (self.callState == QMCallStateActiveAudioCall ||
+        self.callState == QMCallStateActiveVideoCall) {
+        
+        [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
+                                                                 duration:self.callDuration];
     }
     
     self.acceptButton.enabled = NO;

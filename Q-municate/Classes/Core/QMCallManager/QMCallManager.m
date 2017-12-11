@@ -18,14 +18,17 @@
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
+
 NSString * const QMVoipCallEventKey = @"VOIPCall";
 
 @interface QMCallManager ()
-
 <
 QBRTCClientDelegate,
 QMCallKitAdapterUsersStorageProtocol
 >
+{
+    id _didBecomeActiveObserver;
+}
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
 @property (strong, nonatomic) QBMulticastDelegate <QMCallManagerDelegate> *multicastDelegate;
@@ -46,6 +49,10 @@ QMCallKitAdapterUsersStorageProtocol
 
 @dynamic serviceManager;
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
+}
+
 + (BOOL)isCallKitAvailable {
     return QMCallKitAdapter.isCallKitAvailable;
 }
@@ -62,14 +69,36 @@ QMCallKitAdapterUsersStorageProtocol
     if (QMCallKitAdapter.isCallKitAvailable) {
         _callKitAdapter = [[QMCallKitAdapter alloc] initWithUsersStorage:self];
         @weakify(self);
+        // mic was muted by callkit actions
         [_callKitAdapter setOnMicrophoneMuteAction:^{
             @strongify(self);
             [self.multicastDelegate callManagerDidChangeMicrophoneState:self];
         }];
+        // call was ended by callkit actions
+        [_callKitAdapter setOnCallEndedByCallKitAction:^{
+            @strongify(self);
+            if (self.callWindow == nil) {
+                // if no call window in existence that means that call was ended
+                // on our side while not established, send appropriate notification
+                [self sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+            }
+        }];
     }
+    
+    _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
+                                addObserverForName:UIApplicationDidBecomeActiveNotification
+                                object:nil
+                                queue:nil
+                                usingBlock:^(NSNotification * __unused note) {
+                                    // sending presence after application becomes active,
+                                    // or just restoring state if chat is disconnected
+                                    if ([QBChat instance].manualInitialPresence) {
+                                        [QBChat instance].manualInitialPresence = NO;
+                                    }
+                                }];
 }
 
-//MARK: - Call managing
+// MARK: - Call managing
 
 - (void)callToUserWithID:(NSUInteger)userID conferenceType:(QBRTCConferenceType)conferenceType {
     
@@ -203,6 +232,10 @@ QMCallKitAdapterUsersStorageProtocol
             [application endBackgroundTask:self.backgroundTask];
             self.backgroundTask = UIBackgroundTaskInvalid;
         }];
+        // as we are in the background, do not send initial presence in chat
+        // so we won't appear online for all users, only send initial presence
+        // when we will be back in foreground
+        [QBChat instance].manualInitialPresence = YES;
     }
     if (![QBChat instance].isConnected) {
         [self.serviceManager login];
