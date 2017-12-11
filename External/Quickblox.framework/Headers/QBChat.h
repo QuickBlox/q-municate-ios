@@ -90,23 +90,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSArray<id <QBChatDelegate>> *)delegates;
 
-//MARK: - Reconnection
-
-/**
- *  Run force reconnect. This method disconnects from chat and runs reconnection logic.
- *  Works only if autoReconnectEnabled=YES. Otherwise it does nothing.
- */
-- (void)forceReconnect;
+@end
 
 //MARK: - Base Messaging
-
+@interface QBChat(Connection)
 /**
  *  Connect to QuickBlox Chat with completion.
  *
  *  @param user       QBUUser structure represents user's login. Required user's fields: ID, password.
  *  @param completion Completion block with failure error.
  */
-- (void)connectWithUser:(QBUUser *)user completion:(nullable QBChatCompletionBlock)completion;
+- (void)connectWithUser:(QBUUser *)user
+             completion:(nullable QBChatCompletionBlock)completion;
 
 /**
  *  Connect to QuickBlox Chat.
@@ -115,7 +110,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param resource   The resource identifier of user.
  *  @param completion Completion block with failure error.
  */
-- (void)connectWithUser:(QBUUser *)user resource:(nullable NSString *)resource completion:(nullable QBChatCompletionBlock)completion;
+- (void)connectWithUser:(QBUUser *)user
+               resource:(nullable NSString *)resource
+             completion:(nullable QBChatCompletionBlock)completion;
 
 /**
  *  Disconnect current user from Chat and leave all rooms
@@ -123,6 +120,31 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param completion  Completion block with failure error.
  */
 - (void)disconnectWithCompletionBlock:(nullable QBChatCompletionBlock)completion;
+
+/**
+ *  Run force reconnect. This method disconnects from chat and runs reconnection logic.
+ *  Works only if autoReconnectEnabled=YES. Otherwise it does nothing.
+ */
+- (void)forceReconnect;
+
+@end
+
+//MARK: User status
+
+@interface QBChat(UserStatus)
+
+/**
+ *  Send presence message with status. Session will be closed in 90 seconds since last activity.
+ *
+ *  @param status Presence status.
+ *
+ *  @return YES if the request was sent successfully. If not - see log.
+ */
+- (BOOL)sendPresenceWithStatus:(NSString *)status;
+
+@end
+
+@interface QBChat(MessagesStatus)
 
 /**
  *  Send "read" status for message and update "read" status on a server
@@ -140,50 +162,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)markAsDelivered:(QBChatMessage *)message completion:(nullable QBChatCompletionBlock)completion;
 
-/**
- *  Send presence message with status. Session will be closed in 90 seconds since last activity.
- *
- *  @param status Presence status.
- *
- *  @return YES if the request was sent successfully. If not - see log.
- */
-- (BOOL)sendPresenceWithStatus:(NSString *)status;
-
-//MARK: - Contact list
-
-/**
- *  Add user to contact list request
- *
- *  @param userID       ID of user which you would like to add to contact list
- *  @param completion   Completion block with failure error.
- */
-- (void)addUserToContactListRequest:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
-
-/**
- *  Remove user from contact list
- *
- *  @param userID     ID of user which you would like to remove from contact list
- *  @param completion Completion block with failure error.
- */
-- (void)removeUserFromContactList:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
-
-/**
- *  Confirm add to contact list request
- *
- *  @param userID       ID of user from which you would like to confirm add to contact request
- *  @param completion   The block which informs whether a request was delivered to server or not. If request succeded error is nil.
- */
-- (void)confirmAddContactRequest:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
-
-/**
- *  Reject add to contact list request or cancel previously-granted subscription request
- *
- *  @param userID       ID of user from which you would like to reject add to contact request
- *  @param completion   The block which informs whether a request was delivered to server or not. If request succeded error is nil.
- */
-- (void)rejectAddContactRequest:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
+@end
 
 //MARK: - Privacy
+
+@interface QBChat(Privacy)
 
 /**
  *  Retrieve a privacy list by name. QBChatDelegate's method 'didReceivePrivacyList:' will be called if success or 'didNotReceivePrivacyListWithName:error:' if there is an error
@@ -217,7 +200,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)removePrivacyListWithName:(NSString *)privacyListName;
 
+@end
+
 //MARK: - System Messages
+
+@interface QBChat(SystemMessage)
 
 /**
  *  Send system message to dialog.
@@ -227,8 +214,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)sendSystemMessage:(QBChatMessage *)message
                completion:(nullable QBChatCompletionBlock)completion;
+@end
 
-//MARK: Last Activity
+//MARK: - Last Activity
+
+@interface QBChat(LastActivity)
 
 /**
  Get Last activity for user with id.
@@ -249,8 +239,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)lastActivityForUserWithID:(NSUInteger)userID
                           timeout:(NSTimeInterval)timeout
                        completion:(QBUserLastActivityCompletionBlock)completion;
+@end
 
 //MARK: - Send pings to the server or a userID
+
+@interface QBChat(Ping)
+
 
 /**
  *  Send ping to server
@@ -288,6 +282,47 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)pingUserWithID:(NSUInteger)userID timeout:(NSTimeInterval)timeout completion:(QBPingCompleitonBlock)completion;
 
+@end
+
+//MARK: - Contact list
+
+@interface QBChat(ContactList)
+/**
+ *  After establishing a session, a client SHOULD send initial presence to the server in order to signal its availability for communications.
+ */
+@property (assign, nonatomic) BOOL manualInitialPresence;
+
+/**
+ *  Add user to contact list request
+ *
+ *  @param userID       ID of user which you would like to add to contact list
+ *  @param completion   Completion block with failure error.
+ */
+- (void)addUserToContactListRequest:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
+
+/**
+ *  Remove user from contact list
+ *
+ *  @param userID     ID of user which you would like to remove from contact list
+ *  @param completion Completion block with failure error.
+ */
+- (void)removeUserFromContactList:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
+
+/**
+ *  Confirm add to contact list request
+ *
+ *  @param userID       ID of user from which you would like to confirm add to contact request
+ *  @param completion   The block which informs whether a request was delivered to server or not. If request succeded error is nil.
+ */
+- (void)confirmAddContactRequest:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
+
+/**
+ *  Reject add to contact list request or cancel previously-granted subscription request
+ *
+ *  @param userID       ID of user from which you would like to reject add to contact request
+ *  @param completion   The block which informs whether a request was delivered to server or not. If request succeded error is nil.
+ */
+- (void)rejectAddContactRequest:(NSUInteger)userID completion:(nullable QBChatCompletionBlock)completion;
 
 @end
 
