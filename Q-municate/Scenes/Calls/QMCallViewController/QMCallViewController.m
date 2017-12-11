@@ -179,7 +179,8 @@ QBRTCAudioSessionDelegate
     
     QBUUser *opponentUser = [QMCore.instance.callManager opponentUser];
     
-    if (self.callInfoView == nil) {
+    if (self.callInfoView == nil
+        && self.callState != QMCallStateActiveVideoCall) {
         // base call info view configuration
         self.callInfoView = [QMCallInfoView callInfoViewWithUser:opponentUser];
         
