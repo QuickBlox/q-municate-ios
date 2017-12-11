@@ -142,18 +142,19 @@ QBRTCAudioSessionDelegate
         [self.view addSubview:self.localVideoView];
         
         @weakify(self);
-        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification
-                                                          object:nil
-                                                           queue:nil
-                                                      usingBlock:^(NSNotification * __unused note) {
-                                                          @strongify(self);
-                                                          if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
-                                                              QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
-                                                              if (audioSession.currentAudioDevice != QBRTCAudioDeviceSpeaker) {
-                                                                  audioSession.currentAudioDevice = QBRTCAudioDeviceSpeaker;
-                                                              }
-                                                          }
-                                                      }];
+        _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
+                                    addObserverForName:UIApplicationDidBecomeActiveNotification
+                                    object:nil
+                                    queue:nil
+                                    usingBlock:^(NSNotification * __unused note) {
+                                        @strongify(self);
+                                        if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+                                            QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+                                            if (audioSession.currentAudioDevice != QBRTCAudioDeviceSpeaker) {
+                                                audioSession.currentAudioDevice = QBRTCAudioDeviceSpeaker;
+                                            }
+                                        }
+                                    }];
     }
     
     [self configureCallController];
