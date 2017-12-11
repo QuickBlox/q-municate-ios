@@ -69,9 +69,19 @@ QMCallKitAdapterUsersStorageProtocol
     if (QMCallKitAdapter.isCallKitAvailable) {
         _callKitAdapter = [[QMCallKitAdapter alloc] initWithUsersStorage:self];
         @weakify(self);
+        // mic was muted by callkit actions
         [_callKitAdapter setOnMicrophoneMuteAction:^{
             @strongify(self);
             [self.multicastDelegate callManagerDidChangeMicrophoneState:self];
+        }];
+        // call was ended by callkit actions
+        [_callKitAdapter setOnCallEndedByCallKitAction:^{
+            @strongify(self);
+            if (self.callWindow == nil) {
+                // if no call window in existence that means that call was ended
+                // on our side while not established, send appropriate notification
+                [self sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+            }
         }];
     }
     

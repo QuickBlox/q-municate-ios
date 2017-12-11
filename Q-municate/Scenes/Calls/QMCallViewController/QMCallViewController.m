@@ -422,9 +422,6 @@ QBRTCAudioSessionDelegate
             
             bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) ,
                           QMStringForTimeInterval(self.callDuration)];
-            
-            [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
-                                                                     duration:self.callDuration];
         }
         else {
             
@@ -793,6 +790,13 @@ QBRTCAudioSessionDelegate
 - (void)sessionDidClose:(QBRTCSession *)session {
     if (self.session != session) {
         return;
+    }
+    
+    if (self.callState == QMCallStateActiveAudioCall ||
+        self.callState == QMCallStateActiveVideoCall) {
+        
+        [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
+                                                                 duration:self.callDuration];
     }
     
     self.acceptButton.enabled = NO;
