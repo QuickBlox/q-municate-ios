@@ -14,7 +14,6 @@
 @class QBChatDialog;
 @class QBUUser;
 
-
 @interface QMItemProviderResult : NSObject
 
 @property (copy, nonatomic) NSString *text;

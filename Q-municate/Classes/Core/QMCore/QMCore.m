@@ -262,8 +262,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 //MARK: QMContactListServiceCacheDelegate delegate
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
-    
-    [[QMContactListCache instance] contactListItems:block];
+    block([QMContactListCache.instance allContactListItems]);
 }
 
 //MARK: - QMChatServiceDelegate
@@ -314,9 +313,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     // load users if needed
     NSArray<NSNumber *> *IDs = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
     
-    [[self.usersService getUsersWithIDs:IDs] successResult:^(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+    [[self.usersService getUsersWithIDs:IDs] successResult:^(NSArray<QBUUser *> * _Nullable result) {
         
-        NSParameterAssert(IDs.count == t.result.count);
+        NSParameterAssert(IDs.count == result.count);
 
         NSPredicate *predicate =
         [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {

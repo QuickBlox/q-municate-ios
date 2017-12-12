@@ -34,15 +34,21 @@
         attachment.image = [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
     }
     else if (messageToForward.isAudioAttachment) {
-        NSURL *fileURL = [QMCore.instance.chatService.chatAttachmentService.storeService fileURLForAttachment:attachment messageID:messageToForward.ID dialogID:messageToForward.dialogID];
+        
+        NSURL *fileURL = [QMCore.instance.chatService.chatAttachmentService.storeService
+                          fileURLForAttachment:attachment
+                          messageID:messageToForward.ID
+                          dialogID:messageToForward.dialogID];
+        
         attachment.localFileURL = fileURL;
     }
     
-    QMShareEtxentionOperation *operation = [QMShareEtxentionOperation operationWithID:messageToForward.ID
-                                                                                 text:messageToForward.text
-                                                                           attachment:attachment
-                                                                           recipients:recipients
-                                                                           completion:completionBlock];
+    QMShareEtxentionOperation *operation =
+    [QMShareEtxentionOperation operationWithID:messageToForward.ID
+                                          text:messageToForward.text
+                                    attachment:attachment
+                                    recipients:recipients
+                                    completion:completionBlock];
     
     __weak typeof(self) weakSelf = self;
     operation.cancelBlock = ^{

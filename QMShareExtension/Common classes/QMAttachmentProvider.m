@@ -116,6 +116,7 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
     
     return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
+        
         UIImage *image = [UIImage imageWithData:imageData];
         UIImage *resizedImage = [self resizedImageFromImage:image
                                            withMaxImageSize:providerSettings.maxImageSize];
@@ -125,13 +126,11 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
             
             return [BFTask taskWithResult:attachment];
         }];
-    }];
-    
+    }];    
 }
 
 + (BFTask <QBChatAttachment *>*)attachmentWithFileURL:(NSURL *)fileURL
                                              settings:(nullable QMAttachmentProviderSettings *)providerSettings {
-    
     if (providerSettings.maxFileSize > 0) {
         
         NSError *attributesError = nil;
@@ -199,6 +198,7 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     else if (UTTypeConformsTo(UTI, kUTTypeImage)) {
         
         NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
+        
         return [self imageAttachmentWithData:imageData
                                     settings:providerSettings];
     }
