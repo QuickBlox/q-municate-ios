@@ -152,6 +152,8 @@ TTTAttributedLabelDelegate
 
 @property (strong, nonatomic) QMShareHelper *shareHelper;
 
+@property (strong, nonatomic) id updateDialogObserver;
+
 @end
 
 @implementation QMChatVC
@@ -197,6 +199,8 @@ TTTAttributedLabelDelegate
 - (void)dealloc {
     
     [QMCore.instance.openGraphService cancelAllloads];
+    [[QBDarwinNotificationCenter defaultCenter] removeObserver:_updateDialogObserver];
+    
     // -dealloc
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
@@ -349,6 +353,15 @@ TTTAttributedLabelDelegate
     self.topContentAdditionalInset = _additionalNavigationBarHeight;
     
     self.messagesToRead = [NSMutableSet set];
+    
+    NSString *observerName =
+    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
+  
+    self.updateDialogObserver =
+    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:observerName
+                                                        usingBlock:^{
+                                                            [self refreshMessages];
+                                                        }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -23,6 +23,7 @@
 #import "UIImage+QM.h"
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "UIAlertController+QM.h"
+#import "QMConstants.h"
 
 static const NSUInteger kQMUnauthorizedErrorCode = 401;
 
@@ -303,14 +304,18 @@ QMShareEtxentionOperationDelegate>
                                             successBlock:^(QBResponse * _Nonnull __unused response,
                                                            QBChatMessage * _Nonnull __unused tMessage)
                                    {
-                                       [[self qmTaskSaveChangesToDiskForMessage:tMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+                                       
+                                       [self postUpdateNotificationsForDialogWithID:tMessage.dialogID];
+                                       
+                                       [[self qmTaskSaveChangesForMessage:tMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
                                            [source setResult:tMessage];
                                            return nil;
                                        }];
                                    }
-                                              errorBlock:^(QBResponse * _Nonnull response) {
-                                                  [source setError:response.error.error];
-                                              }];
+                                              errorBlock:^(QBResponse * _Nonnull response)
+                                   {
+                                       [source setError:response.error.error];
+                                   }];
     });
 }
 
@@ -466,7 +471,8 @@ QMShareEtxentionOperationDelegate>
 
 //MARK: - Helpers
 
-- (BFTask *)qmTaskSaveChangesToDiskForMessage:(QBChatMessage *)message {
+- (BFTask *)qmTaskSaveChangesForMessage:(QBChatMessage *)message {
+    
     NSParameterAssert(message.dialogID);
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
@@ -570,6 +576,17 @@ QMShareEtxentionOperationDelegate>
         }
         return nil;
     }];
+}
+
+- (void)postUpdateNotificationsForDialogWithID:(NSString *)dialogID {
+    
+    NSParameterAssert(dialogID.length);
+    
+    NSString *observerName =
+    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, dialogID];
+    
+    [[QBDarwinNotificationCenter defaultCenter] postNotificationName:observerName];
+    [[QBDarwinNotificationCenter defaultCenter] postNotificationName:kQMDidUpdateDialogsNotification];
 }
 
 - (void)cancelShare {
