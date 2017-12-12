@@ -52,22 +52,28 @@
 //MARK: - Notifications
 
 - (BFTask *)addUsers:(NSArray *)users toGroupChatDialog:(QBChatDialog *)chatDialog {
+    
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
     NSArray *userIDs = [self.serviceManager.contactManager idsOfUsers:users];
     
-    @weakify(self);
-    return [[self.serviceManager.chatService joinOccupantsWithIDs:userIDs toChatDialog:chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        
-        @strongify(self);
-        QBChatDialog *updatedDialog = task.result;
-        [[self.serviceManager.chatService sendSystemMessageAboutAddingToDialog:updatedDialog toUsersIDs:userIDs withText:kQMDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused systemNotificationTask) {
-            
-            return [self.serviceManager.chatService sendNotificationMessageAboutAddingOccupants:userIDs toDialog:updatedDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
-        }];
-        
-        return nil;
-    }];
+    return [[self.serviceManager.chatService
+             joinOccupantsWithIDs:userIDs
+             toChatDialog:chatDialog] continueWithSuccessBlock:^id(BFTask<QBChatDialog *> *task)
+            {
+                QBChatDialog *updatedDialog = task.result;
+                [self.serviceManager.chatService
+                 sendSystemMessageAboutAddingToDialog:updatedDialog
+                 toUsersIDs:userIDs
+                 withText:kQMDialogsUpdateNotificationMessage];
+                
+                [self.serviceManager.chatService
+                 sendNotificationMessageAboutAddingOccupants:userIDs
+                 toDialog:updatedDialog
+                 withNotificationText:kQMDialogsUpdateNotificationMessage];
+                
+                return nil;
+            }];
 }
 
 - (BFTask *)changeAvatar:(UIImage *)avatar forGroupChatDialog:(QBChatDialog *)chatDialog {

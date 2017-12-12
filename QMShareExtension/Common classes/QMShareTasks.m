@@ -204,7 +204,6 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
             
             NSAssert([t.result isKindOfClass:NSURL.class], @"");
-            
             return [self taskProvideResultWithAttachmentForFileURL:t.result];
         }];
     }

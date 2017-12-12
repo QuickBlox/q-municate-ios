@@ -122,22 +122,17 @@ UISearchResultsUpdating
         return;
     }
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    QMNavigationController *navVC = (id)self.navigationController;
     
-    __weak UINavigationController *navigationController = self.navigationController;
-    
-    @weakify(self);
-    self.task = [[QMCore.instance.chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        @strongify(self);
-        [(QMNavigationController *)navigationController dismissNotificationPanel];
-        
-        if (!task.isFaulted) {
-            
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-        
-        return nil;
+    [navVC showNotificationWithType:QMNotificationPanelTypeLoading
+                            message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                           duration:0];
+    self.task =
+    [[[QMCore.instance.chatManager addUsers:self.dataSource.selectedUsers.allObjects
+                          toGroupChatDialog:self.chatDialog] complete:^{
+        [navVC dismissNotificationPanel];
+    }] successComplete:^{
+        [navVC popViewControllerAnimated:YES];
     }];
 }
 
