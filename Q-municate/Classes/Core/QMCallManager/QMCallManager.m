@@ -310,11 +310,12 @@ QMCallKitAdapterUsersStorageProtocol
         _backgroundTask = UIBackgroundTaskInvalid;
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
             && self.backgroundTask == UIBackgroundTaskInvalid) {
-            // dispatching chat disconnect in 1 second so message about call end
-            // from webrtc does not cut mid sending
+            // dispatching chat disconnect in 1.5 second so message about call end
+            // from webrtc does not cut mid sending (ideally webrtc should wait
+            // untill message about hangup did send, which is not the case now)
             // checking for background task being invalid though, to avoid disconnecting
             // from chat when another call has already being received in background
             [self.serviceManager.chatManager disconnectFromChatIfNeeded];
