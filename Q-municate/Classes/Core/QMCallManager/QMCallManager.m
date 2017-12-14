@@ -318,7 +318,8 @@ QMCallKitAdapterUsersStorageProtocol
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMCallViewControllerEndScreenDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
-        if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground
+            && self.callWindow != nil) {
             [QMSoundManager playEndOfCallSound];
         }
         
