@@ -86,7 +86,7 @@ QMCallKitAdapterUsersStorageProtocol
     }
     
     _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
-                                addObserverForName:UIApplicationDidBecomeActiveNotification
+                                addObserverForName:UIApplicationWillEnterForegroundNotification
                                 object:nil
                                 queue:nil
                                 usingBlock:^(NSNotification * __unused note) {
