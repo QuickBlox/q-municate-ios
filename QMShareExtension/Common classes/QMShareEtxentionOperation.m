@@ -12,8 +12,6 @@
 #import <Quickblox/Quickblox.h>
 #import <QMServices.h>
 
-
-
 @interface QMShareEtxentionOperation()
 
 @property (nonatomic, strong, readwrite) NSArray *recipients;
@@ -22,7 +20,6 @@
 @property (nonatomic, copy) QMShareOperationCompletionBlock shareOperationCompletionBlock;
 
 @end
-
 
 @implementation QMShareEtxentionOperation
 
@@ -121,9 +118,8 @@
             return [BFTask taskWithResult:msg];
         };
         
-        
         if (self.attachment) {
-            return  [[self taskUploadAttachment:self.attachment] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
+            return [[self taskUploadAttachment:self.attachment] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
                 if (self.isCancelled) {
                     return [BFTask cancelledTask];
                 }
@@ -134,7 +130,6 @@
         return sucessBlock(message,nil);
     }];
 }
-
 
 - (BFTask <QBChatAttachment *>*)taskUploadAttachment:(QBChatAttachment *)attachment {
     
@@ -152,7 +147,6 @@
     
     return [BFTask taskWithResult:attachment];
 }
-
 
 
 - (BFTask *)taskSendMessageToRecipient:(id<QMShareItemProtocol>)recipient {

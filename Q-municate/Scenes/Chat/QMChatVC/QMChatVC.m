@@ -1979,6 +1979,14 @@ didDeleteMessageFromMemoryStorage:(QBChatMessage *)message
     }
 }
 
+- (void)chatService:(QMChatService *)__unused chatService
+  didUpdateMessages:(NSArray *)messages
+        forDialogID:(NSString *)dialogID {
+    
+    if ([self.chatDialog.ID isEqualToString:dialogID]) {
+        [self.chatDataSource updateMessages:messages];
+    }
+}
 
 - (void)chatService:(QMChatService *)__unused chatService
 didAddMessageToMemoryStorage:(QBChatMessage *)message
@@ -2167,31 +2175,39 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
         
         self.contactRequestTask =
-        [[QMCore.instance.contactManager addUserToContactList:opponentUser] successComplete:^{
-             [navigationController dismissNotificationPanel];
-             [self.chatDataSource updateMessage:currentMessage];
+        [[QMCore.instance.contactManager addUserToContactList:opponentUser]
+          continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+            
+              if (!t.isFaulted) {
+                  [self.chatDataSource updateMessage:currentMessage];
+              }
+              
+              [navigationController dismissNotificationPanel];
+              return nil;
         }];
     }
     else {
         
         self.contactRequestTask =
-        [[[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser]
-           continueSuccess:^BFTask * _Nullable {
-               
-               return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
-               
-           }] successComplete:^{
-               
-               if (self.splitViewController.isCollapsed) {
-                   [self.navigationController popViewControllerAnimated:YES];
-               }
-               else {
-                   [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-               }
-               
-           }] complete:^{
+        [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser]
+           continueWithSuccessBlock:^id _Nullable(BFTask * __unused t) {
             
-            [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+            return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
+            
+           }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+               
+               if (!t.isFaulted) {
+                   
+                   if (self.splitViewController.isCollapsed) {
+                       [self.navigationController popViewControllerAnimated:YES];
+                   }
+                   else {
+                       [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                   }
+               }
+            
+               [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+               return nil;
         }];
     }
 }
