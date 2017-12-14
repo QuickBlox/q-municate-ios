@@ -26,9 +26,6 @@ NSString * const QMVoipCallEventKey = @"VOIPCall";
 QBRTCClientDelegate,
 QMCallKitAdapterUsersStorageProtocol
 >
-{
-    id _didBecomeActiveObserver;
-}
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
 @property (strong, nonatomic) QBMulticastDelegate <QMCallManagerDelegate> *multicastDelegate;
@@ -48,10 +45,6 @@ QMCallKitAdapterUsersStorageProtocol
 @implementation QMCallManager
 
 @dynamic serviceManager;
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
-}
 
 + (BOOL)isCallKitAvailable {
     return QMCallKitAdapter.isCallKitAvailable;
@@ -84,18 +77,6 @@ QMCallKitAdapterUsersStorageProtocol
             }
         }];
     }
-    
-    _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
-                                addObserverForName:UIApplicationWillEnterForegroundNotification
-                                object:nil
-                                queue:nil
-                                usingBlock:^(NSNotification * __unused note) {
-                                    // sending presence after application becomes active,
-                                    // or just restoring state if chat is disconnected
-                                    if ([QBChat instance].manualInitialPresence) {
-                                        [QBChat instance].manualInitialPresence = NO;
-                                    }
-                                }];
 }
 
 // MARK: - Call managing
@@ -237,7 +218,8 @@ QMCallKitAdapterUsersStorageProtocol
         // when we will be back in foreground
         [QBChat instance].manualInitialPresence = YES;
     }
-    if (![QBChat instance].isConnected) {
+    QBChat *chat = QBChat.instance;
+    if (!chat.isConnected && !chat.isConnecting) {
         [self.serviceManager login];
     }
 }
@@ -324,14 +306,15 @@ QMCallKitAdapterUsersStorageProtocol
         _backgroundTask = UIBackgroundTaskInvalid;
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
             && self.backgroundTask == UIBackgroundTaskInvalid) {
-            // dispatching chat disconnect in 1 second so message about call end
-            // from webrtc does not cut mid sending
+            // dispatching chat disconnect in 1.5 second so message about call end
+            // from webrtc does not cut mid sending (ideally webrtc should wait
+            // untill message about hangup did send, which is not the case now)
             // checking for background task being invalid though, to avoid disconnecting
             // from chat when another call has already being received in background
-            [QBChat.instance disconnectWithCompletionBlock:nil];
+            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
         }
     });
     

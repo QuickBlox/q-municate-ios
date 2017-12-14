@@ -144,14 +144,18 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    
     application.applicationIconBadgeNumber = 0;
-    [[QMCore instance].chatManager disconnectFromChatIfNeeded];
+    [QMCore.instance.chatManager disconnectFromChatIfNeeded];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)__unused application {
-    
-    [[QMCore instance] login];
+    // sending presence after application becomes active,
+    // or just restoring state if chat is disconnected
+    if (QBChat.instance.manualInitialPresence) {
+        QBChat.instance.manualInitialPresence = NO;
+    }
+    // connect to chat now
+    [QMCore.instance login];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)__unused application {
