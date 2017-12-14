@@ -317,7 +317,7 @@ QMCallKitAdapterUsersStorageProtocol
             // from webrtc does not cut mid sending
             // checking for background task being invalid though, to avoid disconnecting
             // from chat when another call has already being received in background
-            [QBChat.instance disconnectWithCompletionBlock:nil];
+            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
         }
     });
     
