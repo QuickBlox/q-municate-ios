@@ -46,10 +46,6 @@ QMCallKitAdapterUsersStorageProtocol
 
 @dynamic serviceManager;
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
-}
-
 + (BOOL)isCallKitAvailable {
     return QMCallKitAdapter.isCallKitAvailable;
 }
