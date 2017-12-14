@@ -145,7 +145,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     application.applicationIconBadgeNumber = 0;
-    [[QMCore instance].chatManager disconnectFromChatIfNeeded];
+    [QMCore.instance.chatManager disconnectFromChatIfNeeded];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)__unused application {
@@ -155,7 +155,7 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         [QBChat instance].manualInitialPresence = NO;
     }
     // connect to chat now
-    [[QMCore instance] login];
+    [QMCore.instance login];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)__unused application {

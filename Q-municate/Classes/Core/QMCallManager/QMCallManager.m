@@ -222,7 +222,7 @@ QMCallKitAdapterUsersStorageProtocol
         // when we will be back in foreground
         [QBChat instance].manualInitialPresence = YES;
     }
-    QBChat *chat = [QBChat instance];
+    QBChat *chat = QBChat.instance;
     if (!chat.isConnected && !chat.isConnecting) {
         [self.serviceManager login];
     }

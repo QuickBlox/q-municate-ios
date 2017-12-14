@@ -208,10 +208,10 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
-            && ![QBChat instance].manualInitialPresence) {
+            && !QBChat.instance.manualInitialPresence) {
             // connecting to chat with manual initial presence if in the background
             // this will not send online presence untill app comes foreground
-            [QBChat instance].manualInitialPresence = YES;
+            QBChat.instance.manualInitialPresence = YES;
         }
         return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
     }];
