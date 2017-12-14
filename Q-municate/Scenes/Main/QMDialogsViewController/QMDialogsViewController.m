@@ -41,7 +41,9 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 @property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *addUserTask;
+
 @property (strong, nonatomic) id observerWillEnterForeground;
+@property (strong, nonatomic) id dialogsUpdatesObserver;
 
 @end
 
@@ -52,6 +54,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
+    [[QBDarwinNotificationCenter defaultCenter] removeObserver:_dialogsUpdatesObserver];
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
@@ -97,6 +100,12 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                                                                                   duration:0];
          }
      }];
+    
+    self.dialogsUpdatesObserver =
+    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQMDidUpdateDialogsNotification
+                                                        usingBlock:^{
+                                                            [QMTasks taskFetchAllData];
+                                                        }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

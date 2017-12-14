@@ -42,4 +42,15 @@ static const CGFloat kQMShadowViewHeight = 0.5f;
 
 static const CLLocationDegrees MKCoordinateSpanDefaultValue = 250;
 
+//Notifications
+
+//DarwinNotificationCenter
+
+//Extension notifications
+//Posted immediately after dialogs' updates in the Share Extension
+static NSNotificationName const kQMDidUpdateDialogsNotification = @"com.quickblox.shareextension.didUpdateDialogs.notification";
+//Posted immediately after dialog's updates in the Share Extension.
+//Full name of the notification should be 'kQMDidUpdateDialogNotificationPrefix:dialogID'
+static NSNotificationName const kQMDidUpdateDialogNotificationPrefix = @"com.quickblox.shareextension.didUpdateDialog.notification";
+
 #endif /* QMConstants_h */

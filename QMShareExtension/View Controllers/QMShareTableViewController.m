@@ -20,7 +20,6 @@
 #import "QMImages.h"
 #import "QMShareContactsTableViewCell.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
-#import <Quickblox/QBDarwinNotificationCenter.h>
 #import "UIAlertController+QM.h"
 
 @interface QMShareTableViewController () <
