@@ -26,9 +26,6 @@ NSString * const QMVoipCallEventKey = @"VOIPCall";
 QBRTCClientDelegate,
 QMCallKitAdapterUsersStorageProtocol
 >
-{
-    id _didBecomeActiveObserver;
-}
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
 @property (strong, nonatomic) QBMulticastDelegate <QMCallManagerDelegate> *multicastDelegate;
@@ -84,18 +81,6 @@ QMCallKitAdapterUsersStorageProtocol
             }
         }];
     }
-    
-    _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
-                                addObserverForName:UIApplicationWillEnterForegroundNotification
-                                object:nil
-                                queue:nil
-                                usingBlock:^(NSNotification * __unused note) {
-                                    // sending presence after application becomes active,
-                                    // or just restoring state if chat is disconnected
-                                    if ([QBChat instance].manualInitialPresence) {
-                                        [QBChat instance].manualInitialPresence = NO;
-                                    }
-                                }];
 }
 
 // MARK: - Call managing
@@ -237,7 +222,8 @@ QMCallKitAdapterUsersStorageProtocol
         // when we will be back in foreground
         [QBChat instance].manualInitialPresence = YES;
     }
-    if (![QBChat instance].isConnected) {
+    QBChat *chat = [QBChat instance];
+    if (!chat.isConnected && !chat.isConnecting) {
         [self.serviceManager login];
     }
 }
