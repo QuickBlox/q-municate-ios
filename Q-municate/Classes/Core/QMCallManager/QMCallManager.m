@@ -170,10 +170,6 @@ QMCallKitAdapterUsersStorageProtocol
             // as callkit handling this by default
             [UIDevice currentDevice].proximityMonitoringEnabled = hasActiveCall;
         }
-        
-        if (!hasActiveCall) {
-            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
-        }
     }
 }
 
@@ -296,6 +292,8 @@ QMCallKitAdapterUsersStorageProtocol
         return;
     }
     
+    self.hasActiveCall = NO;
+    
     if (QMCallKitAdapter.isCallKitAvailable) {
         [self.callKitAdapter endCallWithUUID:self.callUUID completion:nil];
         self.callUUID = nil;
@@ -330,7 +328,6 @@ QMCallKitAdapterUsersStorageProtocol
         self.callWindow = nil;
         
         self.session = nil;
-        self.hasActiveCall = NO;
     });
 }
 
