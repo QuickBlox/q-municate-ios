@@ -37,8 +37,13 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 @interface QMItemProviderLoader<__covariant ResultType> : NSObject
 
 @property (strong, nonatomic, readonly) NSItemProvider *itemProvider;
+@property (copy, nonatomic, readonly) NSString *typeIdentifier;
 
-- (instancetype)initWithProvider:(NSItemProvider *)provider;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithProvider:(NSItemProvider *)provider
+                  typeIdentifier:(NSString *)typeIdentifier NS_DESIGNATED_INITIALIZER;
 
 - (void)loadItemForTypeIdentifier:(NSString *)typeIdentifier
                 completionHandler:(void(^)(ResultType item , NSError * __null_unspecified error))completionHandler;
@@ -49,10 +54,14 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
 @implementation QMItemProviderLoader
 
-- (instancetype)initWithProvider:(NSItemProvider *)provider {
+- (instancetype)initWithProvider:(NSItemProvider *)provider
+                  typeIdentifier:(NSString *)typeIdentifier {
+    
     if (self = [super init]) {
         _itemProvider = provider;
+        _typeIdentifier = [typeIdentifier copy];
     }
+    
     return self;
 }
 
@@ -62,18 +71,20 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 }
 
 - (BFTask *)taskLoadItem {
+    
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         
-        NSString *typeIdentifier = self.itemProvider.registeredTypeIdentifiers.firstObject;
-        
-        [self loadItemForTypeIdentifier:typeIdentifier completionHandler:^(id item, NSError * _Null_unspecified error) {
-            if (error) {
-                [source setError:error];
-            }
-            else {
-                [source setResult:item];
-            }
-        }];
+        [self loadItemForTypeIdentifier:self.typeIdentifier
+                      completionHandler:^(id item, NSError * _Null_unspecified error) {
+                          dispatch_async(dispatch_get_main_queue(), ^{
+                              if (error) {
+                                  [source setError:error];
+                              }
+                              else {
+                                  [source setResult:item];
+                              }
+                          });
+                      }];
     });
 }
 
@@ -129,7 +140,8 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     
     if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
         
-        QMItemProviderLoader<NSString *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        QMItemProviderLoader<NSString *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                                         typeIdentifier:(NSString *)kUTTypeText];
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSString *> * _Nonnull t) {
             result.text = t.result;
             return [BFTask taskWithResult:result];
@@ -137,19 +149,20 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     }
     
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
-        
-        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                                      typeIdentifier:(NSString *)kUTTypeURL];
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull urlTask) {
-            
+
             NSURL *URL = urlTask.result;
-            
+
             if (URL.isFileURL) {
                 return [self taskProvideResultWithAttachmentForFileURL:URL];
             }
             else if (URL.isLocationURL) {
-                
+
                 return [[URL location] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
-                    
+
                     if (locationTask.error) {
                         result.text = URL.absoluteString;
                     }
@@ -159,7 +172,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
                         [QBChatAttachment locationAttachmentWithCoordinate:locationTask.result.coordinate];
                         result.attachment = locationAttachment;
                     }
-                    
+
                     return [BFTask taskWithResult:result];
                 }];
             }
@@ -171,7 +184,8 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     }
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
         
-        QMItemProviderLoader *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        QMItemProviderLoader *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                             typeIdentifier:(NSString *)kUTTypeImage];
         
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
             
@@ -199,7 +213,8 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
              [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
              [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
         
-        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider];
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                                      typeIdentifier:(NSString *)kUTTypeFileURL];
         
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
             
