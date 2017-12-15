@@ -65,7 +65,7 @@ QMShareEtxentionOperationDelegate>
                                                         usingBlock:^{
                                                             [weakSelf dismiss];
                                                         }];
-    
+    NSLog(@"Logout notification");
     if (QBSession.currentSession.currentUser.ID) {
         
         [QMExtensionCache setLogsEnabled:NO];
@@ -104,7 +104,6 @@ QMShareEtxentionOperationDelegate>
         }
     }
 }
-
 
 
 //MARK: - Share Extension Control
@@ -497,12 +496,22 @@ QMShareEtxentionOperationDelegate>
     
     NSArray *inputItems = self.extensionContext.inputItems;
     NSLog(@"Input items = %@", inputItems);
-    NSMutableArray *providers  = [NSMutableArray array];
+    NSMutableArray *providers = [NSMutableArray array];
     for (NSExtensionItem *item in inputItems) {
         [providers addObjectsFromArray:item.attachments];
     }
+    
     NSLog(@"providers = %@", providers);
     
+    if (providers.count == 0) {
+        NSString *errorText = NSLocalizedString(@"QM_EXT_SHARE_COMMON_ERROR", nil);
+        NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
+                                             code:0
+                                         userInfo:@{NSLocalizedDescriptionKey : errorText}];
+        return [BFTask taskWithError:error];
+    }
+    
+
     [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
     
     return [[QMShareTasks loadItemsForItemProviders:providers] continueWithExecutor:BFExecutor.mainThreadExecutor
@@ -595,5 +604,7 @@ QMShareEtxentionOperationDelegate>
                                                           withCompletion:nil];
     [self.shareOperation cancel];
 }
+
+
 
 @end

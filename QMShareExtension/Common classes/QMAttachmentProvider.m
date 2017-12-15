@@ -155,7 +155,9 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
         }
     }
     
-    NSString *fileName = [[fileURL pathComponents] lastObject];
+    NSString *fileName =
+    [[fileURL pathComponents] lastObject];
+
     CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
     
@@ -197,14 +199,17 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     }
     else if (UTTypeConformsTo(UTI, kUTTypeImage)) {
         
-        NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
-        
-        return [self imageAttachmentWithData:imageData
-                                    settings:providerSettings];
+        if (UTTypeConformsTo(UTI, kUTTypePNG)
+            || UTTypeConformsTo(UTI, kUTTypeJPEG)) {
+            
+            NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
+            return [self imageAttachmentWithData:imageData
+                                        settings:providerSettings];
+        }
     }
     
     NSString *localizedDescription =
-    [NSString stringWithFormat:@"Attachment with name %@ not supported",fileName];
+    [NSString stringWithFormat:@"Attachment with name %@ is not supported",fileName];
     
     NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
                                          code:0

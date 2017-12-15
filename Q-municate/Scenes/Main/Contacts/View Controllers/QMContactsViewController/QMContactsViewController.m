@@ -218,6 +218,7 @@ QMUsersServiceDelegate
     
     NSArray *friends = [QMCore.instance.contactManager friends];
     [self.dataSource replaceItems:friends];
+   
 }
 
 //MARK: - UITableViewDelegate

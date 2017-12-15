@@ -409,7 +409,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService
-      contactListDidChange:(QBContactList *)contactList {
+      contactListDidChange:(QBContactList *)__unused contactList {
     
     [QMTasks taskUpdateContacts];
 }

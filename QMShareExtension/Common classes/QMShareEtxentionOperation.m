@@ -191,7 +191,7 @@
 - (BFTask <QBChatDialog *>*)dialogForShareItem:(id <QMShareItemProtocol>)shareItem {
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        if ([shareItem isKindOfClass:QBChatDialog.class]) {
+        if ([shareItem isKindOfClass:QBChatDialog.self]) {
             [source setResult:((QBChatDialog *)shareItem)];
         }
         else {
