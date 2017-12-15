@@ -106,7 +106,6 @@ QMShareContactsDelegate>
 
 
 - (void)dismiss {
-    
     [self.shareControllerDelegate didTapCancelBarButton];
 }
 
@@ -380,6 +379,20 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)dealloc {
     [self.searchController.view removeFromSuperview];
 }
+
+#ifdef __IPHONE_11_0
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+        if (@available(iOS 11.0, *)) {
+            self.searchController.active = NO;
+        }
+    } completion:nil];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+#endif
 
 //MARK: - QMShareContactsDelegate
 
