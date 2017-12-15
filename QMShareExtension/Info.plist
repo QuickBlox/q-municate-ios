@@ -25,33 +25,7 @@
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-			<string>SUBQUERY (
-    extensionItems,
-    $extensionItem,
-    SUBQUERY (
-        $extensionItem.attachments,
-        $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.file-url&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mpeg-4&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.png&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.jpg&quot; OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot; OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.text&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.plain-text&quot; OR 
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mpeg-4-audio&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mp3&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.data&quot;
-    ).@count == 1
-).@count = 1
-OR SUBQUERY (
-    extensionItems,
-    $extensionItem,
-    SUBQUERY (
-        $extensionItem.attachments,
-        $attachment,
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot;
-    ).@count &gt;= 1
-).@count = 1</string>
+			<string>TRUEPREDICATE</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>ShareInterface</string>
