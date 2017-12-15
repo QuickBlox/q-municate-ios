@@ -217,7 +217,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] complete:^{
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t){
          
          [super logoutWithCompletion:^{
              
@@ -253,6 +253,8 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
                  [source setResult:nil];
              });
          }];
+        
+        return nil;
          
      }];
     
@@ -313,9 +315,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     // load users if needed
     NSArray<NSNumber *> *IDs = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
     
-    [[self.usersService getUsersWithIDs:IDs] successResult:^(NSArray<QBUUser *> * _Nullable result) {
+    [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
         
-        NSParameterAssert(IDs.count == result.count);
+        NSParameterAssert(IDs.count == t.result.count);
 
         NSPredicate *predicate =
         [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
@@ -328,6 +330,8 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
             [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
             [self updateVocabulary];
         }
+        
+        return nil;
     }];
 }
 
