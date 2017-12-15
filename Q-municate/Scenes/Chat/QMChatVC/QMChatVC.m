@@ -356,7 +356,7 @@ TTTAttributedLabelDelegate
     
     NSString *observerName =
     [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
-  
+    
     self.updateDialogObserver =
     [[QBDarwinNotificationCenter defaultCenter] addObserverForName:observerName
                                                         usingBlock:^{
@@ -1296,31 +1296,53 @@ NSDictionary *QMDeniedClassesDictionary() {
 - (QMActivityItem *)activityItemForMessage:(QBChatMessage *)message {
     
     if (message.isMediaMessage) {
+        
         QBChatAttachment *attachment = message.attachments.firstObject;
         
         if ([message isImageAttachment]) {
-            NSString *imageCacheKey = [attachment remoteURLWithToken:NO].absoluteString;
-            UIImage *image =
-            [QMImageLoader.instance.imageCache imageFromCacheForKey:imageCacheKey];
-            if (!image) {
-                return nil;
-            }
             
-            return [[QMActivityItem alloc] initWithImage:image];
+            NSString *imagePath =
+            [QMImageLoader.instance pathForOriginalImageWithURL:[attachment remoteURLWithToken:NO]];
+            
+            NSURL *imageURL =
+            [NSURL fileURLWithPath:imagePath];
+            
+            if (imageURL) {
+                
+                QMActivityItem *imageItem =
+                [[QMActivityItem alloc] initWithImageTypeIdentifier:attachment.typeIdentifier
+                                                   loadHandlerBlock:^(NSItemProviderCompletionHandler completionHandler,
+                                                                      UIActivityType  _Nonnull __unused activityType)
+                 {
+                     NSString *key =
+                     [QMImageLoader.instance cacheKeyForURL:[attachment remoteURLWithToken:NO]];
+                     
+                     [QMImageLoader.instance.imageCache queryCacheOperationForKey:key
+                                                                             done:^(UIImage * _Nullable image,
+                                                                                    NSData * __unused _Nullable data,
+                                                                                    SDImageCacheType __unused cacheType)
+                      {
+                          completionHandler(image, nil);
+                      }];
+                 }];
+                
+                return imageItem;
+            }
         }
         else if (message.isAudioAttachment) {
-            NSURL *localURL = [QMCore.instance.chatService.chatAttachmentService.storeService fileURLForAttachment:attachment messageID:message.ID dialogID:message.dialogID];
-            if (!localURL) {
-                return nil;
+            NSURL *audioFileURL =
+            [QMCore.instance.chatService.chatAttachmentService.storeService fileURLForAttachment:attachment
+                                                                                       messageID:message.ID
+                                                                                        dialogID:message.dialogID];
+            if (audioFileURL) {
+                return [[QMActivityItem alloc] initWithURL:audioFileURL];
             }
-            return [[QMActivityItem alloc] initWithURL:localURL];
         }
         else if (message.isLocationMessage) {
             return [[QMActivityItem alloc] initWithURL:[NSURL appleMapsURLForLocationCoordinate:message.locationCoordinate]];
         }
-        else {
-            return nil;
-        }
+        
+        return nil;
     }
     else {
         return [[QMActivityItem alloc] initWithString:message.text];
@@ -1332,7 +1354,6 @@ NSDictionary *QMDeniedClassesDictionary() {
 didPerformAction:(SEL)action
       withSender:(id)__unused sender {
     
-    //Forward
     NSIndexPath *indexPath =  [self.collectionView indexPathForCell:cell];
     QBChatMessage *message = [self.chatDataSource messageForIndexPath:indexPath];
     
@@ -2181,8 +2202,8 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         self.contactRequestTask =
         [[QMCore.instance.contactManager addUserToContactList:opponentUser] successComplete:^{
-             [navigationController dismissNotificationPanel];
-             [self.chatDataSource updateMessage:currentMessage];
+            [navigationController dismissNotificationPanel];
+            [self.chatDataSource updateMessage:currentMessage];
         }];
     }
     else {
@@ -2203,9 +2224,9 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
                }
                
            }] complete:^{
-            
-            [(QMNavigationController *)self.navigationController dismissNotificationPanel];
-        }];
+               
+               [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+           }];
     }
 }
 
