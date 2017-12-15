@@ -26,8 +26,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve all Users for current account (with extended set of pagination parameters)
  
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -40,8 +40,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param extendedRequest Dictionary with extended request
  @param responsePage Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -56,8 +56,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve User by identifier
  
  @param userID ID of QBUUser to be retrieved.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -72,8 +72,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param IDs IDs of users which you want to retrieve
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -88,8 +88,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve User by login
  
  @param userLogin Login of user to be retrieved.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -104,8 +104,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param logins Logins of users which you want to retrieve
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -121,8 +121,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param userFullName Full name of users to be retrieved.
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -138,8 +138,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param tags Tags of users to be retrieved.
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -154,8 +154,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param phoneNumbers Pnone numbers of users which you want to retrieve
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -170,8 +170,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve User by Facebook ID
  
  @param userFacebookID Facebook ID of user to be retrieved.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -186,8 +186,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param facebookIDs Facebook IDs of users which you want to retrieve
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -202,8 +202,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve User by Twitter ID
  
  @param userTwitterID Twitter ID of user to be retrieved.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -218,8 +218,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param twitterIDs Twitter IDs of users which you want to retrieve
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -234,8 +234,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve User by Email
  
  @param userEmail Email of user to be retrieved.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -250,8 +250,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @param emails Emails of users which you want to retrieve
  @param page Pagination parameters
- @param successBlock Block with response, page and users instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response, page and users instances if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -266,8 +266,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Retrieve User by External identifier
  
  @param userExternalID External ID of user to be retrieved.
- @param successBlock Block with response and user instances if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -281,8 +281,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Update current session user.
  
  @param parameters   User parameters that could be updated.
- @param successBlock Block with response and user instances if request succeded.
- @param errorBlock   Block with response instance if request failed.
+ @param successBlock Block with response and user instances if the request is succeeded.
+ @param errorBlock   Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -297,8 +297,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  
  @note You should login firstly in order to delete current user
  
- @param successBlock Block with response instance if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -311,8 +311,8 @@ typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
  Reset user's password. User with this email will retrieve an email instruction for reset password.
  
  @param email User's email
- @param successBlock Block with response instance if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */

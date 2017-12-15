@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param className Name of class
  @param ID Identifier of object to be retrieved
- @param successBlock Block with response instance and QBCOCustomObject instance if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance and QBCOCustomObject instance if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -40,8 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param className Name of class
  @param IDs Identifiers of objects to be retrieved
- @param successBlock Block with response instance, NSArray of found objects if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance, NSArray of found objects if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -55,8 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param className Name of class
  @param extendedRequest Extended set of request parameters. `count` parameter is ignored. To receive count use `countObjectsWithClassName:extendedRequest:successBlock:errorBlock:`
- @param successBlock Block with response instance, NSArray of found objects, NSArray of not found objects Ids and QBResponsePage if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance, NSArray of found objects, NSArray of not found objects Ids and QBResponsePage if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param groupFieldName      Required. Field name for group.
  *  @param extendedRequest     Optional. Extended set of request parameters. `count` parameter is ignored. To receive count use `countObjectsWithClassName:extendedRequest:successBlock:errorBlock:`.
  *  @param successBlock        Block with response instance, NSArray of grouped objects.
- *  @param errorBlock          Block with response instance if request failed.
+ *  @param errorBlock          Block with response instance if the request is failed.
  *
  *  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -95,8 +95,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param className Name of class
  @param extendedRequest Extended set of request parameters
- @param successBlock Block with response instance and count of objects if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance and count of objects if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -112,8 +112,8 @@ NS_ASSUME_NONNULL_BEGIN
  Create record
  
  @param object An instance of object that will be created
- @param successBlock Block with response instance and created object if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance and created object if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -128,8 +128,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param objects An array of instances of objects that will be created
  @param className Name of class
- @param successBlock Block with response instance, NSArray of created objects if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance, NSArray of created objects if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -144,8 +144,8 @@ NS_ASSUME_NONNULL_BEGIN
  Update record
  
  @param object An instance of object that will be updated
- @param successBlock Block with response instance and updated object if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance and updated object if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -158,8 +158,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param object An instance of object that will be updated
  @param specialUpdateOperators Special update operators http://quickblox.com/developers/SimpleSample-customObjects-ios#Special_update_oparators
- @param successBlock Block with response instance and updated object if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance and updated object if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -175,8 +175,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param objects An array of instances of objects that will be updated
  @param className Name of class
- @param successBlock Block with response instance, updated objects and not found objects Ids if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance, updated objects and not found objects Ids if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -191,8 +191,8 @@ NS_ASSUME_NONNULL_BEGIN
  Delete object by identifier
  
  @param objectID ID of object to be removed.
- @param successBlock Block with response instance if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -205,8 +205,8 @@ NS_ASSUME_NONNULL_BEGIN
  Delete objects by IDs
  
  @param objectsIDs Array of IDs of objects to be removed.
- @param successBlock Block with response instance, NSArray of deleted objects Ids and NSArray of not found objects Ids if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance, NSArray of deleted objects Ids and NSArray of not found objects Ids if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -222,8 +222,8 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param className Name of class
  @param ID Identifier of object which permissions will be retrieved
- @param successBlock Block with response instance and QBCOPermissions instance if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance and QBCOPermissions instance if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -241,9 +241,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param className Name of class
  @param objectID Identifier of object to which file will be uploaded
  @param fileFieldName Name of file field
- @param successBlock Block with response instance if request succeded
+ @param successBlock Block with response instance if the request is succeeded
  @param statusBlock Block with upload/download progress
- @param errorBlock Block with response instance if request failed
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -261,9 +261,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param className Name of class
  @param objectID Identifier of object which file will be downloaded
  @param fileFieldName Name of file field
- @param successBlock Block with response instance and NSData instance if request succeded
+ @param successBlock Block with response instance and NSData instance if the request is succeeded
  @param statusBlock Block with upload/download progress
- @param errorBlock Block with response instance if request failed
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -282,9 +282,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param className Name of class
  @param objectID Identifier of object which file will be downloaded
  @param fileFieldName Name of file field
- @param successBlock Block with response instance and NSData instance if request succeded
+ @param successBlock Block with response instance and NSData instance if the request is succeeded
  @param statusBlock Block with upload/download progress
- @param errorBlock Block with response instance if request failed
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */
@@ -302,8 +302,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param className Name of class
  @param objectID Identifier of object form which file will be deleted
  @param fileFieldName Name of file field
- @param successBlock Block with response instance if request succeded
- @param errorBlock Block with response instance if request failed
+ @param successBlock Block with response instance if the request is succeeded
+ @param errorBlock Block with response instance if the request is failed.
  
  @return An instance of QBRequest for cancel operation mainly.
  */

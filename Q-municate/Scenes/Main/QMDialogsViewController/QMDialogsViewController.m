@@ -132,6 +132,13 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
                                                                          duration:0];
     __weak UINavigationController *navigationController = self.navigationController;
     
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
+        && !QBChat.instance.manualInitialPresence) {
+        // connecting to chat with manual initial presence if in the background
+        // this will not send online presence untill app comes foreground
+        QBChat.instance.manualInitialPresence = YES;
+    }
+    
     [[[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
         if (task.isFaulted) {
