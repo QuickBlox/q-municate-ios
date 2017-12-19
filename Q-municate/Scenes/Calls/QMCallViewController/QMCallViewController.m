@@ -823,6 +823,12 @@ QBRTCAudioSessionDelegate
 
 - (void)callManager:(QMCallManager *)__unused callManager willCloseCurrentSession:(QBRTCSession *)__unused session {
     
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground
+        && (self.callState == QMCallStateActiveAudioCall
+            || self.callState == QMCallStateActiveVideoCall)) {
+        [QMSoundManager playEndOfCallSound];
+    }
+    
     if (self.cameraCapture != nil) {
         
         [self.cameraCapture stopSession:nil];
