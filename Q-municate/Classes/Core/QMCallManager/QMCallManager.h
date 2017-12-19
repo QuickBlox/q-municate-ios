@@ -49,6 +49,13 @@ extern NSString * const QMVoipCallEventKey;
  */
 - (void)callManagerDidChangeMicrophoneState:(QMCallManager *)callManager;
 
+/**
+ *  Notifies that call was ended by callkit.
+ *
+ *  @param callManager QMCallManager instance
+ */
+- (void)callManagerCallWasEndedByCallKit:(QMCallManager *)callManager;
+
 @end
 
 /**
@@ -125,6 +132,13 @@ extern NSString * const QMVoipCallEventKey;
  *  @discussion When VOIP push received.
  */
 - (void)performCallKitPreparations;
+
+/**
+ *  Handle user activity with call intent.
+ *
+ *  @param userActivity user activity instance
+ */
+- (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity;
 
 @end
 

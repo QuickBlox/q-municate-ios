@@ -15,6 +15,8 @@
 #import "QMNotification.h"
 #import "QMCallKitAdapter.h"
 
+#import <Intents/Intents.h>
+
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
@@ -24,7 +26,8 @@ NSString * const QMVoipCallEventKey = @"VOIPCall";
 @interface QMCallManager ()
 <
 QBRTCClientDelegate,
-QMCallKitAdapterUsersStorageProtocol
+QMCallKitAdapterUsersStorageProtocol,
+QBChatDelegate
 >
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
@@ -39,6 +42,8 @@ QMCallKitAdapterUsersStorageProtocol
 @property (strong, nonatomic) QMCallKitAdapter *callKitAdapter;
 @property (strong, nonatomic, readwrite) NSUUID *callUUID;
 @property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+
+@property (copy, nonatomic) dispatch_block_t onChatConnectedAction;
 
 @end
 
@@ -57,6 +62,7 @@ QMCallKitAdapterUsersStorageProtocol
     
     _multicastDelegate = (id<QMCallManagerDelegate>)[[QBMulticastDelegate alloc] init];
     
+    [QBChat.instance addDelegate:self];
     [[QBRTCClient instance] addDelegate:self];
     
     if (QMCallKitAdapter.isCallKitAvailable) {
@@ -70,6 +76,7 @@ QMCallKitAdapterUsersStorageProtocol
         // call was ended by callkit actions
         [_callKitAdapter setOnCallEndedByCallKitAction:^{
             @strongify(self);
+            [self.multicastDelegate callManagerCallWasEndedByCallKit:self];
             if (self.callWindow == nil) {
                 // if no call window in existence that means that call was ended
                 // on our side while not established, send appropriate notification
@@ -220,6 +227,54 @@ QMCallKitAdapterUsersStorageProtocol
     }
 }
 
+- (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity {
+    INInteraction *interaction = [userActivity interaction];
+    NSString *handle = userActivity.userInfo[@"handle"];
+    BOOL isAudioCallIntentClass = [interaction.intent isKindOfClass:[INStartAudioCallIntent class]];
+    BOOL isVideoCallIntentClass = [interaction.intent isKindOfClass:[INStartVideoCallIntent class]];
+    NSAssert(isAudioCallIntentClass || isVideoCallIntentClass, @"Incorrect intent.");
+    if (handle == nil) {
+        INPerson *person = nil;
+        if (isAudioCallIntentClass) {
+            person = [[(INStartAudioCallIntent *)(interaction.intent) contacts] firstObject];
+        }
+        else if (isVideoCallIntentClass) {
+            person = [[(INStartVideoCallIntent *)(interaction.intent) contacts] firstObject];
+        }
+        
+        handle = person.personHandle.value;
+    }
+    
+    dispatch_block_t action = ^void() {
+        QBRTCConferenceType conferenceType = isVideoCallIntentClass ? QBRTCConferenceTypeVideo : QBRTCConferenceTypeAudio;
+        [self callToUserWithID:handle.integerValue conferenceType:conferenceType];
+    };
+    
+    if (QBChat.instance.isConnected) {
+        action();
+    }
+    else {
+        self.onChatConnectedAction = action;
+    }
+    
+    action = nil;
+}
+
+// MARK: - QBChatDelegate
+
+- (void)chatDidConnect {
+    if (self.onChatConnectedAction != nil) {
+        self.onChatConnectedAction();
+        self.onChatConnectedAction = nil;
+    }
+}
+
+- (void)chatDidNotConnectWithError:(NSError *)__unused error {
+    if (self.onChatConnectedAction != nil) {
+        self.onChatConnectedAction = nil;
+    }
+}
+
 //MARK: - QBRTCClientDelegate
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)__unused userInfo {
@@ -317,11 +372,6 @@ QMCallKitAdapterUsersStorageProtocol
     });
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMCallViewControllerEndScreenDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground
-            && self.callWindow != nil) {
-            [QMSoundManager playEndOfCallSound];
-        }
         
         [self.multicastDelegate callManager:self willCloseCurrentSession:session];
         
@@ -540,3 +590,4 @@ QMCallKitAdapterUsersStorageProtocol
 }
 
 @end
+
