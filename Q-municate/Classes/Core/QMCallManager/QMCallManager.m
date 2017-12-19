@@ -70,6 +70,7 @@ QMCallKitAdapterUsersStorageProtocol
         // call was ended by callkit actions
         [_callKitAdapter setOnCallEndedByCallKitAction:^{
             @strongify(self);
+            [self.multicastDelegate callManagerCallWasEndedByCallKit:self];
             if (self.callWindow == nil) {
                 // if no call window in existence that means that call was ended
                 // on our side while not established, send appropriate notification

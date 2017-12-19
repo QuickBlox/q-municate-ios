@@ -420,6 +420,9 @@ QBRTCAudioSessionDelegate
         if (self.callState == QMCallStateActiveAudioCall ||
             self.callState == QMCallStateActiveVideoCall) {
             
+            [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
+                                                                     duration:self.callDuration];
+            
             bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) ,
                           QMStringForTimeInterval(self.callDuration)];
         }
@@ -792,13 +795,6 @@ QBRTCAudioSessionDelegate
         return;
     }
     
-    if (self.callState == QMCallStateActiveAudioCall ||
-        self.callState == QMCallStateActiveVideoCall) {
-        
-        [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
-                                                                 duration:self.callDuration];
-    }
-    
     self.acceptButton.enabled = NO;
     self.declineButton.enabled = NO;
     
@@ -826,7 +822,8 @@ QBRTCAudioSessionDelegate
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground
         && (self.callState == QMCallStateActiveAudioCall
             || self.callState == QMCallStateActiveVideoCall)) {
-        [QMSoundManager playEndOfCallSound];
+            
+            [QMSoundManager playEndOfCallSound];
     }
     
     if (self.cameraCapture != nil) {
@@ -841,6 +838,15 @@ QBRTCAudioSessionDelegate
 
 - (void)callManagerDidChangeMicrophoneState:(QMCallManager *)__unused callManager {
     self.muteButton.selected ^= 1;
+}
+
+- (void)callManagerCallWasEndedByCallKit:(QMCallManager *)callManager {
+    if (self.callState == QMCallStateActiveAudioCall
+        || self.callState == QMCallStateActiveVideoCall) {
+        
+        [callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
+                                                 duration:self.callDuration];
+    }
 }
 
 // MARK: - QBRTCAudioSessionDelegate
