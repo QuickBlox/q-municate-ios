@@ -457,6 +457,12 @@ QMUsersServiceDelegate
 
 - (void)readMessage:(QBChatMessage *)message {
     
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+        // as call kit activating app in the background
+        // do not read messages if we are in such state
+        return;
+    }
+    
     if (message.senderID != self.senderID && ![message.readIDs containsObject:@(self.senderID)]) {
         
         //Message could be read only if the chat is connected
