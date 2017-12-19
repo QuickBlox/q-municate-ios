@@ -133,13 +133,6 @@ extern NSString * const QMVoipCallEventKey;
  */
 - (void)performCallKitPreparations;
 
-/**
- *  Handle user activity with call intent.
- *
- *  @param userActivity user activity instance
- */
-- (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity;
-
 @end
 
 NS_ASSUME_NONNULL_END

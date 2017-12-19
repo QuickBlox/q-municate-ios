@@ -79,6 +79,7 @@ QMOpenGraphCacheDataSource, QMOpenGraphServiceDelegate>
  *
  *  @return QMCore singleton
  */
+
 @property (class, readonly) QMCore *instance;
 
 - (BOOL)isInternetConnected;

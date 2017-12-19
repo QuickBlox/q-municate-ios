@@ -88,9 +88,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     // Configuring app appearance
     [[UITabBar appearance] setTintColor:QMMainApplicationColor()];
     [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
-    
+
     // Configuring searchbar appearance
-    
+
     [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
     [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
@@ -212,16 +212,6 @@ forRemoteNotification:(NSDictionary *)userInfo
                                                        remoteNotification:userInfo
                                                              responseInfo:responseInfo
                                                         completionHandler:completionHandler];
-}
-
-- (BOOL)application:(UIApplication *)__unused application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))__unused restorationHandler {
-    
-    BOOL isCallIntent = [userActivity.activityType isEqualToString:INStartAudioCallIntentIdentifier] || [userActivity.activityType isEqualToString:INStartVideoCallIntentIdentifier];
-    if (isCallIntent) {
-        [QMCore.instance.callManager handleUserActivityWithCallIntent:userActivity];
-    }
-    
-    return YES;
 }
 
 //MARK: - QMPushNotificationManagerDelegate protocol

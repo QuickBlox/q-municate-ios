@@ -91,7 +91,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
     [_usersStorage userWithID:[userID integerValue] completion:^(QBUUser * _Nonnull user) {
         __typeof(weakSelf)strongSelf = weakSelf;
         NSString *contactIdentifier = user.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil);;
-        CXHandle *handle = [strongSelf handleForUserID:[userID integerValue]];
+        CXHandle *handle = user != nil ? [strongSelf handleForUser:user] : [strongSelf handleForUserID:[userID integerValue]];
         CXStartCallAction *action = [[CXStartCallAction alloc] initWithCallUUID:uuid handle:handle];
         action.contactIdentifier = contactIdentifier;
         
@@ -147,7 +147,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
         NSString *callerName = user.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil);
         
         CXCallUpdate *update = [[CXCallUpdate alloc] init];
-        update.remoteHandle = [strongSelf handleForUserID:[userID integerValue]];
+        update.remoteHandle = user != nil ? [strongSelf handleForUser:user] : [strongSelf handleForUserID:[userID integerValue]];
         update.localizedCallerName = callerName;
         update.supportsHolding = NO;
         update.supportsGrouping = NO;
@@ -312,6 +312,21 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
 }
 
 // MARK: - Helpers
+
+- (CXHandle *)handleForUser:(QBUUser *)user {
+    // this logic only supports 1 callee at this moment
+    // if QM will support group calls, need to adapt this as well
+    
+    CXHandle *handle = nil;
+    if (user.phone.length > 0) {
+        handle = [[CXHandle alloc] initWithType:CXHandleTypePhoneNumber value:user.phone];
+    }
+    else {
+        handle = [self handleForUserID:user.ID];
+    }
+    
+    return handle;
+}
 
 - (CXHandle *)handleForUserID:(NSUInteger)userID {
     return [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:[NSString stringWithFormat:@"%tu", userID]];
