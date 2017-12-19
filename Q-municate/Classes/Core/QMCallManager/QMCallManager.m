@@ -15,6 +15,8 @@
 #import "QMNotification.h"
 #import "QMCallKitAdapter.h"
 
+#import <Intents/Intents.h>
+
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
@@ -24,7 +26,8 @@ NSString * const QMVoipCallEventKey = @"VOIPCall";
 @interface QMCallManager ()
 <
 QBRTCClientDelegate,
-QMCallKitAdapterUsersStorageProtocol
+QMCallKitAdapterUsersStorageProtocol,
+QBChatDelegate
 >
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
@@ -39,6 +42,8 @@ QMCallKitAdapterUsersStorageProtocol
 @property (strong, nonatomic) QMCallKitAdapter *callKitAdapter;
 @property (strong, nonatomic, readwrite) NSUUID *callUUID;
 @property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+
+@property (copy, nonatomic) dispatch_block_t onChatConnectedAction;
 
 @end
 
@@ -57,6 +62,7 @@ QMCallKitAdapterUsersStorageProtocol
     
     _multicastDelegate = (id<QMCallManagerDelegate>)[[QBMulticastDelegate alloc] init];
     
+    [QBChat.instance addDelegate:self];
     [[QBRTCClient instance] addDelegate:self];
     
     if (QMCallKitAdapter.isCallKitAvailable) {
@@ -218,6 +224,54 @@ QMCallKitAdapterUsersStorageProtocol
     QBChat *chat = QBChat.instance;
     if (!chat.isConnected && !chat.isConnecting) {
         [self.serviceManager login];
+    }
+}
+
+- (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity {
+    INInteraction *interaction = [userActivity interaction];
+    NSString *handle = userActivity.userInfo[@"handle"];
+    BOOL isVideoCallIntent = [interaction.intent isKindOfClass:[INStartVideoCallIntent class]];
+    if (handle == nil) {
+        INPerson *person = nil;
+        if ([interaction.intent isKindOfClass:[INStartAudioCallIntent class]]) {
+            person = [[(INStartAudioCallIntent *)(interaction.intent) contacts] firstObject];
+        }
+        else if (isVideoCallIntent) {
+            person = [[(INStartVideoCallIntent *)(interaction.intent) contacts] firstObject];
+        }
+        
+        handle = person.personHandle.value;
+    }
+    
+    @weakify(self);
+    dispatch_block_t action = ^void() {
+        @strongify(self);
+        QBRTCConferenceType conferenceType = isVideoCallIntent ? QBRTCConferenceTypeVideo : QBRTCConferenceTypeAudio;
+        [self callToUserWithID:handle.integerValue conferenceType:conferenceType];
+    };
+    
+    if (QBChat.instance.isConnected) {
+        action();
+    }
+    else {
+        self.onChatConnectedAction = action;
+    }
+    
+    action = nil;
+}
+
+// MARK: - QBChatDelegate
+
+- (void)chatDidConnect {
+    if (self.onChatConnectedAction != nil) {
+        self.onChatConnectedAction();
+        self.onChatConnectedAction = nil;
+    }
+}
+
+- (void)chatDidNotConnectWithError:(NSError *)__unused error {
+    if (self.onChatConnectedAction != nil) {
+        self.onChatConnectedAction = nil;
     }
 }
 
