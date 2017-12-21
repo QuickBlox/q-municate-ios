@@ -20,6 +20,7 @@
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
+static const NSTimeInterval kQMBackgroundActiveCallCheck = 15.0f;
 
 NSString * const QMVoipCallEventKey = @"VOIPCall";
 
@@ -35,7 +36,9 @@ QBChatDelegate
 
 @property (strong, nonatomic, readwrite) QBRTCSession *session;
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
+
 @property (strong, nonatomic) NSTimer *soundTimer;
+@property (strong, nonatomic) NSTimer *backgroundTimer;
 
 @property (strong, nonatomic) UIWindow *callWindow;
 
@@ -210,12 +213,13 @@ QBChatDelegate
 
 - (void)performCallKitPreparations {
     UIApplication *application = [UIApplication sharedApplication];
-    if (application.applicationState == UIApplicationStateBackground
-        && _backgroundTask == UIBackgroundTaskInvalid) {
-        _backgroundTask = [application beginBackgroundTaskWithExpirationHandler:^{
-            [application endBackgroundTask:self.backgroundTask];
-            self.backgroundTask = UIBackgroundTaskInvalid;
-        }];
+    if (application.applicationState == UIApplicationStateBackground) {
+        if (_backgroundTask == UIBackgroundTaskInvalid) {
+            _backgroundTask = [application beginBackgroundTaskWithExpirationHandler:^{
+                [application endBackgroundTask:self.backgroundTask];
+                self.backgroundTask = UIBackgroundTaskInvalid;
+            }];
+        }
         // as we are in the background, do not send initial presence in chat
         // so we won't appear online for all users, only send initial presence
         // when we will be back in foreground
@@ -225,6 +229,16 @@ QBChatDelegate
     if (!chat.isConnected && !chat.isConnecting) {
         [self.serviceManager login];
     }
+    // As we have connected to the chat, there is a case when we won't receive
+    // call session at all, if, for example, caller cancelled call faster than
+    // we have received VOIP push notification about that.
+    // This will be fixed with updated signaling in a future and must be deleted
+    // in the end.
+    _backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:kQMBackgroundActiveCallCheck
+                                                        target:self
+                                                      selector:@selector(checkBackgroundActiveCall)
+                                                      userInfo:nil
+                                                       repeats:NO];
 }
 
 - (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity {
@@ -275,7 +289,7 @@ QBChatDelegate
     }
 }
 
-//MARK: - QBRTCClientDelegate
+// MARK: - QBRTCClientDelegate
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)__unused userInfo {
     
@@ -291,6 +305,12 @@ QBChatDelegate
     if (session.initiatorID.unsignedIntegerValue == self.serviceManager.currentProfile.userData.ID) {
         // skipping call from ourselves
         return;
+    }
+    
+    // invalidating background timer if there is one
+    if (_backgroundTimer != nil) {
+        [_backgroundTimer invalidate];
+        _backgroundTimer = nil;
     }
     
     self.session = session;
@@ -341,7 +361,8 @@ QBChatDelegate
 
 - (void)sessionDidClose:(QBRTCSession *)session {
     
-    if (self.session != session) {
+    if (self.session != nil
+        && self.session != session) {
         // may be we rejected some one else call
         // while talking with another person
         return;
@@ -359,7 +380,13 @@ QBChatDelegate
         _backgroundTask = UIBackgroundTaskInvalid;
     }
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    // invalidating background timer if there is one
+    if (_backgroundTimer != nil) {
+        [_backgroundTimer invalidate];
+        _backgroundTimer = nil;
+    }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
             && self.backgroundTask == UIBackgroundTaskInvalid) {
             // dispatching chat disconnect in 1.5 second so message about call end
@@ -589,5 +616,24 @@ QBChatDelegate
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
-@end
+- (void)checkBackgroundActiveCall {
+    BOOL isBackground = [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
+    if (isBackground
+        && !self.hasActiveCall) {
+        
+        if (_backgroundTask != UIBackgroundTaskInvalid) {
+            [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+            _backgroundTask = UIBackgroundTaskInvalid;
+        }
+        
+        BOOL isChatActive = QBChat.instance.isConnected || QBChat.instance.isConnecting;
+        if (isChatActive) {
+            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
+        }
+    }
+    
+    [_backgroundTimer invalidate];
+    _backgroundTimer = nil;
+}
 
+@end
