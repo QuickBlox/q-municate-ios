@@ -156,17 +156,21 @@ static const NSUInteger kQMUsersPageLimit = 100;
 
 + (BFTask *)taskFetchAllData {
     
-    NSMutableArray *usersLoadingTasks = [NSMutableArray array];
+    NSMutableArray<BFTask<NSArray<QBUUser *>*>*> *usersLoadingTasks = [NSMutableArray array];
     
     QMCore *core = QMCore.instance;
     
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) =
     ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
-        [usersLoadingTasks addObject:[core.usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
+        if (dialogsUsersIDs.count > 0) {
+            BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:dialogsUsersIDs.allObjects];
+            [usersLoadingTasks addObject:task];
+        }
     };
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask *task) {
+        
         if (core.currentProfile.userData && !task.isFaulted) {
             
             core.currentProfile.lastDialogsFetchingDate = [NSDate date];
@@ -180,6 +184,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     };
     
     NSDate *date = core.currentProfile.lastDialogsFetchingDate;
+    
     if (date) {
         
         return [[core.chatService
