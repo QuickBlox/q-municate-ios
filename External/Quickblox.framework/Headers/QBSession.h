@@ -1,9 +1,11 @@
 //
-// Created by QuickBlox team on 27/12/2013.
-// Copyright (c) 2016 QuickBlox. All rights reserved.
+//  QBSession.h
+//
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @class QBUUser;
 @class QBASession;
@@ -21,6 +23,9 @@ FOUNDATION_EXPORT NSNotificationName const kQBLogoutNotification;
 
 /** The current session instance. */
 @property (nonatomic, strong, readonly, class) QBSession *currentSession;
+
+/** Session user */
+@property (nonatomic, readonly, copy, nullable) QBUUser *currentUser;
 
 /** Returns YES if token has expired */
 @property (nonatomic, readonly) BOOL tokenHasExpired;
@@ -77,8 +82,6 @@ FOUNDATION_EXPORT NSNotificationName const kQBLogoutNotification;
 @end
 
 @interface QBSession (DEPRECATED)
-/** Session user */
-@property (nonatomic, readonly, copy, nullable) QBUUser *currentUser;
 
 /**
  *  Token valid state

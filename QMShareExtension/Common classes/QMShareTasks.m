@@ -92,7 +92,7 @@
 
 
 static NSSet<NSString *>*acceptableTypes() {
-
+    
     static NSSet *acceptableTypes = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -120,8 +120,8 @@ static NSSet<NSString *>*acceptableTypes() {
                               //
                               ]];
     });
-        
-        return acceptableTypes;
+    
+    return acceptableTypes;
 }
 
 
@@ -180,12 +180,12 @@ static NSSet<NSString *>*acceptableTypes() {
             if ([t.result isKindOfClass:[NSURL class]]) {
                 NSURL *fileURL = t.result;
                 return [self taskProvideResultWithAttachmentForFileURL:fileURL
-                                                        typeIdentifiers:provider.registeredTypeIdentifiers];
+                                                       typeIdentifiers:provider.registeredTypeIdentifiers];
             }
             else if ([t.result isKindOfClass:[UIImage class]]) {
                 UIImage *image = t.result;
                 return [self taskProvideResultWithAttachmentImage:image
-                                                     typeIdentifiers:provider.registeredTypeIdentifiers];
+                                                  typeIdentifiers:provider.registeredTypeIdentifiers];
             }
             
             NSString *errorDescription =
@@ -210,11 +210,11 @@ static NSSet<NSString *>*acceptableTypes() {
             
             NSAssert([t.result isKindOfClass:NSURL.self], @"");
             return [self taskProvideResultWithAttachmentForFileURL:t.result
-                                                    typeIdentifiers:provider.registeredTypeIdentifiers];
+                                                   typeIdentifiers:provider.registeredTypeIdentifiers];
         }];
     }
-   else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText] ||
-           [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePlainText]) {
+    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText] ||
+             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePlainText]) {
         
         QMItemProviderLoader<NSString *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
                                                                                          typeIdentifier:(NSString *)kUTTypeText];
@@ -225,22 +225,22 @@ static NSSet<NSString *>*acceptableTypes() {
     }
     
     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeURL]) {
-
+        
         QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
                                                                                       typeIdentifier:(NSString *)kUTTypeURL];
         
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull urlTask) {
-
+            
             NSURL *URL = urlTask.result;
-
+            
             if (URL.isFileURL) {
                 return [self taskProvideResultWithAttachmentForFileURL:URL
                                                        typeIdentifiers:provider.registeredTypeIdentifiers];
             }
             else if (URL.isLocationURL) {
-
+                
                 return [[URL location] continueWithBlock:^id _Nullable(BFTask<CLLocation *> * _Nonnull locationTask) {
-
+                    
                     if (locationTask.error) {
                         result.text = URL.absoluteString;
                     }
@@ -250,7 +250,7 @@ static NSSet<NSString *>*acceptableTypes() {
                         [QBChatAttachment locationAttachmentWithCoordinate:locationTask.result.coordinate];
                         result.attachment = locationAttachment;
                     }
-
+                    
                     return [BFTask taskWithResult:result];
                 }];
             }
@@ -266,14 +266,8 @@ static NSSet<NSString *>*acceptableTypes() {
 }
 
 + (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentImage:(UIImage *)image
-                                                            typeIdentifiers:(NSArray *)typeIdentifiers {
+                                                         typeIdentifiers:(NSArray *)typeIdentifiers {
     QMAttachmentProvider *provider = [QMAttachmentProvider new];
-    
-    QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-    settings.maxImageSideSize = kQMMaxImageSize;
-    settings.maxFileSize = kQMMaxFileSize;
-    
-    provider.providerSettings = settings;
     
     return [[provider taskAttachmentWithImage:image
                               typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
@@ -292,49 +286,37 @@ static NSSet<NSString *>*acceptableTypes() {
 }
 
 + (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForData:(NSData *)data
-                                                            typeIdentifiers:(NSArray *)typeIdentifiers {
+                                                           typeIdentifiers:(NSArray *)typeIdentifiers {
     QMAttachmentProvider *provider = [QMAttachmentProvider new];
     
-    QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-    settings.maxImageSideSize = kQMMaxImageSize;
-    settings.maxFileSize = kQMMaxFileSize;
-    
-    provider.providerSettings = settings;
-    
-   return [[provider taskAttachmentWithData:data
-                            typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
-    {
-        QBChatAttachment *attachment = attachmentTask.result;
-        
-        QMItemProviderResult *result = [QMItemProviderResult new];
-        
-        result.attachment = attachment;
-        result.text =
-        [NSString stringWithFormat:@"%@ attachment",
-         attachment.type.capitalizedString];
-        
-        return [BFTask taskWithResult:result];
-    }];
-}
-
-+ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForFileURL:(NSURL *)fileURL
-                                                               typeIdentifiers:(NSArray *)typeIdentifiers {
-    
-    QMAttachmentProvider *provider =  [QMAttachmentProvider new];
-    
-    QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-    settings.maxImageSideSize = kQMMaxImageSize;
-    settings.maxFileSize = kQMMaxFileSize;
-    
-    provider.providerSettings = settings;
-    
-    return [[provider taskAttachmentWithFileURL:fileURL
-                                 typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+    return [[provider taskAttachmentWithData:data
+                             typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
             {
                 QBChatAttachment *attachment = attachmentTask.result;
                 
                 QMItemProviderResult *result = [QMItemProviderResult new];
-            
+                
+                result.attachment = attachment;
+                result.text =
+                [NSString stringWithFormat:@"%@ attachment",
+                 attachment.type.capitalizedString];
+                
+                return [BFTask taskWithResult:result];
+            }];
+}
+
++ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForFileURL:(NSURL *)fileURL
+                                                              typeIdentifiers:(NSArray *)typeIdentifiers {
+    
+    QMAttachmentProvider *provider =  [QMAttachmentProvider new];
+    
+    return [[provider taskAttachmentWithFileURL:fileURL
+                                typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+            {
+                QBChatAttachment *attachment = attachmentTask.result;
+                
+                QMItemProviderResult *result = [QMItemProviderResult new];
+                
                 result.attachment = attachment;
                 result.text =
                 [NSString stringWithFormat:@"%@ attachment",
