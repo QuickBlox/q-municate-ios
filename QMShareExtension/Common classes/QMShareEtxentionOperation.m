@@ -117,14 +117,15 @@
                 return [BFTask cancelledTask];
             }
             
-            return [[self taskSendMessageToRecipient:shareItem] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+            return [[self taskSendMessageToRecipient:shareItem] continueWithBlock:^id _Nullable(BFTask * _Nonnull sendMessageTask) {
                 
-                if (t.error) {
-                   resultDetails.mutableUnsentRecipients[shareItem] = t.error;
+                if (sendMessageTask.error) {
+                   resultDetails.mutableUnsentRecipients[shareItem] = sendMessageTask.error;
                 }
                 else {
                     [resultDetails.mutableSentRecipients addObject:shareItem];
                 }
+                
                 return nil;
             }];
         }];

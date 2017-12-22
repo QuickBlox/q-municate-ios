@@ -19,9 +19,6 @@
 #import "QMExtensionCache+QMShareExtension.h"
 #import "UIImage+QM.h"
 
-static const NSUInteger kQMMaxFileSize = 100; //in MBs
-static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
-
 @implementation QMItemProviderResult
 
 - (NSString *)description {
@@ -273,7 +270,7 @@ static NSSet<NSString *>*acceptableTypes() {
     QMAttachmentProvider *provider = [QMAttachmentProvider new];
     
     QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-    settings.maxImageSize = kQMMaxImageSize;
+    settings.maxImageSideSize = kQMMaxImageSize;
     settings.maxFileSize = kQMMaxFileSize;
     
     provider.providerSettings = settings;
@@ -299,7 +296,7 @@ static NSSet<NSString *>*acceptableTypes() {
     QMAttachmentProvider *provider = [QMAttachmentProvider new];
     
     QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-    settings.maxImageSize = kQMMaxImageSize;
+    settings.maxImageSideSize = kQMMaxImageSize;
     settings.maxFileSize = kQMMaxFileSize;
     
     provider.providerSettings = settings;
@@ -326,7 +323,7 @@ static NSSet<NSString *>*acceptableTypes() {
     QMAttachmentProvider *provider =  [QMAttachmentProvider new];
     
     QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
-    settings.maxImageSize = kQMMaxImageSize;
+    settings.maxImageSideSize = kQMMaxImageSize;
     settings.maxFileSize = kQMMaxFileSize;
     
     provider.providerSettings = settings;

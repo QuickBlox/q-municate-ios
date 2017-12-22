@@ -17,16 +17,25 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QMAttachmentProviderSettings : NSObject
 
 @property (assign, nonatomic) NSUInteger maxFileSize;  //In megabytes
-@property (assign, nonatomic) CGFloat maxImageSize; //In pixels
-@property (assign, nonatomic) CGFloat imageQuality; // from 0 to 1.0
+@property (assign, nonatomic) NSUInteger maxImageSideSize; //In pixels
+@property (assign, nonatomic) CGFloat dataQuality; // from 0 to 1.0
+
 @end
+
 
 @interface QMAttachmentProvider : NSObject
 
-+ (BFTask <QBChatAttachment *>*)attachmentWithFileURL:(NSURL *)fileURL
-                                             settings:(nullable QMAttachmentProviderSettings *)providerSettings;
-+ (BFTask <QBChatAttachment *>*)imageAttachmentWithData:(NSData *)imageData
-                                             settings:(nullable QMAttachmentProviderSettings *)providerSettings;
+@property (strong, nonatomic) QMAttachmentProviderSettings *providerSettings;
+
+- (BFTask <QBChatAttachment*> *)taskAttachmentWithImage:(UIImage *)image
+                                          typeIdentifiers:(NSArray *)typeIdentifiers;
+
+- (BFTask <QBChatAttachment*> *)taskAttachmentWithFileURL:(NSURL *)fileURL
+                                          typeIdentifiers:(NSArray *)typeIdentifiers;
+
+- (BFTask <QBChatAttachment*> *)taskAttachmentWithData:(NSData *)data
+                                        typeIdentifiers:(NSArray *)typeIdentifiers;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -10,6 +10,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "QBChatAttachment+QMFactory.h"
+#import <QMCVDevelopment/UIImage+QM.h>
+
+static const NSUInteger kQMMaxFileSize = 100; //in MBs
+static const NSUInteger kQMMaxImageSize = 1000; //in pixels
 
 @implementation QMAttachmentProviderSettings @end
 
@@ -17,17 +21,13 @@
 
 @end
 
-@interface QMAssetConverter()
-
-@end
-
 @implementation QMAssetConverter
 
-+ (BFTask <NSURL *> *)taskConvertToOtputFileType:(AVFileType)fileType
-                                        inputURL:(NSURL *)inputFileURL
-                                       outputURL: (NSURL *)outputFileURL
-                                  withPresetName:(nullable NSString *)presetName
-                     shouldOptimizeForNetworkUse:(BOOL)shouldOptimizeForNetworkUse {
++ (BFTask <NSURL *> *)taskConvertToOutputFileType:(AVFileType)fileType
+                                         inputURL:(NSURL *)inputFileURL
+                                        outputURL: (NSURL *)outputFileURL
+                                   withPresetName:(nullable NSString *)presetName
+                      shouldOptimizeForNetworkUse:(BOOL)shouldOptimizeForNetworkUse {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
@@ -65,22 +65,22 @@
     
     NSURL *fileOutput = uniqueOutputFileURLWithFileExtension(@".m4a");
     
-    return [self taskConvertToOtputFileType:AVFileTypeAppleM4A
-                                   inputURL:audioFileURL
-                                  outputURL:fileOutput
-                             withPresetName:AVAssetExportPresetPassthrough
-                shouldOptimizeForNetworkUse:YES];
+    return [self taskConvertToOutputFileType:AVFileTypeAppleM4A
+                                    inputURL:audioFileURL
+                                   outputURL:fileOutput
+                              withPresetName:AVAssetExportPresetPassthrough
+                 shouldOptimizeForNetworkUse:YES];
 }
 
 + (BFTask <NSURL *> *)taskConvertVideoToMpeg4FormatAtUrl:(NSURL *)videoFileURL {
     
     NSURL *fileOutput = uniqueOutputFileURLWithFileExtension(@".mp4");
     
-    return [self taskConvertToOtputFileType:AVFileTypeMPEG4
-                                   inputURL:videoFileURL
-                                  outputURL:fileOutput
-                             withPresetName:AVAssetExportPresetPassthrough
-                shouldOptimizeForNetworkUse:YES];
+    return [self taskConvertToOutputFileType:AVFileTypeMPEG4
+                                    inputURL:videoFileURL
+                                   outputURL:fileOutput
+                              withPresetName:AVAssetExportPresetPassthrough
+                 shouldOptimizeForNetworkUse:YES];
 }
 
 static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtension) {
@@ -96,72 +96,63 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
 
 @implementation QMAttachmentProvider
 
-+ (BFTask <QBChatAttachment *>*)imageAttachmentWithData:(NSData *)imageData
-                                               settings:(nullable QMAttachmentProviderSettings *)providerSettings {
-    if (providerSettings.maxFileSize > 0) {
-        
-        CGFloat fileSize = imageData.length/1024.0f/1024.0f;
-        
-        if (fileSize > providerSettings.maxFileSize) {
-            NSString *localizedDescription =
-            [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil), providerSettings.maxFileSize];
-            NSError *error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
-                                                 code:0
-                                             userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
-            return [BFTask taskWithError:error];
-        }
+
+- (QMAttachmentProviderSettings *)providerSettings {
+    
+    if (!_providerSettings) {
+        _providerSettings = defaultSettings();
     }
     
-    BFExecutor *backgroundExecutor =
-    [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
-    
-    return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
-        
-        UIImage *image = [UIImage imageWithData:imageData];
-        UIImage *resizedImage = [self resizedImageFromImage:image
-                                           withMaxImageSize:providerSettings.maxImageSize];
-        
-        QBChatAttachment *attachment = [QBChatAttachment imageAttachmentWithImage:resizedImage];
-        return [BFTask taskFromExecutor:BFExecutor.mainThreadExecutor withBlock:^id _Nonnull{
-            
-            return [BFTask taskWithResult:attachment];
-        }];
-    }];    
+    return _providerSettings;
 }
 
-+ (BFTask <QBChatAttachment *>*)attachmentWithFileURL:(NSURL *)fileURL
-                                             settings:(nullable QMAttachmentProviderSettings *)providerSettings {
-    if (providerSettings.maxFileSize > 0) {
-        
-        NSError *attributesError = nil;
-        
-        NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURL.path
-                                                                                        error:&attributesError];
-        if (attributesError) {
-            NSLog(@"Error occurred while getting file attributes = %@", attributesError);
-            return [BFTask taskWithError:attributesError];
-        }
-        
-        NSNumber *fileSizeNumber = fileAttributes[NSFileSize];
-        CGFloat fileSize = fileSizeNumber.longLongValue/1024.0f/1024.0f;
-        
-        if (fileSize > providerSettings.maxFileSize) {
-            NSString *localizedDescription =
-            [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil), providerSettings.maxFileSize];
-            NSError *error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
-                                                 code:0
-                                             userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
-            return [BFTask taskWithError:error];
-        }
+
+- (BFTask <QBChatAttachment*> *)taskAttachmentWithImage:(UIImage *)image
+                                        typeIdentifiers:(NSArray *)__unused typeIdentifiers {
+    
+    CGFloat fileSize = image.dataRepresentation.length/1024.0f/1024.0f;
+    
+    NSError *fileSizeError = validateFileSize(fileSize, self.providerSettings.maxFileSize);
+    if (fileSizeError) {
+        return [BFTask taskWithError:fileSizeError];
     }
     
-    NSString *fileName =
-    [[fileURL pathComponents] lastObject];
+    return taskAttachmentFromImage(image, self.providerSettings.maxImageSideSize);
+}
 
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
+
+- (BFTask <QBChatAttachment*> *)taskAttachmentWithFileURL:(NSURL *)fileURL
+                                          typeIdentifiers:(NSArray *)typeIdentifiers {
+    
+    NSAssert(fileURL.isFileURL, @"fileURL");
+    
+    NSError *attributesError = nil;
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fileURL.path
+                                                                                    error:&attributesError];
+    if (attributesError) {
+        NSLog(@"Error occurred while getting file attributes = %@", attributesError);
+        return attachmentErrorTask();
+    }
+    
+    NSNumber *fileSizeNumber = fileAttributes[NSFileSize];
+    CGFloat fileSize = fileSizeNumber.longLongValue/1024.0f/1024.0f;
+    
+    NSError *fileSizeError = validateFileSize(fileSize, self.providerSettings.maxFileSize);
+    if (fileSizeError) {
+        return [BFTask taskWithError:fileSizeError];
+    }
+    
+    CFStringRef UTI = UTIFileURL(fileURL, typeIdentifiers);
+    
+    if (UTI == NULL) {
+        return attachmentErrorTask();
+    }
+    
+    
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
     
-    if (UTTypeConformsTo(UTI, kUTTypeMovie)) {
+    if (UTTypeConformsTo(UTI, kUTTypeVideo)) {
         
         //We should convert all video formats to mp4 format.
         if (UTTypeConformsTo(UTI, kUTTypeMPEG4)) {
@@ -202,60 +193,58 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
         if (UTTypeConformsTo(UTI, kUTTypePNG)
             || UTTypeConformsTo(UTI, kUTTypeJPEG)) {
             
-            NSData *imageData = [NSData dataWithContentsOfURL:fileURL];
-            return [self imageAttachmentWithData:imageData
-                                        settings:providerSettings];
+            NSData *data = [NSData dataWithContentsOfFile:fileURL.path];
+            UIImage *image = [UIImage imageWithData:data];
+            
+            if (image) {
+                return taskAttachmentFromImage(image,self.providerSettings.maxImageSideSize);
+            }
+            else {
+                return attachmentErrorTask();
+            }
         }
     }
     
-    NSString *localizedDescription =
-    [NSString stringWithFormat:@"Attachment with name %@ is not supported",fileName];
-    
-    NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
-                                         code:0
-                                     userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
-    
-    return [BFTask taskWithError:error];
+    return attachmentErrorTask();
 }
 
-+ (NSString *)mimeTypeForData:(NSData *)data {
+
+- (BFTask <QBChatAttachment*> *)taskAttachmentWithData:(NSData *)data
+                                       typeIdentifiers:(NSArray *)typeIdentifiers {
+    NSAssert(data, @"data");
     
-    uint8_t c;
-    [data getBytes:&c length:1];
+    CGFloat fileSize = data.length/1024.0f/1024.0f;
     
-    switch (c) {
-        case 0xFF:
-            return @"image/jpeg";
-            break;
-        case 0x89:
-            return @"image/png";
-            break;
-        case 0x47:
-            return @"image/gif";
-            break;
-        case 0x49:
-        case 0x4D:
-            return @"image/tiff";
-            break;
-        case 0x25:
-            return @"application/pdf";
-            break;
-        case 0xD0:
-            return @"application/vnd";
-            break;
-        case 0x46:
-            return @"text/plain";
-            break;
-        default:
-            return @"application/octet-stream";
+    NSError *fileSizeError = validateFileSize(fileSize, self.providerSettings.maxFileSize);
+    if (fileSizeError) {
+        return [BFTask taskWithError:fileSizeError];
     }
+    
+    CFStringRef UTI = UTITypeIdentifiers(typeIdentifiers);
+    
+    if (UTTypeEqual(UTI, kUTTypePNG) ||
+        UTTypeEqual(UTI, kUTTypeJPEG)) {
+        
+        UIImage *image = [UIImage imageWithData:data];
+        
+        if (image) {
+            return taskAttachmentFromImage(image, self.providerSettings.maxImageSideSize);
+        }
+        else {
+            return attachmentErrorTask();
+        }
+    }
+    
+    return attachmentErrorTask();
 }
 
-+ (BFTask <QBChatAttachment *> *)taskLoadValuesForAttachment:(QBChatAttachment *)attachment {
+
+- (BFTask <QBChatAttachment *> *)taskLoadValuesForAttachment:(QBChatAttachment *)attachment {
     
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         return [BFTask taskWithResult:attachment];
     }
+    
     NSDictionary *options = @{AVURLAssetPreferPreciseDurationAndTimingKey : @YES};
     AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:attachment.localFileURL
                                                options:options];
@@ -273,12 +262,59 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     return [BFTask taskWithResult:attachment];
 }
 
-+ (UIImage *)resizedImageFromImage:(UIImage *)image
-                  withMaxImageSize:(CGFloat)maxImageSize {
+//MARK: - Helpers
+
+
+static BFTask<QBChatAttachment*> *taskAttachmentFromImage(UIImage *image, CGFloat maxSideSize) {
     
-    if (maxImageSize > 0) {
+    BFExecutor *backgroundExecutor =
+    [BFExecutor executorWithDispatchQueue:dispatch_queue_create("backgroundExecutor", DISPATCH_QUEUE_PRIORITY_DEFAULT)];
+    
+    return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
+        
+        UIImage *resizedImage = resizeImage(image , maxSideSize);
+        
+        QBChatAttachment *attachment = [QBChatAttachment imageAttachmentWithImage:resizedImage];
+        attachment.fileData = resizedImage.dataRepresentation;
+        
+        return [BFTask taskFromExecutor:BFExecutor.mainThreadExecutor withBlock:^id _Nonnull{
+            return [BFTask taskWithResult:attachment];
+        }];
+    }];
+}
+
+static BFTask *attachmentErrorTask() {
+    NSString *localizedDescription =
+    [NSString stringWithFormat:@"Attachment is not supported"];
+    
+    NSError *error = [NSError errorWithDomain:NSBundle.mainBundle.bundleIdentifier
+                                         code:0
+                                     userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+    
+    return [BFTask taskWithError:error];
+}
+
+static inline NSError* validateFileSize(CGFloat fileSize, NSUInteger maxFileSize) {
+    
+    NSError *error = nil;
+    
+    if (maxFileSize > 0 && fileSize > maxFileSize) {
+        
+        NSString *localizedDescription =
+        [NSString stringWithFormat:NSLocalizedString(@"QM_STR_MAXIMUM_FILE_SIZE", nil), maxFileSize];
+        error = [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
+                                    code:0
+                                userInfo:@{NSLocalizedDescriptionKey : localizedDescription}];
+    }
+    
+    return error;
+}
+
+static UIImage *resizeImage(UIImage* image, CGFloat maxSideSize) {
+    
+    if (maxSideSize > 0) {
         CGFloat largestSide = image.size.width > image.size.height ? image.size.width : image.size.height;
-        CGFloat scaleCoefficient = largestSide / maxImageSize;
+        CGFloat scaleCoefficient = largestSide / maxSideSize;
         CGSize newSize = CGSizeMake(image.size.width / scaleCoefficient, image.size.height / scaleCoefficient);
         
         UIGraphicsBeginImageContext(newSize);
@@ -291,6 +327,49 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     }
     
     return image;
+}
+
+static CFStringRef UTITypeIdentifiers( NSArray *typeIdentifiers) {
+    CFStringRef UTI = NULL;
+    for (NSString *typeIdentifier in typeIdentifiers) {
+        
+        NSString *extension = (__bridge NSString *)(UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)typeIdentifier, kUTTagClassFilenameExtension));
+        
+        if (extension) {
+            UTI = (__bridge CFStringRef)typeIdentifier;
+            break;
+        }
+    }
+    return UTI;
+}
+
+static CFStringRef UTIFileURL(NSURL *fileURL, NSArray *typeIdentifiers) {
+    
+    CFStringRef UTI = UTITypeIdentifiers(typeIdentifiers);;
+    
+    if (UTI == NULL) {
+        NSString *fileName =
+        [[fileURL pathComponents] lastObject];
+        if (fileName.pathExtension.length > 0) {
+            UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)[fileName pathExtension], NULL);
+        }
+    }
+    
+    return UTI;
+}
+
+static inline QMAttachmentProviderSettings *defaultSettings() {
+    
+    static QMAttachmentProviderSettings *defaultSettings = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        defaultSettings = [QMAttachmentProviderSettings new];
+        defaultSettings.maxImageSideSize = kQMMaxImageSize;
+        defaultSettings.maxFileSize = kQMMaxFileSize;
+    });
+    
+    return defaultSettings;
 }
 
 @end
