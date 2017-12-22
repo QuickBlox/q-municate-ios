@@ -1308,7 +1308,7 @@ NSDictionary *QMDeniedClassesDictionary() {
             [NSURL fileURLWithPath:imagePath];
             
             if (imageURL) {
-                
+
                 QMActivityItem *imageItem =
                 [[QMActivityItem alloc] initWithImageTypeIdentifier:attachment.typeIdentifier
                                                    loadHandlerBlock:^(NSItemProviderCompletionHandler completionHandler,
@@ -1316,7 +1316,7 @@ NSDictionary *QMDeniedClassesDictionary() {
                  {
                      NSString *key =
                      [QMImageLoader.instance cacheKeyForURL:[attachment remoteURLWithToken:NO]];
-                     
+
                      [QMImageLoader.instance.imageCache queryCacheOperationForKey:key
                                                                              done:^(UIImage * _Nullable image,
                                                                                     NSData * __unused _Nullable data,
@@ -1335,7 +1335,18 @@ NSDictionary *QMDeniedClassesDictionary() {
                                                                                        messageID:message.ID
                                                                                         dialogID:message.dialogID];
             if (audioFileURL) {
-                return [[QMActivityItem alloc] initWithURL:audioFileURL];
+                
+                QMActivityItem *audioItem =
+                [[QMActivityItem alloc] initWithPlaceholderItem:audioFileURL
+                                                 typeIdentifier:attachment.typeIdentifier
+                                               loadHandlerBlock:
+                 ^(NSItemProviderCompletionHandler  _Null_unspecified completionHandler,
+                   UIActivityType  _Nonnull __unused activityType)
+                 {
+                     completionHandler(audioFileURL, nil);
+                 }];
+                
+                return audioItem;
             }
         }
         else if (message.isLocationMessage) {
@@ -1359,9 +1370,16 @@ didPerformAction:(SEL)action
     
     if (action == @selector(share)) {
         QMActivityItem *item = [self activityItemForMessage:message];
+        
         if (item) {
-            UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[item] applicationActivities:nil];
-            activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop, UIActivityTypeCopyToPasteboard];
+            UIActivityViewController *activityViewController =
+            [[UIActivityViewController alloc] initWithActivityItems:@[item]
+                                              applicationActivities:nil];
+            activityViewController.excludedActivityTypes = @[UIActivityTypeAirDrop,
+                                                             UIActivityTypeCopyToPasteboard,
+                                                             UIActivityTypeMail,
+                                                             UIActivityTypeAssignToContact];
+
             [self displayActivityViewController:activityViewController
                                      withSender:cell
                                        animated:YES];
