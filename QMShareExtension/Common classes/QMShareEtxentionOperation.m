@@ -12,12 +12,54 @@
 #import <Quickblox/Quickblox.h>
 #import <QMServices.h>
 
+
+@interface QMRecipientOperationResultDetails()
+
+@property (nonatomic, strong) NSMutableSet *mutableSentRecipients;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, NSError *> *mutableUnsentRecipients;
+
+@end
+
+@implementation QMRecipientOperationResultDetails
+
+- (instancetype)init {
+    
+    if (self  = [super init]) {
+        _mutableUnsentRecipients = [NSMutableDictionary dictionary];
+        _mutableSentRecipients = [NSMutableSet set];
+    }
+    return self;
+}
+
+- (NSDictionary<NSString *,NSError *> *)unsentRecipients {
+    return _mutableUnsentRecipients.copy;
+}
+
+- (NSSet *)sentRecipients {
+    return _mutableSentRecipients.copy;
+}
+
+- (NSString *)description {
+
+    NSMutableString *desc = [NSMutableString stringWithString:[super description]];
+    [desc appendFormat:@
+     "\r   Sent:%@"
+     "\r   Unsent: %@",
+     _mutableSentRecipients,
+     _mutableUnsentRecipients];
+
+    return desc;
+}
+
+@end
+
 @interface QMShareEtxentionOperation()
 
 @property (nonatomic, strong, readwrite) NSArray *recipients;
 @property (nonatomic, copy) NSString *text;
 @property (nonatomic, strong) QBChatAttachment *attachment;
 @property (nonatomic, copy) QMShareOperationCompletionBlock shareOperationCompletionBlock;
+@property (nonatomic, strong) BFCancellationTokenSource *uploadAttachmentCancellationToken;
 
 @end
 
@@ -35,27 +77,23 @@
     operation.recipients = recipients;
     operation.text = text;
     operation.attachment = attachment;
-    operation.shareOperationCompletionBlock = [shareOperationCompletionBlock copy];
-    
+    operation.shareOperationCompletionBlock = shareOperationCompletionBlock;
+
     return operation;
 }
 
 - (void)asyncTask {
-    
+  
     [[self taskSendTextToRecipients] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
         if (self.isCancelled) {
-            self.shareOperationCompletionBlock(nil, NO);
+            self.shareOperationCompletionBlock(NO, t.result);
         }
         else {
             [self finish];
-            self.shareOperationCompletionBlock(t.error, YES);
+            self.shareOperationCompletionBlock(YES, t.result);
         }
         return nil;
     }];
-}
-
-- (void)dealloc {
-    NSLog(@"Deallock = %@",self.operationID);
 }
 
 - (BFTask *)taskSendTextToRecipients {
@@ -66,6 +104,8 @@
     
     NSArray *itemsToShare = self.recipients;
     
+    QMRecipientOperationResultDetails *resultDetails = [[QMRecipientOperationResultDetails alloc] init];
+    
     BFTask *task = [BFTask taskWithResult:nil];
     
     for (id <QMShareItemProtocol> shareItem in itemsToShare) {
@@ -73,22 +113,42 @@
         // For each item, extend the task with a function to share with the item.
         task = [task continueWithBlock:^id(BFTask __unused *t) {
             if (self.isCancelled) {
+                NSLog(@"%@", NSStringFromSelector(_cmd));
                 return [BFTask cancelledTask];
             }
-            return [self taskSendMessageToRecipient:shareItem];
+            
+            return [[self taskSendMessageToRecipient:shareItem] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+                
+                if (t.error) {
+                   resultDetails.mutableUnsentRecipients[shareItem] = t.error;
+                }
+                else {
+                    [resultDetails.mutableSentRecipients addObject:shareItem];
+                }
+                return nil;
+            }];
         }];
     }
     
-    return task;
+    return [task continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+        return  [BFTask taskWithResult:resultDetails];
+    }];
+}
+
+- (void)cancel {
+    
+    [self.uploadAttachmentCancellationToken cancel];
+    [super cancel];
 }
 
 - (BFTask <QBChatMessage *> *)taskMessageForRecipient:(id<QMShareItemProtocol>)recipient {
     
     if (self.isCancelled) {
+        NSLog(@"%@", NSStringFromSelector(_cmd));
         return [BFTask cancelledTask];
     }
     
-    return [[self dialogForShareItem:recipient] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull dialogTask) {
+    return [[self dialogForShareItem:recipient] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull dialogTask) {
         
         if (self.isCancelled) {
             return [BFTask cancelledTask];
@@ -97,10 +157,11 @@
         QBChatMessage *message = [QBChatMessage new];
         message.text = self.text;
         
-        BFTask *(^sucessBlock)(QBChatMessage *message,
-                               QBChatAttachment *attachment) =
-        ^(QBChatMessage *msg, QBChatAttachment *att) {
-            NSLog(@"dialogTask = %@", dialogTask);
+        BFTask *(^sucessBlock)(QBChatMessage *,
+                               QBChatAttachment *) =
+        ^(QBChatMessage *msg,
+          QBChatAttachment *att) {
+
             if (att) {
                 msg.attachments = @[att];
             }
@@ -119,15 +180,22 @@
         };
         
         if (self.attachment) {
-            return [[self taskUploadAttachment:self.attachment] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
-                if (self.isCancelled) {
-                    return [BFTask cancelledTask];
-                }
-                return sucessBlock(message, t.result);
-            }];
+            if (self.attachment.ID) {
+                return sucessBlock(message, self.attachment);
+            }
+            else {
+                return [[self taskUploadAttachment:self.attachment] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull t) {
+                    if (self.isCancelled) {
+                        return [BFTask cancelledTask];
+                    }
+                    
+                    self.attachment.ID = t.result.ID;
+                    return sucessBlock(message, t.result);
+                }];
+            }
         }
-        
-        return sucessBlock(message,nil);
+      
+        return sucessBlock(message, nil);
     }];
 }
 
@@ -139,10 +207,15 @@
     
     if ([self.operationDelegate respondsToSelector:@selector(customTaskForOperation:
                                                              uploadAttachment:
-                                                             progressBlock:)]) {
+                                                             progressBlock:
+                                                             cancellationToken:)]) {
+        
+        self.uploadAttachmentCancellationToken = [BFCancellationTokenSource cancellationTokenSource];
+        
         return [self.operationDelegate customTaskForOperation:self
                                              uploadAttachment:attachment
-                                                progressBlock:self.progressBlock];
+                                                progressBlock:self.progressBlock
+                                            cancellationToken:self.uploadAttachmentCancellationToken.token];
     }
     
     return [BFTask taskWithResult:attachment];
@@ -152,7 +225,7 @@
 - (BFTask *)taskSendMessageToRecipient:(id<QMShareItemProtocol>)recipient {
     
     if (self.isCancelled) {
-        NSLog(@"if (self.isCancelled) ");
+        return [BFTask cancelledTask];
     }
     
     return [[self taskMessageForRecipient:recipient] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull messageTask) {
@@ -176,7 +249,6 @@
     }
 }
 
-
 - (BFTask <QBChatDialog *> *)dialogForUser:(QBUUser *)user {
     return [self.operationDelegate taskForOperation:self
                                       dialogForUser:user];
@@ -184,17 +256,12 @@
 
 - (BFTask <QBChatDialog *>*)dialogForShareItem:(id <QMShareItemProtocol>)shareItem {
     
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        if ([shareItem isKindOfClass:QBChatDialog.self]) {
-            [source setResult:((QBChatDialog *)shareItem)];
-        }
-        else {
-            [[self dialogForUser:(QBUUser *)shareItem] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
-                t.error ? [source setError:t.error] : [source setResult:t.result];
-                return nil;
-            }];
-        }
-    });
+    if ([shareItem isKindOfClass:QBChatDialog.self]) {
+        return [BFTask taskWithResult:((QBChatDialog *)shareItem)];
+    }
+    else {
+        return [self dialogForUser:(QBUUser *)shareItem];
+    }
 }
 
 @end

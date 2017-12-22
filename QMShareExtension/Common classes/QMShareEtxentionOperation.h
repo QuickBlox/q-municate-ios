@@ -19,7 +19,15 @@
 @protocol QMShareItemProtocol;
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void(^QMShareOperationCompletionBlock)(NSError *_Nullable error, BOOL completed);
+
+@interface QMRecipientOperationResultDetails : NSObject
+
+@property (nonatomic, strong, readonly) NSSet *sentRecipients;
+@property (nonatomic, strong, readonly) NSDictionary <id, NSError *> *unsentRecipients;
+
+@end
+
+typedef void(^QMShareOperationCompletionBlock)(BOOL completed, QMRecipientOperationResultDetails *resultDetails);
 
 @protocol QMShareEtxentionOperationDelegate <NSObject>
 
@@ -33,22 +41,12 @@ typedef void(^QMShareOperationCompletionBlock)(NSError *_Nullable error, BOOL co
 @optional
 
 - (BFTask <QBChatAttachment*> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
-                                     uploadAttachment:(QBChatAttachment *)attachment
-                                        progressBlock:(QMAttachmentProgressBlock)progressBlock;
-
-- (BFTask <NSURL *>*)customTaskForOperation:(QMShareEtxentionOperation *)operation
-                             saveAttachment:(QBChatAttachment *)attachment
-                                  cacheType:(QMAttachmentCacheType)cacheType;
-
-- (BFTask <QBChatAttachment*> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
-                                    downloadAttachment:(QBChatAttachment *)attachment
-                                         progressBlock:(QMAttachmentProgressBlock)progressBlock;
-
-- (BOOL)operation:(QMShareEtxentionOperation *)operation
-shouldUploadAttachment:(QBChatAttachment *)attachment
- forMessageWithID:(NSString *)messageID;
+                                      uploadAttachment:(QBChatAttachment *)attachment
+                                         progressBlock:(QMAttachmentProgressBlock)progressBlock
+                                     cancellationToken:(BFCancellationToken *)token;
 
 @end
+
 
 @interface QMShareEtxentionOperation : QMAsynchronousOperation
 

@@ -39,6 +39,7 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 @property (strong, nonatomic, readonly) NSItemProvider *itemProvider;
 @property (copy, nonatomic, readonly) NSString *typeIdentifier;
 
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
@@ -93,6 +94,40 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 @implementation QMShareTasks
 
 
+static NSSet<NSString *>*acceptableTypes() {
+
+    static NSSet *acceptableTypes = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        acceptableTypes =
+        [NSSet setWithArray:@[
+                              //Text
+                              (__bridge NSString *)kUTTypeText,
+                              (__bridge NSString *)kUTTypePlainText,
+                              //URLs
+                              (__bridge NSString *)kUTTypeFileURL,
+                              (__bridge NSString *)kUTTypeURL,
+                              //Audio
+                              (__bridge NSString *)kUTTypeMP3,
+                              (__bridge NSString *)kUTTypeMPEG4Audio,
+                              @"com.apple.m4a-audio",//m4a
+                              //Images
+                              (__bridge NSString *)kUTTypePNG,
+                              (__bridge NSString *)kUTTypeJPEG,
+                              //Video
+                              (__bridge NSString *)kUTTypeMPEG4,
+                              //Data
+                              (__bridge NSString *)kUTTypeData,
+                              //Custom types
+                              //
+                              ]];
+    });
+        
+        return acceptableTypes;
+}
+
+
 + (BFTask <NSArray<QMItemProviderResult *>*> *)loadItemsForItemProviders:(NSArray <NSItemProvider *> *)providers {
     
     NSMutableArray *availableProviders = [NSMutableArray arrayWithCapacity:providers.count];
@@ -138,7 +173,51 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
     
     QMItemProviderResult *result = [QMItemProviderResult new];
     
-    if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
+    if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
+        
+        QMItemProviderLoader *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                             typeIdentifier:(NSString *)kUTTypeImage];
+        
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
+            
+            if ([t.result isKindOfClass:[NSURL class]]) {
+                NSURL *fileURL = t.result;
+                return [self taskProvideResultWithAttachmentForFileURL:fileURL
+                                                        typeIdentifiers:provider.registeredTypeIdentifiers];
+            }
+            else if ([t.result isKindOfClass:[UIImage class]]) {
+                UIImage *image = t.result;
+                return [self taskProvideResultWithAttachmentImage:image
+                                                     typeIdentifiers:provider.registeredTypeIdentifiers];
+            }
+            
+            NSString *errorDescription =
+            [NSString stringWithFormat:@"Item tagged as image has unsupported type:%@",
+             NSStringFromClass([t.result class])];
+            
+            NSError *error =
+            [[NSError alloc] initWithDomain:NSBundle.mainBundle.bundleIdentifier
+                                       code:0
+                                   userInfo:@{NSLocalizedDescriptionKey : errorDescription }];
+            return [BFTask taskWithError:error];
+        }];
+    }
+    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie] ||
+             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
+             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
+        
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                                      typeIdentifier:(NSString *)kUTTypeFileURL];
+        
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+            
+            NSAssert([t.result isKindOfClass:NSURL.self], @"");
+            return [self taskProvideResultWithAttachmentForFileURL:t.result
+                                                    typeIdentifiers:provider.registeredTypeIdentifiers];
+        }];
+    }
+   else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText] ||
+           [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePlainText]) {
         
         QMItemProviderLoader<NSString *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
                                                                                          typeIdentifier:(NSString *)kUTTypeText];
@@ -152,12 +231,14 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
 
         QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
                                                                                       typeIdentifier:(NSString *)kUTTypeURL];
+        
         return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull urlTask) {
 
             NSURL *URL = urlTask.result;
 
             if (URL.isFileURL) {
-                return [self taskProvideResultWithAttachmentForFileURL:URL];
+                return [self taskProvideResultWithAttachmentForFileURL:URL
+                                                       typeIdentifiers:provider.registeredTypeIdentifiers];
             }
             else if (URL.isLocationURL) {
 
@@ -182,63 +263,28 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
             }
         }];
     }
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeImage]) {
-        
-        QMItemProviderLoader *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
-                                                                             typeIdentifier:(NSString *)kUTTypeImage];
-        
-        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull t) {
-            
-            if ([t.result isKindOfClass:[NSURL class]]) {
-                NSURL *fileURL = t.result;
-                return [self taskProvideResultWithAttachmentForFileURL:fileURL];
-            }
-            else if ([t.result isKindOfClass:[UIImage class]]) {
-                UIImage *image = t.result;
-                return [self taskProvideResultWithAttachmentForData:image.dataRepresentation];
-            }
-            
-            NSString *errorDescription =
-            [NSString stringWithFormat:@"Item tagged as image has unsupported type:%@",
-             NSStringFromClass([t.result class])];
-            
-            NSError *error =
-            [[NSError alloc] initWithDomain:NSBundle.mainBundle.bundleIdentifier
-                                       code:0
-                                   userInfo:@{NSLocalizedDescriptionKey : errorDescription }];
-            return [BFTask taskWithError:error];
-        }];
-    }
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie] ||
-             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
-             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
-        
-        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
-                                                                                      typeIdentifier:(NSString *)kUTTypeFileURL];
-        
-        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
-            
-            NSAssert([t.result isKindOfClass:NSURL.class], @"");
-            return [self taskProvideResultWithAttachmentForFileURL:t.result];
-        }];
-    }
+    
     
     return [BFTask cancelledTask];
 }
 
-
-+ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForFileURL:(NSURL *)fileURL {
-    
-    QMItemProviderResult *result = [QMItemProviderResult new];
++ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentImage:(UIImage *)image
+                                                            typeIdentifiers:(NSArray *)typeIdentifiers {
+    QMAttachmentProvider *provider = [QMAttachmentProvider new];
     
     QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
     settings.maxImageSize = kQMMaxImageSize;
     settings.maxFileSize = kQMMaxFileSize;
     
-    return [[QMAttachmentProvider attachmentWithFileURL:fileURL
-                                               settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+    provider.providerSettings = settings;
+    
+    return [[provider taskAttachmentWithImage:image
+                              typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
             {
                 QBChatAttachment *attachment = attachmentTask.result;
+                
+                QMItemProviderResult *result = [QMItemProviderResult new];
+                
                 result.attachment = attachment;
                 result.text =
                 [NSString stringWithFormat:@"%@ attachment",
@@ -248,18 +294,50 @@ static const CGFloat kQMMaxImageSize = 1000.0; //in pixels
             }];
 }
 
-+ (BFTask <QMItemProviderResult *> *)taskProvideResultWithAttachmentForData:(NSData *)data {
-    
-    QMItemProviderResult *result = [QMItemProviderResult new];
++ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForData:(NSData *)data
+                                                            typeIdentifiers:(NSArray *)typeIdentifiers {
+    QMAttachmentProvider *provider = [QMAttachmentProvider new];
     
     QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
     settings.maxImageSize = kQMMaxImageSize;
     settings.maxFileSize = kQMMaxFileSize;
     
-    return [[QMAttachmentProvider imageAttachmentWithData:data
-                                                 settings:settings] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+    provider.providerSettings = settings;
+    
+   return [[provider taskAttachmentWithData:data
+                            typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
+    {
+        QBChatAttachment *attachment = attachmentTask.result;
+        
+        QMItemProviderResult *result = [QMItemProviderResult new];
+        
+        result.attachment = attachment;
+        result.text =
+        [NSString stringWithFormat:@"%@ attachment",
+         attachment.type.capitalizedString];
+        
+        return [BFTask taskWithResult:result];
+    }];
+}
+
++ (BFTask <QMItemProviderResult*> *)taskProvideResultWithAttachmentForFileURL:(NSURL *)fileURL
+                                                               typeIdentifiers:(NSArray *)typeIdentifiers {
+    
+    QMAttachmentProvider *provider =  [QMAttachmentProvider new];
+    
+    QMAttachmentProviderSettings *settings = [QMAttachmentProviderSettings new];
+    settings.maxImageSize = kQMMaxImageSize;
+    settings.maxFileSize = kQMMaxFileSize;
+    
+    provider.providerSettings = settings;
+    
+    return [[provider taskAttachmentWithFileURL:fileURL
+                                 typeIdentifiers:typeIdentifiers] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatAttachment *> * _Nonnull attachmentTask)
             {
                 QBChatAttachment *attachment = attachmentTask.result;
+                
+                QMItemProviderResult *result = [QMItemProviderResult new];
+            
                 result.attachment = attachment;
                 result.text =
                 [NSString stringWithFormat:@"%@ attachment",
