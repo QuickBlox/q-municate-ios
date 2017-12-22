@@ -57,6 +57,8 @@ QMShareContactsDelegate>
     return shareViewController;
 }
 
+//MARK: - View Life Cycle
+
 - (void)viewDidLoad {
     
     [super viewDidLoad];
@@ -69,6 +71,169 @@ QMShareContactsDelegate>
     [QMNoResultsCell registerForReuseInTableView:self.tableView];
     
     self.tableView.tableFooterView = [UIView new];
+}
+
+//MARK: - Public Interface
+
+- (void)selectShareItem:(id<QMShareItemProtocol>)shareItem {
+    [self selectShareItems:@[shareItem]];
+}
+
+- (void)deselectShareItem:(id<QMShareItemProtocol>)shareItem {
+    [self deselectShareItems:@[shareItem]];
+}
+
+- (void)selectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems {
+    [self updateSelectionForShareItems:shareItems
+                                select:YES];
+}
+
+- (void)deselectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems {
+    [self updateSelectionForShareItems:shareItems
+                                select:NO];
+}
+
+- (void)deselectAll {
+    [self updateSelectionForShareItems:self.shareDataSource.items
+                                select:NO];
+}
+
+- (void)selectAll {
+    [self updateSelectionForShareItems:self.shareDataSource.items
+                                select:YES];
+}
+
+
+- (void)presentLoadingAlertControllerWithStatus:(NSString *)status
+                                       animated:(BOOL)animated
+                                 withCompletion:(dispatch_block_t)completionBlock {
+
+    __weak typeof(self) weakSelf = self;
+    
+    UIAlertController *alertController = [UIAlertController qm_loadingAlertControllerWithStatus:status
+                                                                                    cancelBlock:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.shareControllerDelegate didCancelSharing];
+    }];
+    
+    [self presentViewController:alertController
+                       animated:animated
+                     completion:completionBlock];
+    
+    self.alertController = alertController;
+}
+
+- (void)dismissLoadingAlertControllerAnimated:(BOOL)animated
+                               withCompletion:(dispatch_block_t)completion {
+    
+    [self.alertController dismissViewControllerAnimated:animated
+                                             completion:completion];
+}
+
+//MARK: - Actions
+
+- (void)dismiss {
+    [self.shareControllerDelegate didTapCancelBarButton];
+}
+
+- (void)shareAction {
+    NSArray *selectedItems = [self.shareDataSource.selectedItems.allObjects copy];
+    [self.shareControllerDelegate didTapShareBarButtonWithSelectedItems:selectedItems];
+}
+
+//MARK: - Configuration
+
+- (void)configureDataSource {
+    
+    NSMutableArray *dialogsDataSource = [NSMutableArray array];
+    
+    NSPredicate *privateDialogsPredicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", @(QBChatDialogTypePrivate)];
+    NSArray *privateDialogs = [self.dialogsToShare filteredArrayUsingPredicate:privateDialogsPredicate];
+    
+    for (QBChatDialog *dialog in privateDialogs) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID == %@",@(dialog.recipientID)];
+        QBUUser *recipient = [self.contactsToShare filteredArrayUsingPredicate:predicate].firstObject;
+        
+        if (recipient) {
+            recipient.updatedAt = dialog.updatedAt;
+            [dialogsDataSource addObject:recipient];
+        }
+    }
+    
+    NSPredicate *groupDialogsPredicate = [NSPredicate predicateWithFormat:@"SELF.type == %@ AND SELF.name.length > 0", @(QBChatDialogTypeGroup)];
+    
+    NSArray *groupDialogs = [self.dialogsToShare filteredArrayUsingPredicate:groupDialogsPredicate];
+    [dialogsDataSource addObjectsFromArray:groupDialogs];
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES comparator:^NSComparisonResult(id <QMShareItemProtocol> _Nonnull obj1, id  <QMShareItemProtocol>_Nonnull obj2) {
+        return [obj2.updatedAt compare:obj1.updatedAt];
+    }];
+    
+    //Main data source
+    self.shareDataSource = [[QMShareDataSource alloc] initWithShareItems:dialogsDataSource
+                                                         sortDescriptors:@[sortDescriptor]
+                                                  alphabetizedDataSource:NO];
+    
+    self.tableView.dataSource = self.shareDataSource;
+    
+    //Search data source
+    self.searchDataSource = ({
+        
+        QMShareSearchControllerDataSource *searchDataSource = [[QMShareSearchControllerDataSource alloc] initWithShareItems:groupDialogs
+                                                                                                            sortDescriptors:nil
+                                                                                                     alphabetizedDataSource:YES];
+        
+        QMShareItemsDataProvider *itemsSearchProvider = [[QMShareItemsDataProvider alloc] initWithShareItems:groupDialogs];
+        itemsSearchProvider.delegate = self.searchResultsController;
+        searchDataSource.searchDataProvider = itemsSearchProvider;
+        searchDataSource.contactsDelegate = self;
+        searchDataSource;
+    });
+    
+    //Contacts data source
+    self.searchDataSource.contactsDataSource = ({
+        
+        QMShareItemsDataProvider *contactsProvider = [[QMShareItemsDataProvider alloc] initWithShareItems:self.contactsToShare.copy];
+        contactsProvider.delegate = self;
+        
+        QMShareDataSource *contactsDataSource = [[QMShareDataSource alloc] initWithShareItems:(NSArray <id <QMShareItemProtocol>> *)self.contactsToShare.copy
+                                                                              sortDescriptors:@[sortDescriptor]
+                                                                       alphabetizedDataSource:NO];
+        contactsDataSource.searchDataProvider = contactsProvider;
+        contactsDataSource;
+    });
+    
+}
+- (void)configureSearch {
+    
+    self.searchResultsController = [[QMSearchResultsController alloc] init];
+    self.searchResultsController.delegate = self;
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
+    self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
+    self.searchController.searchBar.delegate = self;
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.delegate = self;
+    [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
+    
+    [QMNoResultsCell registerForReuseInTableView:self.searchResultsController.tableView];
+    [QMShareTableViewCell registerForReuseInView:self.searchResultsController.tableView];
+    [QMShareContactsTableViewCell registerForReuseInTableView:self.searchResultsController.tableView];
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        self.navigationItem.searchController = self.searchController;
+        self.navigationItem.hidesSearchBarWhenScrolling = NO;
+    }
+    else {
+        self.tableView.tableHeaderView = self.searchController.searchBar;
+    }
+#else
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+#endif
+    
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.definesPresentationContext = YES;
 }
 
 - (void)configureAppereance {
@@ -105,28 +270,7 @@ QMShareContactsDelegate>
 }
 
 
-- (void)dismiss {
-    [self.shareControllerDelegate didTapCancelBarButton];
-}
-
-
-- (void)selectShareItem:(id<QMShareItemProtocol>)shareItem {
-    [self selectShareItems:@[shareItem]];
-}
-
-- (void)deselectShareItem:(id<QMShareItemProtocol>)shareItem {
-    [self deselectShareItems:@[shareItem]];
-}
-
-- (void)selectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems {
-    [self updateSelectionForShareItems:shareItems
-                                select:YES];
-}
-
-- (void)deselectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems {
-    [self updateSelectionForShareItems:shareItems
-                                select:NO];
-}
+//MARK: - Helpers
 
 - (void)updateSelectionForShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems
                               select:(BOOL)shouldBeSelected {
@@ -138,7 +282,7 @@ QMShareContactsDelegate>
         if (isSelected == shouldBeSelected) {
             continue;
         }
-    
+        
         NSIndexPath *indexPath = [self.shareDataSource indexPathForObject:shareItem];
         if (indexPath) {
             id <QMShareViewProtocol> view = [self.tableView cellForRowAtIndexPath:indexPath];
@@ -148,149 +292,16 @@ QMShareContactsDelegate>
     }
 }
 
-- (void)deselectAll {
-    
-}
-
-
-- (void)presentLoadingAlertControllerWithStatus:(NSString *)status
-                                       animated:(BOOL)animated
-                                 withCompletion:(dispatch_block_t)completionBlock {
-
-    __weak typeof(self) weakSelf = self;
-    
-    UIAlertController *alertController = [UIAlertController qm_loadingAlertControllerWithStatus:status
-                                                                                    cancelBlock:^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.shareControllerDelegate didCancelSharing];
-    }];
-    
-    [self presentViewController:alertController
-                       animated:animated
-                     completion:completionBlock];
-    
-    self.alertController = alertController;
-}
-
-- (void)dismissLoadingAlertControllerAnimated:(BOOL)animated
-                               withCompletion:(dispatch_block_t)completion {
-    
-    [self.alertController dismissViewControllerAnimated:animated
-                                             completion:completion];
-}
-
-- (void)shareAction {
-    
-    NSArray *selectedItems = [self.shareDataSource.selectedItems.allObjects copy];
-    [self.shareControllerDelegate didTapShareBarButtonWithSelectedItems:selectedItems];
-}
-
-//MARK: - Helpers
-
 - (void)updateShareButton {
     
     self.navigationItem.rightBarButtonItem.enabled =
     self.shareDataSource.selectedItems.count > 0;
 }
 
-- (void)configureSearch {
-    
-    self.searchResultsController = [[QMSearchResultsController alloc] init];
-    self.searchResultsController.delegate = self;
-    
-    self.searchController = [[UISearchController alloc] initWithSearchResultsController:self.searchResultsController];
-    self.searchController.searchBar.placeholder = NSLocalizedString(@"QM_STR_SEARCH_BAR_PLACEHOLDER", nil);
-    self.searchController.searchBar.delegate = self;
-    self.searchController.searchResultsUpdater = self;
-    self.searchController.delegate = self;
-    [self.searchController.searchBar sizeToFit]; // iOS8 searchbar sizing
-    
-    [QMNoResultsCell registerForReuseInTableView:self.searchResultsController.tableView];
-    [QMShareTableViewCell registerForReuseInView:self.searchResultsController.tableView];
-    [QMShareContactsTableViewCell registerForReuseInTableView:self.searchResultsController.tableView];
-    
-#ifdef __IPHONE_11_0
-    if (@available(iOS 11.0, *)) {
-        self.navigationItem.searchController = self.searchController;
-        self.navigationItem.hidesSearchBarWhenScrolling = NO;
-    }
-    else {
-        self.tableView.tableHeaderView = self.searchController.searchBar;
-    }
-#else
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-#endif
-    
-    self.searchController.dimsBackgroundDuringPresentation = NO;
-    self.definesPresentationContext = YES;
-}
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleDefault;
 }
-
-- (void)configureDataSource {
-    
-    NSMutableArray *dialogsDataSource = [NSMutableArray array];
-    
-    NSPredicate *privateDialogsPredicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", @(QBChatDialogTypePrivate)];
-    NSArray *privateDialogs = [self.dialogsToShare filteredArrayUsingPredicate:privateDialogsPredicate];
-    
-    for (QBChatDialog *dialog in privateDialogs) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ID == %@",@(dialog.recipientID)];
-        QBUUser *recipient = [self.contactsToShare filteredArrayUsingPredicate:predicate].firstObject;
-        
-        if (recipient) {
-            recipient.updatedAt = dialog.updatedAt;
-            [dialogsDataSource addObject:recipient];
-        }
-    }
-    
-    NSPredicate *groupDialogsPredicate = [NSPredicate predicateWithFormat:@"SELF.type == %@ AND SELF.name.length > 0", @(QBChatDialogTypeGroup)];
-    
-    NSArray *groupDialogs = [self.dialogsToShare filteredArrayUsingPredicate:groupDialogsPredicate];
-    [dialogsDataSource addObjectsFromArray:groupDialogs];
-    
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES comparator:^NSComparisonResult(id <QMShareItemProtocol> _Nonnull obj1, id  <QMShareItemProtocol>_Nonnull obj2) {
-        return [obj2.updatedAt compare:obj1.updatedAt];
-    }];
-
-    //Main data source
-    self.shareDataSource = [[QMShareDataSource alloc] initWithShareItems:dialogsDataSource
-                                                         sortDescriptors:@[sortDescriptor]
-                                                  alphabetizedDataSource:NO];
-    
-    self.tableView.dataSource = self.shareDataSource;
-    
-    //Search data source
-    self.searchDataSource = ({
-        
-        QMShareSearchControllerDataSource *searchDataSource = [[QMShareSearchControllerDataSource alloc] initWithShareItems:groupDialogs
-                                                                                                            sortDescriptors:nil
-                                                                                                     alphabetizedDataSource:YES];
-        
-        QMShareItemsDataProvider *itemsSearchProvider = [[QMShareItemsDataProvider alloc] initWithShareItems:groupDialogs];
-        itemsSearchProvider.delegate = self.searchResultsController;
-        searchDataSource.searchDataProvider = itemsSearchProvider;
-        searchDataSource.contactsDelegate = self;
-        searchDataSource;
-    });
-    
-    //Contacts data source
-    self.searchDataSource.contactsDataSource = ({
-        
-        QMShareItemsDataProvider *contactsProvider = [[QMShareItemsDataProvider alloc] initWithShareItems:self.contactsToShare.copy];
-        contactsProvider.delegate = self;
-        
-        QMShareDataSource *contactsDataSource = [[QMShareDataSource alloc] initWithShareItems:(NSArray <id <QMShareItemProtocol>> *)self.contactsToShare.copy
-                                                                              sortDescriptors:@[sortDescriptor]
-                                                                       alphabetizedDataSource:NO];
-        contactsDataSource.searchDataProvider = contactsProvider;
-        contactsDataSource;
-    });
-    
-}
-
 
 //MARK: - UITableViewDelegate
 
