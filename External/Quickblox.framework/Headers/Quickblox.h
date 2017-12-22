@@ -4,11 +4,6 @@
 //
 //  Copyright (c) 2016 QuickBlox. All rights reserved.
 
-
-
-/// Framework version 2.14-3
-FOUNDATION_EXPORT NSString * const QuickbloxFrameworkVersion;
-
 #import <Quickblox/QBAddressBookContact.h>
 #import <Quickblox/QBAddressBookRejectDetails.h>
 #import <Quickblox/QBAddressBookUpdates.h>
@@ -62,3 +57,6 @@ FOUNDATION_EXPORT NSString * const QuickbloxFrameworkVersion;
 #import <Quickblox/QBSettings.h>
 #import <Quickblox/QBUpdateUserParameters.h>
 #import <Quickblox/QBUUser.h>
+
+/// Framework version 2.14-3
+FOUNDATION_EXPORT NSString * const QuickbloxFrameworkVersion;
