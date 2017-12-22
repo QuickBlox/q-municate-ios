@@ -219,7 +219,7 @@
 		E074459E1F87AD0000D12325 /* QMAlphabetizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 589792981C99941400CC6438 /* QMAlphabetizer.m */; };
 		E07773A01FB5CD43006B63FA /* QMShareHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E077739F1FB5CD43006B63FA /* QMShareHelper.m */; };
 		E07BC2271DDF5FD900B8D3B0 /* QMSiriExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = E07BC21F1DDF5FD900B8D3B0 /* QMSiriExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E07CB8A51FAD2B1A0027087E /* QMShareRouterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E07CB8A31FAD2B1A0027087E /* QMShareRouterViewController.m */; };
+		E07CB8A51FAD2B1A0027087E /* QMShareRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E07CB8A31FAD2B1A0027087E /* QMShareRootViewController.m */; };
 		E07CB8A81FAD2F640027087E /* QMShareTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E07CB8A71FAD2F640027087E /* QMShareTableViewController.m */; };
 		E07CB8A91FAD2F640027087E /* QMShareTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E07CB8A71FAD2F640027087E /* QMShareTableViewController.m */; };
 		E07CB8AB1FAD31320027087E /* QMShareTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E07CB8AA1FAD31320027087E /* QMShareTableViewController.xib */; };
@@ -647,8 +647,8 @@
 		E077739F1FB5CD43006B63FA /* QMShareHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMShareHelper.m; sourceTree = "<group>"; };
 		E07BC21F1DDF5FD900B8D3B0 /* QMSiriExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QMSiriExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E07BC2241DDF5FD900B8D3B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E07CB8A21FAD2B1A0027087E /* QMShareRouterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMShareRouterViewController.h; sourceTree = "<group>"; };
-		E07CB8A31FAD2B1A0027087E /* QMShareRouterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMShareRouterViewController.m; sourceTree = "<group>"; };
+		E07CB8A21FAD2B1A0027087E /* QMShareRootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMShareRootViewController.h; sourceTree = "<group>"; };
+		E07CB8A31FAD2B1A0027087E /* QMShareRootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMShareRootViewController.m; sourceTree = "<group>"; };
 		E07CB8A61FAD2F640027087E /* QMShareTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMShareTableViewController.h; sourceTree = "<group>"; };
 		E07CB8A71FAD2F640027087E /* QMShareTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMShareTableViewController.m; sourceTree = "<group>"; };
 		E07CB8AA1FAD31320027087E /* QMShareTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = QMShareTableViewController.xib; path = "QMShareExtension/View Controllers/QMShareTableViewController.xib"; sourceTree = SOURCE_ROOT; };
@@ -2422,8 +2422,8 @@
 		E0A8A7871F8F7B0300382443 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				E07CB8A21FAD2B1A0027087E /* QMShareRouterViewController.h */,
-				E07CB8A31FAD2B1A0027087E /* QMShareRouterViewController.m */,
+				E07CB8A21FAD2B1A0027087E /* QMShareRootViewController.h */,
+				E07CB8A31FAD2B1A0027087E /* QMShareRootViewController.m */,
 				E07CB8AA1FAD31320027087E /* QMShareTableViewController.xib */,
 				E07CB8A61FAD2F640027087E /* QMShareTableViewController.h */,
 				E07CB8A71FAD2F640027087E /* QMShareTableViewController.m */,
@@ -2831,7 +2831,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		5803F2BA1D4F568800AE4934 /* ShellScript */ = {
@@ -2934,7 +2934,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E6936DF91158CD5FF2D1E6C5 /* [CP] Check Pods Manifest.lock */ = {
@@ -2952,7 +2952,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E911BC553233DD014AE11AC7 /* [CP] Copy Pods Resources */ = {
@@ -3196,7 +3196,7 @@
 				E0B5CEDE1F978689004CB06D /* QMActivityItem.m in Sources */,
 				E08B868B1F86540000FA8291 /* QMTableViewCell.m in Sources */,
 				E08ADF5F1F8CCD6D0099CF99 /* QMDataSource.m in Sources */,
-				E07CB8A51FAD2B1A0027087E /* QMShareRouterViewController.m in Sources */,
+				E07CB8A51FAD2B1A0027087E /* QMShareRootViewController.m in Sources */,
 				E03AF8151FACDE5E00DFEE7A /* QBSettings+Qmunicate.m in Sources */,
 				E0AA0E6A1F90E38C0082750E /* QMShareContactsTableViewCell.m in Sources */,
 				E0A8A7A81F8F7B0300382443 /* QMShareItemsDataProvider.m in Sources */,

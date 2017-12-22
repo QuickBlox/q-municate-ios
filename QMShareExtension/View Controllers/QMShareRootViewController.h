@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface QMShareRouterViewController : UIViewController
+@interface QMShareRootViewController : UIViewController
 
 @end

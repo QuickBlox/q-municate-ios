@@ -6,7 +6,7 @@
 //  Copyright © 2017 Quickblox. All rights reserved.
 //
 
-#import "QMShareRouterViewController.h"
+#import "QMShareRootViewController.h"
 #import "QMShareTableViewController.h"
 #import "QMShareTasks.h"
 
@@ -24,10 +24,12 @@
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "UIAlertController+QM.h"
 #import "QMConstants.h"
+#import <QMImageLoader.h>
+#import "QMMediaUploadService.h"
 
 static const NSUInteger kQMUnauthorizedErrorCode = 401;
 
-@interface QMShareRouterViewController()
+@interface QMShareRootViewController()
 
 <QMShareControllerDelegate,
 QMShareEtxentionOperationDelegate>
@@ -46,10 +48,12 @@ QMShareEtxentionOperationDelegate>
 
 @end
 
-@implementation QMShareRouterViewController
+@implementation QMShareRootViewController
 
 //MARK: - View Life Cycle
 - (void)viewDidLoad {
+    
+    QMImageLoader.instance.imageDownloader.shouldDecompressImages = NO;
     
     [super viewDidLoad];
     
@@ -65,10 +69,7 @@ QMShareEtxentionOperationDelegate>
                                                         usingBlock:^{
                                                             [weakSelf dismiss];
                                                         }];
-    NSLog(@"Logout notification");
     if (QBSession.currentSession.currentUser.ID) {
-        
-        [QMExtensionCache setLogsEnabled:NO];
         [self configureAndPresentShareTableViewController];
     }
 }
@@ -234,26 +235,28 @@ QMShareEtxentionOperationDelegate>
                                           text:self.shareItem.text
                                     attachment:self.shareItem.attachment
                                     recipients:selectedItems
-                                    completion:^(NSError * _Nullable error,
-                                                 BOOL completed)
-     {
+                                    completion:^(BOOL completed,
+                                                 QMRecipientOperationResultDetails * _Nonnull resultDetails)
+    {
+        
          __strong typeof(weakSelf) strongSelf = weakSelf;
          [strongSelf.shareTableViewController
           dismissLoadingAlertControllerAnimated:YES
           withCompletion:^{
-              if (error) {
-                  NSString *errorText =
-                  error.localizedDescription ?:
-                  error.description ?:
-                  NSLocalizedString(@"QM_EXT_SHARE_COMMON_ERROR", nil);
-                  [strongSelf presentAlertControllerWithStatus:errorText
-                                             withButtonHandler:nil];
-              }
-              else if (completed) {
-                  [strongSelf completeShare:nil];
+
+              if (completed) {
+                  if (resultDetails.unsentRecipients.allKeys.count > 0) {
+                      NSString *errorText =
+                      @"Something went wrong. The message wasn’t sent to recipients that remain selected.";
+                      [strongSelf presentAlertControllerWithStatus:errorText
+                                                 withButtonHandler:nil];
+                      [strongSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
+                  }
+                  else {
+                      [strongSelf completeShare:nil];
+                  }
               }
           }];
-         
      }];
     
     shareOperation.operationDelegate = self;
@@ -286,14 +289,30 @@ QMShareEtxentionOperationDelegate>
 
 - (BFTask<QBChatAttachment *> *)customTaskForOperation:(QMShareEtxentionOperation *)operation
                                       uploadAttachment:(QBChatAttachment *)attachment
-                                         progressBlock:(QMAttachmentProgressBlock)progressBlock {
+                                         progressBlock:(QMAttachmentProgressBlock)progressBlock
+                                     cancellationToken:(BFCancellationToken *)token {
     
     if ([attachment.type isEqualToString:kQMAttachmentTypeLocation]) {
         return [BFTask taskWithResult:attachment];
     }
-    return [self uploadAttachment:attachment progressBlock:progressBlock];
+    
+    if (attachment.fileData) {
+        return [QMMediaUploadService taskUploadAttachment:attachment
+                                                 withData:attachment.fileData
+                                            progressBlock:progressBlock
+                                        cancellationToken:token];
+    }
+    else if (attachment.localFileURL) {
+        return [QMMediaUploadService taskUploadAttachment:attachment
+                                              withFileURL:attachment.localFileURL
+                                            progressBlock:progressBlock
+                                        cancellationToken:token];
+    }
+    else {
+        NSAssert(NO, @"Should be set data or local URL");
+        return nil;
+    }
 }
-
 
 - (BFTask *)taskSendMessageViaRest:(QBChatMessage *)message {
     
@@ -315,69 +334,6 @@ QMShareEtxentionOperationDelegate>
                                    {
                                        [source setError:response.error.error];
                                    }];
-    });
-}
-
-- (BFTask <QBChatAttachment *> *)uploadAttachment:(QBChatAttachment *)attatchment
-                                    progressBlock:(QMAttachmentProgressBlock)progressBlock {
-    
-    NSData *dataToSend = ^NSData *{
-        
-        if (attatchment.attachmentType == QMAttachmentContentTypeImage) {
-            return attatchment.image.dataRepresentation;
-        }
-        
-        return nil;
-        
-    }();
-    
-    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
-        if (dataToSend) {
-            self.shareOperation.objectToCancel =
-            (id <QMCancellableObject>)[QBRequest TUploadFile:dataToSend
-                                                    fileName:attatchment.name
-                                                 contentType:attatchment.contentType
-                                                    isPublic:NO
-                                                successBlock:^(QBResponse * __unused  _Nonnull response,
-                                                               QBCBlob * _Nonnull tBlob)
-                                       {
-                                           attatchment.ID = tBlob.UID;
-                                           [source setResult:attatchment];
-                                       }
-                                                 statusBlock:^(QBRequest * _Nonnull request,
-                                                               QBRequestStatus * _Nonnull status)
-                                       {
-                                           if (progressBlock) {
-                                               progressBlock(status.percentOfCompletion);
-                                           }
-                                       }
-                                       
-                                                  errorBlock:^(QBResponse * _Nonnull response)
-                                       {
-                                           [source setError:response.error.error];
-                                       }];
-        }
-        else if (attatchment.localFileURL) {
-            self.shareOperation.objectToCancel =
-            (id <QMCancellableObject>)[QBRequest uploadFileWithUrl:attatchment.localFileURL
-                                                          fileName:attatchment.name
-                                                       contentType:attatchment.contentType
-                                                          isPublic:NO
-                                                      successBlock:^(QBResponse * _Nonnull __unused response,
-                                                                     QBCBlob * _Nonnull tBlob)
-                                       {
-                                           attatchment.ID = tBlob.UID;
-                                           [source setResult:attatchment];
-                                       }
-                                                       statusBlock:nil
-                                                        errorBlock:^(QBResponse * _Nonnull response)
-                                       {
-                                           [source setError:response.error.error];
-                                       }];
-        }
-        else {
-            NSAssert(NO, @"Should be set data or local URL");
-        }
     });
 }
 
@@ -418,7 +374,7 @@ QMShareEtxentionOperationDelegate>
     [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // reachability block could possibly be called in background thread
-            [weakSelf cancelShare];
+           // [weakSelf cancelShare];
             [weakSelf presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
                                      withButtonHandler:nil];
         });
