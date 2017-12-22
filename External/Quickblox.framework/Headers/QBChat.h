@@ -1,13 +1,12 @@
 //
 //  QBChat.h
-//  Chat
 //
-//  Copyright 2013 QuickBlox team. All rights reserved.
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
-#import "QBChatTypes.h"
+@import Foundation;
+#import <Quickblox/QBChatTypes.h>
 
 @protocol QBChatDelegate;
 

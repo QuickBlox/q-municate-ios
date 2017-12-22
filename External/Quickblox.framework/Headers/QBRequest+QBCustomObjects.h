@@ -1,13 +1,14 @@
 //
-// Created by QuickBlox team on 24/02/2014.
-// Copyright (c) 2016 QuickBlox. All rights reserved.
+//  QBRequest+QBCustomObjects.h
+//
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "QBRequest.h"
-#import "QBCustomObjectsConsts.h"
+@import Foundation;
+#import <Quickblox/QBRequest.h>
+#import <Quickblox/QBCustomObjectsConsts.h>
 
-@class QBResponse;
 @class QBResponsePage;
 @class QBCOCustomObject;
 @class QBCOFile;

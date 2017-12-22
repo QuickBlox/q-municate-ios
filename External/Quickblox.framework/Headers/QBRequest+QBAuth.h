@@ -1,14 +1,13 @@
 //
-// Created by QuickBlox team on 14/12/2013.
-// Copyright (c) 2016 QuickBlox. All rights reserved.
+//  QBRequest+QBAuth.h
+//
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "QBRequest.h"
+@import Foundation;
+#import <Quickblox/QBRequest.h>
 
-@class QBResponse;
-@class QBASession;
-@class QBSessionParameters;
 @class QBUUser;
 
 NS_ASSUME_NONNULL_BEGIN

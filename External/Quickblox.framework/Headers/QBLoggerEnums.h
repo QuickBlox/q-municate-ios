@@ -1,9 +1,11 @@
 //
-// Created by QuickBlox team on 13/03/2014.
-// Copyright (c) 2016 QuickBlox. All rights reserved.
+//  QBLoggerEnums
+//
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 typedef NS_ENUM(NSUInteger, QBLogLevel) {
     QBLogLevelNothing   =      0,  //  0 - Nothing in Log

@@ -1,12 +1,12 @@
 //
 //  QBRequest+QBContent.h
-//  Quickblox
 //
-//  Created by QuickBlox team on 6/5/14.
-//  Copyright (c) 2016 QuickBlox. All rights reserved.
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import "QBRequest.h"
+@import Foundation;
+#import <Quickblox/QBRequest.h>
 
 @class QBCBlob;
 @class QBCBlobObjectAccess;
@@ -99,7 +99,7 @@ typedef void(^qb_response_blob_block_t)(QBResponse *response, QBCBlob *tBlob);
 /**
  Upload file using BlobObjectAccess
  
- @param data File
+ @param data File data
  @param blobWithWriteAccess An instance of QBCBlobObjectAccess
  @param successBlock Block with response if the request is succeeded
  @param statusBlock Block with upload/download progress
@@ -112,6 +112,23 @@ typedef void(^qb_response_blob_block_t)(QBResponse *response, QBCBlob *tBlob);
              successBlock:(nullable qb_response_block_t)successBlock
               statusBlock:(nullable qb_response_status_block_t)statusBlock
                errorBlock:(nullable qb_response_block_t)errorBlock;
+
+/**
+ Upload file using BlobObjectAccess
+ 
+ @param data File URL
+ @param blobWithWriteAccess An instance of QBCBlobObjectAccess
+ @param successBlock Block with response if request succeded
+ @param statusBlock Block with upload/download progress
+ @param errorBlock Block with response instance if request failed
+ 
+ @return An instance of QBRequest for cancel operation mainly.
+ */
++ (QBRequest *)uploadWithUrl:(NSURL *)url
+         blobWithWriteAccess:(QBCBlob *)blobWithWriteAccess
+                successBlock:(qb_response_block_t)successBlock
+                 statusBlock:(qb_response_status_block_t)statusBlock
+                  errorBlock:(qb_response_block_t)errorBlock;
 
 //MARK: -  Download file
 

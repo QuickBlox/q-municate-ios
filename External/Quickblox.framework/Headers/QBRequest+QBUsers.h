@@ -1,14 +1,13 @@
 //
 //  QBRequest+QBUsers.h
-//  Quickblox
 //
-//  Created by QuickBlox team on 09/12/2013.
-//  Copyright (c) 2016 QuickBlox. All rights reserved.
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import "QBRequest.h"
+@import Foundation;
+#import <Quickblox/QBRequest.h>
 
-@class QBResponse;
 @class QBUUser;
 @class QBGeneralResponsePage;
 @class QBUpdateUserParameters;

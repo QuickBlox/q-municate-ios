@@ -1,14 +1,13 @@
 //
 //  QBRequest+QBChat.h
-//  Quickblox
 //
-//  Created by QuickBlox team on 9/1/14.
-//  Copyright (c) 2016 QuickBlox. All rights reserved.
+//  Created by QuickBlox team
+//  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "QBRequest.h"
-#import "QBCompletionTypes.h"
+@import Foundation;
+#import <Quickblox/QBRequest.h>
+#import <Quickblox/QBCompletionTypes.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
