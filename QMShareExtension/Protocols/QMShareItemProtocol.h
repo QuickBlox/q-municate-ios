@@ -6,7 +6,7 @@
 //  Copyright © 2017 Quickblox. All rights reserved.
 //
 
-@protocol QMShareItemProtocol <NSObject>
+@protocol QMShareItemProtocol <NSCopying, NSObject>
 
 @property (nonatomic, copy, nullable, readonly) NSString *title;
 @property (nonatomic, copy, nullable, readonly) NSString *imageURL;

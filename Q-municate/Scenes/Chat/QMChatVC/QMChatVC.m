@@ -41,6 +41,7 @@
 #import "QMShareTableViewController.h"
 #import "QMActivityItem.h"
 #import "QMShareHelper.h"
+#import "UIAlertController+QM.h"
 
 // external
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -2611,14 +2612,20 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
     
     [self.shareHelper forwardMessage:messageToForward
                         toRecipients:selectedItems
-                 withCompletionBlock:^(NSError *error,
-                                       BOOL completed) {
-                     if (error) {
-                         NSLog(@"Error = %@", error);
-                     }
-                     else if (completed) {
-                         [weakSelf.shareTableViewController dismissViewControllerAnimated:YES
-                                                                               completion:nil];
+                 withCompletionBlock:^(BOOL completed, QMRecipientOperationResultDetails * _Nonnull resultDetails) {
+                     
+                     if (completed) {
+                         if (resultDetails.unsentRecipients.allKeys.count > 0) {
+                             NSString *errorText =
+                             @"Something went wrong. The message wasn’t sent to recipients that remain selected.";
+                             [weakSelf presentAlertControllerWithStatus:errorText
+                                                        withButtonHandler:nil];
+                             [weakSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
+                         }
+                         else {
+                             [weakSelf.shareTableViewController dismissViewControllerAnimated:YES
+                                                                                   completion:nil];
+                         }
                      }
                  }];
 }

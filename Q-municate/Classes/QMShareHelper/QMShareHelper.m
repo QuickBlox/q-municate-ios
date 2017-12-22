@@ -9,7 +9,6 @@
 #import "QMShareHelper.h"
 #import "QMMessagesHelper.h"
 #import "QMCore.h"
-#import "QMShareEtxentionOperation.h"
 #import <QMCVDevelopment/QMImageLoader.h>
 
 
@@ -24,7 +23,7 @@
 
 - (void)forwardMessage:(QBChatMessage *)messageToForward
           toRecipients:(NSArray *)recipients
-   withCompletionBlock:(QMShareHelperCompletionBlock)completionBlock {
+   withCompletionBlock:(QMShareOperationCompletionBlock)completionBlock {
     
     _sendingMessages = [NSMutableArray array];
     

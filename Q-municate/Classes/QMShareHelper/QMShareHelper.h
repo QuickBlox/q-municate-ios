@@ -8,14 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "QMShareTableViewController.h"
-
-typedef void(^QMShareHelperCompletionBlock)(NSError *error, BOOL completed);
+#import "QMShareEtxentionOperation.h"
 
 @interface QMShareHelper : NSObject
 
 - (void)forwardMessage:(QBChatMessage *)messageToForward
           toRecipients:(NSArray *)recipients
-   withCompletionBlock:(QMShareHelperCompletionBlock)completionBlock;
+   withCompletionBlock:(QMShareOperationCompletionBlock)completionBlock;
 
 - (void)cancelForwarding;
 
