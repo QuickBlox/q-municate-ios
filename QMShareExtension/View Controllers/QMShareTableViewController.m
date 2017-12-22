@@ -110,6 +110,49 @@ QMShareContactsDelegate>
 }
 
 
+- (void)selectShareItem:(id<QMShareItemProtocol>)shareItem {
+    [self selectShareItems:@[shareItem]];
+}
+
+- (void)deselectShareItem:(id<QMShareItemProtocol>)shareItem {
+    [self deselectShareItems:@[shareItem]];
+}
+
+- (void)selectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems {
+    [self updateSelectionForShareItems:shareItems
+                                select:YES];
+}
+
+- (void)deselectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems {
+    [self updateSelectionForShareItems:shareItems
+                                select:NO];
+}
+
+- (void)updateSelectionForShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems
+                              select:(BOOL)shouldBeSelected {
+    
+    for (id <QMShareItemProtocol> shareItem in shareItems) {
+        BOOL isSelected =
+        [self.shareDataSource.selectedItems containsObject:shareItem];
+        
+        if (isSelected == shouldBeSelected) {
+            continue;
+        }
+    
+        NSIndexPath *indexPath = [self.shareDataSource indexPathForObject:shareItem];
+        if (indexPath) {
+            id <QMShareViewProtocol> view = [self.tableView cellForRowAtIndexPath:indexPath];
+            [self.shareDataSource selectItem:shareItem
+                                     forView:view];
+        }
+    }
+}
+
+- (void)deselectAll {
+    
+}
+
+
 - (void)presentLoadingAlertControllerWithStatus:(NSString *)status
                                        animated:(BOOL)animated
                                  withCompletion:(dispatch_block_t)completionBlock {
@@ -211,8 +254,7 @@ QMShareContactsDelegate>
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES comparator:^NSComparisonResult(id <QMShareItemProtocol> _Nonnull obj1, id  <QMShareItemProtocol>_Nonnull obj2) {
         return [obj2.updatedAt compare:obj1.updatedAt];
     }];
-    
-    
+
     //Main data source
     self.shareDataSource = [[QMShareDataSource alloc] initWithShareItems:dialogsDataSource
                                                          sortDescriptors:@[sortDescriptor]
@@ -290,6 +332,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self updateShareButton];
     [self.tableView reloadData];
 }
+
 
 - (void)willPresentSearchController:(UISearchController *)searchController {
     

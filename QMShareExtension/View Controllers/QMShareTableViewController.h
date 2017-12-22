@@ -29,6 +29,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)qm_shareTableViewControllerWithDialogs:(NSArray<QBChatDialog*> *)dialogs
                                               contacts:(NSArray<QBUUser *> * _Nullable )contacts;
 
+- (void)selectShareItem:(id<QMShareItemProtocol>)shareItem;
+- (void)deselectShareItem:(id<QMShareItemProtocol>)shareItem;
+
+- (void)selectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems;
+- (void)deselectShareItems:(NSArray <id<QMShareItemProtocol>> *)shareItems;
+
+- (void)deselectAll;
+- (void)selectAll;
 
 - (void)presentLoadingAlertControllerWithStatus:(NSString *)status
                                     animated:(BOOL)animated
@@ -42,8 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) QMShareSearchControllerDataSource *searchDataSource;
 
 @property (nonatomic, weak) id <QMShareControllerDelegate> shareControllerDelegate;
-
-
 
 @end
 
