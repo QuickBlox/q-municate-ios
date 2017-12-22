@@ -9,6 +9,27 @@
 #import "UIAlertController+QM.h"
 #import "QMColors.h"
 
+@implementation UIViewController(QMAlertController)
+
+- (void)presentAlertControllerWithStatus:(NSString *)status
+                       withButtonHandler:(dispatch_block_t)buttonTapBlock {
+    
+    UIAlertController *alertController =
+    [UIAlertController qm_infoAlertControllerWithStatus:status
+                                         buttonTapBlock:buttonTapBlock];
+    
+    if (self.presentedViewController) {
+        [self.presentedViewController presentViewController:alertController
+                                                   animated:YES
+                                                 completion:nil];
+    }
+    else {
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
+@end
+
 @implementation UIAlertController (QM)
 
 //MARK: - Publice methods
