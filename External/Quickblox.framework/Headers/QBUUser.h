@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Create new user.
  */
-@property (nonatomic, class) QBUUser *user;
+@property (nonatomic, class, readonly) QBUUser *user;
 
 /**
  *  ID of User in external system.
