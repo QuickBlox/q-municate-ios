@@ -214,11 +214,10 @@ QMUsersServiceDelegate
 
 //MARK: - Update items
 
-- (BOOL)updateItemsFromContactList {
+- (void)updateItemsFromContactList {
     
     NSArray *friends = [QMCore.instance.contactManager friends];
     [self.dataSource replaceItems:friends];
-   
 }
 
 //MARK: - UITableViewDelegate
@@ -353,6 +352,14 @@ QMUsersServiceDelegate
 }
 
 //MARK: - QMContactListServiceDelegate
+
+- (void)contactListService:(QMContactListService *)__unused contactListService
+      contactListDidChange:(QBContactList *)__unused contactList {
+    
+    [self updateItemsFromContactList];
+    [self.tableView reloadData];
+}
+
 
 //MARK: - QMUsersServiceDelegate
 
