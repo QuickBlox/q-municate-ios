@@ -40,6 +40,8 @@ typedef void(^qb_response_block_t)(QBResponse *response);
  */
 - (void)cancel;
 
++ (void)cancelAllRequests:(dispatch_block_t)completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

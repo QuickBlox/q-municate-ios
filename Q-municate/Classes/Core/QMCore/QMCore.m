@@ -219,41 +219,30 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     [self.cachedVocabularyStrings removeAllObjects];
     [[INVocabulary sharedVocabulary] setVocabularyStrings:self.cachedVocabularyStrings
                                                    ofType:INVocabularyStringTypeContactName];
+    // Clearing contact list cache and memory storage
+    [self.contactListService.contactListMemoryStorage free];
+    [self.openGraphService.memoryStorage free];
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES]
+    [QMContactListCache.instance truncateAll];
+    [QMOpenGraphCache.instance truncateAll];
+    
+    if (self.currentProfile.accountType == QMAccountTypeFacebook) {
+        [QMFacebook logout];
+    }
+    else if (self.currentProfile.accountType == QMAccountTypePhone) {
+        [[FIRAuth auth] signOut:nil];
+    }
+    [self.currentProfile clearProfile];
+    
+    [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
+        [[QMImageLoader instance].imageCache clearMemory];
+    }];
+    
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO]
      continueWithBlock:^id(BFTask * __unused t)
      {
          [super logoutWithCompletion:^{
-             
-             if (self.currentProfile.accountType == QMAccountTypeFacebook) {
-                 [QMFacebook logout];
-             }
-             else if (self.currentProfile.accountType == QMAccountTypePhone) {
-                 [[FIRAuth auth] signOut:nil];
-             }
-             // Clearing contact list cache and memory storage
-             [[QMContactListCache instance] deleteContactList:nil];
-             [self.contactListService.contactListMemoryStorage free];
-             [self.openGraphService.memoryStorage free];
-             [self.chatService.chatAttachmentService removeAllMediaFiles];
-             
-             dispatch_group_t logoutGroup = dispatch_group_create();
-             
-             dispatch_group_enter(logoutGroup);
-             [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
-                 [[QMImageLoader instance].imageCache clearMemory];
-                 dispatch_group_leave(logoutGroup);
-             }];
-             
-             dispatch_group_enter(logoutGroup);
-             [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                 dispatch_group_leave(logoutGroup);
-             }];
-             
-             dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
-                 [self.currentProfile clearProfile];
-                 [source setResult:nil];
-             });
+             [source setResult:nil];
          }];
          
          return nil;
