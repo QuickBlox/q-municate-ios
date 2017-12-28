@@ -69,7 +69,8 @@ QMAttachmentContentServiceDelegate>
     if (!view.mediaHandler) {
         view.mediaHandler = self;
     }
-    if (attachment.attachmentType != QMAttachmentContentTypeAudio && attachment.ID) {
+    
+    if (shouldAutoDownload(attachment) && attachment.ID) {
         
         if (view.messageID != nil && ![view.messageID isEqualToString:message.ID]) {
             
@@ -91,8 +92,8 @@ QMAttachmentContentServiceDelegate>
     
     view.messageID = message.ID;
     view.duration = attachment.duration;
-    view.playable = attachment.attachmentType == QMAttachmentContentTypeAudio ||  attachment.attachmentType == QMAttachmentContentTypeVideo;
-    view.cancellable = attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
+    view.playable = isPlayable(attachment);
+    view.cancellable = canBeCancelled(attachment);
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
@@ -102,12 +103,14 @@ QMAttachmentContentServiceDelegate>
         view.viewState = QMMediaViewStateNotReady;
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoading
-             || attachmentStatus == QMMessageAttachmentStatusUploading) {
+             || attachmentStatus == QMMessageAttachmentStatusUploading
+             || attachmentStatus == QMMessageAttachmentStatusPreparing) {
+        
         view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
-    }
-    else if (attachmentStatus == QMMessageAttachmentStatusPreparing) {
-        view.viewState = QMMediaViewStateLoading;
+        
+        if (attachmentStatus != QMMessageAttachmentStatusPreparing) {
+            view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
+        }
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
         
@@ -129,16 +132,18 @@ QMAttachmentContentServiceDelegate>
         return;
     }
     
-    if (attachment.attachmentType != QMAttachmentContentTypeAudio) {
+    if (shouldAutoDownload(attachment)) {
         [self loadAttachment:attachment
                   forMessage:message
                     withView:view];
     }
 }
 
+
 - (void)loadAttachment:(QBChatAttachment *)attachment
             forMessage:(QBChatMessage *)message
               withView:(id<QMMediaViewDelegate>)view {
+    
     
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
@@ -171,7 +176,6 @@ QMAttachmentContentServiceDelegate>
             UIImage *cachedImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:[transform keyWithURL:url]];
             UIImage *tempImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
             if (cachedImage) {
-                
                 view.viewState = QMMediaViewStateReady;
                 view.image = cachedImage;
             }
@@ -212,14 +216,9 @@ QMAttachmentContentServiceDelegate>
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          if (transfomedImage) {
-                             QMLog(@"_IMAGE has transform messageID:%@",message.ID);
                              view.viewState = QMMediaViewStateReady;
                              view.image = transfomedImage;
                          }
-                         else {
-                             QMLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
-                         }
-                         
                          if (error) {
                              QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
@@ -768,12 +767,32 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 
 
 //MARK: - QMAttachmentContentServiceDelegate
+
 - (BOOL)attachmentContentService:(QMAttachmentContentService *)__unused contentService
         shouldDownloadAttachment:(QBChatAttachment *)attachment
                        messageID:(NSString *)__unused messageID {
     
-    return attachment.attachmentType == QMAttachmentContentTypeImage ||
+    return
+    attachment.attachmentType == QMAttachmentContentTypeImage ||
     attachment.attachmentType == QMAttachmentContentTypeAudio;
+}
+
+//MARK: - Static functions
+
+static inline BOOL shouldAutoDownload(QBChatAttachment *attachment) {
+    return attachment.attachmentType != QMAttachmentContentTypeAudio;
+}
+
+static BOOL isPlayable(QBChatAttachment *attachment) {
+    return
+    attachment.attachmentType == QMAttachmentContentTypeAudio ||
+    attachment.attachmentType == QMAttachmentContentTypeVideo;
+}
+
+static BOOL canBeCancelled(QBChatAttachment *attachment) {
+    return
+    attachment.attachmentType == QMAttachmentContentTypeAudio ||
+    attachment.ID == nil;
 }
 
 @end

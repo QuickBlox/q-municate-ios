@@ -272,7 +272,7 @@ static BFTask<QBChatAttachment*> *taskAttachmentFromImage(UIImage *image, CGFloa
     
     return [BFTask taskFromExecutor:backgroundExecutor withBlock:^id _Nonnull{
         
-        UIImage *resizedImage = resizeImage(image , maxSideSize);
+        UIImage *resizedImage = resizeImage(image,maxSideSize);
         
         QBChatAttachment *attachment = [QBChatAttachment imageAttachmentWithImage:resizedImage];
         attachment.fileData = resizedImage.dataRepresentation;

@@ -148,7 +148,7 @@ static NSSet<NSString *>*acceptableTypes() {
             [availableProviders addObject:provider];
             break;
         }
-        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText]) {
+        else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePlainText]) {
             [availableProviders addObject:provider];
         }
         else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeData]) {
@@ -213,8 +213,7 @@ static NSSet<NSString *>*acceptableTypes() {
                                                    typeIdentifiers:provider.registeredTypeIdentifiers];
         }];
     }
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeText] ||
-             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePlainText]) {
+    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypePlainText]) {
         
         QMItemProviderLoader<NSString *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
                                                                                          typeIdentifier:(NSString *)kUTTypeText];
