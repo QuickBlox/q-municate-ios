@@ -13,7 +13,7 @@ end
 target 'Q-municate' do
     
     pod 'UIDevice-Hardware', '~> 0.1.3'
-    pod 'SSKeychain', '~> 1.2.2'
+    pod 'SAMKeychain'
     pod 'Reachability', '~> 3.2'
     pod 'TTTAttributedLabel', '~> 2.0'
     pod 'libextobjc/EXTScope', '~> 0.4.1'
