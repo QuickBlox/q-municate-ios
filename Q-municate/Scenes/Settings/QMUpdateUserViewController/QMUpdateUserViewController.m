@@ -80,7 +80,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     switch (self.updateUserField) {
             
         case QMUpdateUserFieldFullName:
-            [self configureWithKeyPath:@keypath(QBUUser.new, fullName)
+            [self configureWithKeyPath:qm_keypath(QBUUser, fullName)
                                  title:NSLocalizedString(@"QM_STR_FULLNAME", nil)
                                   text:currentUser.fullName
                             bottomText:nil];
@@ -89,17 +89,17 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
             break;
             
         case QMUpdateUserFieldEmail:
-            [self configureWithKeyPath:@keypath(QBUUser.new, email)
+            [self configureWithKeyPath:qm_keypath(QBUUser, email)
                                  title:NSLocalizedString(@"QM_STR_EMAIL", nil)
                                   text:currentUser.email
                             bottomText:NSLocalizedString(@"QM_STR_EMAIL_DESCRIPTION", nil)];
             self.textField.keyboardType = UIKeyboardTypeEmailAddress;
             break;
-            
+        
         case QMUpdateUserFieldStatus:
-            [self configureWithKeyPath:@keypath(QBUUser.new, status)
+            [self configureWithKeyPath:NSStringFromSelector(@selector(status))
                                  title:NSLocalizedString(@"QM_STR_STATUS", nil)
-                                  text:currentUser.status
+                                  text:qm_keypath(QBUUser, status)
                             bottomText:NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil)];
             self.textField.keyboardType = UIKeyboardTypeAlphabet;
             break;

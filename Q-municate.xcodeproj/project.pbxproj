@@ -2896,6 +2896,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMContactListCacheModel.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMUsersCacheModel.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				"${PODS_ROOT}/SAMKeychain/Support/SAMKeychain.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (

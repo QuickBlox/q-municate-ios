@@ -58,17 +58,21 @@ static const NSUInteger kQMPasswordMinChar = 8;
 
 - (IBAction)changeButtonPressed:(UIBarButtonItem *)__unused sender {
     
+    QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     if (![self.passwordOldField.text isEqualToString:QMCore.instance.currentProfile.userData.password]) {
         
-        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_WRONG_OLD_PASSWORD", nil) duration:kQMDefaultNotificationDismissTime];
+        [navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+                                               message:NSLocalizedString(@"QM_STR_WRONG_OLD_PASSWORD", nil)
+                                              duration:kQMDefaultNotificationDismissTime];
         
         return;
     }
     
     if (![self.passwordNewField.text isEqualToString:self.passwordConfirmField.text]) {
         
-        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning message:NSLocalizedString(@"QM_STR_PASSWORD_DONT_MATCH", nil) duration:kQMDefaultNotificationDismissTime];
-        
+        [navigationController showNotificationWithType:QMNotificationPanelTypeWarning
+                                               message:NSLocalizedString(@"QM_STR_PASSWORD_DONT_MATCH", nil)
+                                              duration:kQMDefaultNotificationDismissTime];
         return;
     }
     
@@ -76,19 +80,15 @@ static const NSUInteger kQMPasswordMinChar = 8;
     params.oldPassword = self.passwordOldField.text;
     params.password = self.passwordNewField.text;
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                           message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                          duration:0];
     
-    __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
-    
-    @weakify(self);
-    [[QMTasks taskUpdateCurrentUser:params] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {
+    [[QMTasks taskUpdateCurrentUser:params] continueWithBlock:^id(BFTask<QBUUser *> *task) {
         
-        @strongify(self);
         [navigationController dismissNotificationPanel];
-        
         if (!task.isFaulted) {
-            
-            [self.navigationController popViewControllerAnimated:YES];
+            [navigationController popViewControllerAnimated:YES];
         }
         
         return nil;

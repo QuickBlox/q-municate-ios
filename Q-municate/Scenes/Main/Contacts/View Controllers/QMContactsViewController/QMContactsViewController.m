@@ -151,13 +151,14 @@ QMUsersServiceDelegate
 
 - (void)configureDataSources {
     
-    self.dataSource = [[QMContactsDataSource alloc] initWithKeyPath:@keypath(QBUUser.new, fullName)];
+    self.dataSource = [[QMContactsDataSource alloc] initWithKeyPath:qm_keypath(QBUUser, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     QMContactsSearchDataProvider *searchDataProvider = [[QMContactsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self.searchResultsController;
     
-    self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
+    self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider
+                                                                                      usingKeyPath:qm_keypath(QBUUser, fullName)];
     
     QMGlobalSearchDataProvider *globalSearchDataProvider = [[QMGlobalSearchDataProvider alloc] init];
     globalSearchDataProvider.delegate = self.searchResultsController;
@@ -314,10 +315,7 @@ QMUsersServiceDelegate
 
 - (void)updateContactsAndEndRefreshing {
     
-    @weakify(self);
-    [[QMTasks taskUpdateContacts] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        @strongify(self);
+    [[QMTasks taskUpdateContacts] continueWithBlock:^id(BFTask *__unused task) {
         
         [self.refreshControl endRefreshing];
         

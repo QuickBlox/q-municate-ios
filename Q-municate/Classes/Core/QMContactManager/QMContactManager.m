@@ -40,75 +40,74 @@
     }
     else {
         
-        @weakify(self);
-        return [[[self.serviceManager.contactListService addUserToContactListRequest:user] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-            
-            @strongify(self);
-            return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
-            
-        }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-            
-            @strongify(self);
-            QBChatMessage *chatMessage = [QMMessagesHelper contactRequestNotificationForUser:user];
-            [self.serviceManager.chatService sendMessage:chatMessage
-                                                    type:chatMessage.messageType
-                                                toDialog:task.result
-                                           saveToHistory:YES
-                                           saveToStorage:YES
-                                              completion:nil];
-            
-            NSString *notificationMessage = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil), self.serviceManager.currentProfile.userData.fullName];
-            
-            [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
-            
-            return nil;
-        }];
+        return [[[self.serviceManager.contactListService addUserToContactListRequest:user]
+                 continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                     
+                     return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
+                     
+                 }] continueWithSuccessBlock:^id(BFTask<QBChatDialog *> *task) {
+                     
+                     QBChatMessage *chatMessage = [QMMessagesHelper contactRequestNotificationForUser:user];
+                     [self.serviceManager.chatService sendMessage:chatMessage
+                                                             type:chatMessage.messageType
+                                                         toDialog:task.result
+                                                    saveToHistory:YES
+                                                    saveToStorage:YES
+                                                       completion:nil];
+                     
+                     NSString *notificationMessage =
+                     [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil),
+                      self.serviceManager.currentProfile.userData.fullName];
+                     
+                     [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
+                     
+                     return nil;
+                 }];
     }
 }
 
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user {
     
-    @weakify(self);
-    return [[self.serviceManager.contactListService acceptContactRequest:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:YES toOpponentID:user.ID];
-    }];
+    return [[self.serviceManager.contactListService acceptContactRequest:user.ID]
+            continueWithSuccessBlock:^id(BFTask *__unused task) {
+                return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:YES
+                                                                                   toOpponentID:user.ID];
+            }];
 }
 
 - (BFTask *)rejectAddContactRequest:(QBUUser *)user {
     
-    @weakify(self);
-    return [[self.serviceManager.contactListService rejectContactRequest:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        @strongify(self);
-        return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:NO toOpponentID:user.ID];
-    }];
+    return [[self.serviceManager.contactListService rejectContactRequest:user.ID]
+            continueWithSuccessBlock:^id(BFTask *__unused task) {
+                return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:NO
+                                                                                   toOpponentID:user.ID];
+            }];
 }
 
 - (BFTask *)removeUserFromContactList:(QBUUser *)user {
     
     __block QBChatDialog *chatDialog = nil;
     
-    @weakify(self);
-    return [[[[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        @strongify(self);
-        
-        return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
-    }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
-        
-        chatDialog = t.result;
-        QBChatMessage *notificationMessage = [QMMessagesHelper removeContactNotificationForUser:user];
-        
-        return [self.serviceManager.chatService sendMessage:notificationMessage
-                                                       type:notificationMessage.messageType
-                                                   toDialog:chatDialog
-                                              saveToHistory:YES
-                                              saveToStorage:NO];
-        
-    }] continueWithBlock:^id _Nullable(BFTask * __unused _Nonnull t) {
-        
-        return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
-    }];
+    return [[[[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID]
+              continueWithSuccessBlock:^id(BFTask *__unused task) {
+                  
+                  return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
+                  
+              }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
+                  
+                  chatDialog = t.result;
+                  QBChatMessage *notificationMessage = [QMMessagesHelper removeContactNotificationForUser:user];
+                  
+                  return [self.serviceManager.chatService sendMessage:notificationMessage
+                                                                 type:notificationMessage.messageType
+                                                             toDialog:chatDialog
+                                                        saveToHistory:YES
+                                                        saveToStorage:NO];
+                  
+              }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
+                  
+                  return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
+              }];
 }
 
 //MARK: - Users
@@ -132,7 +131,7 @@
 
 - (NSArray *)allContactsSortedByFullName {
     
-    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:@keypath(QBUUser.new, fullName)
+    NSSortDescriptor *sorter = [[NSSortDescriptor alloc] initWithKey:qm_keypath(QBUUser, fullName)
                                                            ascending:YES
                                                             selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *sortedUsers = [[self allContacts] sortedArrayUsingDescriptors:@[sorter]];

@@ -135,9 +135,8 @@
             }
         }
         
-        @weakify(self);
+        
         [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            @strongify(self);
             
             for (QMTagView *tagView in enumerateTagsList) {
                 
@@ -311,9 +310,8 @@
     [self insertSubview:temporaryImageViewContainer aboveSubview:self.scrollView];
     self.scrollView.alpha = 0.0f;
     
-    @weakify(self);
     [UIView animateWithDuration:duration animations:^{
-        @strongify(self);
+
         temporaryImageView.alpha = 0.0f;
         self.scrollView.alpha = 1.0f;
         
@@ -399,9 +397,7 @@
         
         self.textField.alpha = 0.0f;
         
-        @weakify(self);
         [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            @strongify(self);
             self.textField.alpha = 1.0f;
         }];
     }
@@ -471,9 +467,8 @@
     }
     else {
         
-        @weakify(self);
         [UIView animateWithDuration:kQMBaseAnimationDuration animations:^{
-            @strongify(self);
+        
             [self.scrollView setContentOffset:contentOffset animated:NO];
         }];
     }
@@ -551,17 +546,15 @@
         
         if (wasEmpty != (textField.text.length == 0) &&
             [self.delegate respondsToSelector:@selector(tagFieldView:didChangeSearchStatus:byClearingTextField:)]) {
-            
             [self.delegate tagFieldView:self didChangeSearchStatus:[self searchIsActive] byClearingTextField:YES];
         }
         
         [self scrollToTextField:NO];
         
         self.textField.hidden = YES;
-        
-        @weakify(self);
+    
         dispatch_async(dispatch_get_main_queue(), ^{
-            @strongify(self);
+            
             self.textField.hidden = NO;
         });
     }

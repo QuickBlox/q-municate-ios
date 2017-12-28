@@ -138,16 +138,16 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 - (void)performAutoLoginAndFetchData {
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                                          message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
-                                                                         duration:0];
-    __weak UINavigationController *navigationController = self.navigationController;
+    QMNavigationController *navigationController = (id)self.navigationController;
+    [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                           message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                          duration:0];
     
     [[[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
         if (task.isFaulted) {
             
-            [(QMNavigationController *)navigationController dismissNotificationPanel];
+            [navigationController dismissNotificationPanel];
             
             NSInteger errorCode = task.error.code;
             if (errorCode == kQMNotAuthorizedInRest
@@ -522,13 +522,10 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 
 - (void)updateDataAndEndRefreshing {
     
-    @weakify(self);
-    
     BFTask *fetchAllDataTask = [QMTasks taskFetchAllData];
     BFTask *fetchContactsTask = [QMTasks taskUpdateContacts];
     [[BFTask taskForCompletionOfAllTasks:@[fetchAllDataTask, fetchContactsTask]]
      continueWithBlock:^id (BFTask * __unused t) {
-         @strongify(self);
          
          [self.refreshControl endRefreshing];
          

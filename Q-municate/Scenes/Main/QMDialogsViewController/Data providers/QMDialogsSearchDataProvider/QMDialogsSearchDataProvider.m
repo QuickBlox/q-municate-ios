@@ -13,8 +13,6 @@
 
 #import "QMCore.h"
 
-static NSString *const kQMDialogsSearchDescriptorKey = @"name";
-
 @implementation QMDialogsSearchDataProvider
 
 - (void)performSearch:(NSString *)searchText {
@@ -34,12 +32,10 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
         return;
     }
     
-    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @strongify(self);
         
         // dialogs local search
-        NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kQMDialogsSearchDescriptorKey ascending:NO];
+        NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:qm_keypath(QBChatDialog, name) ascending:NO];
         NSArray *dialogs = [QMCore.instance.chatService.dialogsMemoryStorage dialogsWithSortDescriptors:@[dialogsSortDescriptor]];
         
         NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];

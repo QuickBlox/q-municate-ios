@@ -173,7 +173,7 @@ NYTPhotosViewControllerDelegate
         
         self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
         [navigationController dismissNotificationPanel];
-       
+        
         return nil;
     };
     
@@ -196,25 +196,24 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleCancel
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                       }]];
-
-    @weakify(self);
+    
+    
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil)
                                                         style:UIAlertActionStyleDestructive
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          @strongify(self);
-                                                          if (self.logoutTask) {
-                                                              // task is in progress
-                                                              return;
-                                                          }
-                                                          
-                                                          [SVProgressHUD show];
-                                                          self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                                                              [SVProgressHUD dismiss];
-                                                              [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                                                              return nil;
-                                                          }];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    if (self.logoutTask) {
+                                        // task is in progress
+                                        return;
+                                    }
+                                    
+                                    [SVProgressHUD show];
+                                    self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id(BFTask *__unused logoutTask) {
+                                        [SVProgressHUD dismiss];
+                                        [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+                                        return nil;
+                                    }];
+                                }]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }

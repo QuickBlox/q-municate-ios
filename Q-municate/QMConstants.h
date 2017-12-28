@@ -21,6 +21,18 @@
 
 #endif
 
+#define qm_keypath(__CLASS__, __KEY__)                      \
+({                                                          \
+    while (1) {                                             \
+        break;                                              \
+        [__CLASS__ class];                                  \
+        __CLASS__ * instance = nil;                         \
+        [instance __KEY__];                                 \
+    }                                                       \
+    NSStringFromSelector(@selector(__KEY__));               \
+})
+
+
 // storyboards
 static NSString *const kQMMainStoryboard = @"Main";
 static NSString *const kQMChatStoryboard = @"Chat";

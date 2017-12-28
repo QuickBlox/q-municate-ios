@@ -156,6 +156,7 @@ QMUsersServiceDelegate
         [self performSegueWithIdentifier:kQMSceneSegueGroupAddUsers sender:self.chatDialog];
     }
     else if (indexPath.row == self.dataSource.leaveChatCellIndex) {
+        
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         if (self.leaveTask) {
@@ -178,31 +179,31 @@ QMUsersServiceDelegate
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LEAVE", nil)
                                                             style:UIAlertActionStyleDestructive
-                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                              
-                                                              [(QMNavigationController *)navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                                                                                               message:NSLocalizedString(@"QM_STR_LOADING", nil)
-                                                                                                                              duration:0];
-                                                              
-                                                              self.leaveTask = [[QMCore.instance.chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-                                                                  
-                                                                  [(QMNavigationController *)navigationController dismissNotificationPanel];
-                                                                  
-                                                                  if (!task.isFaulted) {
-                                                                      
-                                                                      if (self.splitViewController.isCollapsed) {
-                                                                          
-                                                                          [navigationController popToRootViewControllerAnimated:YES];
-                                                                      }
-                                                                      else {
-                                                                          
-                                                                          [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-                                                                      }
-                                                                  }
-                                                                  
-                                                                  return nil;
-                                                              }];
-                                                          }]];
+                                                          handler:^(UIAlertAction * _Nonnull __unused action)
+                                    {
+                                        
+                                        [(QMNavigationController *)navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                                                         message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                                                                        duration:0];
+                                        self.leaveTask =
+                                        [[QMCore.instance.chatManager leaveChatDialog:self.chatDialog]
+                                         continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                                             
+                                             [(QMNavigationController *)navigationController dismissNotificationPanel];
+                                             
+                                             if (!task.isFaulted) {
+                                                 
+                                                 if (self.splitViewController.isCollapsed) {
+                                                     [navigationController popToRootViewControllerAnimated:YES];
+                                                 }
+                                                 else {
+                                                     [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                                                 }
+                                             }
+                                             
+                                             return nil;
+                                         }];
+                                    }]];
         
         [self presentViewController:alertController animated:YES completion:nil];
     }
@@ -290,7 +291,7 @@ didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
-    NSArray *idsOfUsers = [user valueForKeyPath:@keypath(QBUUser.new, ID)];
+    NSArray *idsOfUsers = [user valueForKeyPath:qm_keypath(QBUUser, ID)];
     
     if ([self.chatDialog.occupantIDs qm_containsObjectFromArray:idsOfUsers]) {
         

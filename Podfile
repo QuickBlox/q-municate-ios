@@ -12,12 +12,11 @@ end
 
 target 'Q-municate' do
     
-    pod 'UIDevice-Hardware', '~> 0.1.3'
+    pod 'UIDevice-Hardware', '~> 0.1.11'
     pod 'SAMKeychain'
     pod 'Reachability', '~> 3.2'
     pod 'TTTAttributedLabel', '~> 2.0'
     pod 'libextobjc/EXTScope', '~> 0.4.1'
-    pod 'libextobjc/EXTKeyPathCoding', '~> 0.4.1'
     pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
     pod 'NYTPhotoViewer', '~> 1.1.0'
     #    pod 'QMChatViewController'
