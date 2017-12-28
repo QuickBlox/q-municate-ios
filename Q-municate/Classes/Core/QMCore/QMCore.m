@@ -215,46 +215,37 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 - (BFTask *)logout {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
+    //TODO: Need move to single object
+    [self.cachedVocabularyStrings removeAllObjects];
+    [[INVocabulary sharedVocabulary] setVocabularyStrings:self.cachedVocabularyStrings
+                                                   ofType:INVocabularyStringTypeContactName];
+    // Clearing contact list cache and memory storage
+    [self.contactListService.contactListMemoryStorage free];
+    [self.openGraphService.memoryStorage free];
     
+    [QMContactListCache.instance truncateAll];
+    [QMOpenGraphCache.instance truncateAll];
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t){
-         
+    if (self.currentProfile.accountType == QMAccountTypeFacebook) {
+        [QMFacebook logout];
+    }
+    else if (self.currentProfile.accountType == QMAccountTypePhone) {
+        [[FIRAuth auth] signOut:nil];
+    }
+    [self.currentProfile clearProfile];
+    
+    [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
+        [[QMImageLoader instance].imageCache clearMemory];
+    }];
+    
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO]
+     continueWithBlock:^id(BFTask * __unused t)
+     {
          [super logoutWithCompletion:^{
-             
-             if (self.currentProfile.accountType == QMAccountTypeFacebook) {
-                 
-                 [QMFacebook logout];
-             }
-             else if (self.currentProfile.accountType == QMAccountTypePhone) {
-                 
-                 [[FIRAuth auth] signOut:nil];
-             }
-             // Clearing contact list cache and memory storage
-             [[QMContactListCache instance] deleteContactList:nil];
-             [self.contactListService.contactListMemoryStorage free];
-             [self.openGraphService.memoryStorage free];
-             [self.chatService.chatAttachmentService removeAllMediaFiles];
-             
-             dispatch_group_t logoutGroup = dispatch_group_create();
-             
-             dispatch_group_enter(logoutGroup);
-             [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
-                 [[QMImageLoader instance].imageCache clearMemory];
-                 dispatch_group_leave(logoutGroup);
-             }];
-             
-             dispatch_group_enter(logoutGroup);
-             [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                 dispatch_group_leave(logoutGroup);
-             }];
-             
-             dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
-                 [self.currentProfile clearProfile];
-                 [source setResult:nil];
-             });
+             [source setResult:nil];
          }];
-        
-        return nil;
+         
+         return nil;
          
      }];
     
@@ -318,7 +309,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
         
         NSParameterAssert(IDs.count == t.result.count);
-
+        
         NSPredicate *predicate =
         [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
             return user.fullName.length > 0;
