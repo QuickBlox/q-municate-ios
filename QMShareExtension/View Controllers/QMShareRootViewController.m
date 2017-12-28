@@ -111,6 +111,8 @@ QMShareEtxentionOperationDelegate>
 
 - (void)completeShare:(nullable NSError *)error {
     
+    [SVProgressHUD dismiss];
+    
     NSString *status =
     error ?
     error.localizedDescription :

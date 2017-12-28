@@ -107,14 +107,14 @@ QMShareContactsDelegate>
 - (void)presentLoadingAlertControllerWithStatus:(NSString *)status
                                        animated:(BOOL)animated
                                  withCompletion:(dispatch_block_t)completionBlock {
-
+    
     __weak typeof(self) weakSelf = self;
     
     UIAlertController *alertController = [UIAlertController qm_loadingAlertControllerWithStatus:status
                                                                                     cancelBlock:^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.shareControllerDelegate didCancelSharing];
-    }];
+                                                                                        __strong typeof(weakSelf) strongSelf = weakSelf;
+                                                                                        [strongSelf.shareControllerDelegate didCancelSharing];
+                                                                                    }];
     
     [self presentViewController:alertController
                        animated:animated
@@ -329,17 +329,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
     
-    [self.shareDataSource.selectedItems removeAllObjects];
-    
-    [self.shareDataSource.selectedItems addObjectsFromArray:^NSArray *{
-        
-        NSMutableSet *selectedItems = [NSMutableSet set];
-        [selectedItems unionSet:self.searchDataSource.selectedItems];
-        [selectedItems unionSet:self.searchDataSource.contactsDataSource.selectedItems];
-        
-        return selectedItems.allObjects;
-    }()];
-    
     [self updateShareButton];
     [self.tableView reloadData];
 }
@@ -372,9 +361,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
-- (void)didPresentSearchController:(UISearchController *)searchController {
-    searchController.searchResultsController.view.hidden = NO;
-}
 
 //MARK: - UISearchResultsUpdating
 
@@ -440,7 +426,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         if (@available(iOS 11.0, *)) {
-            self.searchController.active = NO;
+            if (self.searchController.isActive) {
+                self.searchController.active = NO;
+            }
+            NSLog(@"Search controller");
         }
     } completion:nil];
     
@@ -452,6 +441,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)contactsDataSource:(nonnull QMShareDataSource *)__unused contactsDataSource
         didSelectRecipient:(nonnull id<QMShareItemProtocol>)__unused recipient {
+    
+    [self.shareDataSource selectItem:recipient
+                             forView:[self.tableView cellForRowAtIndexPath:[self.shareDataSource indexPathForObject:recipient]]];
     
     if (self.searchController.active) {
         self.searchController.active = NO;
