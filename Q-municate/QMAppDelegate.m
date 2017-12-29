@@ -113,8 +113,13 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
     }
     
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                    didFinishLaunchingWithOptions:launchOptions];
+    // not returning this method as launch options are not ONLY related to facebook
+    // for example when facebook returns NO in this method, callkit call from contacts
+    // app will not be handled. Facebook should not decide if URL should be handled for everything
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
+    
+    return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
