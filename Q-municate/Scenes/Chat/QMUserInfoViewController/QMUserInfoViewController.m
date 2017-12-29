@@ -419,7 +419,7 @@ NYTPhotosViewControllerDelegate
     
     void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD show];
         
         self.task = [[QMCore.instance.contactManager removeUserFromContactList:self.user]
                      continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task)

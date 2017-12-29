@@ -151,13 +151,14 @@ QMUsersServiceDelegate
 
 - (void)configureDataSources {
     
-    self.dataSource = [[QMContactsDataSource alloc] initWithKeyPath:@keypath(QBUUser.new, fullName)];
+    self.dataSource = [[QMContactsDataSource alloc] initWithKeyPath:qm_keypath(QBUUser, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     QMContactsSearchDataProvider *searchDataProvider = [[QMContactsSearchDataProvider alloc] init];
     searchDataProvider.delegate = self.searchResultsController;
     
-    self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
+    self.contactsSearchDataSource = [[QMContactsSearchDataSource alloc] initWithSearchDataProvider:searchDataProvider
+                                                                                      usingKeyPath:qm_keypath(QBUUser, fullName)];
     
     QMGlobalSearchDataProvider *globalSearchDataProvider = [[QMGlobalSearchDataProvider alloc] init];
     globalSearchDataProvider.delegate = self.searchResultsController;
@@ -173,7 +174,7 @@ QMUsersServiceDelegate
             return;
         }
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD show];
         
         NSIndexPath *indexPath = [self.searchResultsController.tableView indexPathForCell:cell];
         QBUUser *user = self.globalSearchDataSource.items[indexPath.row];
@@ -314,10 +315,7 @@ QMUsersServiceDelegate
 
 - (void)updateContactsAndEndRefreshing {
     
-    @weakify(self);
-    [[QMTasks taskUpdateContacts] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        @strongify(self);
+    [[QMTasks taskUpdateContacts] continueWithBlock:^id(BFTask *__unused task) {
         
         [self.refreshControl endRefreshing];
         
@@ -353,11 +351,13 @@ QMUsersServiceDelegate
 
 //MARK: - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+- (void)contactListService:(QMContactListService *)__unused contactListService
+      contactListDidChange:(QBContactList *)__unused contactList {
     
     [self updateItemsFromContactList];
     [self.tableView reloadData];
 }
+
 
 //MARK: - QMUsersServiceDelegate
 
@@ -376,21 +376,27 @@ QMUsersServiceDelegate
 - (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
+    
     NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
+    
     for (QBUUser *user in users) {
+        
         NSIndexPath *indexPath = [self.dataSource indexPathForObject:user];
-        if (indexPath != nil) {
+        if (indexPath != nil &&
+            [self.tableView.indexPathsForVisibleRows containsObject:indexPath]) {
             [indexPaths addObject:indexPath];
         }
     }
+    
     if (indexPaths.count > 0) {
+    
         [self.tableView reloadRowsAtIndexPaths:[indexPaths copy] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
 //MARK: - QMSearchProtocol
 
-- (QMSearchDataSource *)searchDataSource {
+- (QMTableViewSearchDataSource *)searchDataSource {
     
     return (id)self.tableView.dataSource;
 }

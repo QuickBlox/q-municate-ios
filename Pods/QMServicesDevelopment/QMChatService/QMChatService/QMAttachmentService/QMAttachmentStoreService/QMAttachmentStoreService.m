@@ -32,6 +32,7 @@
     
     if (self) {
         
+        _jpegCompressionQuality = 1.0;
         _storeDelegate = delegate;
         _imagesMemoryStorage = [NSMutableDictionary dictionary];
         _attachmentsMemoryStorage = [[QMAttachmentsMemoryStorage alloc] init];
@@ -133,7 +134,18 @@
 }
 
 - (NSData *)dataForImage:(UIImage*)image {
-    return imageData(image);
+    
+    int alphaInfo = CGImageGetAlphaInfo(image.CGImage);
+    BOOL hasAlpha = !(alphaInfo == kCGImageAlphaNone ||
+                      alphaInfo == kCGImageAlphaNoneSkipFirst ||
+                      alphaInfo == kCGImageAlphaNoneSkipLast);
+    
+    if (hasAlpha) {
+        return UIImagePNGRepresentation(image);
+    }
+    else {
+        return UIImageJPEGRepresentation(image, self.jpegCompressionQuality);
+    }
 }
 
 - (void)storeAttachment:(QBChatAttachment *)attachment
@@ -141,7 +153,7 @@
              cacheType:(QMAttachmentCacheType)cacheType
              messageID:(NSString *)messageID
               dialogID:(NSString *)dialogID
-            completion:(dispatch_block_t)completion {
+            completion:(void(^)(NSURL *fileURL))completion {
     
     NSAssert(attachment.ID, @"No ID");
     NSAssert(messageID, @"No ID");
@@ -150,7 +162,7 @@
     if (!data) {
         if (attachment.image) {
             self.imagesMemoryStorage[messageID] = attachment.image;
-            data = imageData(attachment.image);
+            data = [self dataForImage:attachment.image];
         }
         else if (attachment.localFileURL) {
             data = [NSData dataWithContentsOfURL:attachment.localFileURL];
@@ -167,7 +179,7 @@
     }
     else {
         if (completion) {
-            completion();
+            completion(nil);
         }
     }
 }
@@ -177,24 +189,19 @@
        cacheType:(QMAttachmentCacheType)cacheType
        messageID:(NSString *)messageID
         dialogID:(NSString *)dialogID
-      completion:(dispatch_block_t)completion {
+      completion:(void(^)(NSURL *_Nullable fileURL))completion {
     
     NSAssert(attachment.ID, @"No ID");
     NSAssert(messageID, @"No ID");
     NSAssert(dialogID, @"No ID");
     NSAssert(data.length, @"No data");
     
-    dispatch_block_t saveToCacheBlock = ^{
+    void(^saveToCacheBlock)(QBChatAttachment *attachment) = ^(QBChatAttachment *attachment){
         
         if (cacheType & QMAttachmentCacheTypeMemory) {
             
             [self.attachmentsMemoryStorage addAttachment:attachment
                                             forMessageID:messageID];
-            
-            [self updateAttachment:attachment
-                         messageID:messageID
-                          dialogID:dialogID];
-            
         }
     };
     
@@ -214,21 +221,22 @@
             
             if  (![_fileManager createFileAtPath:pathToFile contents:data attributes:nil]) {
                 QMSLog(@"Error was code: %d - message: %s", errno, strerror(errno));
+                completion(nil);
+                return;
             }
             
-            attachment.localFileURL = [NSURL fileURLWithPath:pathToFile];
             dispatch_async(dispatch_get_main_queue(), ^{
-                saveToCacheBlock();
+                saveToCacheBlock(attachment);
                 if (completion) {
-                    completion();
+                    completion([NSURL fileURLWithPath:pathToFile]);
                 }
             });
         });
     }
     else {
-        saveToCacheBlock();
+        saveToCacheBlock(attachment);
         if (completion) {
-            completion();
+            completion(nil);
         }
     }
 }
@@ -476,21 +484,5 @@ static NSString* mediaPath(NSString *dialogID, NSString *messsageID, QBChatAttac
     
     return [mediaPatch stringByAppendingPathComponent:filePath];
 }
-
-static inline NSData * __nullable imageData(UIImage * __nonnull image) {
-    
-    int alphaInfo = CGImageGetAlphaInfo(image.CGImage);
-    BOOL hasAlpha = !(alphaInfo == kCGImageAlphaNone ||
-                      alphaInfo == kCGImageAlphaNoneSkipFirst ||
-                      alphaInfo == kCGImageAlphaNoneSkipLast);
-    
-    if (hasAlpha) {
-        return UIImagePNGRepresentation(image);
-    }
-    else {
-        return UIImageJPEGRepresentation(image, 1.0f);
-    }
-}
-
 
 @end

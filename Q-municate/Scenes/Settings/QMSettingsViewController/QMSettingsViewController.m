@@ -20,6 +20,7 @@
 
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
+#import "SVProgressHUD.h"
 
 static const CGFloat kQMDefaultSectionHeaderHeight = 24.0f;
 static const CGFloat kQMStatusSectionHeaderHeight = 40.0f;
@@ -172,7 +173,7 @@ NYTPhotosViewControllerDelegate
         
         self.pushNotificationSwitch.on = [QMCore instance].currentProfile.pushNotificationsEnabled;
         [navigationController dismissNotificationPanel];
-       
+        
         return nil;
     };
     
@@ -196,28 +197,23 @@ NYTPhotosViewControllerDelegate
                                                       handler:^(UIAlertAction * _Nonnull __unused action) {
                                                       }]];
     
-    __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
-    @weakify(self);
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil)
                                                         style:UIAlertActionStyleDestructive
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                          
-                                                          @strongify(self);
-                                                          if (self.logoutTask) {
-                                                              // task is in progress
-                                                              return;
-                                                          }
-                                                          
-                                                          [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-                                                          
-                                                          self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused logoutTask) {
-                                                              
-                                                              [navigationController dismissNotificationPanel];
-                                                              [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                                                              return nil;
-                                                          }];
-                                                      }]];
+                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                {
+                                    if (self.logoutTask) {
+                                        // task is in progress
+                                        return;
+                                    }
+                                    
+                                    [SVProgressHUD show];
+                                    self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id(BFTask *__unused logoutTask) {
+                                        [SVProgressHUD dismiss];
+                                        [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+                                        return nil;
+                                    }];
+                                }]];
     
     [self presentViewController:alertController animated:YES completion:nil];
 }

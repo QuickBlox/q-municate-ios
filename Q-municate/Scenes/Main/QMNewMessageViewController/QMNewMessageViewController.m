@@ -73,7 +73,7 @@ QMTagFieldViewDelegate
     if (tagIDs.count > 1) {
         // creating group chat
         
-        NSArray *fullNames = [tagIDs valueForKeyPath:@keypath(QBUUser.new, fullName)];
+        NSArray *fullNames = [tagIDs valueForKeyPath:qm_keypath(QBUUser, fullName)];
         NSString *name = [fullNames componentsJoinedByString:@", "];
         NSArray *occupantsIDs = [QMCore.instance.contactManager idsOfUsers:tagIDs];
         

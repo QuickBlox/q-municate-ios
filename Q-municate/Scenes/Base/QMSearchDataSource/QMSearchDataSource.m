@@ -11,6 +11,8 @@
 
 @implementation QMSearchDataSource
 
+@synthesize searchDataProvider = _searchDataProvider;
+
 - (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
     
     self = [super init];
@@ -23,5 +25,12 @@
     
     return self;
 }
+
+- (void)performSearch:(NSString *)searchText {
+    
+    [self.searchDataProvider performSearch:searchText
+                                dataSource:self];
+}
+
 
 @end

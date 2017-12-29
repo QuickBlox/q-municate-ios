@@ -6,8 +6,8 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMAlphabetizedDataSource.h"
+#import "QMAlphabetizedTableViewDataSource.h"
 
-@interface QMContactsDataSource : QMAlphabetizedDataSource
+@interface QMContactsDataSource : QMAlphabetizedTableViewDataSource
 
 @end

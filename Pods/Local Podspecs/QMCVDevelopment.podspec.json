@@ -29,19 +29,19 @@
   },
   "resources": "QMChatViewController/Icons/Media.xcassets",
   "requires_arc": true,
-  "xcconfig": {
-    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework $(PODS_ROOT)/../External"
-  },
   "dependencies": {
     "TTTAttributedLabel": [
-      "> 1.13"
+
     ],
     "SDWebImage": [
-      "~> 4.0.0"
+
     ],
     "FFCircularProgressView": [
 
     ]
+  },
+  "xcconfig": {
+    "FRAMEWORK_SEARCH_PATHS": "$(PODS_ROOT)/../../Framework $(PODS_ROOT)/../External"
   },
   "subspecs": [
     {

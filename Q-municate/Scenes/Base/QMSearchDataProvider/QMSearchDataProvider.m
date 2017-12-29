@@ -17,5 +17,13 @@
         [self.delegate searchDataProviderDidFinishDataFetching:self];
     }
 }
+- (void)performSearch:(NSString *)__unused searchText
+           dataSource:(QMDataSource *)__unused dataSource {
+    
+    if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
+        
+        [self.delegate searchDataProviderDidFinishDataFetching:self];
+    }
+}
 
 @end

@@ -156,10 +156,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     __block QBChatDialog *chatDialog = nil;
     
-    @weakify(self);
-    [[[[self.serviceManager.chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+    [[[[self.serviceManager.chatService fetchDialogWithID:dialogID]
+       continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
-        @strongify(self);
         if (task.result != nil) {
             
             chatDialog = task.result;
@@ -168,7 +167,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         }
         
         if ([delegate respondsToSelector:@selector(pushNotificationManagerDidStartLoadingDialogFromServer:)]) {
-            
             [delegate pushNotificationManagerDidStartLoadingDialogFromServer:self];
         }
         
@@ -176,11 +174,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
-        @strongify(self);
         if (task.isFaulted) {
             
             if ([delegate respondsToSelector:@selector(pushNotificationManager:didFailFetchingDialogWithError:)]) {
-                
                 [delegate pushNotificationManager:self didFailFetchingDialogWithError:task.error];
             }
         }
@@ -189,7 +185,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
             if ([task.result isKindOfClass:[QBChatDialog class]]) {
                 
                 if ([delegate respondsToSelector:@selector(pushNotificationManagerDidFinishLoadingDialogFromServer:)]) {
-                    
                     [delegate pushNotificationManagerDidFinishLoadingDialogFromServer:self];
                 }
                 
@@ -203,7 +198,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        @strongify(self);
         [delegate pushNotificationManager:self didSucceedFetchingDialog:chatDialog];
         
         return nil;

@@ -6,7 +6,7 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMSearchDataSource.h"
+#import "QMTableViewDataSource.h"
 #import "QMSearchProtocols.h"
 #import "QMGlobalSearchDataProvider.h"
 
@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  QMGlobalSearchDataSource class interface.
  *  Used as data source for global search.
  */
-@interface QMGlobalSearchDataSource : QMSearchDataSource <QMGlobalSearchDataSourceProtocol, QMContactsSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol>
+@interface QMGlobalSearchDataSource : QMTableViewSearchDataSource <QMGlobalSearchDataSourceProtocol, QMContactsSearchDataSourceProtocol, QMGlobalSearchDataProviderProtocol>
 
 /**
  *  Add user block action.

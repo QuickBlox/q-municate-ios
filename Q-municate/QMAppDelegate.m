@@ -14,7 +14,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Flurry.h>
-#import <SVProgressHUD.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 #import <Intents/Intents.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FirebaseCore/FirebaseCore.h>
@@ -22,28 +22,7 @@
 
 #import "UIScreen+QMLock.h"
 #import "UIImage+Cropper.h"
-
-static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
-
-#define DEVELOPMENT 1
-
-#if DEVELOPMENT == 0
-
-// Production Test
-static const NSUInteger kQMApplicationID = 13318;
-static NSString * const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
-static NSString * const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#else
-
-// Development
-static const NSUInteger kQMApplicationID = 63068;
-static NSString * const kQMAuthorizationKey = @"BkWsMWL3XUqJdNr";
-static NSString * const kQMAuthorizationSecret = @"bG8PFjwAx3JKFfS";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#endif
+#import "QBSettings+Qmunicate.h"
 
 @interface QMAppDelegate () <QMPushNotificationManagerDelegate, QMAuthServiceDelegate>
 
@@ -56,30 +35,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     application.applicationIconBadgeNumber = 0;
     
     // Quickblox settings
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthKey:kQMAuthorizationKey];
-    [QBSettings setAuthSecret:kQMAuthorizationSecret];
-    [QBSettings setAccountKey:kQMAccountKey];
-    [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
+    [QBSettings configure];
+    [QMServicesManager enableLogging:QMCurrentApplicationZone != QMApplicationZoneProduction];
     
-    [QBSettings setAutoReconnectEnabled:YES];
-    [QBSettings setCarbonsEnabled:YES];
-    
-#if DEVELOPMENT == 0
-    [QBSettings setLogLevel:QBLogLevelNothing];
-    [QBSettings disableXMPPLogging];
-    [QMServicesManager enableLogging:NO];
-    
-    QMLogSetEnabled(NO);
-#else
-    [QBSettings setLogLevel:QBLogLevelDebug];
-    [QBSettings enableXMPPLogging];
-    [QMServicesManager enableLogging:YES];
-    
-    QMLogSetEnabled(YES);
-#endif
-    
-    [[QMCore instance].authService addDelegate:self];
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
@@ -99,12 +57,14 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
     [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+    
     // Configuring external frameworks
     [FIRApp configure];
     [[FIRAuth auth] useAppLanguage];
     [Fabric with:@[CrashlyticsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
-    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
+    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
     // Handling push notifications if needed
@@ -189,11 +149,14 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
     FIRAuthAPNSTokenType firTokenType;
-#if DEVELOPMENT == 0
-    firTokenType = FIRAuthAPNSTokenTypeProd;
-#else
-    firTokenType = FIRAuthAPNSTokenTypeSandbox;
-#endif
+
+    if (QMCurrentApplicationZone == QMApplicationZoneProduction) {
+        firTokenType = FIRAuthAPNSTokenTypeProd;
+    }
+    else {
+        firTokenType = FIRAuthAPNSTokenTypeSandbox;
+    }
+
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
