@@ -67,6 +67,7 @@ NSString *const FBSDKAppEventNameSpentCredits            = @"fb_mobile_spent_cre
 NSString *const FBSDKAppEventParameterNameCurrency               = @"fb_currency";
 NSString *const FBSDKAppEventParameterNameRegistrationMethod     = @"fb_registration_method";
 NSString *const FBSDKAppEventParameterNameContentType            = @"fb_content_type";
+NSString *const FBSDKAppEventParameterNameContent                = @"fb_content";
 NSString *const FBSDKAppEventParameterNameContentID              = @"fb_content_id";
 NSString *const FBSDKAppEventParameterNameSearchString           = @"fb_search_string";
 NSString *const FBSDKAppEventParameterNameSuccess                = @"fb_success";
@@ -153,6 +154,8 @@ NSString *const FBSDKAppEventParameterDialogOutcome               = @"fb_dialog_
 NSString *const FBSDKAppEventParameterDialogErrorMessage          = @"fb_dialog_outcome_error_message";
 NSString *const FBSDKAppEventParameterDialogMode                  = @"fb_dialog_mode";
 NSString *const FBSDKAppEventParameterDialogShareContentType      = @"fb_dialog_share_content_type";
+NSString *const FBSDKAppEventParameterDialogShareContentUUID      = @"fb_dialog_share_content_uuid";
+NSString *const FBSDKAppEventParameterDialogShareContentPageID    = @"fb_dialog_share_content_page_id";
 NSString *const FBSDKAppEventParameterShareTrayActivityName       = @"fb_share_tray_activity";
 NSString *const FBSDKAppEventParameterShareTrayResult             = @"fb_share_tray_result";
 NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
@@ -173,12 +176,15 @@ NSString *const FBSDKAppEventsDialogShareModeFeedBrowser    = @"FeedBrowser";
 NSString *const FBSDKAppEventsDialogShareModeFeedWeb        = @"FeedWeb";
 NSString *const FBSDKAppEventsDialogShareModeUnknown        = @"Unknown";
 
-NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph       = @"OpenGraph";
-NSString *const FBSDKAppEventsDialogShareContentTypeStatus          = @"Status";
-NSString *const FBSDKAppEventsDialogShareContentTypePhoto           = @"Photo";
-NSString *const FBSDKAppEventsDialogShareContentTypeVideo           = @"Video";
-NSString *const FBSDKAppEventsDialogShareContentTypeCamera          = @"Camera";
-NSString *const FBSDKAppEventsDialogShareContentTypeUnknown         = @"Unknown";
+NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph                         = @"OpenGraph";
+NSString *const FBSDKAppEventsDialogShareContentTypeStatus                            = @"Status";
+NSString *const FBSDKAppEventsDialogShareContentTypePhoto                             = @"Photo";
+NSString *const FBSDKAppEventsDialogShareContentTypeVideo                             = @"Video";
+NSString *const FBSDKAppEventsDialogShareContentTypeCamera                            = @"Camera";
+NSString *const FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate          = @"GenericTemplate";
+NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate            = @"MediaTemplate";
+NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate   = @"OpenGraphMusicTemplate";
+NSString *const FBSDKAppEventsDialogShareContentTypeUnknown                           = @"Unknown";
 
 NSString *const FBSDKAppEventsLoggingResultNotification = @"com.facebook.sdk:FBSDKAppEventsLoggingResultNotification";
 
@@ -329,7 +335,7 @@ static NSString *g_overrideAppID = nil;
   [[FBSDKAppEvents singleton] instanceLogEvent:eventName
                                     valueToSum:valueToSum
                                     parameters:parameters
-                            isImplicitlyLogged:NO
+                            isImplicitlyLogged:(BOOL)parameters[FBSDKAppEventParameterImplicitlyLogged]
                                    accessToken:accessToken];
 }
 
@@ -686,7 +692,6 @@ static NSString *g_overrideAppID = nil;
   if (isImplicitlyLogged) {
     eventDictionary[FBSDKAppEventParameterImplicitlyLogged] = @"1";
   }
-  [FBSDKInternalUtility dictionary:eventDictionary setObject:_userID forKey:@"_app_user_id"];
 
   NSString *currentViewControllerName;
   if ([NSThread isMainThread]) {
@@ -784,6 +789,7 @@ static NSString *g_overrideAppID = nil;
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self fetchServerConfiguration:^(void) {
+    NSString *receipt_data = [appEventsState extractReceiptData];
     NSString *JSONString = [appEventsState JSONStringForEvents:_serverConfiguration.implicitLoggingEnabled];
     NSData *encodedEvents = [JSONString dataUsingEncoding:NSUTF8StringEncoding];
     if (!encodedEvents) {
@@ -795,6 +801,11 @@ static NSString *g_overrideAppID = nil;
                                            activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
                                            implicitEventsOnly:appEventsState.areAllEventsImplicit
                                            shouldAccessAdvertisingID:_serverConfiguration.advertisingIDEnabled];
+    NSInteger length = [receipt_data length];
+    if (length > 0) {
+      postParameters[@"receipt_data"] = receipt_data;
+    }
+
     postParameters[@"custom_events_file"] = encodedEvents;
     if (appEventsState.numSkipped > 0) {
       postParameters[@"num_skipped_events"] = [NSString stringWithFormat:@"%lu", (unsigned long)appEventsState.numSkipped];

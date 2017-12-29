@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.6</string>
+	<string>2.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -30,11 +30,12 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb605405446247805</string>
+				<string>com.googleusercontent.apps.265299067289-691cusdf63h5sisbrjgbke0spst6tuva</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1015</string>
+	<string>2001</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>

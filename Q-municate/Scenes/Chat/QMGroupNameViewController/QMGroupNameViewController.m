@@ -41,24 +41,23 @@
 
 - (IBAction)saveButtonPressed:(UIBarButtonItem *)__unused sender {
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
+    QMNavigationController *navigationController = (id)self.navigationController;
     
-    __weak UINavigationController *navigationController = self.navigationController;
+    [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                           message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                          duration:0];
     
-    @weakify(self);
-    [[QMCore.instance.chatManager changeName:self.groupNameField.text forGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        @strongify(self);
-        
-        [(QMNavigationController *)navigationController dismissNotificationPanel];
-        
-        if (!task.isFaulted) {
-            
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-        
-        return nil;
-    }];
+    [[QMCore.instance.chatManager changeName:self.groupNameField.text forGroupChatDialog:self.chatDialog]
+     continueWithBlock:^id(BFTask *task) {
+         
+         [navigationController dismissNotificationPanel];
+         
+         if (!task.isFaulted) {
+             [navigationController popViewControllerAnimated:YES];
+         }
+         
+         return nil;
+     }];
 }
 
 - (IBAction)groupNameFieldEditingChanged:(UITextField *)sender {

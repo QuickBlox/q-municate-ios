@@ -27,6 +27,8 @@
     return self.isEmpty ? [QMNoContactsCell height] : [QMContactCell height];
 }
 
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (self.isEmpty) {

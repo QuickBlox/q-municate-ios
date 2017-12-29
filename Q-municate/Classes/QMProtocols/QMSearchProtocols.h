@@ -6,12 +6,13 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-@class QMSearchDataSource;
+@class QMTableViewSearchDataSource;
+@class QBUUser;
 
 @protocol QMSearchProtocol <NSObject>
 
 @optional
-- (QMSearchDataSource *)searchDataSource;
+- (QMTableViewSearchDataSource *)searchDataSource;
 
 @end
 

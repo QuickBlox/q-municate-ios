@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="rLH-Xc-uKE">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--ShareRouter-->
+        <scene sceneID="zLz-je-gbp">
+            <objects>
+                <viewController storyboardIdentifier="QMShareRouterViewController" title="ShareRouter" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rLH-Xc-uKE" customClass="QMShareRootViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="X4t-MI-yyZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="sQh-51-fIo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Rcs-86-2Ic">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="tn6-M0-yn2"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jmU-ZM-qgT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="241" y="356"/>
+        </scene>
+    </scenes>
+</document>

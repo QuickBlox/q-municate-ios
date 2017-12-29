@@ -458,11 +458,9 @@ QBChatDelegate
 //MARK: - Permissions check
 
 - (void)checkPermissionsWithConferenceType:(QBRTCConferenceType)conferenceType completion:(PermissionBlock)completion {
-    
-    @weakify(self);
+
     [QMPermissions requestPermissionToMicrophoneWithCompletion:^(BOOL granted) {
         
-        @strongify(self);
         if (granted) {
             
             switch (conferenceType) {
@@ -470,7 +468,6 @@ QBChatDelegate
                 case QBRTCConferenceTypeAudio:
                     
                     if (completion) {
-                        
                         completion(granted);
                     }
                     
@@ -481,7 +478,6 @@ QBChatDelegate
                     [QMPermissions requestPermissionToCameraWithCompletion:^(BOOL videoGranted) {
                         
                         if (!videoGranted) {
-                            
                             // showing error alert with a suggestion
                             // to go to the settings
                             [self showAlertWithTitle:NSLocalizedString(@"QM_STR_CAMERA_ERROR", nil)
@@ -489,7 +485,6 @@ QBChatDelegate
                         }
                         
                         if (completion) {
-                            
                             completion(videoGranted);
                         }
                     }];

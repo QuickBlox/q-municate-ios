@@ -16,7 +16,7 @@
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <Bolts/Bolts.h>
 
-static const NSUInteger kQMDialogsPageLimit = 10;
+static const NSUInteger kQMDialogsPageLimit = 100;
 static const NSUInteger kQMUsersPageLimit = 100;
 
 @implementation QMTasks
@@ -206,11 +206,14 @@ static const NSUInteger kQMUsersPageLimit = 100;
     QMCore *core = QMCore.instance;
     
     NSDate *lastUserFetchDate = core.currentProfile.lastUserFetchDate;
+    
     NSMutableArray *contactsIDs = [[core.contactListService.contactListMemoryStorage userIDsFromContactList] mutableCopy];
     [contactsIDs addObject:@(core.currentProfile.userData.ID)];
+    
     NSString *dateFilter = nil;
     
     if (lastUserFetchDate != nil) {
+        
         static NSDateFormatter *dateFormatter = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -230,7 +233,8 @@ static const NSUInteger kQMUsersPageLimit = 100;
         
         NSArray *subArray = [contactsIDs subarrayWithRange:range];
         QBGeneralResponsePage *page =
-        [QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:range.length];
+        [QBGeneralResponsePage responsePageWithCurrentPage:1
+                                                   perPage:range.length];
         
         BFTask *task = [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter)
                                                                     page:page];

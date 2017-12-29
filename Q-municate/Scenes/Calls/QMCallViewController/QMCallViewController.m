@@ -519,10 +519,8 @@ QBRTCAudioSessionDelegate
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
-    @weakify(self);
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
         
-        @strongify(self);
         if (self.callState == QMCallStateActiveVideoCall) {
             // This block is used to update layout for views
             // after interface orientation change

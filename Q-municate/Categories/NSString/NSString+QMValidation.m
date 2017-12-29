@@ -45,7 +45,9 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
             [NSString stringWithFormat:NSLocalizedString(@"QM_STR_VALIDATION_ERROR_NOT_ALLOWED_CHARACTER_PLURAL", @"{Characters}"), result.copy];
         }
         
-        *error = [QMErrorsFactory validationErrorWithLocalizedDescription:errorDescription];
+        if (error != NULL) {
+            *error = [QMErrorsFactory validationErrorWithLocalizedDescription:errorDescription];
+        }
         
         return NO;
     }
@@ -63,7 +65,10 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
         
         NSString *validationErrorDescription =
         [NSString stringWithFormat:NSLocalizedString(@"QM_STR_VALIDATION_ERROR_LENGTH_MIN", @"{Number of symbols}"), minLength];
-        *error = [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+        
+        if (error != NULL) {
+            *error = [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+        }
         
         return NO;
     }
@@ -71,7 +76,10 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
     if (maxLength > 0 && textLength > maxLength) {
         NSString *validationErrorDescription =
         [NSString stringWithFormat:NSLocalizedString(@"QM_STR_VALIDATION_ERROR_LENGTH_MAX",@"{Number of symbols}"), maxLength];
-        *error = [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+        
+        if (error != NULL) {
+            *error = [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+        }
         
         return NO;
     }
@@ -90,7 +98,7 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
         return NO;
     }
     
-   return YES;
+    return YES;
 }
 
 @end

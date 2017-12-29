@@ -17,7 +17,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
 
 @property (strong, nonatomic) BFCancellationTokenSource *globalSearchCancellationTokenSource;
 
-@property (strong, nonatomic) NSTimer* timer;
+@property (strong, nonatomic) NSTimer *timer;
 
 @property (strong, nonatomic) QBGeneralResponsePage *responsePage;
 @property (assign, nonatomic) BOOL shouldLoadMore;
@@ -88,38 +88,37 @@ static const NSUInteger kQMUsersPageLimit = 50;
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
-    @weakify(self);
-    [[QMCore.instance.usersService searchUsersWithFullName:self.cachedSearchText page:self.responsePage] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull task) {
-        
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        
-        @strongify(self);
-        if (task.isCompleted) {
-            
-            self.cachedSearchPage = self.responsePage.currentPage;
-            
-            self.globalSearchCancellationTokenSource = nil;
-            
-            self.shouldLoadMore = task.result.count >= kQMUsersPageLimit;
-            
-            NSMutableArray *sortedUsers = [[self sortUsersByFullname:task.result] mutableCopy];
-            [sortedUsers removeObject:QMCore.instance.currentProfile.userData];
-    
-            if (self.responsePage.currentPage > 1) {
-                
-                [self.dataSource addItems:[sortedUsers copy]];
-            }
-            else {
-                
-                [self.dataSource replaceItems:[sortedUsers copy]];
-            }
-            
-            [self.delegate searchDataProviderDidFinishDataFetching:self];
-        }
-        
-        return nil;
-        
-    } cancellationToken:self.globalSearchCancellationTokenSource.token];
+    [[QMCore.instance.usersService searchUsersWithFullName:self.cachedSearchText page:self.responsePage]
+     continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> *task) {
+         
+         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+         
+         if (task.isCompleted) {
+             
+             self.cachedSearchPage = self.responsePage.currentPage;
+             
+             self.globalSearchCancellationTokenSource = nil;
+             
+             self.shouldLoadMore = task.result.count >= kQMUsersPageLimit;
+             
+             NSMutableArray *sortedUsers = [[self sortUsersByFullname:task.result] mutableCopy];
+             [sortedUsers removeObject:QMCore.instance.currentProfile.userData];
+             
+             if (self.responsePage.currentPage > 1) {
+                 
+                 [self.dataSource addItems:[sortedUsers copy]];
+             }
+             else {
+                 
+                 [self.dataSource replaceItems:[sortedUsers copy]];
+             }
+             
+             [self.delegate searchDataProviderDidFinishDataFetching:self];
+         }
+         
+         return nil;
+         
+     } cancellationToken:self.globalSearchCancellationTokenSource.token];
 }
 
 //MARK: - Methods
@@ -147,7 +146,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
 - (NSArray *)sortUsersByFullname:(NSArray *)users {
     
     NSSortDescriptor *sorter = [[NSSortDescriptor alloc]
-                                initWithKey:@keypath(QBUUser.new, fullName)
+                                initWithKey:qm_keypath(QBUUser, fullName)
                                 ascending:YES
                                 selector:@selector(localizedCaseInsensitiveCompare:)];
     NSArray *sortedUsers = [users sortedArrayUsingDescriptors:@[sorter]];
