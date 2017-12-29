@@ -89,7 +89,13 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
          @strongify(self);
-         if (![QBChat instance].isConnected) {
+         if ([QBChat instance].isConnected) {
+             // if chat was connected (e.g. we are in call) in background
+             // we skip requests, so perform them now as app is active now
+             [QMTasks taskFetchAllData];
+             [QMTasks taskUpdateContacts];
+         }
+         else {
              [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
                                                                                    message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
                                                                                   duration:0];
@@ -385,8 +391,12 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
-    [QMTasks taskFetchAllData];
-    [QMTasks taskUpdateContacts];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        // only perform requests if app is in foreground
+        [QMTasks taskFetchAllData];
+        [QMTasks taskUpdateContacts];
+    }
+    
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
                                                                           message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
                                                                          duration:kQMDefaultNotificationDismissTime];
@@ -394,8 +404,12 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
-    [QMTasks taskFetchAllData];
-    [QMTasks taskUpdateContacts];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        // only perform requests if app is in foreground
+        [QMTasks taskFetchAllData];
+        [QMTasks taskUpdateContacts];
+    }
+    
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
                                                                           message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
                                                                          duration:kQMDefaultNotificationDismissTime];
