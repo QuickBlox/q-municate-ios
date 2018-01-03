@@ -464,19 +464,18 @@ TTTAttributedLabelDelegate
 }
 
 - (void)refreshMessages {
-    
-    @weakify(self);
     // Retrieving message from Quickblox REST history and cache.
     [QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
-                                           iterationBlock:^(QBResponse * __unused response,
-                                                            NSArray *messages,
-                                                            BOOL * __unused stop)
-     {
-         @strongify(self);
-         if (messages.count > 0) {
-             [self.chatDataSource addMessages:messages];
-         }
-     }];
+                                           iterationBlock:nil];
+}
+
+- (void)chatService:(QMChatService *)__unused chatService
+didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
+        forDialogID:(NSString *)__unused dialogID {
+    
+    if (![self.dialogID isEqualToString:dialogID]) return;
+    
+    [self.chatDataSource addMessages:messages];
 }
 
 - (void)readMessage:(QBChatMessage *)message {

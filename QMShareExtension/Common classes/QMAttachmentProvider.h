@@ -28,13 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) QMAttachmentProviderSettings *providerSettings;
 
 - (BFTask <QBChatAttachment*> *)taskAttachmentWithImage:(UIImage *)image
-                                          typeIdentifiers:(NSArray *)typeIdentifiers;
+                                        typeIdentifiers:(NSArray *)typeIdentifiers;
 
 - (BFTask <QBChatAttachment*> *)taskAttachmentWithFileURL:(NSURL *)fileURL
                                           typeIdentifiers:(NSArray *)typeIdentifiers;
 
 - (BFTask <QBChatAttachment*> *)taskAttachmentWithData:(NSData *)data
-                                        typeIdentifiers:(NSArray *)typeIdentifiers;
+                                       typeIdentifiers:(NSArray *)typeIdentifiers;
 
 @end
 
