@@ -46,7 +46,7 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
         }
         
         if (error != NULL) {
-            *error = [QMErrorsFactory validationErrorWithLocalizedDescription:errorDescription];
+            *error = [QMErrorsFactory errorWithLocalizedDescription:errorDescription];
         }
         
         return NO;
@@ -67,7 +67,7 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
         [NSString stringWithFormat:NSLocalizedString(@"QM_STR_VALIDATION_ERROR_LENGTH_MIN", @"{Number of symbols}"), minLength];
         
         if (error != NULL) {
-            *error = [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+            *error = [QMErrorsFactory errorWithLocalizedDescription:validationErrorDescription];
         }
         
         return NO;
@@ -78,7 +78,7 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
         [NSString stringWithFormat:NSLocalizedString(@"QM_STR_VALIDATION_ERROR_LENGTH_MAX",@"{Number of symbols}"), maxLength];
         
         if (error != NULL) {
-            *error = [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+            *error = [QMErrorsFactory errorWithLocalizedDescription:validationErrorDescription];
         }
         
         return NO;
@@ -93,7 +93,7 @@ static NSString *const kQMEmailRegex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0
     
     if (![predicate evaluateWithObject:self]) {
         NSString *validationErrorDescription = NSLocalizedString(@"QM_STR_VALIDATION_ERROR_EMAIL",nil);
-        *error =  [QMErrorsFactory validationErrorWithLocalizedDescription:validationErrorDescription];
+        *error =  [QMErrorsFactory errorWithLocalizedDescription:validationErrorDescription];
         
         return NO;
     }
