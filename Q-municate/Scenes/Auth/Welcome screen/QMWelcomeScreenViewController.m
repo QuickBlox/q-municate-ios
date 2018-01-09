@@ -42,12 +42,10 @@ static NSString * const kQMFacebookIDField = @"id";
 //MARK: - Actions
 
 - (IBAction)connectWithPhone {
-    
-    @weakify(self);
+
     [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
         // License agreement check
         if (success) {
-            @strongify(self);
             [self performPhoneLogin];
         }
     }];
@@ -92,7 +90,7 @@ static NSString * const kQMFacebookIDField = @"id";
 
 - (void)chainFacebookConnect {
     
-    @weakify(self);
+    
     [[[QMFacebook connect] continueWithBlock:^id _Nullable(BFTask<NSString *> * _Nonnull task) {
         // Facebook connect
         if (task.isFaulted || task.isCancelled) {
@@ -112,7 +110,7 @@ static NSString * const kQMFacebookIDField = @"id";
         }
         else if (task.result != nil) {
             
-            @strongify(self);
+            
             [SVProgressHUD dismiss];
             [self performSegueWithIdentifier:kQMSceneSegueMain sender:nil];
             QMCore.instance.currentProfile.accountType = QMAccountTypeFacebook;
@@ -143,7 +141,8 @@ static NSString * const kQMFacebookIDField = @"id";
     authUI.delegate = self;
     FUIPhoneAuth *phoneAuth = [[FUIPhoneAuth alloc] initWithAuthUI:authUI];
     authUI.providers = @[phoneAuth];
-    [phoneAuth signInWithPresentingViewController:self];
+    [phoneAuth signInWithPresentingViewController:self
+                                      phoneNumber:nil];
 }
 
 // MARK: - FUIAuthDelegate delegate

@@ -36,6 +36,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text;
 
+/**
+ *  Send push notification for user with text, extra params and possibly VOIP.
+ *
+ *  @param user user to send push notification to
+ *  @param text text for push notification
+ *  @param extraParams additional parameters to send in payload
+ *  @param isVoip determines whether push should be voip if possible
+ *
+ *  @return BFTask with completion
+ */
++ (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text extraParams:(nullable NSDictionary *)extraParams isVoip:(BOOL)isVoip;
+
 @end
 
 NS_ASSUME_NONNULL_END

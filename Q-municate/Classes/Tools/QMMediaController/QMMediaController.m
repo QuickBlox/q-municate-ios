@@ -14,18 +14,19 @@
 #import "QMPhoto.h"
 #import "NYTPhotosViewController.h"
 #import "QMDateUtils.h"
-#import "QMImageLoader+QBChatAttachment.h"
 #import "UIImage+QM.h"
 
 @interface QMMediaController() <QMAudioPlayerDelegate,
 NYTPhotosViewControllerDelegate,
-QMMediaHandler>
+QMMediaHandler,
+QMAttachmentContentServiceDelegate>
 
 @property (weak, nonatomic) UIViewController <QMMediaControllerDelegate> *viewController;
 @property (strong, nonatomic) QMChatAttachmentService *attachmentsService;
 @property (strong, nonatomic) AVPlayer *videoPlayer;
 @property (weak, nonatomic) UIView *photoReferenceView;
 @property (weak, nonatomic) __kindof UIViewController *presentedViewController;
+
 @end
 
 @implementation QMMediaController
@@ -40,6 +41,8 @@ QMMediaHandler>
         
         _viewController = viewController;
         [QMAudioPlayer audioPlayer].playerDelegate = self;
+        self.attachmentsService.contentService.delegate = self;
+        
     }
     
     return self;
@@ -66,7 +69,8 @@ QMMediaHandler>
     if (!view.mediaHandler) {
         view.mediaHandler = self;
     }
-    if (attachment.attachmentType != QMAttachmentContentTypeAudio && attachment.ID) {
+    
+    if (shouldAutoDownload(attachment) && attachment.ID) {
         
         if (view.messageID != nil && ![view.messageID isEqualToString:message.ID]) {
             
@@ -88,8 +92,8 @@ QMMediaHandler>
     
     view.messageID = message.ID;
     view.duration = attachment.duration;
-    view.playable = attachment.attachmentType == QMAttachmentContentTypeAudio ||  attachment.attachmentType == QMAttachmentContentTypeVideo;
-    view.cancellable = attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.ID == nil;
+    view.playable = isPlayable(attachment);
+    view.cancellable = canBeCancelled(attachment);
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
@@ -99,15 +103,17 @@ QMMediaHandler>
         view.viewState = QMMediaViewStateNotReady;
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoading
-             || attachmentStatus == QMMessageAttachmentStatusUploading) {
+             || attachmentStatus == QMMessageAttachmentStatusUploading
+             || attachmentStatus == QMMessageAttachmentStatusPreparing) {
+        
         view.viewState = QMMediaViewStateLoading;
-        view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
-    }
-    else if (attachmentStatus == QMMessageAttachmentStatusPreparing) {
-        view.viewState = QMMediaViewStateLoading;
+        
+        if (attachmentStatus != QMMessageAttachmentStatusPreparing) {
+            view.progress = [self.attachmentsService.contentService progressForMessageWithID:message.ID];
+        }
     }
     else if (attachmentStatus == QMMessageAttachmentStatusLoaded) {
-    
+        
         if (attachment.attachmentType == QMAttachmentContentTypeAudio) {
             
             QMAudioPlayerStatus *status = [QMAudioPlayer audioPlayer].status;
@@ -126,16 +132,18 @@ QMMediaHandler>
         return;
     }
     
-    if (attachment.attachmentType != QMAttachmentContentTypeAudio) {
+    if (shouldAutoDownload(attachment)) {
         [self loadAttachment:attachment
                   forMessage:message
                     withView:view];
     }
 }
 
+
 - (void)loadAttachment:(QBChatAttachment *)attachment
             forMessage:(QBChatMessage *)message
               withView:(id<QMMediaViewDelegate>)view {
+    
     
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
@@ -168,7 +176,6 @@ QMMediaHandler>
             UIImage *cachedImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:[transform keyWithURL:url]];
             UIImage *tempImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
             if (cachedImage) {
-                
                 view.viewState = QMMediaViewStateReady;
                 view.image = cachedImage;
             }
@@ -209,14 +216,9 @@ QMMediaHandler>
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          if (transfomedImage) {
-                             QMLog(@"_IMAGE has transform messageID:%@",message.ID);
                              view.viewState = QMMediaViewStateReady;
                              view.image = transfomedImage;
                          }
-                         else {
-                             QMLog(@"_IMAGE hasn't transform messageID:%@",message.ID);
-                         }
-                         
                          if (error) {
                              QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
@@ -472,13 +474,19 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     
     if (attachment.attachmentType == QMAttachmentContentTypeImage) {
         
+        NSURL *remoteURL = [attachment remoteURLWithToken:NO];
+        
+        if (attachmentStatus == QMMessageAttachmentStatusUploading ||
+            [QMImageLoader.instance hasImageOperationWithURL:remoteURL]) {
+            return;
+        }
         QBUUser *user =
         [QMCore.instance.usersService.usersMemoryStorage userWithID:message.senderID];
         
         QMPhoto *photo = [[QMPhoto alloc] init];
         
         if (attachment.ID) {
-            photo.image = [QMImageLoader.instance originalImageWithURL:[attachment remoteURLWithToken:NO]];
+            photo.image = nil;
         }
         else {
             photo.image = attachment.image;
@@ -498,7 +506,28 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
         
         self.photoReferenceView = [(QMBaseMediaCell *)view previewImageView];
         
-        [self presentViewControllerWithPhoto:photo];
+        [self presentViewControllerWithPhoto:photo
+                             completionBlock:
+         ^{
+             
+             if (attachment.ID) {
+                 
+                 NSString *key = [QMImageLoader.instance cacheKeyForURL:remoteURL];
+                 
+                 [QMImageLoader.instance.imageCache queryCacheOperationForKey:key
+                                                                         done:^(UIImage * _Nullable image,
+                                                                                NSData * __unused _Nullable data,
+                                                                                SDImageCacheType __unused cacheType)
+                  {
+                      
+                      NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)self.presentedViewController;
+                      if (photosViewController && image) {
+                          photo.image = image;
+                          [photosViewController updateImageForPhoto:photo];
+                      }
+                  }];
+             }
+         }];
     }
     else if (attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
@@ -647,7 +676,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     
     [self presentViewControllerWithPhoto:photo
                       rightBarButtonItem:rightBarButtonItem
-                       leftBarButtonItem:leftBarButtonItem];
+                       leftBarButtonItem:leftBarButtonItem
+                         completionBlock:nil];
 }
 
 - (UIBarButtonItem *)barButtonWithTitle:(NSString *)title
@@ -693,16 +723,19 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 }
 
 
-- (void)presentViewControllerWithPhoto:(QMPhoto *)photo {
+- (void)presentViewControllerWithPhoto:(QMPhoto *)photo
+                       completionBlock:(dispatch_block_t)completion {
     
     [self presentViewControllerWithPhoto:photo
                       rightBarButtonItem:nil
-                       leftBarButtonItem:nil];
+                       leftBarButtonItem:nil
+                         completionBlock:completion];
 }
 
 - (void)presentViewControllerWithPhoto:(QMPhoto *)photo
                     rightBarButtonItem:(UIBarButtonItem *)rightBarButtonItem
-                     leftBarButtonItem:(UIBarButtonItem *)leftBarButtonItem {
+                     leftBarButtonItem:(UIBarButtonItem *)leftBarButtonItem
+                       completionBlock:(dispatch_block_t)completion {
     
     NYTPhotosViewController *photosViewController =
     [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
@@ -721,15 +754,45 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     [self.viewController.view endEditing:YES]; // hiding keyboard
     [self.viewController presentViewController:photosViewController
                                       animated:YES
-                                    completion:nil];
+                                    completion:completion];
     _presentedViewController = photosViewController;
 }
 
 //MARK: - NYTPhotosViewControllerDelegate
 
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController
+           referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
     return self.photoReferenceView;
 }
 
-@end
 
+//MARK: - QMAttachmentContentServiceDelegate
+
+- (BOOL)attachmentContentService:(QMAttachmentContentService *)__unused contentService
+        shouldDownloadAttachment:(QBChatAttachment *)attachment
+                       messageID:(NSString *)__unused messageID {
+    
+    return
+    attachment.attachmentType == QMAttachmentContentTypeImage ||
+    attachment.attachmentType == QMAttachmentContentTypeAudio;
+}
+
+//MARK: - Static functions
+
+static inline BOOL shouldAutoDownload(QBChatAttachment *attachment) {
+    return attachment.attachmentType != QMAttachmentContentTypeAudio;
+}
+
+static BOOL isPlayable(QBChatAttachment *attachment) {
+    return
+    attachment.attachmentType == QMAttachmentContentTypeAudio ||
+    attachment.attachmentType == QMAttachmentContentTypeVideo;
+}
+
+static BOOL canBeCancelled(QBChatAttachment *attachment) {
+    return
+    attachment.attachmentType == QMAttachmentContentTypeAudio ||
+    attachment.ID == nil;
+}
+
+@end

@@ -11,15 +11,6 @@
 
 @implementation QMTableViewDataSource
 
-- (instancetype)init {
-    
-    self = [super init];
-    if (self) {
-        
-        _items = [NSMutableArray array];
-    }
-    return self;
-}
 
 - (id)objectAtIndexPath:(NSIndexPath *)__unused indexPath {
     
@@ -27,6 +18,7 @@
 }
 
 - (NSIndexPath *)indexPathForObject:(id)__unused object {
+    
     return nil;
 }
 
@@ -45,15 +37,30 @@
     return nil;
 }
 
-- (void)addItems:(NSArray *)items {
+
+@end
+
+@implementation QMTableViewSearchDataSource
+
+@synthesize searchDataProvider = _searchDataProvider;
+
+- (instancetype)initWithSearchDataProvider:(QMSearchDataProvider *)searchDataProvider {
     
-    [self.items addObjectsFromArray:items];
+    self = [super init];
+    
+    if (self) {
+        
+        _searchDataProvider = searchDataProvider;
+        _searchDataProvider.dataSource = self;
+    }
+    
+    return self;
 }
 
-- (void)replaceItems:(NSArray *)items {
-    
-    [self.items removeAllObjects];
-    [self.items addObjectsFromArray:items];
+- (void)performSearch:(NSString *)searchText {
+
+    [self.searchDataProvider performSearch:searchText
+                                    dataSource:self];
 }
 
 @end

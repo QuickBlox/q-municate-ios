@@ -67,7 +67,7 @@ UIAlertViewDelegate, QMChatDataSourceDelegate>
     [self registerForNotifications:NO];
     
     self.inputToolbar.contentView.textView.delegate = nil;
-    self.inputToolbar.contentView.textView.pasteDelegate = nil;
+    self.inputToolbar.contentView.textView.qm_placeholderTextViewPasteDelegate = nil;
     self.inputToolbar.delegate = nil;
     
     self.senderDisplayName = nil;

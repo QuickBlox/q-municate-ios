@@ -1,1 +1,1 @@
-../../../NYTPhotoViewer/NYTPhotoViewer/Resource Loading/NSBundle+NYTPhotoViewer.h
+../../../NYTPhotoViewer/Pod/Classes/ios/Resource Loading/NSBundle+NYTPhotoViewer.h

@@ -352,7 +352,6 @@ typedef void(^QMCacheCollection)(NSArray * _Nullable collection);
  */
 - (void)earlierMessagesWithChatDialogID:(NSString *)chatDialogID
                              completion:(nullable void(^)(QBResponse *response, NSArray<QBChatMessage *> * _Nullable messages))completion;
-
 //MARK: - Fetch dialogs
 
 /**
@@ -453,7 +452,7 @@ typedef void(^QMCacheCollection)(NSArray * _Nullable collection);
  *
  *  @param attachmentMessage    QBChatMessage instance with attachment
  *  @param dialog               dialog instance to send message to
- *  @param attachment           QBChatAttachment instance to upload
+ *  @param attachment           QBChatAttachment instance to upload and send
  *  @param completion           completion block with failure error
  */
 - (void)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
@@ -897,6 +896,21 @@ typedef void(^QMCacheCollection)(NSArray * _Nullable collection);
 - (BFTask *)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
                          toDialog:(QBChatDialog *)dialog
               withAttachmentImage:(UIImage *)image;
+
+/**
+ *  Send attachment message to dialog using Bolts.
+ *
+ *  @param attachmentMessage    QBChatMessage instance with attachment
+ *  @param dialog               dialog instance to send message to
+ *  @param attachment           QBChatAttachment instance to upload and send
+ *
+ *  @return BFTask with failure error
+ *
+ *  @see In order to know how to work with BFTask's see documentation https://github.com/BoltsFramework/Bolts-iOS#bolts
+ */
+- (BFTask *)sendAttachmentMessage:(QBChatMessage *)attachmentMessage
+                         toDialog:(QBChatDialog *)dialog
+                   withAttachment:(QBChatAttachment *)attachment;
 
 /**
  *  Mark message as delivered.

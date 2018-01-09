@@ -48,4 +48,10 @@ BFTask *make_task(QMTaskSourceBlock b) {
     
 }
 
+- (BOOL)isEmpty {
+    NSParameterAssert(nil);
+    return NO;
+}
+
 @end
+

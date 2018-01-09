@@ -9,9 +9,9 @@
 #import "QMDialogsSearchDataProvider.h"
 #import "QMDialogsSearchDataSource.h"
 #import "QMSearchProtocols.h"
-#import "QMCore.h"
+#import "QMTableViewDataSource.h"
 
-static NSString *const kQMDialogsSearchDescriptorKey = @"name";
+#import "QMCore.h"
 
 @implementation QMDialogsSearchDataProvider
 
@@ -22,7 +22,7 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
         return;
     }
     
-    QMSearchDataSource <QMDialogsSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
+    QMTableViewSearchDataSource <QMDialogsSearchDataSourceProtocol> *dataSource = (id)self.dataSource;
     
     if (searchText.length == 0) {
         
@@ -32,18 +32,16 @@ static NSString *const kQMDialogsSearchDescriptorKey = @"name";
         return;
     }
     
-    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @strongify(self);
         
         // dialogs local search
-        NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kQMDialogsSearchDescriptorKey ascending:NO];
+        NSSortDescriptor *dialogsSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:qm_keypath(QBChatDialog, name) ascending:NO];
         NSArray *dialogs = [QMCore.instance.chatService.dialogsMemoryStorage dialogsWithSortDescriptors:@[dialogsSortDescriptor]];
         
         NSPredicate *dialogsSearchPredicate = [NSPredicate predicateWithFormat:@"SELF.name CONTAINS[cd] %@", searchText];
         NSMutableArray *dialogsSearchResult = [NSMutableArray arrayWithArray:[dialogs filteredArrayUsingPredicate:dialogsSearchPredicate]];
         
-        [dataSource setItems:dialogsSearchResult];
+        [dataSource replaceItems:dialogsSearchResult];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             

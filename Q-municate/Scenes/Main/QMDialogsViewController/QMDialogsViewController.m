@@ -30,7 +30,8 @@ static const NSInteger kQMUnauthorizedErrorCode = -1011;
 
 <QMUsersServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate,
 UITableViewDelegate, UISearchControllerDelegate, UISearchResultsUpdating,
-QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsControllerDelegate>
+QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate,
+QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *placeholderView;
 @property (strong, nonatomic) UISearchController *searchController;
@@ -40,7 +41,9 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
 @property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
 
 @property (weak, nonatomic) BFTask *addUserTask;
+
 @property (strong, nonatomic) id observerWillEnterForeground;
+@property (strong, nonatomic) id dialogsUpdatesObserver;
 
 @end
 
@@ -51,6 +54,7 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
+    [[QBDarwinNotificationCenter defaultCenter] removeObserver:_dialogsUpdatesObserver];
     
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
@@ -63,6 +67,7 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
     // Subscribing delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
+    [QMCore.instance.contactListService addDelegate:self];
     // search implementation
     [self configureSearch];
     // Data sources init
@@ -89,12 +94,24 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
          @strongify(self);
-         if (![QBChat instance].isConnected) {
+         if ([QBChat instance].isConnected) {
+             // if chat was connected (e.g. we are in call) in background
+             // we skip requests, so perform them now as app is active now
+             [QMTasks taskFetchAllData];
+             [QMTasks taskUpdateContacts];
+         }
+         else {
              [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
                                                                                    message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
                                                                                   duration:0];
          }
      }];
+    
+    self.dialogsUpdatesObserver =
+    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQMDidUpdateDialogsNotification
+                                                        usingBlock:^{
+                                                            [QMTasks taskFetchAllData];
+                                                        }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -127,16 +144,23 @@ QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate, QMSearchResultsC
 
 - (void)performAutoLoginAndFetchData {
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                                          message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
-                                                                         duration:0];
-    __weak UINavigationController *navigationController = self.navigationController;
+    QMNavigationController *navigationController = (id)self.navigationController;
+    [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                           message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                          duration:0];
+    
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
+        && !QBChat.instance.manualInitialPresence) {
+        // connecting to chat with manual initial presence if in the background
+        // this will not send online presence untill app comes foreground
+        QBChat.instance.manualInitialPresence = YES;
+    }
     
     [[[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
         if (task.isFaulted) {
             
-            [(QMNavigationController *)navigationController dismissNotificationPanel];
+            [navigationController dismissNotificationPanel];
             
             NSInteger errorCode = task.error.code;
             if (errorCode == kQMNotAuthorizedInRest
@@ -274,7 +298,6 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 //MARK: - UISearchResultsUpdating
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-    
     [self.dialogsSearchDataSource.searchDataProvider performSearch:searchController.searchBar.text];
 }
 
@@ -376,30 +399,39 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 
 //MARK: - QMChatConnectionDelegate
 
+- (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMTasks taskFetchAllData];
+    }
+}
+
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
     
-    [QMTasks taskFetchAllData];
-    [QMTasks taskUpdateContacts];
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
-                                                                          message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
-                                                                         duration:kQMDefaultNotificationDismissTime];
+    [(QMNavigationController *)self.navigationController
+     showNotificationWithType:QMNotificationPanelTypeSuccess
+     message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
+     duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
-    [QMTasks taskFetchAllData];
-    [QMTasks taskUpdateContacts];
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeSuccess
-                                                                          message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
-                                                                         duration:kQMDefaultNotificationDismissTime];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMTasks taskFetchAllData];
+    }
+    
+    [(QMNavigationController *)self.navigationController
+     showNotificationWithType:QMNotificationPanelTypeSuccess
+     message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
+     duration:kQMDefaultNotificationDismissTime];
 }
-/*
- - (void)chatService:(QMChatService *)__unused chatService
- chatDidNotConnectWithError:(NSError *)error {
- 
- [SVProgressHUD showErrorWithStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_CHAT_FAILED_TO_CONNECT_WITH_ERROR", nil), error.localizedDescription]];
- }
- */
+
+- (void)contactListService:(QMContactListService *)__unused contactListService
+      contactListDidChange:(QBContactList *)__unused contactList {
+    
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMTasks taskUpdateContacts];
+    }
+}
 
 //MARK: - QMUsersServiceDelegate
 
@@ -407,16 +439,14 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
-        
         [self.tableView reloadData];
     }
 }
 
 - (void)usersService:(QMUsersService *)__unused usersService
-         didAddUsers:(NSArray<QBUUser *> *)__unused user {
+         didAddUsers:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
-        
         [self.tableView reloadData];
     }
 }
@@ -511,13 +541,10 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 
 - (void)updateDataAndEndRefreshing {
     
-    @weakify(self);
-    
     BFTask *fetchAllDataTask = [QMTasks taskFetchAllData];
     BFTask *fetchContactsTask = [QMTasks taskUpdateContacts];
     [[BFTask taskForCompletionOfAllTasks:@[fetchAllDataTask, fetchContactsTask]]
      continueWithBlock:^id (BFTask * __unused t) {
-         @strongify(self);
          
          [self.refreshControl endRefreshing];
          

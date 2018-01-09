@@ -24,10 +24,9 @@
 //MARK: - Chat Connection
 
 - (BFTask *)disconnectFromChat {
-    @weakify(self);
+    
     return [[self.serviceManager.chatService disconnect] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        @strongify(self);
         if (self.serviceManager.currentProfile.userData != nil) {
             
             self.serviceManager.currentProfile.lastDialogsFetchingDate = [NSDate date];
@@ -52,37 +51,41 @@
 //MARK: - Notifications
 
 - (BFTask *)addUsers:(NSArray *)users toGroupChatDialog:(QBChatDialog *)chatDialog {
+    
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
     NSArray *userIDs = [self.serviceManager.contactManager idsOfUsers:users];
     
-    @weakify(self);
-    return [[self.serviceManager.chatService joinOccupantsWithIDs:userIDs toChatDialog:chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        
-        @strongify(self);
-        QBChatDialog *updatedDialog = task.result;
-        [[self.serviceManager.chatService sendSystemMessageAboutAddingToDialog:updatedDialog toUsersIDs:userIDs withText:kQMDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused systemNotificationTask) {
-            
-            return [self.serviceManager.chatService sendNotificationMessageAboutAddingOccupants:userIDs toDialog:updatedDialog withNotificationText:kQMDialogsUpdateNotificationMessage];
-        }];
-        
-        return nil;
-    }];
+    return [[self.serviceManager.chatService
+             joinOccupantsWithIDs:userIDs
+             toChatDialog:chatDialog] continueWithSuccessBlock:^id(BFTask<QBChatDialog *> *task)
+            {
+                QBChatDialog *updatedDialog = task.result;
+                [self.serviceManager.chatService
+                 sendSystemMessageAboutAddingToDialog:updatedDialog
+                 toUsersIDs:userIDs
+                 withText:kQMDialogsUpdateNotificationMessage];
+                
+                [self.serviceManager.chatService
+                 sendNotificationMessageAboutAddingOccupants:userIDs
+                 toDialog:updatedDialog
+                 withNotificationText:kQMDialogsUpdateNotificationMessage];
+                
+                return nil;
+            }];
 }
 
 - (BFTask *)changeAvatar:(UIImage *)avatar forGroupChatDialog:(QBChatDialog *)chatDialog {
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
-    @weakify(self);
+    
     return [[[QMContent uploadPNGImage:avatar progress:nil] continueWithSuccessBlock:^id _Nullable(BFTask<QBCBlob *> * _Nonnull task) {
         
-        @strongify(self);
         NSString *url = task.result.isPublic ? [task.result publicUrl] : [task.result privateUrl];
         return [self.serviceManager.chatService changeDialogAvatar:url forChatDialog:chatDialog];
         
     }] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
-        @strongify(self);
         [self.serviceManager.chatService sendNotificationMessageAboutChangingDialogPhoto:task.result withNotificationText:kQMDialogsUpdateNotificationMessage];
         return nil;
     }];
@@ -91,25 +94,23 @@
 - (BFTask *)changeName:(NSString *)name forGroupChatDialog:(QBChatDialog *)chatDialog {
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
-    @weakify(self);
-    return [[self.serviceManager.chatService changeDialogName:name forChatDialog:chatDialog] continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        
-        @strongify(self);
-        
-        return [self.serviceManager.chatService sendNotificationMessageAboutChangingDialogName:task.result withNotificationText:kQMDialogsUpdateNotificationMessage];
-    }];
+    
+    return [[self.serviceManager.chatService changeDialogName:name forChatDialog:chatDialog]
+            continueWithSuccessBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+                
+                return [self.serviceManager.chatService sendNotificationMessageAboutChangingDialogName:task.result
+                                                                                  withNotificationText:kQMDialogsUpdateNotificationMessage];
+            }];
 }
 
 - (BFTask *)leaveChatDialog:(QBChatDialog *)chatDialog {
     NSAssert(chatDialog.type == QBChatDialogTypeGroup, @"Chat dialog must be group type!");
     
-    @weakify(self);
-    
-    return [[self.serviceManager.chatService sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        @strongify(self);
-        return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
-    }];
+    return [[self.serviceManager.chatService
+             sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage]
+            continueWithBlock:^id(BFTask *__unused task) {
+                return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
+            }];
 }
 
 - (BFTask *)sendBackgroundMessageWithText:(NSString *)text toDialogWithID:(NSString *)chatDialogID {

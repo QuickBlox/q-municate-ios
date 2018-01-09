@@ -1,1 +1,1 @@
-../../../NYTPhotoViewer/NYTPhotoViewer/Protocols/NYTPhotosViewControllerDataSource.h
+../../../NYTPhotoViewer/Pod/Classes/ios/Protocols/NYTPhotosViewControllerDataSource.h

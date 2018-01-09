@@ -7,18 +7,25 @@
 //
 
 #import "QMPushNotificationManager.h"
+
 #import "QMCore.h"
+
+#import <PushKit/PushKit.h>
 
 static NSString * const kQMNotificationActionTextAction = @"TEXT_ACTION";
 static NSString * const kQMNotificationCategoryReply = @"TEXT_REPLY";
 
 typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
-@interface QMPushNotificationManager ()
+@interface QMPushNotificationManager () <PKPushRegistryDelegate>
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
 @property (copy, nonatomic) QBTokenCompletionBlock tokenCompletionBlock;
 @property (copy, nonatomic, nullable, readwrite) NSData *deviceToken;
+
+@property (strong, nonatomic) PKPushRegistry *voipRegistry;
+@property (assign, nonatomic) NSUInteger voipSubscriptionID;
+
 @end
 
 @implementation QMPushNotificationManager
@@ -36,6 +43,8 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                 [source setError:t.error];
             }
             else {
+                self.voipRegistry = nil;
+                
                 [[UIApplication sharedApplication] unregisterForRemoteNotifications];
                 [source setResult:nil];
             }
@@ -58,7 +67,8 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     [self registerForPushNotifications];
 }
 
-//MARK: - Subscriptions
+// MARK: - Subscriptions
+
 - (BFTask *)getDeviceToken {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
@@ -146,10 +156,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     __block QBChatDialog *chatDialog = nil;
     
-    @weakify(self);
-    [[[[self.serviceManager.chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
+    [[[[self.serviceManager.chatService fetchDialogWithID:dialogID]
+       continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
         
-        @strongify(self);
         if (task.result != nil) {
             
             chatDialog = task.result;
@@ -158,7 +167,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         }
         
         if ([delegate respondsToSelector:@selector(pushNotificationManagerDidStartLoadingDialogFromServer:)]) {
-            
             [delegate pushNotificationManagerDidStartLoadingDialogFromServer:self];
         }
         
@@ -166,11 +174,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
         
-        @strongify(self);
         if (task.isFaulted) {
             
             if ([delegate respondsToSelector:@selector(pushNotificationManager:didFailFetchingDialogWithError:)]) {
-                
                 [delegate pushNotificationManager:self didFailFetchingDialogWithError:task.error];
             }
         }
@@ -179,7 +185,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
             if ([task.result isKindOfClass:[QBChatDialog class]]) {
                 
                 if ([delegate respondsToSelector:@selector(pushNotificationManagerDidFinishLoadingDialogFromServer:)]) {
-                    
                     [delegate pushNotificationManagerDidFinishLoadingDialogFromServer:self];
                 }
                 
@@ -193,7 +198,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        @strongify(self);
         [delegate pushNotificationManager:self didSucceedFetchingDialog:chatDialog];
         
         return nil;
@@ -227,8 +231,13 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
     
+    // PKPushRegistry
+    if (self.voipRegistry == nil) {
+        self.voipRegistry = [[PKPushRegistry alloc] initWithQueue:dispatch_get_main_queue()];
+        self.voipRegistry.delegate = self;
+        self.voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
+    }
 }
-
 
 - (void)handleActionWithIdentifier:(NSString *)identifier
                 remoteNotification:(NSDictionary *)userInfo
@@ -320,6 +329,46 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     if (_tokenCompletionBlock) {
         _tokenCompletionBlock(nil, error);
         _tokenCompletionBlock = nil;
+    }
+}
+
+// MARK: - PKPushRegistryDelegate protocol
+
+- (void)pushRegistry:(PKPushRegistry *)__unused registry didUpdatePushCredentials:(PKPushCredentials *)__unused pushCredentials forType:(PKPushType)__unused type {
+    QMLog(@"Created VOIP push token.");
+    //  New way, only for updated backend
+    NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    
+    QBMSubscription *subscription = [QBMSubscription subscription];
+    subscription.notificationChannel = QBMNotificationChannelAPNSVOIP;
+    subscription.deviceUDID = deviceIdentifier;
+    subscription.deviceToken = [self.voipRegistry pushTokenForType:PKPushTypeVoIP];
+    
+    @weakify(self);
+    [QBRequest createSubscription:subscription successBlock:^(QBResponse * __unused response, NSArray * __unused objects) {
+        @strongify(self);
+        QMLog(@"Create VOIP Subscription request - Success");
+        QBMSubscription *voipSubscription = objects.firstObject;
+        self.voipSubscriptionID = voipSubscription.ID;
+    } errorBlock:^(QBResponse *response) {
+        QMLog(@"Create VOIP Subscription request - Error: %@", [response.error reasons]);
+    }];
+}
+
+- (void)pushRegistry:(PKPushRegistry *)__unused registry didInvalidatePushTokenForType:(PKPushType)__unused type {
+    QMLog(@"Invalidated VOIP push token.");
+    [QBRequest deleteSubscriptionWithID:_voipSubscriptionID
+                           successBlock:^(QBResponse * __unused response) {
+                               QMLog(@"Unregister Subscription request - Success");
+                           } errorBlock:^(QBResponse *response) {
+                               QMLog(@"Unregister Subscription request - Error: %@", [response.error reasons]);
+                           }];
+}
+
+- (void)pushRegistry:(PKPushRegistry *)__unused registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)__unused type {
+    if (QMCallManager.isCallKitAvailable
+        && [payload.dictionaryPayload objectForKey:QMVoipCallEventKey] != nil) {
+        [self.serviceManager.callManager performCallKitPreparations];
     }
 }
 

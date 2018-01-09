@@ -87,24 +87,25 @@ QMUsersServiceDelegate
         NSUInteger userIndex = [self.dataSource userIndexForIndexPath:indexPath];
         QBUUser *user = self.dataSource.items[userIndex];
         
-        self.addUserTask = [[QMCore.instance.contactManager addUserToContactList:user] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-            
-            [SVProgressHUD dismiss];
-            
-            if (!task.isFaulted) {
-                
-                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            }
-            else {
-                
-                if (![QBChat instance].isConnected) {
-                    
-                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
-                }
-            }
-            
-            return nil;
-        }];
+        self.addUserTask = [[QMCore.instance.contactManager addUserToContactList:user]
+                            continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                                
+                                [SVProgressHUD dismiss];
+                                
+                                if (!task.isFaulted) {
+                                    
+                                    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                                }
+                                else {
+                                    
+                                    if (![QBChat instance].isConnected) {
+                                        
+                                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+                                    }
+                                }
+                                
+                                return nil;
+                            }];
     };
 }
 
@@ -112,18 +113,22 @@ QMUsersServiceDelegate
 
 - (void)updateOccupants {
     
-    [[QMCore.instance.usersService getUsersWithIDs:self.chatDialog.occupantIDs] continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
-        if (t.result) {
-            
-            self.dataSource.items = [[t.result sortedArrayUsingComparator:^NSComparisonResult(QBUUser *u1, QBUUser *u2) {
-                return [u1.fullName caseInsensitiveCompare:u2.fullName];
-            }] mutableCopy];
-            
-            [self.tableView reloadData];
-        }
-        
-        return nil;
-    }];
+    [[QMCore.instance.usersService getUsersWithIDs:self.chatDialog.occupantIDs]
+     continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t)
+     {
+         if (t.result) {
+             
+             NSArray *sortedItems = [t.result sortedArrayUsingComparator:
+                                     ^NSComparisonResult(QBUUser *u1, QBUUser *u2) {
+                                         return [u1.fullName caseInsensitiveCompare:u2.fullName];
+                                     }];
+             
+             [self.dataSource replaceItems:sortedItems];
+             [self.tableView reloadData];
+         }
+         
+         return nil;
+     }];
 }
 
 //MARK: - Actions
@@ -151,6 +156,7 @@ QMUsersServiceDelegate
         [self performSegueWithIdentifier:kQMSceneSegueGroupAddUsers sender:self.chatDialog];
     }
     else if (indexPath.row == self.dataSource.leaveChatCellIndex) {
+        
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         if (self.leaveTask) {
@@ -173,31 +179,31 @@ QMUsersServiceDelegate
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LEAVE", nil)
                                                             style:UIAlertActionStyleDestructive
-                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
-                                                              
-                                                              [(QMNavigationController *)navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                                                                                               message:NSLocalizedString(@"QM_STR_LOADING", nil)
-                                                                                                                              duration:0];
-                                                              
-                                                              self.leaveTask = [[QMCore.instance.chatManager leaveChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-                                                                  
-                                                                  [(QMNavigationController *)navigationController dismissNotificationPanel];
-                                                                  
-                                                                  if (!task.isFaulted) {
-                                                                      
-                                                                      if (self.splitViewController.isCollapsed) {
-                                                                          
-                                                                          [navigationController popToRootViewControllerAnimated:YES];
-                                                                      }
-                                                                      else {
-                                                                          
-                                                                          [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-                                                                      }
-                                                                  }
-                                                                  
-                                                                  return nil;
-                                                              }];
-                                                          }]];
+                                                          handler:^(UIAlertAction * _Nonnull __unused action)
+                                    {
+                                        
+                                        [(QMNavigationController *)navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                                                         message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                                                                        duration:0];
+                                        self.leaveTask =
+                                        [[QMCore.instance.chatManager leaveChatDialog:self.chatDialog]
+                                         continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+                                             
+                                             [(QMNavigationController *)navigationController dismissNotificationPanel];
+                                             
+                                             if (!task.isFaulted) {
+                                                 
+                                                 if (self.splitViewController.isCollapsed) {
+                                                     [navigationController popToRootViewControllerAnimated:YES];
+                                                 }
+                                                 else {
+                                                     [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                                                 }
+                                             }
+                                             
+                                             return nil;
+                                         }];
+                                    }]];
         
         [self presentViewController:alertController animated:YES completion:nil];
     }
@@ -217,10 +223,11 @@ QMUsersServiceDelegate
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)__unused section {
     
-    QMTableSectionHeaderView *headerView = [[QMTableSectionHeaderView alloc] initWithFrame:CGRectMake(0,
-                                                                                                      0,
-                                                                                                      CGRectGetWidth(tableView.frame),
-                                                                                                      kQMSectionHeaderHeight)];
+    QMTableSectionHeaderView *headerView =
+    [[QMTableSectionHeaderView alloc] initWithFrame:CGRectMake(0,
+                                                               0,
+                                                               CGRectGetWidth(tableView.frame),
+                                                               kQMSectionHeaderHeight)];
     
     headerView.title = [NSString stringWithFormat:@"%tu %@", self.chatDialog.occupantIDs.count, NSLocalizedString(@"QM_STR_MEMBERS", nil)];
     
@@ -254,7 +261,8 @@ QMUsersServiceDelegate
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+- (void)chatService:(QMChatService *)__unused chatService
+didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
     
     if ([dialogs containsObject:self.chatDialog]) {
         
@@ -283,7 +291,7 @@ QMUsersServiceDelegate
 
 - (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
-    NSArray *idsOfUsers = [user valueForKeyPath:@keypath(QBUUser.new, ID)];
+    NSArray *idsOfUsers = [user valueForKeyPath:qm_keypath(QBUUser, ID)];
     
     if ([self.chatDialog.occupantIDs qm_containsObjectFromArray:idsOfUsers]) {
         

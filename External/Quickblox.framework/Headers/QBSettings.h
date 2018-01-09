@@ -2,22 +2,12 @@
 //  QBSettings.h
 //  Core
 //
-
 //  Copyright 2011 QuickBlox team. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "QBLogger.h"
+#import <Quickblox/QBLoggerEnums.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
-    
-    QBConnectionZoneTypeAutomatic       = 1, //Default. Endpoints are loaded from QuickBlox
-    QBConnectionZoneTypeProduction      = 2,
-    QBConnectionZoneTypeDevelopment     = 3,
-    QBConnectionZoneTypeStage           = 4
-};
 
 /** 
  QBSettings class interface.
@@ -27,58 +17,74 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 
 /** Storing Application ID */
 @property (nonatomic, class) NSUInteger applicationID;
-
-/** Set account key (from admin.quickblox.com) */
-@property (nonatomic, class, nullable) NSString *accountKey;
-
 /** Setting API Key for Quickblox API */
 @property (nonatomic, class, nullable) NSString *authKey;
 
 /** Setting API Secret for Quickblox API */
 @property (nonatomic, class, nullable) NSString *authSecret;
 
+/**Set account key (from admin.quickblox.com). This parameter is skipped for custom endpoints. */
+@property (nonatomic, class, nullable) NSString *accountKey;
+
 /** Setting application group identifier */
 @property (nonatomic, class, nullable) NSString *applicationGroupIdentifier;
 
 /** Setting Api Endpoint. Default - https://api.quickblox.com*/
-@property (nonatomic, class) NSString *apiEndpoint;
+@property (nonatomic, class, null_resettable) NSString *apiEndpoint;
 
 /** Setting Chat endpoint. Default - chat.quickblox.com */
-@property (nonatomic, class) NSString *chatEndpoint;
+@property (nonatomic, class, null_resettable) NSString *chatEndpoint;
 
 /**
  Load QuickBlox application settings from QBSettings-Info.plist.
  
+ @warning This method should be used only for Continuous Integration (CI), because of security reasons
+ 
  @discussion Raises an exception if any configuration step fails.
  @note This method should be called after the app is launched and before using Quickblox services.
-*/
+ 
+ @code
+ Required keys:
+
+ applicationID : Number
+ authorizationKey : String
+ authorizationSecret : String
+ accountKey : String
+ 
+ Optional keys:
+ 
+ apiEndpoint : String
+ chatEndpoint : String
+ autoReconnectEnabled : BOOL
+ carbonsEnabled : BOOL
+ streamManagementSendMessageTimeout : Integer
+ reconnectTimerInterval : Double
+ keepAliveInterval : Double
+ chatEndpointPort : Integer
+ @endcode
+ */
 + (void)settingsFromPlist;
 
 /**
  Load QuickBlox application settings from specific plist with name.
-
+ 
  @param name plist file name
  */
 + (void)settingsFromPlistWithName:(NSString *)name;
 
 @end
 
-
+//MARK: Chat settings
 
 @interface QBSettings (QBChat)
-/**
- Enable or disable chat auto reconnect. The default value is NO
- */
+
+/**Enable or disable chat auto reconnect. The default value is NO */
 @property (nonatomic, class) BOOL autoReconnectEnabled;
 
-/**
- Enable or disable message carbons
- */
+/** Enable or disable message carbons */
 @property (nonatomic, class) BOOL carbonsEnabled;
 
-/**
- Set timeout value for Stream Management send a message operation
- */
+/** Set timeout value for Stream Management send a message operation */
 @property (nonatomic, class) NSUInteger streamManagementSendMessageTimeout;
 
 /**
@@ -123,7 +129,7 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 
 /**
  A Boolean value indicating whether the manager is enabled.
-
+ 
  @note If YES, the manager will change status bar network activity indicator according to network
  operation notifications it receives. The default value is NO.
  
@@ -157,9 +163,11 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
 
 /**
  Enable log to file
+ 
  The approximate maximum size to allow log files to grow.
  If a log file is larger than this value after a log statement is appended,
  then the log file is rolled.
+ 
  @param maximumFileSize maximum file size in bytes, for example: 1024 * 1024 * 10 = 10Mb
  */
 + (void)enableFileLoggingWithMaximumFileSize:(unsigned long long)maximumFileSize;
@@ -184,47 +192,7 @@ typedef NS_ENUM(NSUInteger, QBConnectionZoneType) {
  Set custom session configuration that will be used for REST API requests.
  '[NSURLSessionConfiguration defaultSessionConfiguration]' is used if nil is passed.
  */
-
 @property (nonatomic, class, nullable) NSURLSessionConfiguration *sessionConfiguration;
-
-@end
-
-@interface QBSettings (DEPRECATED)
-
-/**
- *  Allows to set api endpoint and chat endpoint for service zone.
- *
- *  @note QBConnectionZoneTypeAutomatic is used by default.
- *  If you are using shared server and you are migrating to enterprise account,
- *  then you don't need to resubmit your application, endpoints will be updated automatically.
- 
- *  To set custom endpoints use QBConnectionZoneTypeProduction or QBConnectionZoneTypeDevelopment service zone.
- *  Then you should manually activate your service zone by calling setServiceZone:
- *
- *  @param apiEndpoint  apiEndpoint - Endpoint for service i.e. http://my_custom_endpoint.com. Possible to pass nil to return to default settings
- *  @param chatEndpoint chat endpoint
- *  @param zone         QBConnectionZoneType - service zone
- */
-+ (void)setApiEndpoint:(nullable NSString *)apiEndpoint
-          chatEndpoint:(nullable NSString *)chatEndpoint
-        forServiceZone:(QBConnectionZoneType)zone
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.12.");
-
-/**
- * Allows to change Services Zone to work with Production, Development and Staging environments
- *
- * @param serviceZone - Service Zone. One from QBConnectionZoneType. Default - QBConnectionZoneTypeAutomatic.
- */
-+ (void)setServiceZone:(QBConnectionZoneType)serviceZone
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.12.");
-
-/**
- *  Return current Service Zone
- *
- *  @note serviceZone - Service Zone. One from QBConnectionZoneType. Default - QBConnectionZoneTypeAutomatic
- */
-+ (QBConnectionZoneType)currentServiceZone
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.12.");
 
 @end
 

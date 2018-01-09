@@ -11,10 +11,12 @@
 @interface NSString (QMValidation)
 
 - (BOOL)qm_validateForNotAcceptableCharacters:(NSString *)notAcceptableCharacters
-                                     error:(NSError **)error;
+                                        error:(NSError **)error;
+
 - (BOOL)qm_validateForCharactersCountWithMinLength:(NSUInteger)minLength
-                                      maxLength:(NSUInteger)maxLength
-                                          error:(NSError **)error;
+                                         maxLength:(NSUInteger)maxLength
+                                             error:(NSError **)error;
+
 - (BOOL)qm_validateForEmailFormat:(NSError **)error;
 
 @end

@@ -1,1 +1,1 @@
-../../../NYTPhotoViewer/NYTPhotoViewer/NYTPhotoDismissalInteractionController.h
+../../../NYTPhotoViewer/Pod/Classes/ios/NYTPhotoDismissalInteractionController.h
