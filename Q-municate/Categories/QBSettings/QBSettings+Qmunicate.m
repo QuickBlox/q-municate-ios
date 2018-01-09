@@ -62,6 +62,8 @@
     
     QBSettings.logLevel =
     QMCurrentApplicationZone == QMApplicationZoneProduction ? QBLogLevelNothing : QBLogLevelDebug;
+    
+    [QBSettings settingsFromPlist];
 }
 
 @end

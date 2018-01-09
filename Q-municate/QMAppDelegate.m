@@ -38,8 +38,6 @@
     [QBSettings configure];
     [QMServicesManager enableLogging:QMCurrentApplicationZone != QMApplicationZoneProduction];
     
-    [QBSettings settingsFromPlist];
-    
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
