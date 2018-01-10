@@ -91,6 +91,8 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Taking pictures, video calls</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Saving images for contacts</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location for messaging</string>
 	<key>NSMicrophoneUsageDescription</key>
