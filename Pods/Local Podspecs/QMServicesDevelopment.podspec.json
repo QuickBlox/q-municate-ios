@@ -13,7 +13,7 @@
     "Vitaliy Gurkovsky": "vitaliy.gurkovsky@injoit.com"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
   "source": {
     "git": "https://github.com/QuickBlox/q-municate-services-ios.git",
@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "Bolts": [
-      ">= 1.8.4"
+      ">= 1.9.0"
     ]
   }
 }

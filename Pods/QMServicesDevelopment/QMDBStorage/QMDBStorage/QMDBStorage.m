@@ -62,9 +62,25 @@
       finish:(dispatch_block_t)finish {
     
     NSManagedObjectContext *ctx = _stack.privateWriterContext;
-    [_stack.privateWriterContext performBlock:^{
+    
+    [ctx performBlock:^{
+        
+        dispatch_block_t complete = ^{
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (finish) {
+                    finish();
+                }
+            });
+        };
         
         block(ctx);
+        
+        if (!ctx.hasChanges) {
+            complete();
+            return;
+        }
         
         if (ctx.insertedObjects.count > 0) {
             QMSLog(@"[%@] Save: %tu inserted object(s)",
@@ -81,14 +97,16 @@
                    NSStringFromClass([self class]),
                    ctx.deletedObjects.count);
         }
-
-        [ctx QM_saveToPersistentStoreAndWait];
-        dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [ctx QM_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
             
-            if (finish) {
-                finish();
+            if (!success) {
+                QMSLog(@"[%@] Save error: %@",
+                       NSStringFromClass([self class]),
+                       error);
             }
-        });
+            complete();
+        }];
     }];
 }
 

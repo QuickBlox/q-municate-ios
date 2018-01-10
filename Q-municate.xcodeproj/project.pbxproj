@@ -2900,15 +2900,15 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebasePhoneAuthUI.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/NYTPhotoViewer/NYTPhotoViewer.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle",
 				"${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMCVDevelopment/QMChatViewController.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMChatCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMContactListCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMUsersCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
 				"${PODS_ROOT}/SAMKeychain/Support/SAMKeychain.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -2976,10 +2976,10 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMChatCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMContactListCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMUsersCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2998,11 +2998,11 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QMShareExtension/Pods-QMShareExtension-resources.sh",
 				"${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMCVDevelopment/QMChatViewController.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMChatCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMContactListCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMUsersCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
+				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
 				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
