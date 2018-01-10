@@ -12,6 +12,8 @@
 #import "QMStatusStringBuilder.h"
 #import "QMMessageNotification.h"
 
+static NSString * const kQMVoipPushNotificationParam = @"ios_voip";
+
 @implementation QMNotification
 
 //MARK: - Message notification
@@ -21,11 +23,6 @@
                         hostViewController:(UIViewController *)hvc {
     
     NSParameterAssert(chatMessage.dialogID);
-    
-    if ([QMCore instance].callManager.hasActiveCall) {
-        // do not show message notifications while call is active
-        return;
-    }
     
     QBChatDialog *chatDialog =
     [QMCore.instance.chatService.dialogsMemoryStorage chatDialogWithID:chatMessage.dialogID];
@@ -78,22 +75,35 @@
 //MARK: - Push notification
 
 + (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text {
+    return [self sendPushNotificationToUser:user withText:text extraParams:nil isVoip:NO];
+}
+
++ (BFTask *)sendPushNotificationToUser:(QBUUser *)user withText:(NSString *)text extraParams:(NSDictionary *)extraParams isVoip:(BOOL)isVoip {
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
     NSString *message = text;
     QBMEvent *event = [QBMEvent event];
     event.notificationType = QBMNotificationTypePush;
-    event.usersIDs = [NSString stringWithFormat:@"%zd", user.ID];
+    event.usersIDs = [NSString stringWithFormat:@"%tu", user.ID];
     event.type = QBMEventTypeOneShot;
     // custom params
-    NSDictionary  *dictPush = @{@"message" : message,
-                                @"ios_badge": @"1",
-                                @"ios_sound": @"default"
-                                };
+    NSMutableDictionary *payloadDict = [@{
+                                         @"message" : message,
+                                         @"ios_badge": @"1",
+                                         @"ios_sound": @"default",
+                                         } mutableCopy];
+    
+    if (extraParams.count > 0) {
+        [payloadDict addEntriesFromDictionary:extraParams];
+    }
+    
+    if (isVoip) {
+        payloadDict[kQMVoipPushNotificationParam] = @"1";
+    }
     
     NSError *error = nil;
-    NSData *sendData = [NSJSONSerialization dataWithJSONObject:dictPush options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *sendData = [NSJSONSerialization dataWithJSONObject:[payloadDict copy] options:NSJSONWritingPrettyPrinted error:&error];
     NSString *jsonString = [[NSString alloc] initWithData:sendData encoding:NSUTF8StringEncoding];
     
     event.message = jsonString;

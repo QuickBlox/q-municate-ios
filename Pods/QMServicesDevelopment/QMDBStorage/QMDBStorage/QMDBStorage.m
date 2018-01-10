@@ -65,6 +65,23 @@
     [_stack.privateWriterContext performBlock:^{
         
         block(ctx);
+        
+        if (ctx.insertedObjects.count > 0) {
+            QMSLog(@"[%@] Save: %tu inserted object(s)",
+                   NSStringFromClass([self class]),
+                   ctx.insertedObjects.count);
+        }
+        else if (ctx.updatedObjects.count > 0) {
+            QMSLog(@"[%@] Save: %tu updated object(s)",
+                   NSStringFromClass([self class]),
+                   ctx.updatedObjects.count);
+        }
+        else if (ctx.deletedObjects.count > 0) {
+            QMSLog(@"[%@] Save: %tu deleted object(s)",
+                   NSStringFromClass([self class]),
+                   ctx.deletedObjects.count);
+        }
+
         [ctx QM_saveToPersistentStoreAndWait];
         dispatch_async(dispatch_get_main_queue(), ^{
             

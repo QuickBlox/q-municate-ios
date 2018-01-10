@@ -8,31 +8,32 @@ PODS:
   - Crashlytics (3.9.3):
     - Fabric (~> 1.7.2)
   - Fabric (1.7.2)
-  - FBSDKCoreKit (4.28.0):
+  - FBSDKCoreKit (4.29.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.28.0):
+  - FBSDKLoginKit (4.29.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.28.0):
+  - FBSDKShareKit (4.29.0):
     - FBSDKCoreKit
   - FFCircularProgressView (0.5)
-  - Firebase/Auth (4.6.0):
+  - Firebase/Auth (4.8.0):
     - Firebase/Core
-    - FirebaseAuth (= 4.3.2)
-  - Firebase/Core (4.6.0):
+    - FirebaseAuth (= 4.4.1)
+  - Firebase/Core (4.8.0):
     - FirebaseAnalytics (= 4.0.5)
-    - FirebaseCore (= 4.0.11)
+    - FirebaseCore (= 4.0.13)
   - FirebaseAnalytics (4.0.5):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.3.2):
+  - FirebaseAuth (4.4.1):
     - FirebaseAnalytics (~> 4.0)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.11):
+  - FirebaseCore (4.0.13):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseInstanceID (2.0.6)
+  - FirebaseInstanceID (2.0.8):
+    - FirebaseCore (~> 4.0)
   - FirebaseUI/Auth (4.5.0):
     - Firebase/Auth (~> 4.2)
   - FirebaseUI/Phone (4.5.0):
@@ -50,8 +51,6 @@ PODS:
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
   - GTMSessionFetcher/Core (1.1.12)
-  - libextobjc/EXTKeyPathCoding (0.4.1):
-    - libextobjc/RuntimeExtensions
   - libextobjc/EXTScope (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
@@ -121,10 +120,10 @@ PODS:
   - QMServicesDevelopment (0.5.5):
     - Bolts (>= 1.8.4)
   - Reachability (3.2)
+  - SAMKeychain (1.5.3)
   - SDWebImage (4.2.2):
     - SDWebImage/Core (= 4.2.2)
   - SDWebImage/Core (4.2.2)
-  - SSKeychain (1.2.3)
   - SVProgressHUD (2.2.2)
   - TTTAttributedLabel (2.0.0)
   - UIDevice-Hardware (0.1.11)
@@ -137,16 +136,15 @@ DEPENDENCIES:
   - FBSDKShareKit
   - FirebaseUI/Phone (~> 4.0)
   - Flurry-iOS-SDK/FlurrySDK (<= 8.3.1)
-  - libextobjc/EXTKeyPathCoding (~> 0.4.1)
   - libextobjc/EXTScope (~> 0.4.1)
   - NYTPhotoViewer (~> 1.1.0)
   - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `feature/QMShareExtension`)
   - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `feature/IQMUNICATE-650`)
   - Reachability (~> 3.2)
-  - SSKeychain (~> 1.2.2)
+  - SAMKeychain
   - SVProgressHUD
   - TTTAttributedLabel (~> 2.0)
-  - UIDevice-Hardware (~> 0.1.3)
+  - UIDevice-Hardware (~> 0.1.11)
 
 EXTERNAL SOURCES:
   QMCVDevelopment:
@@ -158,25 +156,25 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   QMCVDevelopment:
-    :commit: 15f3d33b2c1470f9d5a7a04a6d9a3ab1b82ef7ab
+    :commit: 80c99683195e7b956cdafc966b9fd1bb5bdea425
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: cf8c70b5a99b0e064b1507ee243277b866150238
+    :commit: df638da47823e560c245849a3c5aece4ce76799a
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
   Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
-  FBSDKCoreKit: ca961e279113f691fd83dc634c0bbad9d4e3f370
-  FBSDKLoginKit: b077381c27d800f21661757e8140cf2c80a91e4a
-  FBSDKShareKit: 4f525556e0df4cf0f574cb3f01c675434f29d477
+  FBSDKCoreKit: 6f139173dc63a1deaff4430a55f2fe5bb222d2af
+  FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
+  FBSDKShareKit: 18a2cd118aef11dd657fe7e8b64bae5c719088b2
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
-  Firebase: 27321a925aa85520618255a7c630859e0502ccbd
+  Firebase: 710decbbc6d9d48530e9a5dba3209740c3532e05
   FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
-  FirebaseAuth: e58563adb207a43910a2ed87fecb9fa7d556df5a
-  FirebaseCore: 2a946ece8fbe3ce1fdeeb55324f273caade22df9
-  FirebaseInstanceID: 24958382a1011bba5aaff37e334e7a650b9118f5
+  FirebaseAuth: dc0dd403beca5b2b016aac89c2d0b8dad1c81926
+  FirebaseCore: 3c02ec652db3d03fdc8bc6d9154af3e20d64b6f5
+  FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
   FirebaseUI: 883482fea73b73bbb488c55176f4c6ad128957eb
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
@@ -188,12 +186,12 @@ SPEC CHECKSUMS:
   QMCVDevelopment: f459cc40e4dce463d7fd9092504e9a9aa49aa7a8
   QMServicesDevelopment: 0416865882789f2f6deec8f49c2868c7d82da100
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
-  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   SVProgressHUD: 59b2d3dabacbd051576d21d32293ca7228dc18b0
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05
 
-PODFILE CHECKSUM: 58b460697da54ed58f8db2736e4f5b98fd23e40a
+PODFILE CHECKSUM: 26eba340613fc15d2b443fe4b64a2e49bbd93263
 
 COCOAPODS: 1.4.0.beta.1

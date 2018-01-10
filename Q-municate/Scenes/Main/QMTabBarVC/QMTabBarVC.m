@@ -54,6 +54,12 @@ QMChatConnectionDelegate
 
 - (void)showNotificationForMessage:(QBChatMessage *)chatMessage {
     
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+        // no need to show notification s if app is active in background
+        // e.g. call kit
+        return;
+    }
+    
     if (chatMessage.senderID == QMCore.instance.currentProfile.userData.ID) {
         // no need to handle notification for self message
         return;
@@ -78,14 +84,19 @@ QMChatConnectionDelegate
         return;
     }
     
+    BOOL hasActiveCall = QMCore.instance.callManager.hasActiveCall;
+    if (hasActiveCall
+        && chatMessage.isCallNotificationMessage) {
+        // do not show call notification message if there is an active call
+        return;
+    }
+    
     [QMSoundManager playMessageReceivedSound];
     
     MPGNotificationButtonHandler buttonHandler = nil;
     UIViewController *hvc = nil;
     
-    BOOL hasActiveCall = QMCore.instance.callManager.hasActiveCall;
     BOOL isiOS8 = iosMajorVersion() < 9;
-    
     if (hasActiveCall || isiOS8) {
         // using hvc if active call or visible keyboard on ios8 devices
         // due to notification triggering window to be hidden

@@ -10,6 +10,8 @@
 #import "QMSLog.h"
 #import "QMTimeOut.h"
 #import "QMSLog.h"
+#import <AVFoundation/AVFoundation.h>
+#import <CoreMedia/CoreMedia.h>
 
 static inline NSArray *QMAssetKeysArrayForOptions(QMAssetLoaderKeyOptions options) {
     
@@ -51,6 +53,7 @@ static inline NSArray *QMAssetKeysArrayForOptions(QMAssetLoaderKeyOptions option
 @property (copy, nonatomic) QMAssetLoaderCompletionBlock completion;
 @property (assign, nonatomic) QMAssetLoaderKeyOptions assetKeyOptions;
 @property (nonatomic, strong) dispatch_queue_t assetQueue;
+
 @end
 
 @implementation QMAssetOperation
@@ -213,8 +216,12 @@ static inline NSArray *QMAssetKeysArrayForOptions(QMAssetLoaderKeyOptions option
                            }];
         }
         else {
-            [self finishOperationWithResult:result
-                                      error:nil];
+            NSError *error =
+            [NSError errorWithDomain:[NSBundle mainBundle].bundleIdentifier
+                                code:0
+                            userInfo:@{NSLocalizedDescriptionKey : @"There are no video tracks for video asset"}];
+            [self finishOperationWithResult:nil
+                                      error:error];
         }
     }
     else {

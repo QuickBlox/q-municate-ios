@@ -96,7 +96,7 @@ typedef void(^FIRInstanceIDDeleteHandler)(NSError * __nullable error)
     FIR_SWIFT_NAME(InstanceIDDeleteHandler);
 
 /**
- * @enum FIRInstanceIDError
+ * Public errors produced by InstanceID.
  */
 typedef NS_ENUM(NSUInteger, FIRInstanceIDError) {
   // Http related errors.
@@ -275,6 +275,10 @@ FIR_SWIFT_NAME(InstanceID)
 
 /**
  *  Resets Instance ID and revokes all tokens.
+ *
+ *  This method also triggers a request to fetch a new Instance ID and Firebase Messaging scope
+ *  token. Please listen to kFIRInstanceIDTokenRefreshNotification when the new ID and token are
+ *  ready.
  */
 - (void)deleteIDWithHandler:(nonnull FIRInstanceIDDeleteHandler)handler
     FIR_SWIFT_NAME(deleteID(handler:));

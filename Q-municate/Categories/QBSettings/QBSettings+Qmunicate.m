@@ -11,10 +11,10 @@
 @implementation QBSettings (Qmunicate)
 
 + (void)configure{
-
+    
     switch (QMCurrentApplicationZone) {
             
-        case  QMApplicationZoneDevelopment:
+        case QMApplicationZoneDevelopment:
             
             QBSettings.applicationID = 36125;
             QBSettings.authKey = @"gOGVNO4L9cBwkPE";
@@ -22,8 +22,17 @@
             QBSettings.accountKey = @"6Qyiz3pZfNsex1Enqnp7";
             
             break;
-        
-        case  QMApplicationZoneProduction:
+            
+        case QMApplicationZoneDevelopment1:
+            
+            QBSettings.applicationID  = 63068;
+            QBSettings.authKey = @"BkWsMWL3XUqJdNr";
+            QBSettings.authSecret = @"bG8PFjwAx3JKFfS";
+            QBSettings.accountKey =  @"6Qyiz3pZfNsex1Enqnp7";
+            
+            break;
+            
+        case QMApplicationZoneProduction:
             
             QBSettings.applicationID = 13318;
             QBSettings.authKey = @"WzrAY7vrGmbgFfP";
@@ -31,8 +40,8 @@
             QBSettings.accountKey = @"6Qyiz3pZfNsex1Enqnp7";
             
             break;
-        
-        case  QMApplicationZoneQA:
+            
+        case QMApplicationZoneQA:
             
             QBSettings.applicationID = 47;
             QBSettings.authKey = @"7JE5cmpMwLd2S22";
@@ -46,7 +55,7 @@
         default:
             break;
     }
-
+    
     QBSettings.applicationGroupIdentifier = @"group.com.quickblox.qmunicate";
     QBSettings.autoReconnectEnabled = YES;
     QBSettings.carbonsEnabled = YES;

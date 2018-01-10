@@ -93,7 +93,13 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
          @strongify(self);
-         if (![QBChat instance].isConnected) {
+         if ([QBChat instance].isConnected) {
+             // if chat was connected (e.g. we are in call) in background
+             // we skip requests, so perform them now as app is active now
+             [QMTasks taskFetchAllData];
+             [QMTasks taskUpdateContacts];
+         }
+         else {
              [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
                                                                                    message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
                                                                                   duration:0];
@@ -151,6 +157,13 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
                                            message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
                                           duration:0];
+    
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
+        && !QBChat.instance.manualInitialPresence) {
+        // connecting to chat with manual initial presence if in the background
+        // this will not send online presence untill app comes foreground
+        QBChat.instance.manualInitialPresence = YES;
+    }
     
     [[[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
@@ -396,7 +409,9 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 //MARK: - QMChatConnectionDelegate
 
 - (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
-    [QMTasks taskFetchAllData];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMTasks taskFetchAllData];
+    }
 }
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
@@ -409,7 +424,9 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
     
-    [QMTasks taskFetchAllData];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMTasks taskFetchAllData];
+    }
     
     [(QMNavigationController *)self.navigationController
      showNotificationWithType:QMNotificationPanelTypeSuccess
@@ -420,7 +437,9 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 - (void)contactListService:(QMContactListService *)__unused contactListService
       contactListDidChange:(QBContactList *)__unused contactList {
     
-    [QMTasks taskUpdateContacts];
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
+        [QMTasks taskUpdateContacts];
+    }
 }
 
 //MARK: - QMUsersServiceDelegate

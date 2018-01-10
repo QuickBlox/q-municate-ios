@@ -41,7 +41,14 @@ extern NSString *const kQMAttachmentTypeLocation;
 /**
  *  Determinates attachment's file extension. 'Content type' should be specified.
  */
-@property (copy, nonatomic, readonly) NSString *fileExtension;
+@property (nonatomic, readonly) NSString *fileExtension;
+
+
+/**
+ *  Determinates attachment's core type identifier. 'Content type' should be specified.
+ *  @see UTCoreTypes.h.
+ */
+@property (nonatomic, readonly) NSString *typeIdentifier;
 
 /**
  *  Image of attachment (for video/image).
@@ -72,6 +79,11 @@ extern NSString *const kQMAttachmentTypeLocation;
  *  Attachment has all needed values
  */
 @property (nonatomic, assign, getter=isPrepared, readonly) BOOL prepared;
+
+/**
+ *  The NSData instance that identifies attachment resource.
+ */
+@property (nonatomic, copy) NSData *fileData;
 
 - (NSURL *)remoteURLWithToken:(BOOL)withToken;
 - (NSURL *)remoteURL;

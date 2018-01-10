@@ -51,30 +51,24 @@
 - (void)free {
     
     [self.usersMemoryStorage free];
+    [self.listeners removeAllObjects];
+    
 }
 //MARK: - Tasks
 
 - (void)loadFromCache {
     
-    if ([self.cacheDataSource
-         respondsToSelector:@selector(cachedUsersWithCompletion:)]) {
+    __weak __typeof(self)weakSelf = self;
+    [self.cacheDataSource cachedUsersWithCompletion:^(NSArray *collection) {
         
-        __weak __typeof(self)weakSelf = self;
-        [self.cacheDataSource cachedUsersWithCompletion:^(NSArray *collection) {
+        if (collection.count > 0) {
             
-            if (collection.count > 0) {
-                
-                [weakSelf.usersMemoryStorage addUsers:collection];
-                
-                if ([weakSelf.multicastDelegate
-                     respondsToSelector:@selector(usersService:
-                                                  didLoadUsersFromCache:)]) {
-                         [weakSelf.multicastDelegate usersService:weakSelf
-                                            didLoadUsersFromCache:collection];
-                     }
-            }
-        }];
-    }
+            [weakSelf.usersMemoryStorage addUsers:collection];
+            [weakSelf.multicastDelegate usersService:weakSelf
+                               didLoadUsersFromCache:collection];
+            
+        }
+    }];
 }
 
 //MARK: - Add Remove multicaste delegate
@@ -153,13 +147,17 @@
 -  (BFTask *)getUsersWithIDs:(NSArray *)usersIDs
                         page:(QBGeneralResponsePage *)page
                    forceLoad:(BOOL)forceLoad {
+    
+    NSParameterAssert(usersIDs.count > 0);
     NSParameterAssert(usersIDs);
     NSParameterAssert(page);
+    NSParameterAssert(page.perPage <= 100);
     
-    NSDictionary *searchInfo =
+    NSDictionary<NSString *, id> *searchInfo =
     [self.usersMemoryStorage usersByExcludingUsersIDs:usersIDs];
-    NSArray *foundUsers = searchInfo[QMUsersSearchKey.foundObjects];
-    NSArray *notFoundIDs = searchInfo[QMUsersSearchKey.notFoundSearchValues];
+    
+    NSArray<QBUUser *> *foundUsers = searchInfo[QMUsersSearchKey.foundObjects];
+    NSArray<NSNumber *> *notFoundIDs = searchInfo[QMUsersSearchKey.notFoundSearchValues];
     
     if (!forceLoad && notFoundIDs.count == 0) {
         
@@ -176,10 +174,28 @@
                                   QBGeneralResponsePage *page,
                                   NSArray *users)
          {
+             NSMutableArray *tResult = [NSMutableArray arrayWithCapacity:searchableUsers.count];
+             [tResult addObjectsFromArray:users];
+             
+             NSArray<NSNumber *> *responseIDs = [users valueForKey:@"ID"];
+             NSMutableArray *removedUsersIDs = [searchableUsers mutableCopy];
+             [removedUsersIDs removeObjectsInArray:responseIDs];
+             
+             for (NSNumber *ID in removedUsersIDs) {
+                 
+                 QBUUser *user = [QBUUser user];
+                 user.ID = ID.unsignedIntegerValue;
+                 user.fullName = @"Removed";
+                 [tResult addObject:user];
+             }
+             
+             NSParameterAssert(tResult.count == searchableUsers.count);
+             
              NSArray<QBUUser *> *result =
-             [self performUpdateWithLoadedUsers:users
+             [self performUpdateWithLoadedUsers:[tResult copy]
                                      foundUsers:foundUsers
                                   wasLoadForced:forceLoad];
+             
              [source setResult:result];
              
          } errorBlock:^(QBResponse *response) {
@@ -690,6 +706,7 @@
 }
 
 - (void)notifyListenersAboutUsersUpdate:(NSArray <QBUUser *> *)users {
+    
     NSEnumerator *keyEnumerator = self.listeners.keyEnumerator;
     for (QBUUser *user in keyEnumerator) {
         if ([users containsObject:user]) {

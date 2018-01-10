@@ -83,6 +83,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)deleteContactList:(nullable dispatch_block_t)completion;
 
+- (void)truncateAll;
+
 //MARK: Fetch ContactList operations
 
 /**

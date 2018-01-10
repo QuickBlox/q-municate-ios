@@ -1,5 +1,5 @@
 
-platform :ios, '8.1'
+platform :ios, '9.0'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
@@ -19,8 +19,6 @@ target 'Q-municate' do
     pod 'libextobjc/EXTScope', '~> 0.4.1'
     pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
     pod 'NYTPhotoViewer', '~> 1.1.0'
-    #    pod 'QMChatViewController'
-    #    pod 'QMServices'
     
     #Facebook
     pod 'FBSDKCoreKit'

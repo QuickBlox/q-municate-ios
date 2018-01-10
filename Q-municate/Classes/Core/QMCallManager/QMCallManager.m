@@ -7,20 +7,28 @@
 //
 
 #import "QMCallManager.h"
+
 #import "QMCore.h"
 #import "QMCallViewController.h"
 #import "QMSoundManager.h"
 #import "QMPermissions.h"
 #import "QMNotification.h"
+#import "QMCallKitAdapter.h"
+
+#import <Intents/Intents.h>
 
 static const NSTimeInterval kQMAnswerTimeInterval = 60.0f;
 static const NSTimeInterval kQMDialingTimeInterval = 5.0f;
 static const NSTimeInterval kQMCallViewControllerEndScreenDelay = 1.0f;
+static const NSTimeInterval kQMBackgroundActiveCallCheck = 15.0f;
+
+NSString * const QMVoipCallEventKey = @"VOIPCall";
 
 @interface QMCallManager ()
-
 <
-QBRTCClientDelegate
+QBRTCClientDelegate,
+QMCallKitAdapterUsersStorageProtocol,
+QBChatDelegate
 >
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
@@ -28,15 +36,27 @@ QBRTCClientDelegate
 
 @property (strong, nonatomic, readwrite) QBRTCSession *session;
 @property (assign, nonatomic, readwrite) BOOL hasActiveCall;
+
 @property (strong, nonatomic) NSTimer *soundTimer;
+@property (strong, nonatomic) NSTimer *backgroundTimer;
 
 @property (strong, nonatomic) UIWindow *callWindow;
+
+@property (strong, nonatomic) QMCallKitAdapter *callKitAdapter;
+@property (strong, nonatomic, readwrite) NSUUID *callUUID;
+@property (assign, nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+
+@property (copy, nonatomic) dispatch_block_t onChatConnectedAction;
 
 @end
 
 @implementation QMCallManager
 
 @dynamic serviceManager;
+
++ (BOOL)isCallKitAvailable {
+    return QMCallKitAdapter.isCallKitAvailable;
+}
 
 - (void)serviceWillStart {
     
@@ -45,10 +65,31 @@ QBRTCClientDelegate
     
     _multicastDelegate = (id<QMCallManagerDelegate>)[[QBMulticastDelegate alloc] init];
     
+    [QBChat.instance addDelegate:self];
     [[QBRTCClient instance] addDelegate:self];
+    
+    if (QMCallKitAdapter.isCallKitAvailable) {
+        _callKitAdapter = [[QMCallKitAdapter alloc] initWithUsersStorage:self];
+        @weakify(self);
+        // mic was muted by callkit actions
+        [_callKitAdapter setOnMicrophoneMuteAction:^{
+            @strongify(self);
+            [self.multicastDelegate callManagerDidChangeMicrophoneState:self];
+        }];
+        // call was ended by callkit actions
+        [_callKitAdapter setOnCallEndedByCallKitAction:^{
+            @strongify(self);
+            [self.multicastDelegate callManagerCallWasEndedByCallKit:self];
+            if (self.callWindow == nil) {
+                // if no call window in existence that means that call was ended
+                // on our side while not established, send appropriate notification
+                [self sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+            }
+        }];
+    }
 }
 
-//MARK: - Call managing
+// MARK: - Call managing
 
 - (void)callToUserWithID:(NSUInteger)userID conferenceType:(QBRTCConferenceType)conferenceType {
     
@@ -75,6 +116,11 @@ QBRTCClientDelegate
             return;
         }
         
+        if (QMCallKitAdapter.isCallKitAvailable) {
+            self.callUUID = [NSUUID UUID];
+            [self.callKitAdapter startCallWithUserID:@(userID) session:self.session uuid:self.callUUID];
+        }
+        
         [self startPlayingCallingSound];
         
         // instantiating view controller
@@ -86,8 +132,12 @@ QBRTCClientDelegate
         NSString *callerName = currentUser.fullName ?: [NSString stringWithFormat:@"%tu", currentUser.ID];
         NSString *pushText = [NSString stringWithFormat:@"%@ %@", callerName, NSLocalizedString(@"QM_STR_IS_CALLING_YOU", nil)];
         
-        [QMNotification sendPushNotificationToUser:opponentUser withText:pushText];
-        
+        [QMNotification sendPushNotificationToUser:opponentUser
+                                          withText:pushText
+                                       extraParams:@{
+                                                     QMVoipCallEventKey : @"1",
+                                                     }
+                                            isVoip:YES];
         
         [self prepareCallWindow];
         
@@ -95,6 +145,10 @@ QBRTCClientDelegate
         
         [self.session startCall:nil];
         self.hasActiveCall = YES;
+        
+        if (QMCallKitAdapter.isCallKitAvailable) {
+            [self.callKitAdapter updateCallWithUUID:self.callUUID connectingAtDate:[NSDate date]];
+        }
     }];
 }
 
@@ -120,12 +174,11 @@ QBRTCClientDelegate
         
         _hasActiveCall = hasActiveCall;
         
-        if (self.session.conferenceType == QBRTCConferenceTypeAudio) {
+        if (!QMCallKitAdapter.isCallKitAvailable
+            && self.session.conferenceType == QBRTCConferenceTypeAudio) {
+            // enabling proximity sensor only if call kit is not available
+            // as callkit handling this by default
             [UIDevice currentDevice].proximityMonitoringEnabled = hasActiveCall;
-        }
-        
-        if (!hasActiveCall) {
-            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
         }
     }
 }
@@ -156,7 +209,87 @@ QBRTCClientDelegate
     return opponentUser;
 }
 
-//MARK: - QBRTCClientDelegate
+// MARK: - Methods
+
+- (void)performCallKitPreparations {
+    UIApplication *application = [UIApplication sharedApplication];
+    if (application.applicationState == UIApplicationStateBackground) {
+        if (_backgroundTask == UIBackgroundTaskInvalid) {
+            _backgroundTask = [application beginBackgroundTaskWithExpirationHandler:^{
+                [application endBackgroundTask:self.backgroundTask];
+                self.backgroundTask = UIBackgroundTaskInvalid;
+            }];
+        }
+        // as we are in the background, do not send initial presence in chat
+        // so we won't appear online for all users, only send initial presence
+        // when we will be back in foreground
+        [QBChat instance].manualInitialPresence = YES;
+    }
+    QBChat *chat = QBChat.instance;
+    if (!chat.isConnected && !chat.isConnecting) {
+        [self.serviceManager login];
+    }
+    // As we have connected to the chat, there is a case when we won't receive
+    // call session at all, if, for example, caller cancelled call faster than
+    // we have received VOIP push notification about that.
+    // This will be fixed with updated signaling in a future and must be deleted
+    // in the end.
+    _backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:kQMBackgroundActiveCallCheck
+                                                        target:self
+                                                      selector:@selector(checkBackgroundActiveCall)
+                                                      userInfo:nil
+                                                       repeats:NO];
+}
+
+- (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity {
+    INInteraction *interaction = [userActivity interaction];
+    NSString *handle = userActivity.userInfo[@"handle"];
+    BOOL isAudioCallIntentClass = [interaction.intent isKindOfClass:[INStartAudioCallIntent class]];
+    BOOL isVideoCallIntentClass = [interaction.intent isKindOfClass:[INStartVideoCallIntent class]];
+    NSAssert(isAudioCallIntentClass || isVideoCallIntentClass, @"Incorrect intent.");
+    if (handle == nil) {
+        INPerson *person = nil;
+        if (isAudioCallIntentClass) {
+            person = [[(INStartAudioCallIntent *)(interaction.intent) contacts] firstObject];
+        }
+        else if (isVideoCallIntentClass) {
+            person = [[(INStartVideoCallIntent *)(interaction.intent) contacts] firstObject];
+        }
+        
+        handle = person.personHandle.value;
+    }
+    
+    dispatch_block_t action = ^void() {
+        QBRTCConferenceType conferenceType = isVideoCallIntentClass ? QBRTCConferenceTypeVideo : QBRTCConferenceTypeAudio;
+        [self callToUserWithID:handle.integerValue conferenceType:conferenceType];
+    };
+    
+    if (QBChat.instance.isConnected) {
+        action();
+    }
+    else {
+        self.onChatConnectedAction = action;
+    }
+    
+    action = nil;
+}
+
+// MARK: - QBChatDelegate
+
+- (void)chatDidConnect {
+    if (self.onChatConnectedAction != nil) {
+        self.onChatConnectedAction();
+        self.onChatConnectedAction = nil;
+    }
+}
+
+- (void)chatDidNotConnectWithError:(NSError *)__unused error {
+    if (self.onChatConnectedAction != nil) {
+        self.onChatConnectedAction = nil;
+    }
+}
+
+// MARK: - QBRTCClientDelegate
 
 - (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)__unused userInfo {
     
@@ -174,19 +307,41 @@ QBRTCClientDelegate
         return;
     }
     
+    // invalidating background timer if there is one
+    if (_backgroundTimer != nil) {
+        [_backgroundTimer invalidate];
+        _backgroundTimer = nil;
+    }
+    
     self.session = session;
     self.hasActiveCall = YES;
     
-    [self startPlayingRingtoneSound];
-    
-    // initializing controller
-    QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
-    
-    [self prepareCallWindow];
-    self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+    if (QMCallKitAdapter.isCallKitAvailable) {
+        self.callUUID = [NSUUID UUID];
+        
+        @weakify(self);
+        [_callKitAdapter reportIncomingCallWithUserID:session.initiatorID session:session uuid:self.callUUID onAcceptAction:^{
+            @strongify(self);
+            // initializing controller
+            QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
+            
+            [self prepareCallWindow];
+            self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+            
+        } completion:nil];
+    }
+    else {
+        [self startPlayingRingtoneSound];
+        
+        // initializing controller
+        QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
+        
+        [self prepareCallWindow];
+        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+    }
 }
 
-- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)__unused report forUserID:(NSNumber *)__unused userID {
+- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
     
     ILog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
 }
@@ -196,12 +351,18 @@ QBRTCClientDelegate
     if (self.session == session) {
         // stopping calling sounds
         [self stopAllSounds];
+        
+        if (QMCallKitAdapter.isCallKitAvailable
+            && [session.initiatorID unsignedIntegerValue] == self.serviceManager.currentProfile.userData.ID) {
+            [_callKitAdapter updateCallWithUUID:_callUUID connectedAtDate:[NSDate date]];
+        }
     }
 }
 
 - (void)sessionDidClose:(QBRTCSession *)session {
     
-    if (self.session != session) {
+    if (self.session != nil
+        && self.session != session) {
         // may be we rejected some one else call
         // while talking with another person
         return;
@@ -209,9 +370,35 @@ QBRTCClientDelegate
     
     self.hasActiveCall = NO;
     
+    if (QMCallKitAdapter.isCallKitAvailable) {
+        [self.callKitAdapter endCallWithUUID:self.callUUID completion:nil];
+        self.callUUID = nil;
+    }
+    
+    if (_backgroundTask != UIBackgroundTaskInvalid) {
+        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }
+    
+    // invalidating background timer if there is one
+    if (_backgroundTimer != nil) {
+        [_backgroundTimer invalidate];
+        _backgroundTimer = nil;
+    }
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
+            && self.backgroundTask == UIBackgroundTaskInvalid) {
+            // dispatching chat disconnect in 1.5 second so message about call end
+            // from webrtc does not cut mid sending (ideally webrtc should wait
+            // untill message about hangup did send, which is not the case now)
+            // checking for background task being invalid though, to avoid disconnecting
+            // from chat when another call has already being received in background
+            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
+        }
+    });
+    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMCallViewControllerEndScreenDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        [QMSoundManager playEndOfCallSound];
         
         [self.multicastDelegate callManager:self willCloseCurrentSession:session];
         
@@ -387,6 +574,17 @@ QBRTCClientDelegate
     [self _sendNotificationMessage:message];
 }
 
+// MARK: - QMCallKitAdapterUsersStorageProtocol protocol impl
+
+- (void)userWithID:(NSUInteger)userID completion:(void (^)(QBUUser * _Nonnull))completion {
+    [[self.serviceManager.usersService getUserWithID:userID] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull t) {
+        if (completion != nil) {
+            completion(t.result);
+        }
+        return nil;
+    }];
+}
+
 //MARK: - Helpers
 
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message {
@@ -411,6 +609,26 @@ QBRTCClientDelegate
     
     UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
     [viewController presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)checkBackgroundActiveCall {
+    BOOL isBackground = [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
+    if (isBackground
+        && !self.hasActiveCall) {
+        
+        if (_backgroundTask != UIBackgroundTaskInvalid) {
+            [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+            _backgroundTask = UIBackgroundTaskInvalid;
+        }
+        
+        BOOL isChatActive = QBChat.instance.isConnected || QBChat.instance.isConnecting;
+        if (isChatActive) {
+            [self.serviceManager.chatManager disconnectFromChatIfNeeded];
+        }
+    }
+    
+    [_backgroundTimer invalidate];
+    _backgroundTimer = nil;
 }
 
 @end

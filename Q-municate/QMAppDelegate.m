@@ -10,6 +10,7 @@
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QMColors.h"
+
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Flurry.h>
@@ -45,9 +46,9 @@
     // Configuring app appearance
     [[UITabBar appearance] setTintColor:QMMainApplicationColor()];
     [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
-
+    
     // Configuring searchbar appearance
-
+    
     [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
     [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
@@ -72,8 +73,13 @@
         [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
     }
     
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                    didFinishLaunchingWithOptions:launchOptions];
+    // not returning this method as launch options are not ONLY related to facebook
+    // for example when facebook returns NO in this method, callkit call from contacts
+    // app will not be handled. Facebook should not decide if URL should be handled for everything
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
+    
+    return YES;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -103,14 +109,18 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    
     application.applicationIconBadgeNumber = 0;
-    [[QMCore instance].chatManager disconnectFromChatIfNeeded];
+    [QMCore.instance.chatManager disconnectFromChatIfNeeded];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)__unused application {
-    
-    [[QMCore instance] login];
+    // sending presence after application becomes active,
+    // or just restoring state if chat is disconnected
+    if (QBChat.instance.manualInitialPresence) {
+        QBChat.instance.manualInitialPresence = NO;
+    }
+    // connect to chat now
+    [QMCore.instance login];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)__unused application {
@@ -170,6 +180,16 @@ forRemoteNotification:(NSDictionary *)userInfo
                                                        remoteNotification:userInfo
                                                              responseInfo:responseInfo
                                                         completionHandler:completionHandler];
+}
+
+- (BOOL)application:(UIApplication *)__unused application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))__unused restorationHandler {
+    
+    BOOL isCallIntent = [userActivity.activityType isEqualToString:INStartAudioCallIntentIdentifier] || [userActivity.activityType isEqualToString:INStartVideoCallIntentIdentifier];
+    if (isCallIntent) {
+        [QMCore.instance.callManager handleUserActivityWithCallIntent:userActivity];
+    }
+    
+    return YES;
 }
 
 //MARK: - QMPushNotificationManagerDelegate protocol

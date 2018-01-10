@@ -38,6 +38,14 @@ NSString  *kQMAttachmentContentTypeKey = @"content-type";
     return (__bridge_transfer NSString *)extension;
 }
 
+- (NSString *)typeIdentifier {
+    
+    CFStringRef MIMEType = (__bridge CFStringRef)self.contentType;
+    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, MIMEType, NULL);
+    return (__bridge_transfer NSString *)uti;
+}
+
+
 - (NSString *)contentType {
     
     NSString *contentType = self[kQMAttachmentContentTypeKey];
@@ -65,6 +73,14 @@ NSString  *kQMAttachmentContentTypeKey = @"content-type";
     objc_setAssociatedObject(self, @selector(localFileURL), localFileURL, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+- (NSData *)fileData {
+    return objc_getAssociatedObject(self, @selector(fileData));
+}
+
+- (void)setFileData:(NSData *)fileData {
+    objc_setAssociatedObject(self, @selector(fileData), fileData, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (UIImage *)image {
     return objc_getAssociatedObject(self, @selector(image));
 }
@@ -72,6 +88,7 @@ NSString  *kQMAttachmentContentTypeKey = @"content-type";
 - (void)setImage:(UIImage *)image {
     objc_setAssociatedObject(self, @selector(image), image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 
 
 - (QMAttachmentType)attachmentType {
@@ -138,12 +155,10 @@ NSString  *kQMAttachmentContentTypeKey = @"content-type";
 }
 
 - (NSInteger)duration {
-    
     return [self[kQMAttachmentDurationKey] integerValue];
 }
 
 - (void)setDuration:(NSInteger)duration {
-    
     if (self.duration != duration) {
         self[kQMAttachmentDurationKey] = [NSString stringWithFormat:@"%ld",(unsigned long)duration];
     }

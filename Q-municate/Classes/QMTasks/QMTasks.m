@@ -163,7 +163,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) =
     ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
-        if (dialogsUsersIDs.count > 0) {        
+        if (dialogsUsersIDs.count > 0) {
             BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:dialogsUsersIDs.allObjects];
             [usersLoadingTasks addObject:task];
         }
