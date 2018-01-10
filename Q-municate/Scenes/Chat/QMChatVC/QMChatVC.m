@@ -266,12 +266,22 @@ TTTAttributedLabelDelegate
     self.mediaController = [[QMMediaController alloc] initWithViewController:self];
     
     @weakify(self);
+    NSString *observerName =
+    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
+    
+    __weak __typeof(self)weakSelf = self;
+    self.updateDialogObserver =
+    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:observerName
+                                                        usingBlock:^{
+                                                            [weakSelf syncWithCache];
+                                                        }];
     
     [self.mediaController setOnError:^(QBChatMessage *__unused message, NSError *error) {
         
         @strongify(self);
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
+    
     
     // subscribing to delegates
     [QMCore.instance.chatService addDelegate:self];
@@ -354,15 +364,6 @@ TTTAttributedLabelDelegate
     self.topContentAdditionalInset = _additionalNavigationBarHeight;
     
     self.messagesToRead = [NSMutableSet set];
-    
-    NSString *observerName =
-    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
-    
-    self.updateDialogObserver =
-    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:observerName
-                                                        usingBlock:^{
-                                                            [self refreshMessages];
-                                                        }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -438,13 +439,6 @@ TTTAttributedLabelDelegate
     return self.chatDialog.ID;
 }
 
-- (void)didUpdateMessage:(QBChatMessage *)message {
-    
-    if ([self.chatDialog.ID isEqualToString:message.dialogID]) {
-        [self.chatDataSource updateMessage:message];
-    }
-}
-
 //MARK: - Helpers & Utility
 
 - (void)updateOpponentOnlineStatus {
@@ -467,6 +461,10 @@ TTTAttributedLabelDelegate
     // Retrieving message from Quickblox REST history and cache.
     [QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
                                            iterationBlock:nil];
+}
+
+- (void)syncWithCache {
+    [QMCore.instance.chatService syncMessagesWithCacheForDialogID:self.dialogID];
 }
 
 - (void)chatService:(QMChatService *)__unused chatService
@@ -1839,7 +1837,7 @@ didPerformAction:(SEL)action
                                                           senderID:self.senderID
                                                       chatDialogID:self.chatDialog.ID
                                                           dateSent:[NSDate date]];
-    [self.chatDataSource addMessage:message];
+    
     [QMCore.instance.chatService sendAttachmentMessage:message
                                               toDialog:self.chatDialog
                                         withAttachment:attachment

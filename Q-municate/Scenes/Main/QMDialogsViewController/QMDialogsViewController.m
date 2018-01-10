@@ -63,7 +63,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     
     [super viewDidLoad];
     
-    
     // Subscribing delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
@@ -103,9 +102,19 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     
     self.dialogsUpdatesObserver =
     [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQMDidUpdateDialogsNotification
-                                                        usingBlock:^{
-                                                            [QMTasks taskFetchAllData];
-                                                        }];
+                                                        usingBlock:^
+     {
+         NSDate *lastFetchDate =
+         QMCore.instance.currentProfile.lastDialogsFetchingDate;
+         
+         [[QMCore.instance.chatService syncLaterDialogsWithCacheFromDate:lastFetchDate] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t)
+          {
+              if (t.result.count > 0) {
+                  [self.tableView reloadData];
+              }
+              return nil;
+          }];
+     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
