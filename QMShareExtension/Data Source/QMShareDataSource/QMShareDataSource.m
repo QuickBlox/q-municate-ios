@@ -88,7 +88,7 @@ static const NSUInteger kContactsSection = 0;
 
 
 - (void)selectItem:(id<QMShareItemProtocol>)item
-           forView:(id <QMShareViewProtocol>)view {
+           forView:(id<QMShareViewProtocol>)view {
     
     BOOL isSelected = [self.selectedItems containsObject:item];
     

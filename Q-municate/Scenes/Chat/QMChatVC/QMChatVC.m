@@ -1857,9 +1857,7 @@ didPerformAction:(SEL)action
 
 - (void)sendAttachmentMessageWithImage:(UIImage *)image {
     
-    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @strongify(self);
         
         UIImage *resizedImage = [self resizedImageFromImage:image];
         
@@ -2423,10 +2421,8 @@ didFinishPickingWithError:(NSError *)error {
 - (void)imagePicker:(QMImagePicker *)__unused imagePicker
 didFinishPickingPhoto:(UIImage *)photo {
     
-    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @strongify(self);
-        
+    
         if (imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             UIImage *newImage = [photo fixOrientation];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -2446,9 +2442,8 @@ didFinishPickingVideo:(NSURL *)videoUrl {
     
     QBChatAttachment *attachment = [QBChatAttachment videoAttachmentWithFileURL:videoUrl];
     
-    @weakify(self);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @strongify(self);
+        
         AVURLAsset *videoAsset = [AVURLAsset URLAssetWithURL:videoUrl options:nil];
         NSTimeInterval durationSeconds = CMTimeGetSeconds(videoAsset.duration);
         attachment.duration = lround(durationSeconds);
