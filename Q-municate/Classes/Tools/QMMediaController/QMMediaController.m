@@ -12,7 +12,8 @@
 #import "QMCore.h"
 #import "QMAudioPlayer.h"
 #import "QMPhoto.h"
-#import "NYTPhotosViewController.h"
+#import <NYTPhotoViewer/NYTPhotoViewer.h>
+
 #import "QMDateUtils.h"
 #import "UIImage+QM.h"
 
@@ -298,32 +299,32 @@ QMAttachmentContentServiceDelegate>
         [self.attachmentsService attachmentWithID:attachment.ID
                                           message:message
                                     progressBlock:^(float progress)
-        {
-            if ([view.messageID isEqualToString:message.ID]) {
-                view.progress = progress;
-            }
-        } completion:^(QMAttachmentOperation * _Nonnull op) {
-            
-            if (op.isCancelled ||
-                ![view.messageID isEqualToString:message.ID]) {
-                return;
-            }
-            
-            if (!op.error) {
-                
-                view.duration = attachment.duration;
-                
-                if ([QMAudioPlayer audioPlayer].status.playerState != QMAudioPlayerStatePlaying) {
-                    [weakSelf playAttachment:attachment forMessage:message];
-                }
-                else {
-                    view.viewState = QMMediaViewStateReady;
-                }
-            }
-            else {
-                view.viewState = QMMediaViewStateError;
-            }
-        }];
+         {
+             if ([view.messageID isEqualToString:message.ID]) {
+                 view.progress = progress;
+             }
+         } completion:^(QMAttachmentOperation * _Nonnull op) {
+             
+             if (op.isCancelled ||
+                 ![view.messageID isEqualToString:message.ID]) {
+                 return;
+             }
+             
+             if (!op.error) {
+                 
+                 view.duration = attachment.duration;
+                 
+                 if ([QMAudioPlayer audioPlayer].status.playerState != QMAudioPlayerStatePlaying) {
+                     [weakSelf playAttachment:attachment forMessage:message];
+                 }
+                 else {
+                     view.viewState = QMMediaViewStateReady;
+                 }
+             }
+             else {
+                 view.viewState = QMMediaViewStateError;
+             }
+         }];
     }
     if (attachment.attachmentType == QMAttachmentContentTypeAudio || attachment.attachmentType == QMAttachmentContentTypeVideo) {
         
@@ -530,8 +531,14 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                       
                       NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)self.presentedViewController;
                       if (photosViewController && image) {
+                          
                           photo.image = image;
-                          [photosViewController updateImageForPhoto:photo];
+                          
+                          NYTPhotoViewerSinglePhotoDataSource *updatedPhotoDataSource =
+                          [NYTPhotoViewerSinglePhotoDataSource dataSourceWithPhoto:photo];
+                          
+                          photosViewController.dataSource = updatedPhotoDataSource;
+                          [photosViewController reloadPhotosAnimated:YES];
                       }
                   }];
              }
@@ -745,8 +752,11 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                      leftBarButtonItem:(UIBarButtonItem *)leftBarButtonItem
                        completionBlock:(dispatch_block_t)completion {
     
+    NYTPhotoViewerSinglePhotoDataSource *photoDataSource =
+    [NYTPhotoViewerSinglePhotoDataSource dataSourceWithPhoto:photo];
+    
     NYTPhotosViewController *photosViewController =
-    [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    [[NYTPhotosViewController alloc] initWithDataSource:photoDataSource];
     
     if (rightBarButtonItem != nil) {
         photosViewController.rightBarButtonItem = rightBarButtonItem;

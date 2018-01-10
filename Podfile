@@ -18,7 +18,7 @@ target 'Q-municate' do
     pod 'TTTAttributedLabel', '~> 2.0'
     pod 'libextobjc/EXTScope', '~> 0.4.1'
     pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
-    pod 'NYTPhotoViewer', '~> 1.1.0'
+    pod 'NYTPhotoViewer', :git => 'https://github.com/NYTimes/NYTPhotoViewer.git', :tag => 'v2.0.0'
     
     #Facebook
     pod 'FBSDKCoreKit'

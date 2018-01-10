@@ -9,7 +9,7 @@
 #import "QMImagePreview.h"
 #import <QMImageLoader.h>
 
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import <NYTPhotoViewer/NYTPhotoViewer.h>
 #import "QMPhoto.h"
 
 @implementation QMImagePreview
@@ -22,11 +22,12 @@
     }
     
     QMPhoto *photo = [[QMPhoto alloc] init];
+    NYTPhotoViewerSinglePhotoDataSource *photoDataSource =
+    [NYTPhotoViewerSinglePhotoDataSource dataSourceWithPhoto:photo];
     
-    NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithPhotos:@[photo]];
+    NYTPhotosViewController *photosViewController = [[NYTPhotosViewController alloc] initWithDataSource:photoDataSource];
     
     if ([ivc conformsToProtocol:@protocol(NYTPhotosViewControllerDelegate)]) {
-        
         photosViewController.delegate = (UIViewController<NYTPhotosViewControllerDelegate> *)ivc;
     }
     
@@ -34,7 +35,8 @@
     
     QMImageLoader *loader = [QMImageLoader instance];
     
-    [loader downloadImageWithURL:url transform:nil
+    [loader downloadImageWithURL:url
+                       transform:nil
                          options:SDWebImageHighPriority
                         progress:nil
                        completed:^(UIImage * _Nullable image,
@@ -46,9 +48,13 @@
                            
                            if (!error && image) {
                                photo.image = [loader originalImageWithURL:imageURL];
-                               [photosViewController updateImageForPhoto:photo];
+                               NYTPhotoViewerSinglePhotoDataSource *updatedPhotoDataSource =
+                               [NYTPhotoViewerSinglePhotoDataSource dataSourceWithPhoto:photo];
+                               
+                               photosViewController.dataSource = updatedPhotoDataSource;
+                               [photosViewController reloadPhotosAnimated:YES];
                            }
-    }];
+                       }];
 }
 
 @end
