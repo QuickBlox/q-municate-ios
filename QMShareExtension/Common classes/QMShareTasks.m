@@ -90,7 +90,7 @@
 
 @implementation QMShareTasks
 
-
+/* TODO: for test
 static NSSet<NSString *>*acceptableTypes() {
     
     static NSSet *acceptableTypes = nil;
@@ -124,6 +124,7 @@ static NSSet<NSString *>*acceptableTypes() {
     return acceptableTypes;
 }
 
+*/
 
 + (BFTask <NSArray<QMItemProviderResult *>*> *)loadItemsForItemProviders:(NSArray <NSItemProvider *> *)providers {
     
