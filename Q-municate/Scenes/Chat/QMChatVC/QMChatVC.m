@@ -46,6 +46,7 @@
 // external
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <AVKit/AVKit.h>
+#import <notify.h>
 
 @import SafariServices;
 
@@ -200,7 +201,6 @@ TTTAttributedLabelDelegate
 - (void)dealloc {
     
     [QMCore.instance.openGraphService cancelAllloads];
-    [[QBDarwinNotificationCenter defaultCenter] removeObserver:_updateDialogObserver];
     
     // -dealloc
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
@@ -263,26 +263,27 @@ TTTAttributedLabelDelegate
     self.detailedCells = [NSMutableSet set];
     self.statusStringBuilder = [[QMStatusStringBuilder alloc] init];
     
-    self.mediaController = [[QMMediaController alloc] initWithViewController:self];
-    
     @weakify(self);
-    NSString *observerName =
-    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
     
-    __weak __typeof(self)weakSelf = self;
-    self.updateDialogObserver =
-    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:observerName
-                                                        usingBlock:^{
-                                                            [weakSelf syncWithCache];
-                                                        }];
-    
+    self.mediaController = [[QMMediaController alloc] initWithViewController:self];
     [self.mediaController setOnError:^(QBChatMessage *__unused message, NSError *error) {
-        
         @strongify(self);
         [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:error.localizedRecoverySuggestion duration:kQMDefaultNotificationDismissTime];
     }];
     
+    NSString *observerName =
+    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
+
+    int t_token = 0;
     
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        
+        notify_register_dispatch(observerName.UTF8String, &t_token, dispatch_get_main_queue(), ^(int __unused token) {
+            @strongify(self);
+            [self syncWithCache];
+        });
+    }
+
     // subscribing to delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.contactListService addDelegate:self];
@@ -2492,6 +2493,7 @@ didFinishPickingVideo:(NSURL *)videoUrl {
         title = NSLocalizedString(@"Photos Access Disabled", nil);
         message = NSLocalizedString(@"You can allow access to Photos in Settings", nil);
     }
+    
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message

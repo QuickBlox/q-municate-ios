@@ -22,6 +22,7 @@
 #import "QMSplitViewController.h"
 #import "QMNavigationController.h"
 #import "QMNavigationBar.h"
+#import <notify.h>
 
 static const NSInteger kQMNotAuthorizedInRest = -1000;
 static const NSInteger kQMUnauthorizedErrorCode = -1011;
@@ -43,7 +44,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 @property (weak, nonatomic) BFTask *addUserTask;
 
 @property (strong, nonatomic) id observerWillEnterForeground;
-@property (strong, nonatomic) id dialogsUpdatesObserver;
 
 @end
 
@@ -54,8 +54,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
-    [[QBDarwinNotificationCenter defaultCenter] removeObserver:_dialogsUpdatesObserver];
-    
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -106,21 +104,20 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
          }
      }];
     
-    self.dialogsUpdatesObserver =
-    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQMDidUpdateDialogsNotification
-                                                        usingBlock:^
-     {
-         NSDate *lastFetchDate =
-         QMCore.instance.currentProfile.lastDialogsFetchingDate;
-         
-         [[QMCore.instance.chatService syncLaterDialogsWithCacheFromDate:lastFetchDate] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t)
-          {
-              if (t.result.count > 0) {
-                  [self.tableView reloadData];
-              }
-              return nil;
-          }];
-     }];
+    int t_token = 0;
+    notify_register_dispatch(kQMDidUpdateDialogsNotification.UTF8String, &t_token, dispatch_get_main_queue(), ^(int __unused token) {
+        
+        NSDate *lastFetchDate =
+        QMCore.instance.currentProfile.lastDialogsFetchingDate;
+         @strongify(self);
+        [[QMCore.instance.chatService syncLaterDialogsWithCacheFromDate:lastFetchDate] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t)
+         {
+             if (t.result.count > 0) {
+                 [self.tableView reloadData];
+             }
+             return nil;
+         }];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
