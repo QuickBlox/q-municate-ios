@@ -27,6 +27,8 @@
 #import <QMImageLoader.h>
 #import "QMMediaUploadService.h"
 
+#import <notify.h>
+
 static const NSUInteger kQMUnauthorizedErrorCode = 401;
 
 @interface QMShareRootViewController()
@@ -54,10 +56,6 @@ QMShareEtxentionOperationDelegate>
 - (void)viewDidLoad {
     
     QMImageLoader.instance.imageDownloader.shouldDecompressImages = NO;
-    
-    QMExtensionCache.chatCache;
-    QMExtensionCache.contactsCache;
-    QMExtensionCache.usersCache;
     
     [super viewDidLoad];
     
@@ -261,7 +259,7 @@ QMShareEtxentionOperationDelegate>
                   }
                   else {
                       
-                      [[QBDarwinNotificationCenter defaultCenter] postNotificationName:kQMDidUpdateDialogsNotification];
+                      notify_post(kQMDidUpdateDialogsNotification.UTF8String);
                       [strongSelf completeShare:nil];
                   }
               }
@@ -571,11 +569,12 @@ static void qmPostNotificationsForDialogID(NSString *dialogID) {
     NSString *observerName =
     [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, dialogID];
     
-    [[QBDarwinNotificationCenter defaultCenter] postNotificationName:observerName];
+    notify_post(observerName.UTF8String);
 }
 
 static inline void updateDialog(QBChatDialog *dialog,
                                 QBChatMessage *message) {
+    
     dialog.lastMessageUserID = message.senderID;
     dialog.lastMessageText = message.text;
     dialog.lastMessageDate = message.dateSent;
