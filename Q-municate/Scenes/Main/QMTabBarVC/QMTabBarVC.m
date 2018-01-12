@@ -42,6 +42,7 @@ QMChatConnectionDelegate
     }
 }
 
+#ifndef __IPHONE_11_0
 - (void)viewWillLayoutSubviews {
     
     CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
@@ -49,6 +50,7 @@ QMChatConnectionDelegate
     tabFrame.origin.y = self.view.frame.size.height - 45;
     self.tabBar.frame = tabFrame;
 }
+#endif
 
 //MARK: - Notification
 
