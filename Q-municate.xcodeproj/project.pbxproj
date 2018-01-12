@@ -2900,15 +2900,15 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate-resources.sh",
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebaseAuthUI.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/FirebaseUI/FirebasePhoneAuthUI.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/NYTPhotoViewer/NYTPhotoViewer.bundle,
 				"${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle,
 				"${PODS_ROOT}/SAMKeychain/Support/SAMKeychain.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -2976,10 +2976,10 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -2998,11 +2998,11 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QMShareExtension/Pods-QMShareExtension-resources.sh",
 				"${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle",
-				"$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle,
+				$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle,
 				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -3589,7 +3589,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = QMShareExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMShareExtension;
@@ -3626,7 +3626,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = QMShareExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMShareExtension;
