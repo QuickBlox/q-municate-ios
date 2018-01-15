@@ -116,8 +116,8 @@ static const NSUInteger kQMUsersPageLimit = 100;
     }
     else if (type == QMAccountTypeFacebook) {
         
-        return [[QMFacebook connect] continueWithBlock:^id(BFTask<NSString *> *task) {
-            return task.result ? [core.authService loginWithFacebookSessionToken:task.result] : nil;
+        return [[QMFacebook connect] continueWithSuccessBlock:^id(BFTask<NSString *> *task) {
+            return  [core.authService loginWithFacebookSessionToken:task.result];
         }];
     }
     else if (type == QMAccountTypePhone) {

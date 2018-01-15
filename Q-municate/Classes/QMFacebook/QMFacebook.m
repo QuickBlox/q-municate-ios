@@ -18,46 +18,63 @@ static NSString * const kQMLogoUrl = @"https://files.quickblox.com/ic_launcher.p
 static NSString * const kQMAppName = @"Q-municate";
 static NSString * const kQMDataKey = @"data";
 
-static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
+static NSString * const kFBGraphGetPictureFormat =
+@"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
 @implementation QMFacebook
 
 + (BFTask *)connect {
     
-    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
-    
     FBSDKAccessToken *session = [FBSDKAccessToken currentAccessToken];
     
     if (!session) {
         
-        UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+        UINavigationController *navigationController =
+        (id)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+        
+        NSArray *readPermissions =
+        @[@"email", @"public_profile", @"user_friends"];
         
         FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        [loginManager logInWithReadPermissions:@[@"email", @"public_profile", @"user_friends"]
-                            fromViewController:navigationController
-                                       handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-                                           
-                                           if (error) {
-                                               
-                                               [source setError:error];
-                                           }
-                                           else if (result.isCancelled) {
-                                               
-                                               [source cancel];
-                                               
-                                           }
-                                           else {
-                                               
-                                               [source setResult:result.token.tokenString];
-                                           }
-                                       }];
+        
+        return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+            
+            [loginManager logInWithReadPermissions:readPermissions
+                                fromViewController:navigationController
+                                           handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
+             {
+                 
+                 if (error) {
+                     [source setError:error];
+                 }
+                 else if (result.isCancelled) {
+                     [source cancel];
+                 }
+                 else {
+                     [source setResult:result.token.tokenString];
+                 }
+             }];
+            
+        });
     }
     else {
         
-        [source setResult:session.tokenString];
+        /*
+         Handling an Invalidated Session.
+         
+         We cannot know if the cached Facebook session is valid until we attempt to make a request to the API.
+         A session can become invalidated if a user changes their password or revokes the application's privileges.
+         When this happens, the user needs to be logged out. We can identify an invalid session error within a FBSDKGraphRequest completion
+         handler.
+         
+         If the request fails, we can check if it was due to an invalid session by:
+         if ([error.userInfo[@"error"][@"type"] isEqualToString: @"OAuthException"])
+         */
+        
+        return [[self loadMe] continueWithSuccessBlock:^id _Nullable(BFTask<NSDictionary *> * _Nonnull  __unused t) {
+            return [BFTask taskWithResult:session.tokenString];
+        }];
     }
-    
-    return source.task;
 }
 
 + (NSURL *)userImageUrlWithUserID:(NSString *)userID {
@@ -70,16 +87,18 @@ static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/
 
 + (BFTask *)loadMe {
     
-    BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
-    
-    FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-    
-    [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection, id result, NSError *error) {
+    return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         
-        error != nil ? [source setError:error] : [source setResult:result];
-    }];
-    
-    return source.task;
+        FBSDKGraphRequest *myInfoRequest =
+        [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+        
+        [myInfoRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection,
+                                                    id result,
+                                                    NSError *error)
+         {
+             error ? [source setError:error] : [source setResult:result];
+         }];
+    });
 }
 
 + (void)logout {

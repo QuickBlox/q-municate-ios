@@ -24,6 +24,9 @@
 #import "QMNavigationBar.h"
 #import <notify.h>
 
+static BOOL isFacebookError(NSError *error) {
+    return [error.userInfo[@"error"][@"type"] isEqualToString:@"OAuthException"];
+}
 static const NSInteger kQMNotAuthorizedInRest = -1000;
 static const NSInteger kQMUnauthorizedErrorCode = -1011;
 
@@ -171,6 +174,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
             NSInteger errorCode = task.error.code;
             if (errorCode == kQMNotAuthorizedInRest
                 || errorCode == kQMUnauthorizedErrorCode
+                || isFacebookError(task.error)
                 || (errorCode == kBFMultipleErrorsError
                     && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
                         || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
