@@ -13,6 +13,7 @@
 #import "QMSoundManager.h"
 #import "QBChatDialog+OpponentID.h"
 #import "QMHelpers.h"
+#import <UIDevice-Hardware.h>
 
 @interface QMTabBarVC ()
 
@@ -42,15 +43,16 @@ QMChatConnectionDelegate
     }
 }
 
-#ifndef __IPHONE_11_0
 - (void)viewWillLayoutSubviews {
     
-    CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
-    tabFrame.size.height = 45;
-    tabFrame.origin.y = self.view.frame.size.height - 45;
-    self.tabBar.frame = tabFrame;
+    if (![UIDevice.currentDevice.modelName isEqualToString:@"iPhone X"]) {
+        CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
+        tabFrame.size.height = 45;
+        tabFrame.origin.y = self.view.frame.size.height - 45;
+        self.tabBar.frame = tabFrame;
+    }
 }
-#endif
+
 
 //MARK: - Notification
 
