@@ -98,6 +98,10 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     @weakify(self);
     [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
         
+        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+            //No needs to perform login if application is in background state
+            return;
+        }
         @strongify(self);
         dispatch_async(dispatch_get_main_queue(), ^{
             // reachability block could possibly be called in background thread
@@ -208,7 +212,8 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     return [[QMTasks taskAutoLogin]
             continueWithSuccessBlock:^id(BFTask<QBUUser *> *task) {
-                return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
+                return [self.chatService connectWithUserID:task.result.ID
+                                                  password:task.result.password];
             }];
 }
 
