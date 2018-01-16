@@ -53,6 +53,33 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 //MARK: - Life cycle
 
+- (void)showLoadingWithStatus:(NSString *)status {
+    
+    if (status) {
+        self.navigationItem.title = status;
+    }
+    
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
+    [activityIndicator startAnimating];
+    self.navigationItem.leftBarButtonItem = item;
+}
+
+- (void)dismissLoadingWithResultStatus:(NSString *)resultStatus {
+    
+    self.navigationItem.leftBarButtonItem = nil;
+    if (resultStatus) {
+        self.navigationItem.title = resultStatus;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMDefaultNotificationDismissTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.navigationItem.title = @"Chats";
+        });
+    }
+    else {
+        self.navigationItem.title = @"Chats";
+    }
+}
+
+
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
@@ -74,6 +101,11 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     // registering nibs for current VC and search results VC
     [self registerNibs];
     
+    CATransition *fadeTextAnimation = [CATransition animation];
+    fadeTextAnimation.duration = 1.0;
+    fadeTextAnimation.type = kCATransitionFade;
+    [self.navigationController.navigationBar.layer addAnimation: fadeTextAnimation
+                                                         forKey:@"fadeText"];
     [self performAutoLoginAndFetchData];
     // adding refresh control task
     if (self.refreshControl) {
@@ -161,13 +193,14 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         return;
     }
     
+    [self showLoadingWithStatus:NSLocalizedString(@"QM_STR_CONNECTING", nil)];
     
     self.loginTask = [[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
         //Perform logout task in case user is not athorized or facebook session is invalidated
         if (task.isFaulted) {
             
-            [navigationController dismissNotificationPanel];
+            [self dismissLoadingWithResultStatus:nil];
             
             NSInteger errorCode = task.error.code;
             if (errorCode == kQMNotAuthorizedInRest
@@ -413,11 +446,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 }
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
-    
-    [(QMNavigationController *)self.navigationController
-     showNotificationWithType:QMNotificationPanelTypeSuccess
-     message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
-     duration:kQMDefaultNotificationDismissTime];
+    [self dismissLoadingWithResultStatus:nil];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
@@ -426,10 +455,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
         [QMTasks taskFetchAllData];
     }
     
-    [(QMNavigationController *)self.navigationController
-     showNotificationWithType:QMNotificationPanelTypeSuccess
-     message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
-     duration:kQMDefaultNotificationDismissTime];
+    [self dismissLoadingWithResultStatus:nil];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService
