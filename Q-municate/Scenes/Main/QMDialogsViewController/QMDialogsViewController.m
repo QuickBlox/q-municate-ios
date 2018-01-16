@@ -145,7 +145,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         self.tableView.contentOffset = offset;
     }
     
-    [self.tableView reloadData];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -454,6 +453,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         [self.tableView reloadData];
+        
     }
 }
 
@@ -462,6 +462,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         [self.tableView reloadData];
+
     }
 }
 
@@ -547,15 +548,13 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 
 - (void)updateDataAndEndRefreshing {
     
-    BFTask *fetchAllDataTask = [QMTasks taskFetchAllData];
-    BFTask *fetchContactsTask = [QMTasks taskUpdateContacts];
-    [[BFTask taskForCompletionOfAllTasks:@[fetchAllDataTask, fetchContactsTask]]
-     continueWithBlock:^id (BFTask * __unused t) {
-         
-         [self.refreshControl endRefreshing];
-         
-         return nil;
-     }];
+    [[[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * __unused t) {
+        return [QMTasks taskUpdateContacts];
+    }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
+           [self.refreshControl endRefreshing];
+        return nil;
+    }];
+    
 }
 
 //MARK: - Register nibs

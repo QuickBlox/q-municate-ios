@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMChatService/QMChatService/QMAttachmentService/QMTimeOut/QMTimeOut.h
+../../../../../q-municate-services-ios/QMChatService/QMChatService/QMAttachmentService/QMTimeOut/QMTimeOut.h

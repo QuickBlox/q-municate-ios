@@ -1,1 +1,1 @@
-../../../QMServicesDevelopment/QMBaseService/QMBaseService/QMAsynchronousOperation/QMAsynchronousOperation.h
+../../../../../q-municate-services-ios/QMBaseService/QMBaseService/QMAsynchronousOperation/QMAsynchronousOperation.h

@@ -45,10 +45,11 @@ NSString *const BFTaskMultipleErrorsUserInfoKey = @"errors";
 
 #pragma mark - Initializer
 
+
 - (instancetype)init {
     self = [super init];
     if (!self) return self;
-
+    NSLog(@"%@", self);
     _lock = [[NSObject alloc] init];
     _condition = [[NSCondition alloc] init];
     _callbacks = [NSMutableArray array];
