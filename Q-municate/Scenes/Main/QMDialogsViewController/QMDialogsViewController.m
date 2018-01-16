@@ -54,28 +54,46 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 //MARK: - Life cycle
 
 - (void)showLoadingWithStatus:(NSString *)status {
+
+    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    activityIndicatorView.frame = CGRectMake(0, 0, 22, 22);
+    activityIndicatorView.color = [UIColor blackColor];
+    [activityIndicatorView startAnimating];
     
-    if (status) {
-        self.navigationItem.title = status;
-    }
+    UILabel *titleLabel = [UILabel new];
+    titleLabel.text = status;
+    titleLabel.font = [UIFont boldSystemFontOfSize:18];
+    #warning For the love of God fix this
+    titleLabel.tag = 77;
+    CGSize fittingSize = [titleLabel sizeThatFits:CGSizeMake(200.0f, activityIndicatorView.frame.size.height)];
+    titleLabel.frame = CGRectMake(activityIndicatorView.frame.origin.x + activityIndicatorView.frame.size.width + 8,
+                                  activityIndicatorView.frame.origin.y,
+                                  fittingSize.width,
+                                  fittingSize.height);
     
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:activityIndicator];
-    [activityIndicator startAnimating];
-    self.navigationItem.leftBarButtonItem = item;
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(-(activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width)/2,
+                                                                 -(activityIndicatorView.frame.size.height)/2,
+                                                                 activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width,
+                                                                 activityIndicatorView.frame.size.height)];
+    [titleView addSubview:activityIndicatorView];
+    [titleView addSubview:titleLabel];
+    
+    self.navigationItem.titleView = titleView;
 }
 
 - (void)dismissLoadingWithResultStatus:(NSString *)resultStatus {
     
     self.navigationItem.leftBarButtonItem = nil;
     if (resultStatus) {
-        self.navigationItem.title = resultStatus;
+        #warning For the love of God fix this
+        UILabel *label = [self.navigationItem.titleView viewWithTag:77];
+        label.text = resultStatus;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMDefaultNotificationDismissTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.navigationItem.title = @"Chats";
+            self.navigationItem.titleView = nil;
         });
     }
     else {
-        self.navigationItem.title = @"Chats";
+        self.navigationItem.titleView = nil;
     }
 }
 
