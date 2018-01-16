@@ -43,8 +43,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 // Data sources
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
 @property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
-
-@property (weak, nonatomic) BFTask *addUserTask;
+@property (weak, nonatomic) BFTask *loginTask;
 
 @property (strong, nonatomic) id observerWillEnterForeground;
 
@@ -93,7 +92,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                                                        queue:nil
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
-         @strongify(self);
+         
          if ([QBChat instance].isConnected) {
              // if chat was connected (e.g. we are in call) in background
              // we skip requests, so perform them now as app is active now
@@ -101,9 +100,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
              [QMTasks taskUpdateContacts];
          }
          else {
-             [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                                                                   message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
-                                                                                  duration:0];
+             [self performAutoLoginAndFetchData];
          }
      }];
     
@@ -112,7 +109,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         
         NSDate *lastFetchDate =
         QMCore.instance.currentProfile.lastDialogsFetchingDate;
-         @strongify(self);
+        @strongify(self);
         [[QMCore.instance.chatService syncLaterDialogsWithCacheFromDate:lastFetchDate] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t)
          {
              if (t.result.count > 0) {
@@ -153,11 +150,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 - (void)performAutoLoginAndFetchData {
     
-    QMNavigationController *navigationController = (id)self.navigationController;
-    [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
-                                           message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
-                                          duration:0];
-    
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
         && !QBChat.instance.manualInitialPresence) {
         // connecting to chat with manual initial presence if in the background
@@ -165,8 +157,14 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         QBChat.instance.manualInitialPresence = YES;
     }
     
-    [[[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
+    if (self.loginTask) {
+        return;
+    }
+    
+    
+    self.loginTask = [[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
+        //Perform logout task in case user is not athorized or facebook session is invalidated
         if (task.isFaulted) {
             
             [navigationController dismissNotificationPanel];
@@ -179,9 +177,15 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                     && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
                         || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
                         
-                        return [QMCore.instance logout];
+                        return [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+                            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+                            return nil;
+                        }];
                     }
         }
+        
+        [QMTasks taskFetchAllData];
+        [QMTasks taskUpdateContacts];
         
         if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
             [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
@@ -191,15 +195,8 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
             [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
         }
         
-        return [BFTask cancelledTask];
-        
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        if (!task.isCancelled) {
-            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-        }
-        
         return nil;
+        
     }];
 }
 

@@ -117,8 +117,6 @@
     if (QBChat.instance.manualInitialPresence) {
         QBChat.instance.manualInitialPresence = NO;
     }
-    // connect to chat now
-    [QMCore.instance login];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)__unused application {
