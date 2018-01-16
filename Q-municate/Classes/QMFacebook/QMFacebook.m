@@ -21,6 +21,7 @@ static NSString * const kQMDataKey = @"data";
 static NSString * const kFBGraphGetPictureFormat =
 @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
+
 @implementation QMFacebook
 
 + (BFTask *)connect {
@@ -28,7 +29,6 @@ static NSString * const kFBGraphGetPictureFormat =
     FBSDKAccessToken *session = [FBSDKAccessToken currentAccessToken];
     
     if (!session) {
-        
         UINavigationController *navigationController =
         (id)[[UIApplication sharedApplication].windows.firstObject rootViewController];
         
@@ -43,7 +43,6 @@ static NSString * const kFBGraphGetPictureFormat =
                                 fromViewController:navigationController
                                            handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
              {
-                 
                  if (error) {
                      [source setError:error];
                  }
@@ -70,7 +69,6 @@ static NSString * const kFBGraphGetPictureFormat =
          If the request fails, we can check if it was due to an invalid session by:
          if ([error.userInfo[@"error"][@"type"] isEqualToString: @"OAuthException"])
          */
-        
         return [[self loadMe] continueWithSuccessBlock:^id _Nullable(BFTask<NSDictionary *> * _Nonnull  __unused t) {
             return [BFTask taskWithResult:session.tokenString];
         }];
@@ -91,7 +89,7 @@ static NSString * const kFBGraphGetPictureFormat =
         
         FBSDKGraphRequest *myInfoRequest =
         [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
-        
+        [myInfoRequest setGraphErrorRecoveryDisabled:YES];
         [myInfoRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection,
                                                     id result,
                                                     NSError *error)
