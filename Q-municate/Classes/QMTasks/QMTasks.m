@@ -116,8 +116,19 @@ static const NSUInteger kQMUsersPageLimit = 100;
     }
     else if (type == QMAccountTypeFacebook) {
         
-        return [[QMFacebook connect] continueWithSuccessBlock:^id(BFTask<NSString *> *task) {
-            return  [core.authService loginWithFacebookSessionToken:task.result];
+        return [[QMFacebook connect] continueWithBlock:^id(BFTask<NSString *> *task) {
+            
+            NSError *error = task.error;
+            if (error) {
+                if (isFacebookSessionError(error)) {
+                    NSError *notLoggedError = [QMErrorsFactory errorNotLoggedInREST];
+                    return [BFTask taskWithError:notLoggedError];
+                }
+                else {
+                    return task;
+                }
+            }
+            return [core.authService loginWithFacebookSessionToken:task.result];
         }];
     }
     else if (type == QMAccountTypePhone) {
@@ -168,10 +179,10 @@ static const NSUInteger kQMUsersPageLimit = 100;
             [self sliceArray:dialogsUsersIDs.allObjects
                        limit:kQMUsersPageLimit
                    enumerate:^(NSArray *slice, NSRange __unused range)
-            {
-                BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:slice];
-                [usersLoadingTasks addObject:task];
-            }];
+             {
+                 BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:slice];
+                 [usersLoadingTasks addObject:task];
+             }];
         }
     };
     
@@ -234,15 +245,15 @@ static const NSUInteger kQMUsersPageLimit = 100;
     [self sliceArray:contactsIDs
                limit:kQMUsersPageLimit
            enumerate:^(NSArray *slice, NSRange range)
-    {
-        QBGeneralResponsePage *page =
-        [QBGeneralResponsePage responsePageWithCurrentPage:1
-                                                   perPage:range.length];
-        BFTask *task =
-        [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(slice, dateFilter)
-                                                     page:page];
-        [tasks addObject:task];
-    }];
+     {
+         QBGeneralResponsePage *page =
+         [QBGeneralResponsePage responsePageWithCurrentPage:1
+                                                    perPage:range.length];
+         BFTask *task =
+         [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(slice, dateFilter)
+                                                      page:page];
+         [tasks addObject:task];
+     }];
     
     BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask * __unused t) {
         core.currentProfile.lastUserFetchDate = [NSDate date];
@@ -285,6 +296,13 @@ static inline NSDictionary *filterForUsersFetch(NSArray *usersIDs, NSString *dat
                             ]};
     }
     return filters;
+}
+
+static BOOL isFacebookSessionError(NSError *error) {
+    if (!error) {
+        return NO;
+    }
+    return [error.userInfo[@"error"][@"type"] isEqualToString:@"OAuthException"];
 }
 
 @end
