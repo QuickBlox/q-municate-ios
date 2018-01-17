@@ -1,1 +1,1 @@
-../../../../../QMChatViewController-ios/QMChatViewController/Views/Cells/QMChatLocationOutgoingCell/QMChatLocationOutgoingCell.h
+../../../QMCVDevelopment/QMChatViewController/Views/Cells/QMChatLocationOutgoingCell/QMChatLocationOutgoingCell.h
