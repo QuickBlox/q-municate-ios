@@ -98,12 +98,13 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     @weakify(self);
     [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
         
-        if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
-            //No needs to perform login if application is in background state
-            return;
-        }
-        @strongify(self);
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground) {
+                //No needs to perform login if application is in background state
+                return;
+            }
+            @strongify(self);
             // reachability block could possibly be called in background thread
             [self login];
         });
