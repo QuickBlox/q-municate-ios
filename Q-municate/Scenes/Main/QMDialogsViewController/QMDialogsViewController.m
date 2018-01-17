@@ -145,6 +145,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         self.tableView.contentOffset = offset;
     }
     
+    [self.tableView reloadData];
 }
 
 - (void)performAutoLoginAndFetchData {

@@ -305,6 +305,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
     // load users if needed
     NSArray<NSNumber *> *IDs = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    if (IDs.count == 0) {
+        return;
+    }
     
     [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
         
