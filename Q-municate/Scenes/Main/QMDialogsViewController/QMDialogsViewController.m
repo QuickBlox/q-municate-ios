@@ -24,9 +24,6 @@
 #import "QMNavigationBar.h"
 #import <notify.h>
 
-static BOOL isFacebookError(NSError *error) {
-    return [error.userInfo[@"error"][@"type"] isEqualToString:@"OAuthException"];
-}
 static const NSInteger kQMNotAuthorizedInRest = -1000;
 static const NSInteger kQMUnauthorizedErrorCode = -1011;
 
@@ -43,7 +40,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 // Data sources
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
 @property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
-@property (weak, nonatomic) BFTask *loginTask;
 
 @property (strong, nonatomic) id observerWillEnterForeground;
 
@@ -52,51 +48,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 @implementation QMDialogsViewController
 
 //MARK: - Life cycle
-
-- (void)showLoadingWithStatus:(NSString *)status {
-
-    UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    activityIndicatorView.frame = CGRectMake(0, 0, 22, 22);
-    activityIndicatorView.color = [UIColor blackColor];
-    [activityIndicatorView startAnimating];
-    
-    UILabel *titleLabel = [UILabel new];
-    titleLabel.text = status;
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
-    #warning For the love of God fix this
-    titleLabel.tag = 77;
-    CGSize fittingSize = [titleLabel sizeThatFits:CGSizeMake(200.0f, activityIndicatorView.frame.size.height)];
-    titleLabel.frame = CGRectMake(activityIndicatorView.frame.origin.x + activityIndicatorView.frame.size.width + 8,
-                                  activityIndicatorView.frame.origin.y,
-                                  fittingSize.width,
-                                  fittingSize.height);
-    
-    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(-(activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width)/2,
-                                                                 -(activityIndicatorView.frame.size.height)/2,
-                                                                 activityIndicatorView.frame.size.width + 8 + titleLabel.frame.size.width,
-                                                                 activityIndicatorView.frame.size.height)];
-    [titleView addSubview:activityIndicatorView];
-    [titleView addSubview:titleLabel];
-    
-    self.navigationItem.titleView = titleView;
-}
-
-- (void)dismissLoadingWithResultStatus:(NSString *)resultStatus {
-    
-    self.navigationItem.leftBarButtonItem = nil;
-    if (resultStatus) {
-        #warning For the love of God fix this
-        UILabel *label = [self.navigationItem.titleView viewWithTag:77];
-        label.text = resultStatus;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kQMDefaultNotificationDismissTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.navigationItem.titleView = nil;
-        });
-    }
-    else {
-        self.navigationItem.titleView = nil;
-    }
-}
-
 
 - (void)dealloc {
     
@@ -119,11 +70,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     // registering nibs for current VC and search results VC
     [self registerNibs];
     
-    CATransition *fadeTextAnimation = [CATransition animation];
-    fadeTextAnimation.duration = 1.0;
-    fadeTextAnimation.type = kCATransitionFade;
-    [self.navigationController.navigationBar.layer addAnimation: fadeTextAnimation
-                                                         forKey:@"fadeText"];
     [self performAutoLoginAndFetchData];
     // adding refresh control task
     if (self.refreshControl) {
@@ -142,7 +88,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                                                        queue:nil
                                                   usingBlock:^(NSNotification * _Nonnull __unused note)
      {
-         
+         @strongify(self);
          if ([QBChat instance].isConnected) {
              // if chat was connected (e.g. we are in call) in background
              // we skip requests, so perform them now as app is active now
@@ -150,7 +96,9 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
              [QMTasks taskUpdateContacts];
          }
          else {
-             [self performAutoLoginAndFetchData];
+             [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                                   message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                                                                  duration:0];
          }
      }];
     
@@ -199,6 +147,11 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 - (void)performAutoLoginAndFetchData {
     
+    QMNavigationController *navigationController = (id)self.navigationController;
+    [navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                           message:NSLocalizedString(@"QM_STR_CONNECTING", nil)
+                                          duration:0];
+    
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
         && !QBChat.instance.manualInitialPresence) {
         // connecting to chat with manual initial presence if in the background
@@ -206,23 +159,15 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         QBChat.instance.manualInitialPresence = YES;
     }
     
-    if (self.loginTask) {
-        return;
-    }
-    
-    [self showLoadingWithStatus:NSLocalizedString(@"QM_STR_CONNECTING", nil)];
-    
-    self.loginTask = [[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
+    [[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         
-        //Perform logout task in case user is not athorized or facebook session is invalidated
         if (task.isFaulted) {
             
-            [self dismissLoadingWithResultStatus:nil];
+            [navigationController dismissNotificationPanel];
             
             NSInteger errorCode = task.error.code;
             if (errorCode == kQMNotAuthorizedInRest
                 || errorCode == kQMUnauthorizedErrorCode
-                || isFacebookError(task.error)
                 || (errorCode == kBFMultipleErrorsError
                     && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
                         || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
@@ -234,9 +179,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                     }
         }
         
-        [QMTasks taskFetchAllData];
-        [QMTasks taskUpdateContacts];
-        
         if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
             [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
         }
@@ -246,7 +188,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         }
         
         return nil;
-        
     }];
 }
 
@@ -463,7 +404,11 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 }
 
 - (void)chatServiceChatDidConnect:(QMChatService *)__unused chatService {
-    [self dismissLoadingWithResultStatus:nil];
+    
+    [(QMNavigationController *)self.navigationController
+     showNotificationWithType:QMNotificationPanelTypeSuccess
+     message:NSLocalizedString(@"QM_STR_CHAT_CONNECTED", nil)
+     duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)chatServiceChatDidReconnect:(QMChatService *)__unused chatService {
@@ -472,7 +417,10 @@ didReceiveNotificationMessage:(QBChatMessage *)message
         [QMTasks taskFetchAllData];
     }
     
-    [self dismissLoadingWithResultStatus:nil];
+    [(QMNavigationController *)self.navigationController
+     showNotificationWithType:QMNotificationPanelTypeSuccess
+     message:NSLocalizedString(@"QM_STR_CHAT_RECONNECTED", nil)
+     duration:kQMDefaultNotificationDismissTime];
 }
 
 - (void)contactListService:(QMContactListService *)__unused contactListService
@@ -507,7 +455,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         [self.tableView reloadData];
-
+        
     }
 }
 
@@ -596,7 +544,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     [[[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * __unused t) {
         return [QMTasks taskUpdateContacts];
     }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
-           [self.refreshControl endRefreshing];
+        [self.refreshControl endRefreshing];
         return nil;
     }];
     
