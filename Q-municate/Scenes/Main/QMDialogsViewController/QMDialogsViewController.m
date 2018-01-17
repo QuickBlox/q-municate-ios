@@ -24,9 +24,6 @@
 #import "QMNavigationBar.h"
 #import <notify.h>
 
-static const NSInteger kQMNotAuthorizedInRest = -1000;
-static const NSInteger kQMUnauthorizedErrorCode = -1011;
-
 @interface QMDialogsViewController ()
 
 <QMUsersServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate,
@@ -63,6 +60,14 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
     [QMCore.instance.contactListService addDelegate:self];
+    
+    QMCore.instance.athorizationErrorBlock = ^{
+        [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+            return nil;
+        }];
+    };
+    
     // search implementation
     [self configureSearch];
     // Data sources init
@@ -160,31 +165,17 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     }
     
     [[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
-        
         if (task.isFaulted) {
-            
             [navigationController dismissNotificationPanel];
+        }
+        else {
+            if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
+                [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
+            }
             
-            NSInteger errorCode = task.error.code;
-            if (errorCode == kQMNotAuthorizedInRest
-                || errorCode == kQMUnauthorizedErrorCode
-                || (errorCode == kBFMultipleErrorsError
-                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
-                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
-                        
-                        return [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
-                            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
-                            return nil;
-                        }];
-                    }
-        }
-        
-        if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
-            [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
-        }
-        
-        if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
-            [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
+            if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
+                [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
+            }
         }
         
         return nil;

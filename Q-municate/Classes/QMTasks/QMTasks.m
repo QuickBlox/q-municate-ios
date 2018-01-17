@@ -116,18 +116,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     }
     else if (type == QMAccountTypeFacebook) {
         
-        return [[QMFacebook connect] continueWithBlock:^id(BFTask<NSString *> *task) {
-            
-            NSError *error = task.error;
-            if (error) {
-                if (isFacebookSessionError(error)) {
-                    NSError *notLoggedError = [QMErrorsFactory errorNotLoggedInREST];
-                    return [BFTask taskWithError:notLoggedError];
-                }
-                else {
-                    return task;
-                }
-            }
+        return [[QMFacebook connect] continueWithSuccessBlock:^id(BFTask<NSString *> *task) {
             return [core.authService loginWithFacebookSessionToken:task.result];
         }];
     }
@@ -296,13 +285,6 @@ static inline NSDictionary *filterForUsersFetch(NSArray *usersIDs, NSString *dat
                             ]};
     }
     return filters;
-}
-
-static BOOL isFacebookSessionError(NSError *error) {
-    if (!error) {
-        return NO;
-    }
-    return [error.userInfo[@"error"][@"type"] isEqualToString:@"OAuthException"];
 }
 
 @end

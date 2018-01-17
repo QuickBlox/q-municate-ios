@@ -24,11 +24,15 @@ static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
 static NSString *const kQMBaseErrorKey = @"base";
 
+static const NSInteger kQMNotAuthorizedInRest = -1000;
+static const NSInteger kQMUnauthorizedErrorCode = -1011;
+
 static NSString *const kQMContactListCacheNameKey = @"q-municate-contacts";
 static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 @interface QMCore () <QMAuthServiceDelegate>
 
+@property (weak, nonatomic) BFTask *loginTask;
 @property (strong, nonatomic) NSMutableOrderedSet *cachedVocabularyStrings;
 
 @end
@@ -211,11 +215,27 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 - (BFTask *)login {
     
-    return [[QMTasks taskAutoLogin]
-            continueWithSuccessBlock:^id(BFTask<QBUUser *> *task) {
-                return [self.chatService connectWithUserID:task.result.ID
-                                                  password:task.result.password];
-            }];
+    if (self.loginTask) {
+        return nil;
+    }
+    
+    self.loginTask =
+    [[QMTasks taskAutoLogin] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull loginTask) {
+        
+        if (loginTask.error) {
+            if (isCriritalAuthorizationError(loginTask.error) &&
+                self.athorizationErrorBlock) {
+                self.athorizationErrorBlock();
+                self.athorizationErrorBlock = nil;
+            }
+            return loginTask;
+        }
+        return [self.chatService connectWithUserID:loginTask.result.ID
+                                          password:loginTask.result.password];
+    }];
+
+    
+    return self.loginTask;
 }
 
 - (BFTask *)logout {
@@ -433,6 +453,28 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
             
         }];
     }
+}
+
+static BOOL isCriritalAuthorizationError(NSError *error) {
+    NSCParameterAssert(error);
+    NSInteger errorCode = error.code;
+    if (errorCode == kQMNotAuthorizedInRest
+        || errorCode == kQMUnauthorizedErrorCode
+        || isFacebookSessionError(error)
+        || (errorCode == kBFMultipleErrorsError
+            && ([error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
+                || [error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
+                return YES;
+            }
+    
+    return NO;
+}
+
+static BOOL isFacebookSessionError(NSError *error) {
+    NSString *errorType =
+    error.userInfo[@"com.facebook.sdk:FBSDKGraphRequestErrorParsedJSONResponseKey"][@"body"][@"error"][@"type"];
+    
+    return [errorType isEqualToString:@"OAuthException"];
 }
 
 @end
