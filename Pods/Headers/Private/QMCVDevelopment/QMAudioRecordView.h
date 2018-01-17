@@ -1,1 +1,1 @@
-../../../QMCVDevelopment/QMChatViewController/Views/CustomUI/QMAudioRecordView/QMAudioRecordView.h
+../../../../../QMChatViewController-ios/QMChatViewController/Views/CustomUI/QMAudioRecordView/QMAudioRecordView.h

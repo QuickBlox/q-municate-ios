@@ -202,7 +202,6 @@ TTTAttributedLabelDelegate
     
     [QMCore.instance.openGraphService cancelAllloads];
     
-    // -dealloc
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
@@ -489,16 +488,17 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
         
         //Message could be read only if the chat is connected
         if (QBChat.instance.isConnected) {
-            
-            [[QMCore.instance.chatService readMessage:message] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+            __weak __typeof(self)weakSelf = self;
+            [[QMCore.instance.chatService readMessage:message]
+             continueWithBlock:^id(BFTask *task) {
                 
                 if (task.isFaulted) {
                     ILog(@"Problems while marking message as read! Error: %@", task.error);
                 }
                 else if (task.isCompleted) {
-                    
-                    [self.messagesToRead removeObject:message];
-                    
+
+                    [weakSelf.messagesToRead removeObject:message];
+
                     if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
                         [UIApplication sharedApplication].applicationIconBadgeNumber--;
                     }
