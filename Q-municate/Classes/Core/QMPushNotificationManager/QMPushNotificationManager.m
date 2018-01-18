@@ -217,8 +217,11 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
     
-    // PKPushRegistry
-    if (self.voipRegistry == nil) {
+    // subscribing for PKPushRegistry
+    // only if call kit supported
+    // as this is the only case for now
+    if (QMCallManager.isCallKitAvailable
+        && self.voipRegistry == nil) {
         self.voipRegistry = [[PKPushRegistry alloc] initWithQueue:dispatch_get_main_queue()];
         self.voipRegistry.delegate = self;
         self.voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
@@ -342,10 +345,12 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
 - (void)pushRegistry:(PKPushRegistry *)__unused registry didInvalidatePushTokenForType:(PKPushType)__unused type {
     QMLog(@"Invalidated VOIP push token.");
+    @weakify(self);
     [QBRequest deleteSubscriptionWithID:_voipSubscriptionID
                            successBlock:^(QBResponse * __unused response) {
                                QMLog(@"Unregister VOIP Subscription request - Success");
-                               _voipSubscriptionID = 0;
+                               @strongify(self);
+                               self.voipSubscriptionID = 0;
                            } errorBlock:^(QBResponse *response) {
                                QMLog(@"Unregister VOIP Subscription request - Error: %@", [response.error reasons]);
                            }];
