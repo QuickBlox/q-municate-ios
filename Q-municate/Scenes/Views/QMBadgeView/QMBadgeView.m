@@ -68,11 +68,6 @@ static UIImage *_bgViewImage = nil;
     self.layer.opaque = YES;
 }
 
-- (void)layoutSubviews {
-    
-    [super layoutSubviews];
-}
-
 //MARK: - Setters
 
 - (void)setBadgeNumber:(NSUInteger)badgeNumber {
@@ -86,7 +81,6 @@ static UIImage *_bgViewImage = nil;
     BOOL hidden = (_hideOnZeroValue && badgeNumber == 0);
     _bgView.hidden = hidden;
     _badge.hidden = hidden;
-    
 }
 
 @end
