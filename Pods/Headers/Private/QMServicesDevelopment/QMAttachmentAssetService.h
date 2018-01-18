@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMChatService/QMChatService/QMAttachmentService/QMAttachmentAssetService/QMAttachmentAssetService.h
+../../../QMServicesDevelopment/QMChatService/QMChatService/QMAttachmentService/QMAttachmentAssetService/QMAttachmentAssetService.h

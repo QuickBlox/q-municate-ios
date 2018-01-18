@@ -41,7 +41,6 @@
 }
 
 - (void)performBackgroundQueue:(void (^)(NSManagedObjectContext *ctx))block {
-    
     NSManagedObjectContext *backgroundContext = [NSManagedObjectContext QM_privateQueueContext];
     [backgroundContext setParentContext:self.stack.privateWriterContext];
     [backgroundContext performBlock:^{
@@ -61,7 +60,7 @@
 - (void)save:(void (^)(NSManagedObjectContext *ctx))block
       finish:(dispatch_block_t)finish {
     
-    NSManagedObjectContext *ctx = _stack.privateWriterContext;
+    NSManagedObjectContext *ctx = self.stack.privateWriterContext;
     
     [ctx performBlock:^{
         

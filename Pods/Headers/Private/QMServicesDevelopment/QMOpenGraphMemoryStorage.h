@@ -1,1 +1,1 @@
-../../../../../q-municate-services-ios/QMOpenGraphService/QMOpenGraphService/QMOpenGraphMemoryStorage.h
+../../../QMServicesDevelopment/QMOpenGraphService/QMOpenGraphService/QMOpenGraphMemoryStorage.h
