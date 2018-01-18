@@ -601,10 +601,10 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (BOOL) tableView:(UITableView *)__unused tableView
-  canPerformAction:(SEL)action
- forRowAtIndexPath:(NSIndexPath *)__unused indexPath
-        withSender:(id)__unused sender{
+- (BOOL)tableView:(UITableView *)__unused tableView
+ canPerformAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)__unused indexPath
+       withSender:(id)__unused sender{
     
     return action == @selector(copy:);
 }

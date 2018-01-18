@@ -37,26 +37,12 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
     if (shouldUnsubscribe) {
-        [[self unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-            
-            if (t.error) {
-                [source setError:t.error];
-            }
-            else {
-                self.voipRegistry = nil;
-                
-                [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-                [source setResult:nil];
-            }
-            
-            return nil;
-        }];
+        self.voipRegistry = nil;
+        [self unSubscribeFromPushNotifications];
     }
-    else {
-        
-        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-        [source setResult:nil];
-    }
+    
+    [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+    [source setResult:nil];
     
     return source.task;
 }
@@ -269,7 +255,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         }];
         
         // Do the work associated with the task.
-        ILog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
+        QMLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
         
         [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
             
@@ -334,15 +320,14 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
 // MARK: - PKPushRegistryDelegate protocol
 
-- (void)pushRegistry:(PKPushRegistry *)__unused registry didUpdatePushCredentials:(PKPushCredentials *)__unused pushCredentials forType:(PKPushType)__unused type {
+- (void)pushRegistry:(PKPushRegistry *)__unused registry didUpdatePushCredentials:(PKPushCredentials *)pushCredentials forType:(PKPushType)__unused type {
     QMLog(@"Created VOIP push token.");
-    //  New way, only for updated backend
     NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
     QBMSubscription *subscription = [QBMSubscription subscription];
     subscription.notificationChannel = QBMNotificationChannelAPNSVOIP;
     subscription.deviceUDID = deviceIdentifier;
-    subscription.deviceToken = [self.voipRegistry pushTokenForType:PKPushTypeVoIP];
+    subscription.deviceToken = pushCredentials.token;
     
     @weakify(self);
     [QBRequest createSubscription:subscription successBlock:^(QBResponse * __unused response, NSArray * __unused objects) {
@@ -359,9 +344,10 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     QMLog(@"Invalidated VOIP push token.");
     [QBRequest deleteSubscriptionWithID:_voipSubscriptionID
                            successBlock:^(QBResponse * __unused response) {
-                               QMLog(@"Unregister Subscription request - Success");
+                               QMLog(@"Unregister VOIP Subscription request - Success");
+                               _voipSubscriptionID = 0;
                            } errorBlock:^(QBResponse *response) {
-                               QMLog(@"Unregister Subscription request - Error: %@", [response.error reasons]);
+                               QMLog(@"Unregister VOIP Subscription request - Error: %@", [response.error reasons]);
                            }];
 }
 
