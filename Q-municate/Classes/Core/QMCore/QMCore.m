@@ -238,7 +238,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         [[QMImageLoader instance].imageCache clearMemory];
     }];
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO]
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES]
      continueWithBlock:^id(BFTask * __unused t)
      {
          [super logoutWithCompletion:^{
