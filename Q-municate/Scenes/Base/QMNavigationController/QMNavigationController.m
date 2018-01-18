@@ -19,8 +19,7 @@ static const CGFloat kQMNotificationPanelViewHeight = 36.0f;
 
 @interface QMNavigationController ()
 <
-UINavigationBarDelegate,
-UINavigationControllerDelegate
+UINavigationBarDelegate
 >
 {
     NSTimer *_dismissTimer;
@@ -35,7 +34,6 @@ UINavigationControllerDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.delegate = self;
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         self.navigationBar.prefersLargeTitles = YES;
@@ -107,13 +105,11 @@ UINavigationControllerDelegate
      object:nil];
 }
 
-- (void)navigationController:(UINavigationController *)__unused navigationController
-      willShowViewController:(UIViewController *)viewController
-                    animated:(BOOL) __unused animated
-{
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
     //Fix hidesBottomBarWhenPushed
     UITabBarController *tabBarController = self.tabBarController;
-    if (tabBarController != nil && viewController.hidesBottomBarWhenPushed) {
+    if (tabBarController != nil && self.hidesBottomBarWhenPushed) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [tabBarController.tabBar setHidden:YES];
