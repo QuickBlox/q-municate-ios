@@ -85,20 +85,20 @@ EOM
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMCVDevelopment/QMChatViewController.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMChatCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMContactListCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMUsersCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMOpenGraphCacheModel.bundle"
   install_resource "${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "${PODS_ROOT}/QMCVDevelopment/QMChatViewController/Icons/Media.xcassets"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMCVDevelopment/QMChatViewController.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMChatCacheModel.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMContactListCacheModel.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMUsersCacheModel.bundle"
-  install_resource "$PODS_CONFIGURATION_BUILD_DIR/QMServicesDevelopment/QMOpenGraphCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMCVDevelopment/QMChatViewController.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMChatCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMContactListCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMUsersCacheModel.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/QMServicesDevelopment/QMOpenGraphCacheModel.bundle"
   install_resource "${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle"
 fi
 
