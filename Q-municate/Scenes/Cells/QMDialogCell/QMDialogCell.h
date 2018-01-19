@@ -11,7 +11,13 @@
 
 @interface QMDialogCell : QMTableViewCell
 
+/**
+ Unread messages badge.
+ 
+ @remark Pass 0 to hide the badge.
+ */
+@property (assign, nonatomic) NSUInteger badgeNumber;
+
 - (void)setTime:(NSString *)time;
-- (void)setBadgeNumber:(NSUInteger)badgeNumber;
 
 @end
