@@ -36,13 +36,18 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
+    [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+    
     if (shouldUnsubscribe) {
         self.voipRegistry = nil;
-        [self unSubscribeFromPushNotifications];
+        [[self unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * __unused _Nonnull t) {
+            [source setResult:nil];
+            return nil;
+        }];
     }
-    
-    [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-    [source setResult:nil];
+    else {
+        [source setResult:nil];
+    }
     
     return source.task;
 }
