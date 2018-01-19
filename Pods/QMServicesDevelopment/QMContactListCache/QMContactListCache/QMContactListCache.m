@@ -75,8 +75,19 @@ static QMContactListCache *_contactListcCacheInstance = nil;
 
 - (void)insertOrUpdateContactListWithItems:(NSArray<QBContactListItem *> *)contactListItems
                                 completion:(dispatch_block_t)completion {
+
+    [self insertOrUpdateContactListWithItems:contactListItems completion:completion force:NO];
+}
+
+- (void)insertOrUpdateContactListWithItems:(NSArray<QBContactListItem *> *)contactListItems
+                                completion:(dispatch_block_t)completion
+                                     force:(BOOL)force {
     
     [self save:^(NSManagedObjectContext *ctx) {
+        
+        if (force) {
+            [CDContactListItem QM_truncateAllInContext:ctx];
+        }
         
         for (QBContactListItem *contactListItem in contactListItems) {
             
@@ -92,6 +103,7 @@ static QMContactListCache *_contactListcCacheInstance = nil;
 
 - (void)insertOrUpdateContactListItemsWithContactList:(QBContactList *)contactList
                                            completion:(dispatch_block_t)completion {
+    
     NSMutableArray *items =
     [NSMutableArray arrayWithCapacity:contactList.contacts.count + contactList.pendingApproval.count];
     
@@ -99,7 +111,8 @@ static QMContactListCache *_contactListcCacheInstance = nil;
     [items addObjectsFromArray:contactList.pendingApproval];
     
     [self insertOrUpdateContactListWithItems:[items copy]
-                                  completion:completion];
+                                  completion:completion
+                                       force:YES];
 }
 
 - (void)deleteContactListItem:(QBContactListItem *)contactListItem

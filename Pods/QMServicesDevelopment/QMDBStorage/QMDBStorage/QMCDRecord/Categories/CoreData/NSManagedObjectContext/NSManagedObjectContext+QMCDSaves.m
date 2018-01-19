@@ -171,7 +171,6 @@
                         completion(saved, error);
                     }
                 }
-                [self reset];
             }
         }
     };
