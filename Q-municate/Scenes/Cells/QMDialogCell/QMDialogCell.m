@@ -29,6 +29,7 @@
     [super awakeFromNib];
     
     _timeLabel.text = nil;
+    _badgeView.hidden = YES;
 }
 
 //MARK: - Setters
