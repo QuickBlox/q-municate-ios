@@ -97,9 +97,11 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
             break;
         
         case QMUpdateUserFieldStatus:
-            [self configureWithKeyPath:NSStringFromSelector(@selector(status))
+            
+            
+            [self configureWithKeyPath:qm_keypath(QBUUser, status)
                                  title:NSLocalizedString(@"QM_STR_STATUS", nil)
-                                  text:qm_keypath(QBUUser, status)
+                                  text:currentUser.status
                             bottomText:NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil)];
             self.textField.keyboardType = UIKeyboardTypeAlphabet;
             break;
