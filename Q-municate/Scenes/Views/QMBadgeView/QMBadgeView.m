@@ -19,6 +19,8 @@
 
 @implementation QMBadgeView
 
+@dynamic badgeText;
+
 static UIImage *_bgViewImage = nil;
 
 + (UIImage *)circlieImageWithColor:(UIColor *)color {
@@ -41,7 +43,6 @@ static UIImage *_bgViewImage = nil;
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    _hideOnZeroValue = YES;
     _badgeTextColor = [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
     _badgeBGColor = [UIColor colorWithRed:23.0f/255.0f green:208.0f/255.0f blue:75.f/255.0f alpha:1.0f];
     
@@ -70,17 +71,12 @@ static UIImage *_bgViewImage = nil;
 
 //MARK: - Setters
 
-- (void)setBadgeNumber:(NSUInteger)badgeNumber {
-    
-    if (_badgeNumber != badgeNumber) {
-        
-        _badgeNumber = badgeNumber;
-        _badge.text = [NSString stringWithFormat:@"%tu", badgeNumber];
-    }
-    
-    BOOL hidden = (_hideOnZeroValue && badgeNumber == 0);
-    _bgView.hidden = hidden;
-    _badge.hidden = hidden;
+- (void)setBadgeText:(NSString *)badgeText {
+    _badge.text = badgeText;
+}
+
+- (NSString *)badgeText {
+    return _badge.text;
 }
 
 @end

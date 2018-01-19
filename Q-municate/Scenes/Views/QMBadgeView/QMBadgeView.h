@@ -10,7 +10,6 @@
 
 @interface QMBadgeView : UIView
 
-@property (assign, nonatomic) IBInspectable NSUInteger badgeNumber;
-@property (assign, nonatomic) IBInspectable BOOL hideOnZeroValue;
+@property (copy, nonatomic) IBInspectable NSString *badgeText;
 
 @end
