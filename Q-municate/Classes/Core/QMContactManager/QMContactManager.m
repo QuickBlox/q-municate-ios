@@ -54,13 +54,6 @@
                                                     saveToHistory:YES
                                                     saveToStorage:YES
                                                        completion:nil];
-                     
-                     NSString *notificationMessage =
-                     [NSString stringWithFormat:NSLocalizedString(@"QM_STR_FRIEND_REQUEST_DID_SEND_FOR_OPPONENT", nil),
-                      self.serviceManager.currentProfile.userData.fullName];
-                     
-                     [QMNotification sendPushNotificationToUser:user withText:notificationMessage];
-                     
                      return nil;
                  }];
     }
