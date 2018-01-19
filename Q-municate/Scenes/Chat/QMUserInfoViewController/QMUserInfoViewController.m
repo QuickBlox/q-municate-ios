@@ -377,9 +377,7 @@ NYTPhotosViewControllerDelegate
         
         if (![self canMakeAPhoneCall:&error]) {
             
-            [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
-                                                                                  message:error.localizedDescription
-                                                                                 duration:kQMDefaultNotificationDismissTime];
+            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         }
         else {
             NSString *cleanedPhoneNumber = [self formatPhoneUrl:self.user.phone];
