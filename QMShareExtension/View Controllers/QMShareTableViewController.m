@@ -112,8 +112,7 @@ QMShareContactsDelegate>
     
     UIAlertController *alertController = [UIAlertController qm_loadingAlertControllerWithStatus:status
                                                                                     cancelBlock:^{
-                                                                                        __strong typeof(weakSelf) strongSelf = weakSelf;
-                                                                                        [strongSelf.shareControllerDelegate didCancelSharing];
+                                                                                        [weakSelf.shareControllerDelegate shareTableViewControllerDidCancelSharing:self];
                                                                                     }];
     
     [self presentViewController:alertController
@@ -125,20 +124,25 @@ QMShareContactsDelegate>
 
 - (void)dismissLoadingAlertControllerAnimated:(BOOL)animated
                                withCompletion:(dispatch_block_t)completion {
-    
-    [self.alertController dismissViewControllerAnimated:animated
-                                             completion:completion];
+    if (self.alertController && !self.alertController.isBeingDismissed) {
+        [self.alertController dismissViewControllerAnimated:animated
+                                                 completion:completion];
+    }
+    else {
+        completion ? completion() : nil;
+    }
 }
 
 //MARK: - Actions
 
 - (void)dismiss {
-    [self.shareControllerDelegate didTapCancelBarButton];
+    [self.shareControllerDelegate shareTableViewControllerDidTapCancelBarButton:self];
 }
 
 - (void)shareAction {
     NSArray *selectedItems = [self.shareDataSource.selectedItems.allObjects copy];
-    [self.shareControllerDelegate didTapShareBarButtonWithSelectedItems:selectedItems];
+    [self.shareControllerDelegate shareTableViewController:self
+                     didTapShareBarButtonWithSelectedItems:selectedItems];
 }
 
 //MARK: - Configuration
@@ -397,45 +401,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.searchController.active = NO;
 }
 
-
-- (void)dismissViewControllerAnimated:(BOOL)flag
-                           completion:(void (^)(void))completion {
-    
-    dispatch_block_t alertControllerCompletion = ^{
-        [super dismissViewControllerAnimated:flag
-                                  completion:completion];
-    };
-    
-    if (self.alertController) {
-        [self dismissLoadingAlertControllerAnimated:NO
-                                     withCompletion:alertControllerCompletion];
-    }
-    else {
-        alertControllerCompletion();
-    }
-}
-
-
 - (void)dealloc {
     [self.searchController.view removeFromSuperview];
 }
 
-#ifdef __IPHONE_11_0
+
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
-        if (@available(iOS 11.0, *)) {
-            if (self.searchController.isActive) {
-                self.searchController.active = NO;
-            }
-            NSLog(@"Search controller");
+        if (self.searchController.isActive) {
+            self.searchController.active = NO;
         }
     } completion:nil];
     
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
-#endif
+
 
 //MARK: - QMShareContactsDelegate
 

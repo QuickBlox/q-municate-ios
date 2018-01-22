@@ -17,7 +17,7 @@ typedef NS_ENUM(NSUInteger, QMAlertControllerType) {
 @interface UIViewController(QMAlertController)
 
 - (void)presentAlertControllerWithStatus:(NSString *)status
-                       withButtonHandler:(dispatch_block_t)buttonTapBlock;
+                       buttonHandler:(dispatch_block_t)buttonTapBlock;
 @end
 
 @interface UIAlertController (QM)
