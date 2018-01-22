@@ -45,6 +45,7 @@
 
 - (void)setBadgeNumber:(NSUInteger)badgeNumber {
     if (_badgeNumber != badgeNumber) {
+        _badgeNumber = badgeNumber;
         if (badgeNumber > 0) {
             self.badgeView.hidden = NO;
             self.badgeView.badgeText = [NSString stringWithFormat:@"%@",
