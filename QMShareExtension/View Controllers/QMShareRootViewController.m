@@ -80,7 +80,6 @@ QMShareEtxentionOperationDelegate>
     
     [super viewWillAppear:animated];
     
-    NSLog(@"current user = %@", QBSession.currentSession.currentUser);
     if (QBSession.currentSession.currentUser.ID == 0) {
         
         dispatch_block_t completion = ^{
@@ -123,7 +122,7 @@ QMShareEtxentionOperationDelegate>
     __weak typeof(self) weakSelf = self;
     
     [self presentAlertControllerWithStatus:status
-                         withButtonHandler:^{
+                         buttonHandler:^{
                              
                              __strong typeof(weakSelf) strongSelf = weakSelf;
                              
@@ -212,9 +211,9 @@ QMShareEtxentionOperationDelegate>
 }
 
 //MARK: - QMShareControllerDelegate
+-(void)shareTableViewController:(QMShareTableViewController *)shareTableViewController
+didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
 
-- (void)didTapShareBarButtonWithSelectedItems:(NSArray *)selectedItems {
-    
     NSParameterAssert(self.shareItem);
     
     if (self.shareOperation.isSending) {
@@ -223,7 +222,7 @@ QMShareEtxentionOperationDelegate>
     
     if (!self.internetConnection.isReachable) {
         [self presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                             withButtonHandler:nil];
+                             buttonHandler:nil];
         return;
     }
     
@@ -254,7 +253,7 @@ QMShareEtxentionOperationDelegate>
                       NSString *errorText =
                       @"Something went wrong. The message wasn’t sent to recipients that remain selected.";
                       [strongSelf presentAlertControllerWithStatus:errorText
-                                                 withButtonHandler:nil];
+                                                 buttonHandler:nil];
                       [strongSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
                   }
                   else {
@@ -272,11 +271,11 @@ QMShareEtxentionOperationDelegate>
     self.shareOperation = shareOperation;
 }
 
-- (void)didCancelSharing {
+- (void)shareTableViewControllerDidCancelSharing:(QMShareTableViewController *)shareTableViewController {
     [self cancelShare];
 }
 
-- (void)didTapCancelBarButton {
+- (void)shareTableViewControllerDidTapCancelBarButton:(QMShareTableViewController *)shareTableViewController {
     [self dismiss];
 }
 
@@ -384,7 +383,7 @@ QMShareEtxentionOperationDelegate>
             // reachability block could possibly be called in background thread
             // [weakSelf cancelShare];
             [weakSelf presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                                     withButtonHandler:nil];
+                                     buttonHandler:nil];
         });
     }];
     
@@ -527,23 +526,6 @@ static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
     }];
 }
 
-- (void)presentAlertControllerWithStatus:(NSString *)errorStatus
-                       withButtonHandler:(dispatch_block_t)buttonTapBlock {
-    
-    UIAlertController *alertController =
-    [UIAlertController qm_infoAlertControllerWithStatus:errorStatus
-                                         buttonTapBlock:buttonTapBlock];
-    
-    if (self.presentedViewController) {
-        [self.presentedViewController presentViewController:alertController
-                                                   animated:YES
-                                                 completion:nil];
-    }
-    else {
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-}
-
 - (void)updateDialogsDataSource {
     
     [[self taskDialogsDataSource] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t) {
@@ -556,9 +538,6 @@ static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
 }
 
 - (void)cancelShare {
-    
-    [self.shareTableViewController dismissLoadingAlertControllerAnimated:YES
-                                                          withCompletion:nil];
     [self.shareOperation cancel];
 }
 

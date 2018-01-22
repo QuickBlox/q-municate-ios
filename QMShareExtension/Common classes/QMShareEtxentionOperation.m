@@ -85,6 +85,7 @@
 - (void)asyncTask {
   
     [[self taskSendTextToRecipients] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+        
         if (self.isCancelled) {
             self.shareOperationCompletionBlock(NO, t.result);
         }
@@ -92,6 +93,9 @@
             [self finish];
             self.shareOperationCompletionBlock(YES, t.result);
         }
+        
+        self.shareOperationCompletionBlock = nil;
+        
         return nil;
     }];
 }

@@ -88,21 +88,28 @@
     
     [self.sendingMessages addObject:message];
     
+    BFContinuationBlock completionBlock =  ^id _Nullable(BFTask *task) {
+        //Don't save forwarded message to deferred queue
+        if (task.error) {
+            [QMCore.instance.chatService.deferredQueueManager removeMessage:message];
+        }
+        return task;
+    };
+    
     if (message.attachments.count > 0 && !message.isLocationMessage) {
         QBChatAttachment *attachment = message.attachments.firstObject;
         
         QBChatDialog *dialog = [QMCore.instance.chatService.dialogsMemoryStorage chatDialogWithID:message.dialogID];
-        return [QMCore.instance.chatService sendAttachmentMessage:message
-                                                         toDialog:dialog
-                                                   withAttachment:attachment];
+        return [[QMCore.instance.chatService sendAttachmentMessage:message
+                                                          toDialog:dialog
+                                                    withAttachment:attachment] continueWithBlock:completionBlock];
     }
     else {
-        return [QMCore.instance.chatService sendMessage:message
-                                             toDialogID:message.dialogID
-                                          saveToHistory:YES
-                                          saveToStorage:YES];
+        return [[QMCore.instance.chatService sendMessage:message
+                                              toDialogID:message.dialogID
+                                           saveToHistory:YES
+                                           saveToStorage:YES] continueWithBlock:completionBlock];
     }
 }
-
 
 @end
