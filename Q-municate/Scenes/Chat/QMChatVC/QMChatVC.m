@@ -273,7 +273,7 @@ TTTAttributedLabelDelegate
     
     NSString *observerName =
     [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, self.dialogID];
-
+    
     int t_token = 0;
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
@@ -283,7 +283,7 @@ TTTAttributedLabelDelegate
             [self syncWithCache];
         });
     }
-
+    
     // subscribing to delegates
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.contactListService addDelegate:self];
@@ -492,20 +492,20 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
             __weak __typeof(self)weakSelf = self;
             [[QMCore.instance.chatService readMessage:message]
              continueWithBlock:^id(BFTask *task) {
-                
-                if (task.isFaulted) {
-                    ILog(@"Problems while marking message as read! Error: %@", task.error);
-                }
-                else if (task.isCompleted) {
-
-                    [weakSelf.messagesToRead removeObject:message];
-
-                    if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
-                        [UIApplication sharedApplication].applicationIconBadgeNumber--;
-                    }
-                }
-                return nil;
-            }];
+                 
+                 if (task.isFaulted) {
+                     ILog(@"Problems while marking message as read! Error: %@", task.error);
+                 }
+                 else if (task.isCompleted) {
+                     
+                     [weakSelf.messagesToRead removeObject:message];
+                     
+                     if ([UIApplication sharedApplication].applicationIconBadgeNumber > 0) {
+                         [UIApplication sharedApplication].applicationIconBadgeNumber--;
+                     }
+                 }
+                 return nil;
+             }];
         }
         else {
             [self.messagesToRead addObject:message];
@@ -1314,7 +1314,7 @@ NSDictionary *QMDeniedClassesDictionary() {
             [NSURL fileURLWithPath:imagePath];
             
             if (imageURL) {
-
+                
                 QMActivityItem *imageItem =
                 [[QMActivityItem alloc] initWithImageTypeIdentifier:attachment.typeIdentifier
                                                    loadHandlerBlock:^(NSItemProviderCompletionHandler completionHandler,
@@ -1322,7 +1322,7 @@ NSDictionary *QMDeniedClassesDictionary() {
                  {
                      NSString *key =
                      [QMImageLoader.instance cacheKeyForURL:[attachment remoteURLWithToken:NO]];
-
+                     
                      [QMImageLoader.instance.imageCache queryCacheOperationForKey:key
                                                                              done:^(UIImage * _Nullable image,
                                                                                     NSData * __unused _Nullable data,
@@ -1385,7 +1385,7 @@ didPerformAction:(SEL)action
                                                              UIActivityTypeCopyToPasteboard,
                                                              UIActivityTypeMail,
                                                              UIActivityTypeAssignToContact];
-
+            
             [self displayActivityViewController:activityViewController
                                      withSender:cell
                                        animated:YES];
@@ -1393,12 +1393,15 @@ didPerformAction:(SEL)action
     }
     else if(action == @selector(forward)) {
         
+        self.indexPathToForward = indexPath;
+        
         NSArray *dialogs = QMCore.instance.chatService.dialogsMemoryStorage.unsortedDialogs;
         NSArray *friends = [QMCore.instance.contactManager friends];
         
         QMShareTableViewController *shareTableViewController=
         [QMShareTableViewController qm_shareTableViewControllerWithDialogs:dialogs contacts:friends];
         shareTableViewController.title = NSLocalizedString(@"QM_STR_FORWARD", nil);
+        shareTableViewController.shareControllerDelegate = self;
         
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:shareTableViewController];
         
@@ -1406,9 +1409,6 @@ didPerformAction:(SEL)action
                            animated:YES
                          completion:nil];
         
-        self.indexPathToForward = indexPath;
-        
-        shareTableViewController.shareControllerDelegate = self;
         self.shareTableViewController = shareTableViewController;
     }
 }
@@ -2232,39 +2232,39 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         self.contactRequestTask =
         [[QMCore.instance.contactManager addUserToContactList:opponentUser]
-          continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-            
-              if (!t.isFaulted) {
-                  [self.chatDataSource updateMessage:currentMessage];
-              }
-              
-              [navigationController dismissNotificationPanel];
-              return nil;
-        }];
+         continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+             
+             if (!t.isFaulted) {
+                 [self.chatDataSource updateMessage:currentMessage];
+             }
+             
+             [navigationController dismissNotificationPanel];
+             return nil;
+         }];
     }
     else {
         
         self.contactRequestTask =
         [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser]
-           continueWithSuccessBlock:^id _Nullable(BFTask * __unused t) {
-            
-            return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
-            
-           }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-               
-               if (!t.isFaulted) {
-                   
-                   if (self.splitViewController.isCollapsed) {
-                       [self.navigationController popViewControllerAnimated:YES];
-                   }
-                   else {
-                       [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-                   }
-               }
-            
-               [(QMNavigationController *)self.navigationController dismissNotificationPanel];
-               return nil;
-        }];
+          continueWithSuccessBlock:^id _Nullable(BFTask * __unused t) {
+              
+              return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
+              
+          }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+              
+              if (!t.isFaulted) {
+                  
+                  if (self.splitViewController.isCollapsed) {
+                      [self.navigationController popViewControllerAnimated:YES];
+                  }
+                  else {
+                      [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                  }
+              }
+              
+              [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+              return nil;
+          }];
     }
 }
 
@@ -2430,7 +2430,7 @@ didFinishPickingWithError:(NSError *)error {
 didFinishPickingPhoto:(UIImage *)photo {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    
+        
         if (imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera) {
             UIImage *newImage = [photo fixOrientation];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -2494,7 +2494,6 @@ didFinishPickingVideo:(NSURL *)videoUrl {
         title = NSLocalizedString(@"Photos Access Disabled", nil);
         message = NSLocalizedString(@"You can allow access to Photos in Settings", nil);
     }
-    
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message
@@ -2599,12 +2598,16 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
     }
 }
 
-- (void)didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
+//MARK: - QMShareControllerDelegate
+
+- (void)shareTableViewController:(QMShareTableViewController *)__unused shareTableViewController
+didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
     
     NSParameterAssert(self.indexPathToForward);
     
     if (![QMCore.instance isInternetConnected]) {
         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
+        return;
     }
     
     QBChatMessage *messageToForward = [self.chatDataSource messageForIndexPath:self.indexPathToForward];
@@ -2617,32 +2620,44 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
     
     [self.shareHelper forwardMessage:messageToForward
                         toRecipients:selectedItems
-                 withCompletionBlock:^(BOOL completed, QMRecipientOperationResultDetails * _Nonnull resultDetails) {
+                 withCompletionBlock:^(BOOL completed,
+                                       QMRecipientOperationResultDetails * _Nonnull resultDetails) {
                      
-                     if (completed) {
-                         if (resultDetails.unsentRecipients.allKeys.count > 0) {
-                             NSString *errorText =
-                             @"Something went wrong. The message wasn’t sent to recipients that remain selected.";
-                             [weakSelf presentAlertControllerWithStatus:errorText
-                                                        withButtonHandler:nil];
-                             [weakSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
-                         }
-                         else {
-                             [weakSelf.shareTableViewController dismissViewControllerAnimated:YES
-                                                                                   completion:nil];
-                         }
-                     }
+                     __strong typeof(weakSelf) strongSelf = weakSelf;
+                     [strongSelf.shareTableViewController
+                      dismissLoadingAlertControllerAnimated:YES
+                      withCompletion:^{
+                          
+                          if (completed) {
+                              if (resultDetails.unsentRecipients.allKeys.count > 0) {
+                                  [strongSelf presentAlertControllerWithStatus:errorMessage(completed)
+                                                                 buttonHandler:nil];
+                                  [strongSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
+                              }
+                              else {
+                                  [strongSelf.shareTableViewController dismissViewControllerAnimated:YES
+                                                                                          completion:nil];
+                              }
+                          }
+                          else {
+                              //In case we cancel forwarding, there can be recipients that received message.
+                              if (resultDetails.sentRecipients.allObjects.count > 0) {
+                                  [strongSelf presentAlertControllerWithStatus:errorMessage(completed)
+                                                                 buttonHandler:nil];
+                                  [strongSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
+                              }
+                          }
+                      }];
                  }];
 }
 
-
-- (void)didTapCancelBarButton {
+- (void)shareTableViewControllerDidTapCancelBarButton:(QMShareTableViewController *)__unused shareTableViewController {
     
     [self.shareTableViewController dismissViewControllerAnimated:YES
                                                       completion:nil];
 }
 
-- (void)didCancelSharing {
+- (void)shareTableViewControllerDidCancelSharing:(QMShareTableViewController *)__unused shareTableViewController {
     [self.shareHelper cancelForwarding];
 }
 
@@ -2651,6 +2666,12 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
         _shareHelper = [[QMShareHelper alloc] init];
     }
     return _shareHelper;
+}
+
+static inline NSString *errorMessage(BOOL operationWasCompleted) {
+    return [NSString stringWithFormat:@"%@ %@",
+            operationWasCompleted ? @"Something went wrong." : @"Forwarding was cancelled.",
+            @"The message wasn’t sent to recipients that remain selected."];
 }
 
 @end

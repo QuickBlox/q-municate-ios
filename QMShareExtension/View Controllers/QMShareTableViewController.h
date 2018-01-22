@@ -12,15 +12,19 @@
 
 @class QBUUser;
 @class QBChatDialog;
+@class QMShareTableViewController;
 
 @protocol QMShareItemProtocol;
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol QMShareControllerDelegate <NSObject>
 
-- (void)didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems;
-- (void)didTapCancelBarButton;
-- (void)didCancelSharing;
+- (void)shareTableViewController:(QMShareTableViewController *)shareTableViewController
+didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems;
+
+- (void)shareTableViewControllerDidTapCancelBarButton:(QMShareTableViewController *)shareTableViewController;
+
+- (void)shareTableViewControllerDidCancelSharing:(QMShareTableViewController *)shareTableViewController;
 
 @end
 
