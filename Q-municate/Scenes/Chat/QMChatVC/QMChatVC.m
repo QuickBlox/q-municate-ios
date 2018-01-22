@@ -2250,18 +2250,23 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
             return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
             
            }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-               
-               if (!t.isFaulted) {
+               // Run after async data updates (multicast delegate)
+               dispatch_async(dispatch_get_main_queue(), ^{
                    
-                   if (self.splitViewController.isCollapsed) {
-                       [self.navigationController popViewControllerAnimated:YES];
+                   if (!t.isFaulted) {
+                       
+                       if (self.splitViewController.isCollapsed) {
+                           
+                           [self.navigationController popViewControllerAnimated:YES];
+                       }
+                       else {
+                           [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                       }
                    }
-                   else {
-                       [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-                   }
-               }
-            
-               [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+                   
+                   [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+               });
+               
                return nil;
         }];
     }

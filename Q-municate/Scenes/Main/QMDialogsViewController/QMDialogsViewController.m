@@ -144,8 +144,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         [self.refreshControl beginRefreshing];
         self.tableView.contentOffset = offset;
     }
-    
-    [self.tableView reloadData];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -351,8 +349,7 @@ didAddMessageToMemoryStorage:(QBChatMessage *)__unused message
     [self.tableView reloadData];
 }
 
-- (void)chatService:(QMChatService *)__unused chatService
-didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
+- (void)chatService:(QMChatService *)__unused chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
     
     if (self.dialogsDataSource.items.count == 0) {
         self.tableView.backgroundView = self.placeholderView;
