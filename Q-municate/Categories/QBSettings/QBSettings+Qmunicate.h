@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, QMApplicationZone) {
     QMApplicationZoneQA,
 };
 
-static const QMApplicationZone QMCurrentApplicationZone = QMApplicationZoneDevelopment;
+static const QMApplicationZone QMCurrentApplicationZone = QMApplicationZoneProduction;
 
 @interface QBSettings (Qmunicate)
 
