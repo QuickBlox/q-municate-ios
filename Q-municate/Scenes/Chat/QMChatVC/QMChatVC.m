@@ -44,6 +44,7 @@
 #import "UIAlertController+QM.h"
 
 // external
+#import <SVProgressHUD.h>
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <AVKit/AVKit.h>
 #import <notify.h>
@@ -2601,6 +2602,10 @@ willChangeActiveCallState:(BOOL)willHaveActiveCall {
 - (void)didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
     
     NSParameterAssert(self.indexPathToForward);
+    
+    if (![QMCore.instance isInternetConnected]) {
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
+    }
     
     QBChatMessage *messageToForward = [self.chatDataSource messageForIndexPath:self.indexPathToForward];
     NSParameterAssert(messageToForward);
