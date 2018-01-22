@@ -406,22 +406,18 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
-#ifdef __IPHONE_11_0
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
-        if (@available(iOS 11.0, *)) {
-            if (self.searchController.isActive) {
-                self.searchController.active = NO;
-            }
-            NSLog(@"Search controller");
+        if (self.searchController.isActive) {
+            self.searchController.active = NO;
         }
     } completion:nil];
     
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
-#endif
+
 
 //MARK: - QMShareContactsDelegate
 
