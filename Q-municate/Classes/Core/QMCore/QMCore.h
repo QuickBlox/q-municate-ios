@@ -75,6 +75,16 @@ QMOpenGraphCacheDataSource, QMOpenGraphServiceDelegate>
 @property (copy, nonatomic, nullable) NSString *activeDialogID;
 
 /**
+ A block called when login process completes with critical authorization error/errors.
+
+ @discussion Common critical situations:
+ - An user, who signed in via Facebook, has changed facebook password.
+ - An user, who signed in via Facebook, has removed application from settings.
+ - There is no authorized user.
+ */
+@property (copy, nonatomic, nullable) dispatch_block_t athorizationErrorBlock;
+
+/**
  *  QMCore shared instance.
  *
  *  @return QMCore singleton

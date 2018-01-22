@@ -116,8 +116,8 @@ static const NSUInteger kQMUsersPageLimit = 100;
     }
     else if (type == QMAccountTypeFacebook) {
         
-        return [[QMFacebook connect] continueWithBlock:^id(BFTask<NSString *> *task) {
-            return task.result ? [core.authService loginWithFacebookSessionToken:task.result] : nil;
+        return [[QMFacebook connect] continueWithSuccessBlock:^id(BFTask<NSString *> *task) {
+            return [core.authService loginWithFacebookSessionToken:task.result];
         }];
     }
     else if (type == QMAccountTypePhone) {
@@ -168,10 +168,10 @@ static const NSUInteger kQMUsersPageLimit = 100;
             [self sliceArray:dialogsUsersIDs.allObjects
                        limit:kQMUsersPageLimit
                    enumerate:^(NSArray *slice, NSRange __unused range)
-            {
-                BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:slice];
-                [usersLoadingTasks addObject:task];
-            }];
+             {
+                 BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:slice];
+                 [usersLoadingTasks addObject:task];
+             }];
         }
     };
     
@@ -234,15 +234,15 @@ static const NSUInteger kQMUsersPageLimit = 100;
     [self sliceArray:contactsIDs
                limit:kQMUsersPageLimit
            enumerate:^(NSArray *slice, NSRange range)
-    {
-        QBGeneralResponsePage *page =
-        [QBGeneralResponsePage responsePageWithCurrentPage:1
-                                                   perPage:range.length];
-        BFTask *task =
-        [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(slice, dateFilter)
-                                                     page:page];
-        [tasks addObject:task];
-    }];
+     {
+         QBGeneralResponsePage *page =
+         [QBGeneralResponsePage responsePageWithCurrentPage:1
+                                                    perPage:range.length];
+         BFTask *task =
+         [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(slice, dateFilter)
+                                                      page:page];
+         [tasks addObject:task];
+     }];
     
     BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask * __unused t) {
         core.currentProfile.lastUserFetchDate = [NSDate date];

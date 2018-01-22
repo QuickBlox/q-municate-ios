@@ -24,7 +24,7 @@
 - (NSString *)description {
     
     NSMutableString *result = [NSMutableString stringWithString:[super description]];
-    [result appendFormat:@"Text: %@\n", _text];
+    [result appendFormat:@"Text: %@/n", _text];
     [result appendFormat:@"Attachment: %@",_attachment];
     
     return result.copy;

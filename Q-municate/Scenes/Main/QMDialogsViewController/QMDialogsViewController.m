@@ -24,9 +24,6 @@
 #import "QMNavigationBar.h"
 #import <notify.h>
 
-static const NSInteger kQMNotAuthorizedInRest = -1000;
-static const NSInteger kQMUnauthorizedErrorCode = -1011;
-
 @interface QMDialogsViewController ()
 
 <QMUsersServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate,
@@ -40,8 +37,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 // Data sources
 @property (strong, nonatomic) QMDialogsDataSource *dialogsDataSource;
 @property (strong, nonatomic) QMDialogsSearchDataSource *dialogsSearchDataSource;
-
-@property (weak, nonatomic) BFTask *addUserTask;
 
 @property (strong, nonatomic) id observerWillEnterForeground;
 
@@ -65,6 +60,14 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     [QMCore.instance.chatService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
     [QMCore.instance.contactListService addDelegate:self];
+    
+    QMCore.instance.athorizationErrorBlock = ^{
+        [[QMCore.instance logout] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+            return nil;
+        }];
+    };
+    
     // search implementation
     [self configureSearch];
     // Data sources init
@@ -109,7 +112,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         
         NSDate *lastFetchDate =
         QMCore.instance.currentProfile.lastDialogsFetchingDate;
-         @strongify(self);
+        @strongify(self);
         [[QMCore.instance.chatService syncLaterDialogsWithCacheFromDate:lastFetchDate] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t)
          {
              if (t.result.count > 0) {
@@ -162,37 +165,18 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         QBChat.instance.manualInitialPresence = YES;
     }
     
-    [[[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
-        
+    [[QMCore.instance login] continueWithBlock:^id(BFTask *task) {
         if (task.isFaulted) {
-            
             [navigationController dismissNotificationPanel];
+        }
+        else {
+            if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
+                [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
+            }
             
-            NSInteger errorCode = task.error.code;
-            if (errorCode == kQMNotAuthorizedInRest
-                || errorCode == kQMUnauthorizedErrorCode
-                || (errorCode == kBFMultipleErrorsError
-                    && ([task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][0] code] == kQMUnauthorizedErrorCode
-                        || [task.error.userInfo[BFTaskMultipleErrorsUserInfoKey][1] code] == kQMUnauthorizedErrorCode))) {
-                        
-                        return [QMCore.instance logout];
-                    }
-        }
-        
-        if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
-            [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
-        }
-        
-        if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
-            [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
-        }
-        
-        return [BFTask cancelledTask];
-        
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        if (!task.isCancelled) {
-            [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
+            if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
+                [QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications];
+            }
         }
         
         return nil;
@@ -463,7 +447,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         [self.tableView reloadData];
-
+        
     }
 }
 
@@ -552,7 +536,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     [[[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * __unused t) {
         return [QMTasks taskUpdateContacts];
     }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
-           [self.refreshControl endRefreshing];
+        [self.refreshControl endRefreshing];
         return nil;
     }];
     
