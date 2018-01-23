@@ -389,7 +389,7 @@ QMUsersServiceDelegate
     }
     
     if (indexPaths.count > 0) {
-    
+        
         [self.tableView reloadRowsAtIndexPaths:[indexPaths copy] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
@@ -417,18 +417,14 @@ QMUsersServiceDelegate
     [QMNoContactsCell registerForReuseInTableView:self.tableView];
 }
 
-#ifdef __IPHONE_11_0
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
-        if (@available(iOS 11.0, *)) {
-            self.searchController.active = NO;
-        }
+        self.searchController.active = NO;
     } completion:nil];
     
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
-#endif
 
 @end

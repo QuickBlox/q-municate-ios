@@ -115,6 +115,8 @@ UINavigationBarDelegate
             [tabBarController.tabBar setHidden:YES];
         });
     }
+    [super viewWillTransitionToSize:size
+          withTransitionCoordinator:coordinator];
 }
 
 // MARK: - UINavigationBarDelegate
