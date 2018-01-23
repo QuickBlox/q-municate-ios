@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  Adds the given delegate implementation to the list of observers.
  *
  *  @param delegate delegate to add
+ *
+ *  @notes All delegates are called on the main thread asynchronously.
  */
 - (void)addDelegate:(id)delegate;
 
