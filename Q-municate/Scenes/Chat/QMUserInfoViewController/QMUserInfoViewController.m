@@ -377,9 +377,7 @@ NYTPhotosViewControllerDelegate
         
         if (![self canMakeAPhoneCall:&error]) {
             
-            [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
-                                                                                  message:error.localizedDescription
-                                                                                 duration:kQMDefaultNotificationDismissTime];
+            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         }
         else {
             NSString *cleanedPhoneNumber = [self formatPhoneUrl:self.user.phone];
@@ -419,7 +417,7 @@ NYTPhotosViewControllerDelegate
     
     void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
         
-        [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeClear];
+        [SVProgressHUD show];
         
         self.task = [[QMCore.instance.contactManager removeUserFromContactList:self.user]
                      continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task)
@@ -601,10 +599,10 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (BOOL) tableView:(UITableView *)__unused tableView
-  canPerformAction:(SEL)action
- forRowAtIndexPath:(NSIndexPath *)__unused indexPath
-        withSender:(id)__unused sender{
+- (BOOL)tableView:(UITableView *)__unused tableView
+ canPerformAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)__unused indexPath
+       withSender:(id)__unused sender{
     
     return action == @selector(copy:);
 }

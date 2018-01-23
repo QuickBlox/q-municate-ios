@@ -29,6 +29,7 @@
     [super awakeFromNib];
     
     _timeLabel.text = nil;
+    _badgeView.hidden = YES;
 }
 
 //MARK: - Setters
@@ -43,8 +44,16 @@
 }
 
 - (void)setBadgeNumber:(NSUInteger)badgeNumber {
-    
-    self.badgeView.badgeNumber = badgeNumber;
+    _badgeNumber = badgeNumber;
+    if (badgeNumber > 0) {
+        self.badgeView.hidden = NO;
+        self.badgeView.badgeText = [NSString stringWithFormat:@"%@",
+                                    badgeNumber >= 99 ? @"99+" : @(badgeNumber)];
+    }
+    else {
+        self.badgeView.hidden = YES;
+        self.badgeView.badgeText = nil;
+    }
 }
 
 @end

@@ -50,7 +50,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
             else {
                 
                 NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:readIDs];
-                NSMutableArray *readNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
+                NSMutableArray *readNames = [users valueForKeyPath:qm_keypath(QBUUser, fullName)];
                 
                 NSString *localizedString = NSLocalizedString([message isMediaMessage] ? @"QM_STR_SEEN_BY_NAMES_STATUS" : @"QM_STR_READ_BY_NAMES_STATUS", nil);
                 [statusString appendFormat:localizedString, [readNames componentsJoinedByString:@", "]];
@@ -68,7 +68,7 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
             else {
                 
                 NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:deliveredIDs];
-                NSMutableArray *deliveredNames = [users valueForKeyPath:@keypath(QBUUser.new, fullName)];
+                NSMutableArray *deliveredNames = [users valueForKeyPath:qm_keypath(QBUUser, fullName)];
                 
                 [statusString appendFormat:NSLocalizedString(@"QM_STR_DELIVERED_TO_NAMES_STATUS", nil), [deliveredNames componentsJoinedByString:@", "]];
             }
@@ -166,13 +166,15 @@ static const NSUInteger kQMStatusStringNamesLimit = 2;
                         
                         NSArray *users = [QMCore.instance.usersService.usersMemoryStorage usersWithIDs:notification.addedOccupantsIDs];
                         NSString *fullNameString = [self fullNamesString:users];
-                        messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil), sender.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil), fullNameString];
+                        messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_ADD_USERS_TO_EXIST_GROUP_CONVERSATION_TEXT", nil),
+                                       sender.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil), fullNameString];
                     }
                     else if (notification.deletedOccupantsIDs.count > 0) {
                         
-                        QBUUser *leavedUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[[notification.deletedOccupantsIDs firstObject] integerValue]];
+                        QBUUser *leavedUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[notification.deletedOccupantsIDs.firstObject integerValue]];
                         
-                        messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil), leavedUser.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil)];
+                        messageText = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_LEAVE_GROUP_CONVERSATION_TEXT", nil),
+                                       leavedUser.fullName ?: NSLocalizedString(@"QM_STR_UNKNOWN_USER", nil)];
                     }
                 }
                     

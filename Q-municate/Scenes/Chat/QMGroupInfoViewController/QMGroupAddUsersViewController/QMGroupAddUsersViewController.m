@@ -15,6 +15,7 @@
 
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
+#import "SVProgressHUD.h"
 
 @interface QMGroupAddUsersViewController ()
 <
@@ -63,7 +64,8 @@ UISearchResultsUpdating
     self.dataProvider = [[QMGroupAddUsersSearchDataProvider alloc] initWithExcludedUserIDs:self.cachedOccupantIDs];
     self.dataProvider.delegate = self;
     
-    self.dataSource = [[QMNewMessageContactListSearchDataSource alloc] initWithSearchDataProvider:self.dataProvider usingKeyPath:@keypath(QBUUser.new, fullName)];
+    self.dataSource = [[QMNewMessageContactListSearchDataSource alloc] initWithSearchDataProvider:self.dataProvider
+                                                                                     usingKeyPath:qm_keypath(QBUUser, fullName)];
     self.tableView.dataSource = self.dataSource;
     
     [self replaceUsers];
@@ -121,17 +123,14 @@ UISearchResultsUpdating
         // task in progress
         return;
     }
-    
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-    
-    __weak UINavigationController *navigationController = self.navigationController;
+
+    [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_STR_LOADING", nil)];
     
     @weakify(self);
     self.task = [[QMCore.instance.chatManager addUsers:self.dataSource.selectedUsers.allObjects toGroupChatDialog:self.chatDialog] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+        [SVProgressHUD dismiss];
         
         @strongify(self);
-        [(QMNavigationController *)navigationController dismissNotificationPanel];
-        
         if (!task.isFaulted) {
             
             [self.navigationController popViewControllerAnimated:YES];

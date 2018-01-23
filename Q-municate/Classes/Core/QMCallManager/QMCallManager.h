@@ -14,6 +14,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSString * const QMVoipCallEventKey;
+
 /**
  *  QMCallManagerDelegate protocol. Used to notify about session updates.
  */
@@ -40,6 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)callManager:(QMCallManager *)callManager willChangeActiveCallState:(BOOL)willHaveActiveCall;
 
+/**
+ *  Notifies when microphone state was changed from call kit.
+ *
+ *  @param callManager QMCallManager instance
+ */
+- (void)callManagerDidChangeMicrophoneState:(QMCallManager *)callManager;
+
+/**
+ *  Notifies that call was ended by callkit.
+ *
+ *  @param callManager QMCallManager instance
+ */
+- (void)callManagerCallWasEndedByCallKit:(QMCallManager *)callManager;
+
 @end
 
 /**
@@ -63,6 +79,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeDelegate:(id<QMCallManagerDelegate>)delegate;
 
 /**
+ *  Determines whether callkit is available or not.
+ */
+@property (class, readonly, getter=isCallKitAvailable) BOOL callKitAvailable;
+
+/**
  *  Current session.
  */
 @property (strong, nonatomic, readonly, nullable) QBRTCSession *session;
@@ -71,6 +92,11 @@ NS_ASSUME_NONNULL_BEGIN
  *   Whether active call is in progress.
  */
 @property (assign, nonatomic, readonly) BOOL hasActiveCall;
+
+/**
+ *  Current call UUID
+ */
+@property (strong, nonatomic, readonly, nullable) NSUUID *callUUID;
 
 /**
  *  Call to user with ID and conference type.
@@ -99,6 +125,20 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param duration call duration if needed
  */
 - (void)sendCallNotificationMessageWithState:(QMCallNotificationState)state duration:(NSTimeInterval)duration;
+
+/**
+ *  Performing call kit preparations.
+ *
+ *  @discussion When VOIP push received.
+ */
+- (void)performCallKitPreparations;
+
+/**
+ *  Handle user activity with call intent.
+ *
+ *  @param userActivity user activity instance
+ */
+- (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity;
 
 @end
 

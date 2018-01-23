@@ -7,6 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <Foundation/Foundation.h>
 // status bar image
 UIImage *QMStatusBarBackgroundImage(void);

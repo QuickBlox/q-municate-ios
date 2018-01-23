@@ -10,10 +10,11 @@
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QMColors.h"
+
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Flurry.h>
-#import <SVProgressHUD.h>
+#import <SVProgressHUD/SVProgressHUD.h>
 #import <Intents/Intents.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FirebaseCore/FirebaseCore.h>
@@ -21,28 +22,7 @@
 
 #import "UIScreen+QMLock.h"
 #import "UIImage+Cropper.h"
-
-static NSString * const kQMAppGroupIdentifier = @"group.com.quickblox.qmunicate";
-
-#define DEVELOPMENT 1
-
-#if DEVELOPMENT == 0
-
-// Production Test
-static const NSUInteger kQMApplicationID = 13318;
-static NSString * const kQMAuthorizationKey = @"WzrAY7vrGmbgFfP";
-static NSString * const kQMAuthorizationSecret = @"xS2uerEveGHmEun";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#else
-
-// Development
-static const NSUInteger kQMApplicationID = 36125;
-static NSString * const kQMAuthorizationKey = @"gOGVNO4L9cBwkPE";
-static NSString * const kQMAuthorizationSecret = @"JdqsMHCjHVYkVxV";
-static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
-
-#endif
+#import "QBSettings+Qmunicate.h"
 
 @interface QMAppDelegate () <QMPushNotificationManagerDelegate, QMAuthServiceDelegate>
 
@@ -55,30 +35,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     application.applicationIconBadgeNumber = 0;
     
     // Quickblox settings
-    [QBSettings setApplicationID:kQMApplicationID];
-    [QBSettings setAuthKey:kQMAuthorizationKey];
-    [QBSettings setAuthSecret:kQMAuthorizationSecret];
-    [QBSettings setAccountKey:kQMAccountKey];
-    [QBSettings setApplicationGroupIdentifier:kQMAppGroupIdentifier];
+    [QBSettings configure];
+    [QMServicesManager enableLogging:QMCurrentApplicationZone != QMApplicationZoneProduction];
     
-    [QBSettings setAutoReconnectEnabled:YES];
-    [QBSettings setCarbonsEnabled:YES];
-    
-#if DEVELOPMENT == 0
-    [QBSettings setLogLevel:QBLogLevelNothing];
-    [QBSettings disableXMPPLogging];
-    [QMServicesManager enableLogging:NO];
-    
-    QMLogSetEnabled(NO);
-#else
-    [QBSettings setLogLevel:QBLogLevelDebug];
-    [QBSettings enableXMPPLogging];
-    [QMServicesManager enableLogging:YES];
-    
-    QMLogSetEnabled(YES);
-#endif
-    
-    [[QMCore instance].authService addDelegate:self];
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
@@ -87,9 +46,9 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     // Configuring app appearance
     [[UITabBar appearance] setTintColor:QMMainApplicationColor()];
     [[UINavigationBar appearance] setTintColor:QMSecondaryApplicationColor()];
-
+    
     // Configuring searchbar appearance
-
+    
     [[UISearchBar appearance] setSearchBarStyle:UISearchBarStyleMinimal];
     [[UISearchBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UISearchBar appearance] setBackgroundImage:QMStatusBarBackgroundImage() forBarPosition:0 barMetrics:UIBarMetricsDefault];
@@ -98,12 +57,14 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
     [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
+    
     // Configuring external frameworks
     [FIRApp configure];
     [[FIRAuth auth] useAppLanguage];
     [Fabric with:@[CrashlyticsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
-    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", kQMApplicationID],
+    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
     // Handling push notifications if needed
@@ -112,11 +73,21 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
         [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
     }
     
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                    didFinishLaunchingWithOptions:launchOptions];
+    // not returning this method as launch options are not ONLY related to facebook
+    // for example when facebook returns NO in this method, callkit call from contacts
+    // app will not be handled. Facebook should not decide if URL should be handled for everything
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
+    
+    return YES;
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+- (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    if ([[FIRAuth auth] canHandleNotification:userInfo]) {
+        completionHandler(UIBackgroundFetchResultNoData);
+        return;
+    }
     
     if (application.applicationState == UIApplicationStateInactive) {
         
@@ -135,22 +106,19 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
     }
 }
 
-- (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    if ([[FIRAuth auth] canHandleNotification:userInfo]) {
-        completionHandler(UIBackgroundFetchResultNoData);
-        return;
-    }
-}
-
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    
     application.applicationIconBadgeNumber = 0;
-    [[QMCore instance].chatManager disconnectFromChatIfNeeded];
+    [QMCore.instance.chatManager disconnectFromChatIfNeeded];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)__unused application {
-    
-    [[QMCore instance] login];
+    // sending presence after application becomes active,
+    // or just restoring state if chat is disconnected
+    if (QBChat.instance.manualInitialPresence) {
+        QBChat.instance.manualInitialPresence = NO;
+    }
+    // connect to chat now
+    [QMCore.instance login];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)__unused application {
@@ -182,18 +150,23 @@ static NSString * const kQMAccountKey = @"6Qyiz3pZfNsex1Enqnp7";
 
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
     FIRAuthAPNSTokenType firTokenType;
-#if DEVELOPMENT == 0
-    firTokenType = FIRAuthAPNSTokenTypeProd;
-#else
-    firTokenType = FIRAuthAPNSTokenTypeSandbox;
-#endif
+
+    if (QMCurrentApplicationZone == QMApplicationZoneProduction) {
+        firTokenType = FIRAuthAPNSTokenTypeProd;
+    }
+    else {
+        firTokenType = FIRAuthAPNSTokenTypeSandbox;
+    }
+
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
 - (void)application:(UIApplication *)__unused application
 didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    
     [[QMCore instance].pushNotificationManager handleError:error];
 }
 
@@ -209,11 +182,21 @@ forRemoteNotification:(NSDictionary *)userInfo
                                                         completionHandler:completionHandler];
 }
 
+- (BOOL)application:(UIApplication *)__unused application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))__unused restorationHandler {
+    
+    BOOL isCallIntent = [userActivity.activityType isEqualToString:INStartAudioCallIntentIdentifier] || [userActivity.activityType isEqualToString:INStartVideoCallIntentIdentifier];
+    if (isCallIntent) {
+        [QMCore.instance.callManager handleUserActivityWithCallIntent:userActivity];
+    }
+    
+    return YES;
+}
+
 //MARK: - QMPushNotificationManagerDelegate protocol
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    
     UITabBarController *tabBarController = [[(UISplitViewController *)self.window.rootViewController viewControllers] firstObject];
+    
     UIViewController *dialogsVC = [[(UINavigationController *)[[tabBarController viewControllers] firstObject] viewControllers] firstObject];
     
     NSString *activeDialogID = [QMCore instance].activeDialogID;

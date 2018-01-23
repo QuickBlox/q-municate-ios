@@ -206,58 +206,48 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 - (BFTask *)login {
     
-    return [[QMTasks taskAutoLogin] continueWithSuccessBlock:^id(BFTask<QBUUser *> *__unused task) {
-        return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
-    }];
+    return [[QMTasks taskAutoLogin]
+            continueWithSuccessBlock:^id(BFTask<QBUUser *> *task) {
+                return [self.chatService connectWithUserID:task.result.ID password:task.result.password];
+            }];
 }
 
 - (BFTask *)logout {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
+    //TODO: Need move to single object
+    [self.cachedVocabularyStrings removeAllObjects];
+    [[INVocabulary sharedVocabulary] setVocabularyStrings:self.cachedVocabularyStrings
+                                                   ofType:INVocabularyStringTypeContactName];
+    // Clearing contact list cache and memory storage
+    [self.contactListService.contactListMemoryStorage free];
+    [self.openGraphService.memoryStorage free];
     
-    @weakify(self);
+    [QMContactListCache.instance truncateAll];
+    [QMOpenGraphCache.instance truncateAll];
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+    if (self.currentProfile.accountType == QMAccountTypeFacebook) {
+        [QMFacebook logout];
+    }
+    else if (self.currentProfile.accountType == QMAccountTypePhone) {
+        [[FIRAuth auth] signOut:nil];
+    }
+    [self.currentProfile clearProfile];
     
-        [super logoutWithCompletion:^{
-            
-            @strongify(self);
-            if (self.currentProfile.accountType == QMAccountTypeFacebook) {
-                
-                [QMFacebook logout];
-            }
-            else if (self.currentProfile.accountType == QMAccountTypePhone) {
-                
-                [[FIRAuth auth] signOut:nil];
-            }
-            // clearing contact list cache and memory storage
-            [[QMContactListCache instance] deleteContactList:nil];
-            [self.contactListService.contactListMemoryStorage free];
-            [self.openGraphService.memoryStorage free];
-            
-            dispatch_group_t logoutGroup = dispatch_group_create();
-            
-            dispatch_group_enter(logoutGroup);
-            [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
-                [[QMImageLoader instance].imageCache clearMemory];
-                dispatch_group_leave(logoutGroup);
-            }];
-            
-            [self.chatService.chatAttachmentService removeAllMediaFiles];
-            
-            dispatch_group_enter(logoutGroup);
-            [QMOpenGraphCache.instance deleteAllOpenGraphItemsWithCompletion:^{
-                dispatch_group_leave(logoutGroup);
-            }];
-            
-            dispatch_group_notify(logoutGroup, dispatch_get_main_queue(), ^{
-                [self.currentProfile clearProfile];
-                [source setResult:nil];
-            });
-        }];
-        
-        return nil;
+    [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
+        [[QMImageLoader instance].imageCache clearMemory];
     }];
+    
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES]
+     continueWithBlock:^id(BFTask * __unused t)
+     {
+         [super logoutWithCompletion:^{
+             [source setResult:nil];
+         }];
+         
+         return nil;
+         
+     }];
     
     return source.task;
 }
@@ -265,8 +255,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 //MARK: QMContactListServiceCacheDelegate delegate
 
 - (void)cachedContactListItems:(QMCacheCollection)block {
-    
-    [[QMContactListCache instance] contactListItems:block];
+    block([QMContactListCache.instance allContactListItems]);
 }
 
 //MARK: - QMChatServiceDelegate
@@ -314,21 +303,30 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
       contactListDidChange:(QBContactList *)contactList {
     
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
-    
     // load users if needed
-    [self.usersService getUsersWithIDs:[self.contactListService.contactListMemoryStorage userIDsFromContactList]];
-    
-    NSPredicate *predicate =
-    [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
-        return user.fullName.length > 0;
-    }];
-    
-    NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
-    
-    if (friendNames.count) {
-        [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
-        [self updateVocabulary];
+    NSArray<NSNumber *> *IDs = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    if (IDs.count == 0) {
+        return;
     }
+    
+    [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+        
+        NSParameterAssert(IDs.count == t.result.count);
+        
+        NSPredicate *predicate =
+        [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
+            return user.fullName.length > 0;
+        }];
+        
+        NSArray *friendNames = [[self.contactManager.friends filteredArrayUsingPredicate:predicate] valueForKey:@"fullName"];
+        
+        if (friendNames.count) {
+            [self.cachedVocabularyStrings addObjectsFromArray:friendNames];
+            [self updateVocabulary];
+        }
+        
+        return nil;
+    }];
 }
 
 //MARK: QMOpenGraphCacheDataSource
@@ -419,7 +417,9 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
 }
 
 - (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
-
+    
+    NSParameterAssert(QBSession.currentSession.tokenHasExpired == YES);
+    NSParameterAssert(QBSession.currentSession.sessionDetails.token == nil);
 }
 
 - (void)authService:(QMAuthService *)__unused authService

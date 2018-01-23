@@ -54,9 +54,21 @@ static UIFont *labelFont() {
     if (self) {
         
         self.backgroundColor = QMTableViewBackgroundColor();
-        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
         [self addSubview:self.titleLabel];
+        if (@available(iOS 11, *)) {
+            self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+            UILayoutGuide * guide = self.safeAreaLayoutGuide;
+            NSLayoutConstraint *leading = [self.titleLabel.leadingAnchor constraintEqualToAnchor:guide.leadingAnchor];
+            leading.constant = 16;
+            leading.active = YES;
+            
+            [self.titleLabel.trailingAnchor constraintEqualToAnchor:guide.trailingAnchor].active = YES;
+            [self.titleLabel.topAnchor constraintEqualToAnchor:guide.topAnchor].active = YES;
+            [self.titleLabel.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor].active = YES;
+        } else {
+            self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        }
     }
     
     return self;

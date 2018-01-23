@@ -11,9 +11,9 @@
 
 #import "QMTagFieldView.h"
 #import "QMCore.h"
-#import "QMNavigationController.h"
 #import "QMChatVC.h"
 #import "QMHelpers.h"
+#import "SVProgressHUD.h"
 
 @interface QMNewMessageViewController ()
 
@@ -73,12 +73,10 @@ QMTagFieldViewDelegate
     if (tagIDs.count > 1) {
         // creating group chat
         
-        NSArray *fullNames = [tagIDs valueForKeyPath:@keypath(QBUUser.new, fullName)];
+        NSArray *fullNames = [tagIDs valueForKeyPath:qm_keypath(QBUUser, fullName)];
         NSString *name = [fullNames componentsJoinedByString:@", "];
         NSArray *occupantsIDs = [QMCore.instance.contactManager idsOfUsers:tagIDs];
-        
-        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-        __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
+        [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_STR_LOADING", nil)];
         
         __block QBChatDialog *chatDialog = nil;
         
@@ -86,7 +84,7 @@ QMTagFieldViewDelegate
         self.dialogCreationTask = [[[QMCore.instance.chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
             @strongify(self);
-            [navigationController dismissNotificationPanel];
+            [SVProgressHUD dismiss];
             
             if (!task.isFaulted) {
                 
@@ -116,15 +114,13 @@ QMTagFieldViewDelegate
             [self removeControllerFromStack];
         }
         else {
-            
-            [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-            __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
+            [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_STR_LOADING", nil)];
             
             @weakify(self);
             self.dialogCreationTask = [[QMCore.instance.chatService createPrivateChatDialogWithOpponent:user] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
                 
                 @strongify(self);
-                [navigationController dismissNotificationPanel];
+                [SVProgressHUD dismiss];
                 
                 if (!task.isFaulted) {
                     

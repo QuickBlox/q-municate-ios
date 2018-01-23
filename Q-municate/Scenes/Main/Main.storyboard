@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="FCI-lM-7qj">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -83,6 +84,7 @@ out here.</string>
                         <constraint firstItem="a2R-U6-Tau" firstAttribute="centerX" secondItem="rdX-TC-FEa" secondAttribute="centerX" id="k3u-Zw-RPs"/>
                         <constraint firstItem="21S-RQ-hLa" firstAttribute="width" secondItem="rdX-TC-FEa" secondAttribute="height" multiplier="45:184" id="uJ1-Q1-L6D"/>
                     </constraints>
+                    <viewLayoutGuide key="safeArea" id="kcl-zs-7Ci"/>
                 </view>
             </objects>
             <point key="canvasLocation" x="-1727" y="-8661"/>
@@ -127,10 +129,6 @@ out here.</string>
         <scene sceneID="DAe-Pp-cCf">
             <objects>
                 <viewController hidesBottomBarWhenPushed="YES" id="312-xk-x9O" customClass="QMNewMessageViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="csN-5F-4uv"/>
-                        <viewControllerLayoutGuide type="bottom" id="naP-m6-BjI"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="D3L-Fa-dYZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -156,9 +154,10 @@ out here.</string>
                             <constraint firstAttribute="trailingMargin" secondItem="Kqz-t0-q4s" secondAttribute="trailing" constant="-20" id="JwE-A8-C52"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Kqz-t0-q4s" secondAttribute="bottom" id="YZW-sv-dBa"/>
                             <constraint firstItem="Kqz-t0-q4s" firstAttribute="leading" secondItem="D3L-Fa-dYZ" secondAttribute="leadingMargin" constant="-20" id="iIB-q9-gJY"/>
-                            <constraint firstItem="PV0-ej-tkc" firstAttribute="top" secondItem="csN-5F-4uv" secondAttribute="bottom" id="oaO-IX-iVo"/>
+                            <constraint firstItem="PV0-ej-tkc" firstAttribute="top" secondItem="KP9-Fh-7x1" secondAttribute="top" id="oaO-IX-iVo"/>
                             <constraint firstAttribute="trailingMargin" secondItem="PV0-ej-tkc" secondAttribute="trailing" constant="-20" id="q2x-5p-Azk"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="KP9-Fh-7x1"/>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="New Message" id="L45-qf-VdP">
@@ -202,10 +201,6 @@ out here.</string>
         <scene sceneID="Uex-YR-GMw">
             <objects>
                 <viewController restorationIdentifier="ViewControllerNoSelection" storyboardIdentifier="ViewControllerNoSelection" id="nI4-LA-Hfc" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="IOW-IO-0mY"/>
-                        <viewControllerLayoutGuide type="bottom" id="wna-Fh-SKm"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vHP-0k-RMj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -216,11 +211,12 @@ out here.</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wna-Fh-SKm" firstAttribute="top" secondItem="A6t-bd-vnt" secondAttribute="bottom" id="IFJ-dC-oe9"/>
-                            <constraint firstItem="A6t-bd-vnt" firstAttribute="top" secondItem="IOW-IO-0mY" secondAttribute="bottom" id="NJr-zP-j8q"/>
-                            <constraint firstItem="A6t-bd-vnt" firstAttribute="leading" secondItem="vHP-0k-RMj" secondAttribute="leading" id="mcb-oJ-fDw"/>
-                            <constraint firstAttribute="trailing" secondItem="A6t-bd-vnt" secondAttribute="trailing" id="zTf-8v-INz"/>
+                            <constraint firstItem="jkD-7w-deg" firstAttribute="bottom" secondItem="A6t-bd-vnt" secondAttribute="bottom" id="IFJ-dC-oe9"/>
+                            <constraint firstItem="A6t-bd-vnt" firstAttribute="top" secondItem="jkD-7w-deg" secondAttribute="top" id="NJr-zP-j8q"/>
+                            <constraint firstItem="A6t-bd-vnt" firstAttribute="leading" secondItem="jkD-7w-deg" secondAttribute="leading" id="mcb-oJ-fDw"/>
+                            <constraint firstItem="jkD-7w-deg" firstAttribute="trailing" secondItem="A6t-bd-vnt" secondAttribute="trailing" id="zTf-8v-INz"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="jkD-7w-deg"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Che-ZV-Qcq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -331,14 +327,11 @@ out here.</string>
         <scene sceneID="uD7-Xf-iCz">
             <objects>
                 <viewController storyboardIdentifier="QMChatVC" title="ChatVC" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="tuk-08-fQq" customClass="QMChatVC" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="sVY-fU-EIq"/>
-                        <viewControllerLayoutGuide type="bottom" id="SCw-m4-fka"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dYl-Nc-bFj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="KXy-ye-8py"/>
                     </view>
                     <navigationItem key="navigationItem" id="WVr-hG-2uC"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -353,22 +346,30 @@ out here.</string>
                     <rect key="frame" x="0.0" y="0.0" width="173" height="36"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ay-fb-r0U">
-                            <rect key="frame" x="0.0" y="3" width="173" height="17"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ay-fb-r0U">
+                            <rect key="frame" x="0.0" y="0.0" width="173" height="18"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                             <color key="textColor" red="0.43137254899999999" green="0.43137254899999999" blue="0.43137254899999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJx-MI-YV7">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJx-MI-YV7">
                             <rect key="frame" x="0.0" y="18" width="173" height="15"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="7ay-fb-r0U" firstAttribute="leading" secondItem="FUb-Qb-P6t" secondAttribute="leading" id="516-PS-9rC"/>
+                        <constraint firstItem="UJx-MI-YV7" firstAttribute="top" secondItem="7ay-fb-r0U" secondAttribute="bottom" id="51d-yO-Bhr"/>
+                        <constraint firstItem="FUb-Qb-P6t" firstAttribute="bottom" secondItem="UJx-MI-YV7" secondAttribute="bottom" constant="3" id="Nl7-9f-WPT"/>
+                        <constraint firstItem="7ay-fb-r0U" firstAttribute="top" secondItem="FUb-Qb-P6t" secondAttribute="top" id="VNP-zm-sqo"/>
+                        <constraint firstItem="UJx-MI-YV7" firstAttribute="trailing" secondItem="FUb-Qb-P6t" secondAttribute="trailing" id="cgj-93-gUZ"/>
+                        <constraint firstItem="UJx-MI-YV7" firstAttribute="leading" secondItem="FUb-Qb-P6t" secondAttribute="leading" id="nbI-CP-dEt"/>
+                        <constraint firstItem="7ay-fb-r0U" firstAttribute="trailing" secondItem="FUb-Qb-P6t" secondAttribute="trailing" id="oTQ-ns-3Ej"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="FUb-Qb-P6t"/>
                     <connections>
                         <action selector="onlineTitlePressed" destination="tuk-08-fQq" eventType="touchUpInside" id="KtQ-Zp-VW6"/>
                         <outlet property="statusLabel" destination="UJx-MI-YV7" id="lzn-ja-ojD"/>
@@ -440,6 +441,6 @@ out here.</string>
         <image name="qm-tb-settings" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="SCD-ix-MHd"/>
+        <segue reference="LJb-6W-9Cm"/>
     </inferredMetricsTieBreakers>
 </document>

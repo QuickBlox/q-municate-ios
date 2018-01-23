@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bKY-DK-nee">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bKY-DK-nee">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -10,15 +14,12 @@
         <scene sceneID="coi-fO-T4a">
             <objects>
                 <viewController modalTransitionStyle="flipHorizontal" id="bKY-DK-nee" customClass="QMSplashViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="aw5-FH-71P"/>
-                        <viewControllerLayoutGuide type="bottom" id="KRL-4V-bI6"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BWA-Jh-VHm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_splash" translatesAutoresizingMaskIntoConstraints="NO" id="vjz-zX-hEI">
+                                <rect key="frame" x="127.5" y="273.5" width="120" height="120"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="Dhq-RR-dRI"/>
                                     <constraint firstAttribute="height" constant="120" id="ofq-i5-XHn"/>
@@ -27,9 +28,10 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="vjz-zX-hEI" firstAttribute="centerX" secondItem="BWA-Jh-VHm" secondAttribute="centerX" id="4jh-TJ-FGu"/>
+                            <constraint firstItem="vjz-zX-hEI" firstAttribute="centerX" secondItem="rrE-eZ-azW" secondAttribute="centerX" id="4jh-TJ-FGu"/>
                             <constraint firstItem="vjz-zX-hEI" firstAttribute="centerY" secondItem="BWA-Jh-VHm" secondAttribute="centerY" id="DZg-qc-4BW"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="rrE-eZ-azW"/>
                     </view>
                     <navigationItem key="navigationItem" id="FNq-5Y-cZb"/>
                     <connections>

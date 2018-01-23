@@ -16,7 +16,7 @@
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <Bolts/Bolts.h>
 
-static const NSUInteger kQMDialogsPageLimit = 10;
+static const NSUInteger kQMDialogsPageLimit = 100;
 static const NSUInteger kQMUsersPageLimit = 100;
 
 @implementation QMTasks
@@ -156,17 +156,27 @@ static const NSUInteger kQMUsersPageLimit = 100;
 
 + (BFTask *)taskFetchAllData {
     
-    NSMutableArray *usersLoadingTasks = [NSMutableArray array];
+    NSMutableArray<BFTask<NSArray<QBUUser *>*>*> *usersLoadingTasks = [NSMutableArray array];
     
     QMCore *core = QMCore.instance;
     
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) =
     ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
         
-        [usersLoadingTasks addObject:[core.usersService getUsersWithIDs:dialogsUsersIDs.allObjects]];
+        if (dialogsUsersIDs.count > 0) {
+            
+            [self sliceArray:dialogsUsersIDs.allObjects
+                       limit:kQMUsersPageLimit
+                   enumerate:^(NSArray *slice, NSRange __unused range)
+            {
+                BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:slice];
+                [usersLoadingTasks addObject:task];
+            }];
+        }
     };
     
     BFContinuationBlock completionBlock = ^id _Nullable(BFTask *task) {
+        
         if (core.currentProfile.userData && !task.isFaulted) {
             
             core.currentProfile.lastDialogsFetchingDate = [NSDate date];
@@ -180,6 +190,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     };
     
     NSDate *date = core.currentProfile.lastDialogsFetchingDate;
+    
     if (date) {
         
         return [[core.chatService
@@ -201,11 +212,14 @@ static const NSUInteger kQMUsersPageLimit = 100;
     QMCore *core = QMCore.instance;
     
     NSDate *lastUserFetchDate = core.currentProfile.lastUserFetchDate;
+    
     NSMutableArray *contactsIDs = [[core.contactListService.contactListMemoryStorage userIDsFromContactList] mutableCopy];
     [contactsIDs addObject:@(core.currentProfile.userData.ID)];
+    
     NSString *dateFilter = nil;
     
     if (lastUserFetchDate != nil) {
+        
         static NSDateFormatter *dateFormatter = nil;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -217,24 +231,18 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     NSMutableArray *tasks = [[NSMutableArray alloc] init];
     
-    NSRange range;
-    range.location = 0;
-    range.length = contactsIDs.count > kQMUsersPageLimit ? kQMUsersPageLimit : contactsIDs.count;
-    
-    while (range.location < contactsIDs.count) {
-        
-        NSArray *subArray = [contactsIDs subarrayWithRange:range];
+    [self sliceArray:contactsIDs
+               limit:kQMUsersPageLimit
+           enumerate:^(NSArray *slice, NSRange range)
+    {
         QBGeneralResponsePage *page =
-        [QBGeneralResponsePage responsePageWithCurrentPage:1 perPage:range.length];
-        
-        BFTask *task = [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(subArray, dateFilter)
-                                                                    page:page];
+        [QBGeneralResponsePage responsePageWithCurrentPage:1
+                                                   perPage:range.length];
+        BFTask *task =
+        [core.usersService searchUsersWithExtendedRequest:filterForUsersFetch(slice, dateFilter)
+                                                     page:page];
         [tasks addObject:task];
-        
-        range.location += range.length;
-        NSUInteger diff = contactsIDs.count - range.location;
-        range.length = diff > kQMUsersPageLimit ? kQMUsersPageLimit : diff;
-    }
+    }];
     
     BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask * __unused t) {
         core.currentProfile.lastUserFetchDate = [NSDate date];
@@ -243,6 +251,23 @@ static const NSUInteger kQMUsersPageLimit = 100;
     }];
     
     return task;
+}
+
++ (void)sliceArray:(NSArray *)array
+             limit:(NSUInteger)limit
+         enumerate:(void(^)(NSArray *slice, NSRange range))enumerate {
+    
+    NSRange range = NSMakeRange(0, array.count > limit ? limit : array.count);
+    
+    while (range.location < array.count) {
+        
+        NSArray *slice = [array subarrayWithRange:range];
+        enumerate(slice, range);
+        
+        range.location += range.length;
+        NSUInteger diff = array.count - range.location;
+        range.length = diff > limit ? limit : diff;
+    }
 }
 
 static inline NSDictionary *filterForUsersFetch(NSArray *usersIDs, NSString *dateFilter) {

@@ -34,7 +34,6 @@ UINavigationBarDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         self.navigationBar.prefersLargeTitles = YES;
@@ -104,6 +103,20 @@ UINavigationBarDelegate
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kQMNavigationBarHeightChangeNotification
      object:nil];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+    //Fix hidesBottomBarWhenPushed
+    UITabBarController *tabBarController = self.tabBarController;
+    if (tabBarController != nil && self.hidesBottomBarWhenPushed) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tabBarController.tabBar setHidden:YES];
+        });
+    }
+    [super viewWillTransitionToSize:size
+          withTransitionCoordinator:coordinator];
 }
 
 // MARK: - UINavigationBarDelegate

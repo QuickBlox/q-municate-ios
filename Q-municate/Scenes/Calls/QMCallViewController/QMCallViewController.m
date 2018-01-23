@@ -43,6 +43,9 @@ QBRTCClientDelegate,
 QMCallManagerDelegate,
 QBRTCAudioSessionDelegate
 >
+{
+    id _didBecomeActiveObserver;
+}
 
 @property (assign, nonatomic) QMCallState callState;
 
@@ -92,7 +95,7 @@ QBRTCAudioSessionDelegate
 //MARK: - Life cycle
 
 - (void)dealloc {
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
@@ -137,6 +140,21 @@ QBRTCAudioSessionDelegate
         self.localVideoView.autoresizingMask = self.opponentVideoView.autoresizingMask;
         
         [self.view addSubview:self.localVideoView];
+        
+        @weakify(self);
+        _didBecomeActiveObserver = [[NSNotificationCenter defaultCenter]
+                                    addObserverForName:UIApplicationDidBecomeActiveNotification
+                                    object:nil
+                                    queue:nil
+                                    usingBlock:^(NSNotification * __unused note) {
+                                        @strongify(self);
+                                        if (self.session.conferenceType == QBRTCConferenceTypeVideo) {
+                                            QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+                                            if (audioSession.currentAudioDevice != QBRTCAudioDeviceSpeaker) {
+                                                audioSession.currentAudioDevice = QBRTCAudioDeviceSpeaker;
+                                            }
+                                        }
+                                    }];
     }
     
     [self configureCallController];
@@ -149,13 +167,20 @@ QBRTCAudioSessionDelegate
     
     [self configureCallInfoView];
     [self configureToolbar];
+    
+    if (self.isVideoCall
+        && self.callState == QMCallStateActiveVideoCall) {
+        // configuring active video call
+        [self configureVideoCall];
+    }
 }
 
 - (void)configureCallInfoView {
     
     QBUUser *opponentUser = [QMCore.instance.callManager opponentUser];
     
-    if (self.callInfoView == nil) {
+    if (self.callInfoView == nil
+        && self.callState != QMCallStateActiveVideoCall) {
         // base call info view configuration
         self.callInfoView = [QMCallInfoView callInfoViewWithUser:opponentUser];
         
@@ -352,8 +377,6 @@ QBRTCAudioSessionDelegate
                 [self configureCallController];
                 
                 [self.session acceptCall:nil];
-                
-                [self configureVideoCall];
             }];
             
             break;
@@ -397,11 +420,11 @@ QBRTCAudioSessionDelegate
         if (self.callState == QMCallStateActiveAudioCall ||
             self.callState == QMCallStateActiveVideoCall) {
             
-            bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) ,
-                          QMStringForTimeInterval(self.callDuration)];
-            
             [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
                                                                      duration:self.callDuration];
+            
+            bottomText = [NSString stringWithFormat:@"%@ - %@", NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil) ,
+                          QMStringForTimeInterval(self.callDuration)];
         }
         else {
             
@@ -496,10 +519,8 @@ QBRTCAudioSessionDelegate
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
-    @weakify(self);
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> __unused context) {
         
-        @strongify(self);
         if (self.callState == QMCallStateActiveVideoCall) {
             // This block is used to update layout for views
             // after interface orientation change
@@ -672,13 +693,15 @@ QBRTCAudioSessionDelegate
     [QMCore.instance.callManager stopAllSounds];
     
     if (![self.session.initiatorID isEqualToNumber:userID]) {
-        // there is QBRTC bug, when userID is always opponents iD
+        // there is QBRTC bug, when userID is always opponents ID
         // even  for user, who did not answer, this delegate will be called
         // with opponent user ID
         [QMCore.instance.callManager sendCallNotificationMessageWithState:QMCallNotificationStateMissedNoAnswer duration:0];
+        self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
     }
-    
-    self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_USER_DOESNT_ANSWER", nil);
+    else {
+        self.callInfoView.bottomText = NSLocalizedString(@"QM_STR_CALL_WAS_STOPPED", nil);
+    }
 }
 
 - (void)session:(QBRTCSession *)session rejectedByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
@@ -706,11 +729,6 @@ QBRTCAudioSessionDelegate
     
     self.callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
     [self configureCallController];
-    
-    if (self.isVideoCall) {
-        // configuring video call
-        [self configureVideoCall];
-    }
 }
 
 - (void)session:(QBRTCSession *)session hungUpByUser:(NSNumber *)__unused userID userInfo:(NSDictionary *)__unused userInfo {
@@ -780,7 +798,12 @@ QBRTCAudioSessionDelegate
     
     [[QMCore instance].callManager stopAllSounds];
     
-    [[QBRTCAudioSession instance] deinitialize];
+    QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
+    if (audioSession.isInitialized
+        && ![audioSession audioSessionIsActivatedOutside:[AVAudioSession sharedInstance]]) {
+        QMLog(@"Deinitializing QBRTCAudioSession in CallViewController.");
+        [audioSession deinitialize];
+    }
     
     if (self.isVideoCall) {
         
@@ -794,6 +817,13 @@ QBRTCAudioSessionDelegate
 
 - (void)callManager:(QMCallManager *)__unused callManager willCloseCurrentSession:(QBRTCSession *)__unused session {
     
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground
+        && (self.callState == QMCallStateActiveAudioCall
+            || self.callState == QMCallStateActiveVideoCall)) {
+            
+            [QMSoundManager playEndOfCallSound];
+    }
+    
     if (self.cameraCapture != nil) {
         
         [self.cameraCapture stopSession:nil];
@@ -802,7 +832,19 @@ QBRTCAudioSessionDelegate
 }
 
 - (void)callManager:(nonnull QMCallManager *)__unused callManager willChangeActiveCallState:(BOOL)__unused willHaveActiveCall {
-    
+}
+
+- (void)callManagerDidChangeMicrophoneState:(QMCallManager *)__unused callManager {
+    self.muteButton.selected ^= 1;
+}
+
+- (void)callManagerCallWasEndedByCallKit:(QMCallManager *)callManager {
+    if (self.callState == QMCallStateActiveAudioCall
+        || self.callState == QMCallStateActiveVideoCall) {
+        
+        [callManager sendCallNotificationMessageWithState:QMCallNotificationStateHangUp
+                                                 duration:self.callDuration];
+    }
 }
 
 // MARK: - QBRTCAudioSessionDelegate
