@@ -383,7 +383,7 @@ QBChatDelegate
     
     self.hasActiveCall = NO;
     
-    if (QMCallKitAdapter.isCallKitAvailable) {
+    if (QMCallKitAdapter.isCallKitAvailable && self.callUUID) {
         [self.callKitAdapter endCallWithUUID:self.callUUID completion:nil];
         self.callUUID = nil;
     }
