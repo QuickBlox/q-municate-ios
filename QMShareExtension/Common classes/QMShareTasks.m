@@ -200,9 +200,29 @@ static NSSet<NSString *>*acceptableTypes() {
             return [BFTask taskWithError:error];
         }];
     }
-    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie] ||
-             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio] ||
-             [provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
+    else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeMovie]) {
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                                      typeIdentifier:(NSString *)kUTTypeMovie];
+        
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+            
+            NSAssert([t.result isKindOfClass:NSURL.self], @"");
+            return [self taskProvideResultWithAttachmentForFileURL:t.result
+                                                   typeIdentifiers:provider.registeredTypeIdentifiers];
+        }];
+    }
+    else if  ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeAudio]) {
+        QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
+                                                                                      typeIdentifier:(NSString *)kUTTypeAudio];
+        
+        return [[itemProvider taskLoadItem] continueWithSuccessBlock:^id _Nullable(BFTask<NSURL *> * _Nonnull t) {
+            
+            NSAssert([t.result isKindOfClass:NSURL.self], @"");
+            return [self taskProvideResultWithAttachmentForFileURL:t.result
+                                                   typeIdentifiers:provider.registeredTypeIdentifiers];
+        }];
+    }
+     else if ([provider hasItemConformingToTypeIdentifier:(NSString *)kUTTypeFileURL]) {
         
         QMItemProviderLoader<NSURL *> *itemProvider = [[QMItemProviderLoader alloc] initWithProvider:provider
                                                                                       typeIdentifier:(NSString *)kUTTypeFileURL];

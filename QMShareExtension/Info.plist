@@ -31,17 +31,20 @@
     SUBQUERY (
         $extensionItem.attachments,
         $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.file-url&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mpeg-4&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.png&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.jpeg&quot; OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot; OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.plain-text&quot; OR
-		    ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mpeg-4-audio&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;com.apple.m4a-audio&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.mp3&quot; OR
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.data&quot;
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.image&quot; ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.audiovisual-content&quot; ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.plain-text&quot;
     ).@count == 1
+).@count == 1
+OR
+SUBQUERY (
+    extensionItems,
+    $extensionItem,
+    SUBQUERY (
+        $extensionItem.attachments,
+        $attachment,
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot;
+    ).@count &gt;= 1
 ).@count == 1</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
