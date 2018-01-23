@@ -125,8 +125,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     [super viewWillAppear:animated];
     
     if (self.searchController.isActive) {
-        
-        self.tabBarController.tabBar.hidden = YES;
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.searchResultsController.tableView];
     }
@@ -288,11 +286,11 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
     self.additionalNavigationBarHeight = 0;
     self.searchResultsController.tableView.dataSource = self.dialogsSearchDataSource;
-    self.tabBarController.tabBar.hidden = YES;
+    
 }
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
-    self.tabBarController.tabBar.hidden = NO;
+
 }
 
 - (void)didDismissSearchController:(UISearchController *)__unused searchController {

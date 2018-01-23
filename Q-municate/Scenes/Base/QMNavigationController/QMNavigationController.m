@@ -107,6 +107,8 @@ UINavigationBarDelegate
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
+    [super viewWillTransitionToSize:size
+          withTransitionCoordinator:coordinator];
     //Fix hidesBottomBarWhenPushed
     UITabBarController *tabBarController = self.tabBarController;
     if (tabBarController != nil && self.hidesBottomBarWhenPushed) {
@@ -115,8 +117,6 @@ UINavigationBarDelegate
             [tabBarController.tabBar setHidden:YES];
         });
     }
-    [super viewWillTransitionToSize:size
-          withTransitionCoordinator:coordinator];
 }
 
 // MARK: - UINavigationBarDelegate

@@ -117,7 +117,7 @@ PODS:
     - QMCVDevelopment/Utils
     - SDWebImage
     - TTTAttributedLabel
-  - QMServicesDevelopment (0.5.5):
+  - QMServicesDevelopment (0.6):
     - Bolts (>= 1.9.0)
   - Reachability (3.2)
   - SAMKeychain (1.5.3)
@@ -162,10 +162,10 @@ CHECKOUT OPTIONS:
     :git: https://github.com/NYTimes/NYTPhotoViewer.git
     :tag: v2.0.0
   QMCVDevelopment:
-    :commit: cd281c7cd8ff54d8736eab31e4c2755421fe3b9b
+    :commit: f1ca817956619497b21f785a0b177842503df082
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 2e0604bd9624f3badcdd030ddf0e9af680d89ca8
+    :commit: 420ee5205b294b228326752543dd07144eaa8910
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -190,7 +190,7 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NYTPhotoViewer: 34b8bd6bcc297466adec1668f9a01249d73c90e6
   QMCVDevelopment: 521cac3a8abf5c40c16f9aa45d590f7b01c3baba
-  QMServicesDevelopment: 025569df757b87dbd7e304dce392bb888284b9be
+  QMServicesDevelopment: 3749a800221ce209f4a9912406f1592b4ceb42f4
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431

@@ -475,6 +475,8 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                 }
             else if (image) {
                 
+                __strong __typeof(weakOperation) strongOperation = weakOperation;
+                
                 if (transform) {
                     
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -491,7 +493,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                             
                             
                             dispatch_main_async_safe(^{
-                                __strong __typeof(weakOperation) strongOperation = weakOperation;
+                                
                                 if (strongOperation && !strongOperation.isCancelled) {
                                     completedBlock(image, transformedImage, nil, cacheType, YES, url);
                                 }
@@ -502,9 +504,8 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                         }
                         else {
                             
-                            
                             dispatch_main_async_safe(^{
-                                __strong __typeof(weakOperation) strongOperation = weakOperation;
+                                
                                 if (strongOperation && !strongOperation.isCancelled) {
                                     completedBlock(image, transformedImage, nil, cacheType, YES, url);
                                 }
@@ -518,7 +519,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                 } else {
                     
                     dispatch_main_async_safe(^{
-                        __strong __typeof(weakOperation) strongOperation = weakOperation;
+                        
                         if (strongOperation && !strongOperation.isCancelled) {
                             completedBlock(image, nil, nil, cacheType, YES, url);
                         }
@@ -549,12 +550,14 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
          {
              if (tranformedImageFromCache) {
                  
+                 __strong __typeof(weakOperation) strongOperation = weakOperation;
+                 
                  dispatch_main_async_safe(^{
-                     __strong __typeof(weakOperation) strongOperation = weakOperation;
                      if (strongOperation && !strongOperation.isCancelled) {
                          completedBlock(nil, tranformedImageFromCache, nil, cacheType, YES, url);
                      }
                  });
+                 
                  [weakSelf safelyRemoveOperationFromRunning:weakOperation];
                  return;
              }
@@ -683,3 +686,4 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
 }
 
 @end
+
