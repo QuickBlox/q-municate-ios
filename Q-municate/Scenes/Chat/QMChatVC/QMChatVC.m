@@ -366,7 +366,7 @@ TTTAttributedLabelDelegate
     
     self.messagesToRead = [NSMutableSet set];
     
-    self.progressView.tintColor = QMChatOutgoingCellColor();
+    self.progressView.tintColor = QMChatProgressColor();
     
 }
 
