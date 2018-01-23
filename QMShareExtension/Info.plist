@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>2.7</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2002</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -31,9 +31,9 @@
     SUBQUERY (
         $extensionItem.attachments,
         $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.image&quot; ||
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.audiovisual-content&quot; ||
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.plain-text&quot;
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image" ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.audiovisual-content" ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.plain-text"
     ).@count == 1
 ).@count == 1
 OR
@@ -43,7 +43,7 @@ SUBQUERY (
     SUBQUERY (
         $extensionItem.attachments,
         $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot;
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url"
     ).@count &gt;= 1
 ).@count == 1</string>
 		</dict>
