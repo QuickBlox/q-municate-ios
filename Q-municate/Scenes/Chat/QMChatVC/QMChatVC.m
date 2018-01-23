@@ -365,6 +365,9 @@ TTTAttributedLabelDelegate
     self.topContentAdditionalInset = _additionalNavigationBarHeight;
     
     self.messagesToRead = [NSMutableSet set];
+    
+    self.progressView.tintColor = QMChatOutgoingCellColor();
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -459,7 +462,13 @@ TTTAttributedLabelDelegate
 }
 
 - (void)refreshMessages {
+    
     // Retrieving message from Quickblox REST history and cache.
+    
+    if (self.storedMessages.count == 0) {
+        [self startSpinProgress];
+    }
+    
     [QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
                                            iterationBlock:nil];
 }
@@ -473,6 +482,7 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
         forDialogID:(NSString *)__unused dialogID {
     
     if (![self.dialogID isEqualToString:dialogID]) return;
+    if (!self.progressView.hidden) [self stopSpinProgress];
     
     [self.chatDataSource addMessages:messages];
 }
@@ -2024,6 +2034,7 @@ didPerformAction:(SEL)action
             [QMCore.instance.openGraphService preloadGraphItemForText:message.text ID:message.ID];
         }
         [self.chatDataSource addMessages:messages];
+        if (!self.progressView.hidden) [self stopSpinProgress];
     }
 }
 
