@@ -346,22 +346,29 @@ out here.</string>
                     <rect key="frame" x="0.0" y="0.0" width="173" height="36"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ay-fb-r0U">
-                            <rect key="frame" x="0.0" y="3" width="173" height="17"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ay-fb-r0U">
+                            <rect key="frame" x="0.0" y="0.0" width="173" height="18"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                             <color key="textColor" red="0.43137254899999999" green="0.43137254899999999" blue="0.43137254899999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJx-MI-YV7">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJx-MI-YV7">
                             <rect key="frame" x="0.0" y="18" width="173" height="15"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="0.56078431370000004" green="0.5568627451" blue="0.58039215690000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="7ay-fb-r0U" firstAttribute="leading" secondItem="FUb-Qb-P6t" secondAttribute="leading" id="516-PS-9rC"/>
+                        <constraint firstItem="UJx-MI-YV7" firstAttribute="top" secondItem="7ay-fb-r0U" secondAttribute="bottom" id="51d-yO-Bhr"/>
+                        <constraint firstItem="FUb-Qb-P6t" firstAttribute="bottom" secondItem="UJx-MI-YV7" secondAttribute="bottom" constant="3" id="Nl7-9f-WPT"/>
+                        <constraint firstItem="7ay-fb-r0U" firstAttribute="top" secondItem="FUb-Qb-P6t" secondAttribute="top" id="VNP-zm-sqo"/>
+                        <constraint firstItem="UJx-MI-YV7" firstAttribute="trailing" secondItem="FUb-Qb-P6t" secondAttribute="trailing" id="cgj-93-gUZ"/>
+                        <constraint firstItem="UJx-MI-YV7" firstAttribute="leading" secondItem="FUb-Qb-P6t" secondAttribute="leading" id="nbI-CP-dEt"/>
+                        <constraint firstItem="7ay-fb-r0U" firstAttribute="trailing" secondItem="FUb-Qb-P6t" secondAttribute="trailing" id="oTQ-ns-3Ej"/>
+                    </constraints>
                     <viewLayoutGuide key="safeArea" id="FUb-Qb-P6t"/>
                     <connections>
                         <action selector="onlineTitlePressed" destination="tuk-08-fQq" eventType="touchUpInside" id="KtQ-Zp-VW6"/>
