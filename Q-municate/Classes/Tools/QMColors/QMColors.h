@@ -33,4 +33,5 @@ UIColor *QMChatEmojiiKeyboardTintColor(void);
 UIColor *QMChatIncomingLinkColor(void);
 UIColor *QMChatCellIncomingHighlightedColor(void);
 UIColor *QMChatCellOutgoingHighlightedColor(void);
+UIColor *QMChatProgressColor(void);
 
