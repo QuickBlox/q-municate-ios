@@ -14,7 +14,7 @@
         <!--Change password-->
         <scene sceneID="0MP-xR-dfc">
             <objects>
-                <tableViewController id="xlr-cy-xj3" customClass="QMChangePasswordViewController" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="xlr-cy-xj3" customClass="QMChangePasswordViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="qzD-sb-CvO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -557,7 +557,7 @@
         <!--Update User View Controller-->
         <scene sceneID="7DJ-f3-Ayg">
             <objects>
-                <tableViewController id="wnD-Fc-JNZ" customClass="QMUpdateUserViewController" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="wnD-Fc-JNZ" customClass="QMUpdateUserViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="none" rowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="bjN-4A-Mjy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -572,7 +572,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7Vn-Js-Fhp">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="7Vn-Js-Fhp">
                                                     <rect key="frame" x="27" y="11" width="321" height="21"/>
                                                     <accessibility key="accessibilityConfiguration" hint="hjkjkhjkjhkl" label="gdfgdfgd"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
