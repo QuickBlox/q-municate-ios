@@ -100,7 +100,9 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
         self.view.backgroundColor = self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
-        self.view.backgroundColor = !self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
+        [UIView animateWithDuration:0.2 animations:^{
+            self.view.backgroundColor = !self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
+        }];
     }];
 }
 
@@ -123,6 +125,7 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
     NSMutableArray *viewControllers = [primaryNavigationController.viewControllers mutableCopy];
     [viewControllers addObjectsFromArray:detailViewControllers];
     [primaryNavigationController setViewControllers:[viewControllers copy]];
+    
     
     return YES;
 }

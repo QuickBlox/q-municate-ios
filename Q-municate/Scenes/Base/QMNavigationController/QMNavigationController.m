@@ -41,7 +41,9 @@ UINavigationBarDelegate
 #endif
 }
 
-- (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
+- (void)showNotificationWithType:(QMNotificationPanelType)notificationType
+                         message:(NSString *)message
+                        duration:(NSTimeInterval)duration {
     
     if ([self.navigationBar isKindOfClass:[QMNavigationBar class]]) {
         
@@ -103,20 +105,6 @@ UINavigationBarDelegate
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kQMNavigationBarHeightChangeNotification
      object:nil];
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    
-    [super viewWillTransitionToSize:size
-          withTransitionCoordinator:coordinator];
-    //Fix hidesBottomBarWhenPushed
-    UITabBarController *tabBarController = self.tabBarController;
-    if (tabBarController != nil && self.hidesBottomBarWhenPushed) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [tabBarController.tabBar setHidden:YES];
-        });
-    }
 }
 
 // MARK: - UINavigationBarDelegate
