@@ -60,7 +60,6 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
     self.navigationItem.leftItemsSupplementBackButton = YES;
     
     self.textField.delegate = self;
-    self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     
     [QMValidationCell registerForReuseInTableView:self.tableView];
     // configure appearance
@@ -85,7 +84,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
                                   text:currentUser.fullName
                             bottomText:nil];
             
-            self.textField.keyboardType = UIKeyboardTypeAlphabet;
+            self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
             
         case QMUpdateUserFieldEmail:
@@ -103,7 +102,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
                                  title:NSLocalizedString(@"QM_STR_STATUS", nil)
                                   text:currentUser.status
                             bottomText:NSLocalizedString(@"QM_STR_STATUS_DESCRIPTION", nil)];
-            self.textField.keyboardType = UIKeyboardTypeAlphabet;
+            self.textField.keyboardType = UIKeyboardTypeDefault;
             break;
             
         case QMUpdateUserFieldNone:
