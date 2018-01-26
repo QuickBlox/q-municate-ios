@@ -240,10 +240,9 @@ TTTAttributedLabelDelegate
         self.navigationItem.largeTitleDisplayMode = UINavigationItemLargeTitleDisplayModeNever;
     }
 #endif
+    [self.tabBarController.tabBar setTranslucent:YES];
     
-    self.collectionView.collectionViewLayout.minimumLineSpacing = 8.0f;
     self.collectionView.backgroundColor = [UIColor clearColor];
-    
     self.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
     self.navigationItem.leftItemsSupplementBackButton = YES;
     // setting up chat controller
@@ -368,6 +367,10 @@ TTTAttributedLabelDelegate
     
     self.progressView.tintColor = QMChatProgressColor();
     
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = YES;
+    
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -381,7 +384,7 @@ TTTAttributedLabelDelegate
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification
                                                       object:nil
                                                        queue:nil
-                                                  usingBlock:^(NSNotification * _Nonnull __unused note)
+                                                  usingBlock:^(NSNotification *__unused note)
      {
          @strongify(self);
          
@@ -395,7 +398,6 @@ TTTAttributedLabelDelegate
          }
      }];
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated {
     
@@ -2060,6 +2062,8 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
         forDialogID:(NSString *)dialogID {
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
+        
+        if (!self.progressView.hidden) [self stopSpinProgress];
         [self handleAddedMessage:message];
     }
 }
