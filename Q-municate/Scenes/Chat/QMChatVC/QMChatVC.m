@@ -471,8 +471,12 @@ TTTAttributedLabelDelegate
         [self startSpinProgress];
     }
     
-    [QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
-                                           iterationBlock:nil];
+    [[QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
+                                           iterationBlock:nil]
+     continueWithBlock:^id(BFTask<NSArray<QBChatMessage *> *> * __unused t) {
+        if (!self.progressView.hidden) [self stopSpinProgress];
+        return nil;
+    }];
 }
 
 - (void)syncWithCache {
@@ -484,7 +488,6 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
         forDialogID:(NSString *)__unused dialogID {
     
     if (![self.dialogID isEqualToString:dialogID]) return;
-    if (!self.progressView.hidden) [self stopSpinProgress];
     
     [self.chatDataSource addMessages:messages];
 }
@@ -2036,7 +2039,6 @@ didPerformAction:(SEL)action
             [QMCore.instance.openGraphService preloadGraphItemForText:message.text ID:message.ID];
         }
         [self.chatDataSource addMessages:messages];
-        if (!self.progressView.hidden) [self stopSpinProgress];
     }
 }
 
@@ -2063,7 +2065,6 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
     
     if ([self.chatDialog.ID isEqualToString:dialogID]) {
         
-        if (!self.progressView.hidden) [self stopSpinProgress];
         [self handleAddedMessage:message];
     }
 }
