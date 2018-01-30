@@ -67,12 +67,6 @@
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
-    // Handling push notifications if needed
-    if (launchOptions != nil) {
-        NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
-    }
-    
     // not returning this method as launch options are not ONLY related to facebook
     // for example when facebook returns NO in this method, callkit call from contacts
     // app will not be handled. Facebook should not decide if URL should be handled for everything
@@ -100,9 +94,7 @@
         
         [QMCore instance].pushNotificationManager.pushNotification = userInfo;
         // calling dispatch async for push notification handling to have priority in main queue
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
-        });
+        [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
     }
 }
 

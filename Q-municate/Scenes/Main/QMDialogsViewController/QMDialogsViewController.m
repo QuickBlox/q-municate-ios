@@ -30,8 +30,7 @@ static const NSInteger kQMUnauthorizedErrorCode = -1011;
 @interface QMDialogsViewController ()
 
 <QMUsersServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate,
-UITableViewDelegate, UISearchControllerDelegate, UISearchResultsUpdating,
-QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate,
+UITableViewDelegate, UISearchControllerDelegate, UISearchResultsUpdating, QMDialogsDataSourceDelegate,
 QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *placeholderView;
@@ -173,10 +172,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                         
                         return [QMCore.instance logout];
                     }
-        }
-        
-        if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
-            [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
         }
         
         if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
@@ -388,14 +383,6 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 - (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)__unused dialogs {
     
     [self.tableView reloadData];
-}
-
-//MARK: - QMPushNotificationManagerDelegate
-
-- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager
-       didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    
-    [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
 }
 
 //MARK: - QMChatConnectionDelegate
