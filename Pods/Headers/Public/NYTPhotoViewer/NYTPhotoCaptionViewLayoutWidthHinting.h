@@ -1,1 +1,1 @@
-../../../NYTPhotoViewer/Pod/Classes/ios/Protocols/NYTPhotoCaptionViewLayoutWidthHinting.h
+../../../NYTPhotoViewer/NYTPhotoViewer/Protocols/NYTPhotoCaptionViewLayoutWidthHinting.h

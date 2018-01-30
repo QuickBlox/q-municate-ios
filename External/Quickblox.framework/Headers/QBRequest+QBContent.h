@@ -116,7 +116,7 @@ typedef void(^qb_response_blob_block_t)(QBResponse *response, QBCBlob *tBlob);
 /**
  Upload file using BlobObjectAccess
  
- @param data File URL
+ @param url File URL
  @param blobWithWriteAccess An instance of QBCBlobObjectAccess
  @param successBlock Block with response if request succeded
  @param statusBlock Block with upload/download progress

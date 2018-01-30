@@ -100,7 +100,7 @@ static QMChatCache *_chatCacheInstance = nil;
     [self performMainQueue:^(NSManagedObjectContext *ctx) {
         result = [[CDDialog QM_findAllSortedBy:sortTerm
                                      ascending:ascending
-                                 withPredicate:nil
+                                 withPredicate:predicate
                                      inContext:ctx] toQBChatDialogs];
     }];
     

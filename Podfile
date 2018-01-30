@@ -4,13 +4,24 @@ xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
 
-def common_pods
-    #pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    #pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'feature/IQMUNICATE-650'
+def services
+    
+#    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
+#    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
+    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
 end
 
+def chat_view_controller
+    
+#    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
+    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+end
+
+
 target 'Q-municate' do
+    
+    chat_view_controller
+    services
     
     pod 'UIDevice-Hardware', '~> 0.1.11'
     pod 'SAMKeychain'
@@ -18,37 +29,34 @@ target 'Q-municate' do
     pod 'TTTAttributedLabel', '~> 2.0'
     pod 'libextobjc/EXTScope', '~> 0.4.1'
     pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
-    pod 'NYTPhotoViewer', '~> 1.1.0'
+    pod 'NYTPhotoViewer', :git => 'https://github.com/NYTimes/NYTPhotoViewer.git', :tag => 'v2.0.0'
     
     #Facebook
     pod 'FBSDKCoreKit'
     pod 'FBSDKShareKit'
     pod 'FBSDKLoginKit'
-
     #Twitter
     pod 'Fabric'
     pod 'Crashlytics'
-    
     #Firebase
     pod 'FirebaseUI/Phone', '~> 4.0'
-    #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QMShareExtension'
-    
-    common_pods
     
 end
 
 target 'QMSiriExtension' do
-    common_pods
+    
+    services
+    
 end
 
 target 'QMShareExtension' do
-    common_pods
+    
+    services
+    chat_view_controller
+    
     pod 'Reachability', '~> 3.2'
-    #pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'feature/QMShareExtension'
     pod 'SVProgressHUD'
+    
 end
 
 post_install do |installer|

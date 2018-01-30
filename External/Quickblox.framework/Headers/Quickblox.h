@@ -24,6 +24,7 @@
 #import <Quickblox/QBContactList.h>
 #import <Quickblox/QBContactListItem.h>
 #import <Quickblox/QBContentEnums.h>
+#import <Quickblox/QBConnection.h>
 #import <Quickblox/QBCOPermissions.h>
 #import <Quickblox/QBCustomObjectsConsts.h>
 #import <Quickblox/QBCustomObjectsEnums.h>
@@ -58,5 +59,5 @@
 #import <Quickblox/QBUpdateUserParameters.h>
 #import <Quickblox/QBUUser.h>
 
-/// Framework version 2.14-5
+/// Framework version 2.15
 FOUNDATION_EXPORT NSString * const QuickbloxFrameworkVersion;

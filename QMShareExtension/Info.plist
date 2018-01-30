@@ -17,15 +17,35 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>2.7</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2002</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
 			<key>NSExtensionActivationRule</key>
-			<string>TRUEPREDICATE</string>
+			<string>SUBQUERY (
+    extensionItems,
+    $extensionItem,
+    SUBQUERY (
+        $extensionItem.attachments,
+        $attachment,
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image" ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.audiovisual-content" ||
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.plain-text"
+    ).@count == 1
+).@count == 1
+OR
+SUBQUERY (
+    extensionItems,
+    $extensionItem,
+    SUBQUERY (
+        $extensionItem.attachments,
+        $attachment,
+        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url"
+    ).@count &gt;= 1
+).@count == 1</string>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>ShareInterface</string>

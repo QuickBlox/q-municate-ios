@@ -22,6 +22,7 @@
 #import "QMSplitViewController.h"
 #import "QMNavigationController.h"
 #import "QMNavigationBar.h"
+#import <notify.h>
 
 static const NSInteger kQMNotAuthorizedInRest = -1000;
 static const NSInteger kQMUnauthorizedErrorCode = -1011;
@@ -43,7 +44,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 @property (weak, nonatomic) BFTask *addUserTask;
 
 @property (strong, nonatomic) id observerWillEnterForeground;
-@property (strong, nonatomic) id dialogsUpdatesObserver;
 
 @end
 
@@ -54,15 +54,12 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
-    [[QBDarwinNotificationCenter defaultCenter] removeObserver:_dialogsUpdatesObserver];
-    
     ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    
     
     // Subscribing delegates
     [QMCore.instance.chatService addDelegate:self];
@@ -107,11 +104,20 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
          }
      }];
     
-    self.dialogsUpdatesObserver =
-    [[QBDarwinNotificationCenter defaultCenter] addObserverForName:kQMDidUpdateDialogsNotification
-                                                        usingBlock:^{
-                                                            [QMTasks taskFetchAllData];
-                                                        }];
+    int t_token = 0;
+    notify_register_dispatch(kQMDidUpdateDialogsNotification.UTF8String, &t_token, dispatch_get_main_queue(), ^(int __unused token) {
+        
+        NSDate *lastFetchDate =
+        QMCore.instance.currentProfile.lastDialogsFetchingDate;
+         @strongify(self);
+        [[QMCore.instance.chatService syncLaterDialogsWithCacheFromDate:lastFetchDate] continueWithBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t)
+         {
+             if (t.result.count > 0) {
+                 [self.tableView reloadData];
+             }
+             return nil;
+         }];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -119,8 +125,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     [super viewWillAppear:animated];
     
     if (self.searchController.isActive) {
-        
-        self.tabBarController.tabBar.hidden = YES;
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.searchResultsController.tableView];
     }
@@ -138,8 +142,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         [self.refreshControl beginRefreshing];
         self.tableView.contentOffset = offset;
     }
-    
-    [self.tableView reloadData];
 }
 
 - (void)performAutoLoginAndFetchData {
@@ -284,11 +286,11 @@ titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)willPresentSearchController:(UISearchController *)__unused searchController {
     self.additionalNavigationBarHeight = 0;
     self.searchResultsController.tableView.dataSource = self.dialogsSearchDataSource;
-    self.tabBarController.tabBar.hidden = YES;
+    
 }
 
 - (void)willDismissSearchController:(UISearchController *)__unused searchController {
-    self.tabBarController.tabBar.hidden = NO;
+
 }
 
 - (void)didDismissSearchController:(UISearchController *)__unused searchController {
@@ -345,8 +347,7 @@ didAddMessageToMemoryStorage:(QBChatMessage *)__unused message
     [self.tableView reloadData];
 }
 
-- (void)chatService:(QMChatService *)__unused chatService
-didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
+- (void)chatService:(QMChatService *)__unused chatService didDeleteChatDialogWithIDFromMemoryStorage:(NSString *)__unused chatDialogID {
     
     if (self.dialogsDataSource.items.count == 0) {
         self.tableView.backgroundView = self.placeholderView;
@@ -448,6 +449,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         [self.tableView reloadData];
+        
     }
 }
 
@@ -456,6 +458,7 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
     
     if ([self.tableView.dataSource isKindOfClass:[QMDialogsDataSource class]]) {
         [self.tableView reloadData];
+
     }
 }
 
@@ -541,15 +544,13 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
 
 - (void)updateDataAndEndRefreshing {
     
-    BFTask *fetchAllDataTask = [QMTasks taskFetchAllData];
-    BFTask *fetchContactsTask = [QMTasks taskUpdateContacts];
-    [[BFTask taskForCompletionOfAllTasks:@[fetchAllDataTask, fetchContactsTask]]
-     continueWithBlock:^id (BFTask * __unused t) {
-         
-         [self.refreshControl endRefreshing];
-         
-         return nil;
-     }];
+    [[[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * __unused t) {
+        return [QMTasks taskUpdateContacts];
+    }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
+           [self.refreshControl endRefreshing];
+        return nil;
+    }];
+    
 }
 
 //MARK: - Register nibs

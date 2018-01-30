@@ -82,7 +82,12 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+- (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    if ([[FIRAuth auth] canHandleNotification:userInfo]) {
+        completionHandler(UIBackgroundFetchResultNoData);
+        return;
+    }
     
     if (application.applicationState == UIApplicationStateInactive) {
         
@@ -98,13 +103,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
         });
-    }
-}
-
-- (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    if ([[FIRAuth auth] canHandleNotification:userInfo]) {
-        completionHandler(UIBackgroundFetchResultNoData);
-        return;
     }
 }
 
@@ -152,6 +150,7 @@
 
 - (void)application:(UIApplication *)__unused application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
     FIRAuthAPNSTokenType firTokenType;
 
@@ -167,6 +166,7 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 
 - (void)application:(UIApplication *)__unused application
 didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    
     [[QMCore instance].pushNotificationManager handleError:error];
 }
 
@@ -195,8 +195,8 @@ forRemoteNotification:(NSDictionary *)userInfo
 //MARK: - QMPushNotificationManagerDelegate protocol
 
 - (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    
     UITabBarController *tabBarController = [[(UISplitViewController *)self.window.rootViewController viewControllers] firstObject];
+    
     UIViewController *dialogsVC = [[(UINavigationController *)[[tabBarController viewControllers] firstObject] viewControllers] firstObject];
     
     NSString *activeDialogID = [QMCore instance].activeDialogID;

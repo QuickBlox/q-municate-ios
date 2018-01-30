@@ -289,6 +289,17 @@ didReceiveNotificationMessage:(QBChatMessage *)message
     block(dialogs);
 }
 
+- (void)cachedDialogsWithPredicate:(NSPredicate *)predicate
+                            block:(QMCacheCollection)block {
+    
+    NSArray<QBChatDialog *> *dialogs =
+    [QMChatCache.instance dialogsSortedBy:CDDialogAttributes.lastMessageDate
+                                ascending:YES
+                            withPredicate:predicate];
+    block(dialogs);
+}
+
+
 - (void)cachedDialogWithID:(NSString *)dialogID completion:(void (^)(QBChatDialog *dialog))completion {
     
     completion([QMChatCache.instance dialogByID:dialogID]);
@@ -302,6 +313,17 @@ didReceiveNotificationMessage:(QBChatMessage *)message
                                      ascending:NO];
     block(result);
 }
+
+- (void)cachedMessagesWithPredicate:(NSPredicate *)predicate
+                              block:(nullable QMCacheCollection)block {
+
+    [QMChatCache.instance messagesWithPredicate:predicate
+                                       sortedBy:CDMessageAttributes.messageID
+                                      ascending:NO
+                                     completion:block];
+}
+
+
 
 //MARK: - QMUsersServiceCacheDataSource
 

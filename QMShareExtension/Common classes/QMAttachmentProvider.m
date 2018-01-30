@@ -152,7 +152,7 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
     
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
     
-    if (UTTypeConformsTo(UTI, kUTTypeVideo)) {
+    if (UTTypeConformsTo(UTI, kUTTypeMovie)) {
         
         //We should convert all video formats to mp4 format.
         if (UTTypeConformsTo(UTI, kUTTypeMPEG4)) {

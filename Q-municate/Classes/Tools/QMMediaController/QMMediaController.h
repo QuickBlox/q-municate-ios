@@ -38,7 +38,6 @@ NS_ASSUME_NONNULL_BEGIN
 @required
 
 - (nullable id<QMMediaViewDelegate>)viewForMessage:(QBChatMessage *)message;
-- (void)didUpdateMessage:(QBChatMessage *)message;
 - (NSString *)dialogID;
 - (void)sendAttachmentMessageWithImage:(UIImage *)image;
 

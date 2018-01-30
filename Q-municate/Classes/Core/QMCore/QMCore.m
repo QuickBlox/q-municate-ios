@@ -238,7 +238,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         [[QMImageLoader instance].imageCache clearMemory];
     }];
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO]
+    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES]
      continueWithBlock:^id(BFTask * __unused t)
      {
          [super logoutWithCompletion:^{
@@ -305,6 +305,9 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
     // load users if needed
     NSArray<NSNumber *> *IDs = [self.contactListService.contactListMemoryStorage userIDsFromContactList];
+    if (IDs.count == 0) {
+        return;
+    }
     
     [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
         

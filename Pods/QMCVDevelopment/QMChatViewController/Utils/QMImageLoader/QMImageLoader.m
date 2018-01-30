@@ -144,7 +144,6 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
 
 @interface QMImageLoader()
 
-@property (strong, nonatomic) NSMutableDictionary<NSString *, QMImageTransform *> *transforms;
 @property (strong, nonatomic) NSMutableSet *failedURLs;
 @property (strong, nonatomic) NSMutableDictionary *runningOperations;
 
@@ -195,7 +194,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
             qmCache = [[SDImageCache alloc] initWithNamespace:@"default"];
         }
         
-        qmCache.maxMemoryCost = 25 * 1024 * 1024;
+        qmCache.maxMemoryCost = 15 * 1024 * 1024;
         
         SDWebImageDownloader *qmDownloader = [SDWebImageDownloader sharedDownloader];
         
@@ -211,7 +210,6 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
     self = [super initWithCache:cache downloader:downloader];
     if (self) {
         _runningOperations = [NSMutableDictionary dictionary];
-        _transforms = [NSMutableDictionary dictionary];
     }
     
     return self;
@@ -262,7 +260,7 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
         url = nil;
     }
     
-    __block QMWebImageCombinedOperation *operation = [QMWebImageCombinedOperation new];
+    QMWebImageCombinedOperation *operation = [QMWebImageCombinedOperation new];
     __weak QMWebImageCombinedOperation *weakOperation = operation;
     
     BOOL isFailedUrl = NO;
@@ -290,43 +288,25 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
     NSString *key = [self cacheKeyForURL:url];
     NSString *transformKey = [transform keyWithURL:url];
     
-    if (transform) {
-        @synchronized (self.transforms) {
-            self.transforms[transformKey] = transform;
-        }
-    }
-    
-    dispatch_block_t cleanupTransform = ^() {
-        
-        if (transformKey) {
-            
-            @synchronized (self.transforms) {
-                self.transforms[transformKey] = nil;
-            }
-        }
-    };
-    
     typedef NSOperation *(^qm_cache_operation)(void);
     
     qm_cache_operation cacheOp = ^() {
         
-        return [self.imageCache queryCacheOperationForKey:key done:^(UIImage * _Nullable image,
-                                                                     NSData * _Nullable data,
-                                                                     SDImageCacheType cacheType) {
+        return [weakSelf.imageCache queryCacheOperationForKey:key done:^(UIImage * _Nullable image,
+                                                                         NSData * _Nullable data,
+                                                                         SDImageCacheType cacheType) {
             
-            if (operation.isCancelled) {
-                cleanupTransform();
-                [self safelyRemoveOperationFromRunning:operation];
+            if (weakOperation.isCancelled) {
+                [weakSelf safelyRemoveOperationFromRunning:weakOperation];
                 
                 return;
             }
             
             if ((!image || options & SDWebImageRefreshCached) &&
-                (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] ||
-                 [self.delegate imageManager:self shouldDownloadImageForURL:url])) {
+                (![weakSelf.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] ||
+                 [weakSelf.delegate imageManager:weakSelf shouldDownloadImageForURL:url])) {
                     
                     if (image && options & SDWebImageRefreshCached) {
-                        cleanupTransform();
                         dispatch_main_async_safe(^{
                             // If image was found in the cache but SDWebImageRefreshCached is provided, notify about the cached image
                             // AND try to re-download it in order to let a chance to NSURLCache to refresh it from server.
@@ -363,13 +343,13 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                     }
                     
                     SDWebImageDownloadToken * subOperation =
-                    [self.imageDownloader downloadImageWithURL:urlToDownload
-                                                       options:downloaderOptions
-                                                      progress:progressBlock
-                                                     completed:^(UIImage *downloadedImage,
-                                                                 NSData *data,
-                                                                 NSError *error,
-                                                                 BOOL finished)
+                    [weakSelf.imageDownloader downloadImageWithURL:urlToDownload
+                                                           options:downloaderOptions
+                                                          progress:progressBlock
+                                                         completed:^(UIImage *downloadedImage,
+                                                                     NSData *data,
+                                                                     NSError *error,
+                                                                     BOOL finished)
                      {
                          __strong __typeof(weakOperation) strongOperation = weakOperation;
                          if (!strongOperation || strongOperation.isCancelled) {
@@ -380,7 +360,6 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                              // if this one is called second, we will overwrite the new data
                          }
                          else if (error) {
-                             cleanupTransform();
                              
                              dispatch_main_async_safe(^{
                                  
@@ -396,16 +375,16 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                                  error.code != NSURLErrorDataNotAllowed &&
                                  error.code != NSURLErrorCannotFindHost &&
                                  error.code != NSURLErrorCannotConnectToHost) {
-                                 @synchronized (self.failedURLs) {
-                                     [self.failedURLs addObject:url];
+                                 @synchronized (weakSelf.failedURLs) {
+                                     [weakSelf.failedURLs addObject:url];
                                  }
                              }
                          }
                          else {
                              
                              if ((options & SDWebImageRetryFailed)) {
-                                 @synchronized (self.failedURLs) {
-                                     [self.failedURLs removeObject:url];
+                                 @synchronized (weakSelf.failedURLs) {
+                                     [weakSelf.failedURLs removeObject:url];
                                  }
                              }
                              
@@ -423,23 +402,22 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                                  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                                      
                                      UIImage *transformedImage =
-                                     [self imageManager:self
-                                              transform:transform
-                               transformDownloadedImage:downloadedImage
-                                                withURL:url];
+                                     [weakSelf imageManager:weakSelf
+                                                  transform:transform
+                                   transformDownloadedImage:downloadedImage
+                                                    withURL:url];
                                      
                                      if (transformedImage && finished) {
                                          
                                          BOOL imageWasTransformed = ![transformedImage isEqual:downloadedImage];
                                          
-                                         [self.imageCache storeImage:downloadedImage
-                                                           imageData:(imageWasTransformed ? nil : data)
-                                                              forKey:key
-                                                              toDisk:cacheOnDisk
-                                                          completion:nil];
+                                         [weakSelf.imageCache storeImage:downloadedImage
+                                                               imageData:(imageWasTransformed ? nil : data)
+                                                                  forKey:key
+                                                                  toDisk:cacheOnDisk
+                                                              completion:nil];
                                      }
                                      
-                                     cleanupTransform();
                                      
                                      dispatch_main_async_safe(^{
                                          
@@ -459,13 +437,13 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                                  
                                  if (downloadedImage && finished) {
                                      
-                                     [self.imageCache storeImage:downloadedImage
-                                                       imageData:data
-                                                          forKey:key toDisk:cacheOnDisk
-                                                      completion:nil];
+                                     [weakSelf.imageCache storeImage:downloadedImage
+                                                           imageData:data
+                                                              forKey:key toDisk:cacheOnDisk
+                                                          completion:nil];
                                  }
                                  
-                                 cleanupTransform();
+                                 
                                  dispatch_main_async_safe(^{
                                      
                                      if (strongOperation && !strongOperation.isCancelled) {
@@ -480,17 +458,24 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                          
                          if (finished) {
                              
-                             [self safelyRemoveOperationFromRunning:operation];
+                             [weakSelf safelyRemoveOperationFromRunning:operation];
                          }
                      }];
-                    operation.cancelBlock = ^{
+                    
+                    @synchronized (operation){
                         
-                        [self.imageDownloader cancel:subOperation];
-                        __strong __typeof(weakOperation) strongOperation = weakOperation;
-                        [self safelyRemoveOperationFromRunning:strongOperation];
-                    };
+                        __weak __typeof(subOperation)weakSuboperation = subOperation;
+                        weakOperation.cancelBlock = ^{
+                            
+                            [weakSelf.imageDownloader cancel:weakSuboperation];
+                            __strong __typeof(weakOperation) strongOperation = weakOperation;
+                            [weakSelf safelyRemoveOperationFromRunning:strongOperation];
+                        };
+                    }
                 }
             else if (image) {
+                
+                __strong __typeof(weakOperation) strongOperation = weakOperation;
                 
                 if (transform) {
                     
@@ -500,60 +485,58 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
                         
                         if (!transformedImage) {
                             
-                            transformedImage = [self imageManager:self
-                                                        transform:transform
-                                         transformDownloadedImage:image
-                                                          withURL:url];
-                            cleanupTransform();
+                            transformedImage =
+                            [weakSelf imageManager:weakSelf
+                                         transform:transform
+                          transformDownloadedImage:image
+                                           withURL:url];
+                            
                             
                             dispatch_main_async_safe(^{
-                                __strong __typeof(weakOperation) strongOperation = weakOperation;
+                                
                                 if (strongOperation && !strongOperation.isCancelled) {
                                     completedBlock(image, transformedImage, nil, cacheType, YES, url);
                                 }
                             });
-                            @synchronized (self.runningOperations) {
-                                [self.runningOperations removeObjectForKey:operationID];
+                            @synchronized (weakSelf.runningOperations) {
+                                [weakSelf.runningOperations removeObjectForKey:operationID];
                             }
                         }
                         else {
                             
-                            cleanupTransform();
                             dispatch_main_async_safe(^{
-                                __strong __typeof(weakOperation) strongOperation = weakOperation;
+                                
                                 if (strongOperation && !strongOperation.isCancelled) {
                                     completedBlock(image, transformedImage, nil, cacheType, YES, url);
                                 }
                             });
-                            @synchronized (self.runningOperations) {
-                                [self.runningOperations removeObjectForKey:operationID];
+                            @synchronized (weakSelf.runningOperations) {
+                                [weakSelf.runningOperations removeObjectForKey:operationID];
                             }
                         }
                     });
                     
                 } else {
                     
-                    cleanupTransform();
-                    
                     dispatch_main_async_safe(^{
-                        __strong __typeof(weakOperation) strongOperation = weakOperation;
+                        
                         if (strongOperation && !strongOperation.isCancelled) {
                             completedBlock(image, nil, nil, cacheType, YES, url);
                         }
                     });
-                    [self safelyRemoveOperationFromRunning:operation];
+                    [weakSelf safelyRemoveOperationFromRunning:weakOperation];
                 }
             }
             else {
                 // Image not in cache and download disallowed by delegate
-                cleanupTransform();
+                
                 dispatch_main_async_safe(^{
                     __strong __typeof(weakOperation) strongOperation = weakOperation;
                     if (strongOperation && !weakOperation.isCancelled) {
                         completedBlock(nil, nil, nil, SDImageCacheTypeNone, YES, url);
                     }
                 });
-                [self safelyRemoveOperationFromRunning:operation];
+                [weakSelf safelyRemoveOperationFromRunning:weakOperation];
             }
         }];
     };
@@ -567,14 +550,15 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
          {
              if (tranformedImageFromCache) {
                  
-                 cleanupTransform();
+                 __strong __typeof(weakOperation) strongOperation = weakOperation;
+                 
                  dispatch_main_async_safe(^{
-                     __strong __typeof(weakOperation) strongOperation = weakOperation;
                      if (strongOperation && !strongOperation.isCancelled) {
                          completedBlock(nil, tranformedImageFromCache, nil, cacheType, YES, url);
                      }
                  });
-                 [self safelyRemoveOperationFromRunning:weakOperation];
+                 
+                 [weakSelf safelyRemoveOperationFromRunning:weakOperation];
                  return;
              }
              
@@ -667,6 +651,10 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
 
 @implementation QMWebImageCombinedOperation
 
+- (void)dealloc {
+    
+}
+
 - (void)setCancelBlock:(SDWebImageNoParamsBlock)cancelBlock {
     // check if the operation is already cancelled, then we just call the cancelBlock
     if (self.isCancelled) {
@@ -698,3 +686,4 @@ NSString *stringWithImageTransformType(QMImageTransformType transformType) {
 }
 
 @end
+

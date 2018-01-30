@@ -242,6 +242,12 @@ QBChatDelegate
 }
 
 - (void)handleUserActivityWithCallIntent:(NSUserActivity *)userActivity {
+    
+    if (self.serviceManager.currentUser == nil) {
+        // do not perform calls if we do not have logged in user
+        return;
+    }
+    
     INInteraction *interaction = [userActivity interaction];
     NSString *handle = userActivity.userInfo[@"handle"];
     BOOL isAudioCallIntentClass = [interaction.intent isKindOfClass:[INStartAudioCallIntent class]];
@@ -259,9 +265,16 @@ QBChatDelegate
         handle = person.personHandle.value;
     }
     
+    NSUInteger userID = handle.integerValue;
+    
+    if (![self.serviceManager.contactManager isFriendWithUserID:userID]) {
+        // do not call a user if he is not in a friend list
+        return;
+    }
+    
     dispatch_block_t action = ^void() {
         QBRTCConferenceType conferenceType = isVideoCallIntentClass ? QBRTCConferenceTypeVideo : QBRTCConferenceTypeAudio;
-        [self callToUserWithID:handle.integerValue conferenceType:conferenceType];
+        [self callToUserWithID:userID conferenceType:conferenceType];
     };
     
     if (QBChat.instance.isConnected) {
@@ -370,7 +383,7 @@ QBChatDelegate
     
     self.hasActiveCall = NO;
     
-    if (QMCallKitAdapter.isCallKitAvailable) {
+    if (QMCallKitAdapter.isCallKitAvailable && self.callUUID) {
         [self.callKitAdapter endCallWithUUID:self.callUUID completion:nil];
         self.callUUID = nil;
     }

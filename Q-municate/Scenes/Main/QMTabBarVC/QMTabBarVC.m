@@ -13,6 +13,7 @@
 #import "QMSoundManager.h"
 #import "QBChatDialog+OpponentID.h"
 #import "QMHelpers.h"
+#import <UIDevice-Hardware.h>
 
 @interface QMTabBarVC ()
 
@@ -39,15 +40,45 @@ QMChatConnectionDelegate
         
         vc.tabBarItem.title = nil;
         vc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+            if (screenSize.height == 812.0f)
+                vc.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -25, 0);
+            
+        }
     }
 }
 
 - (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
     
-    CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
-    tabFrame.size.height = 45;
-    tabFrame.origin.y = self.view.frame.size.height - 45;
-    self.tabBar.frame = tabFrame;
+    if ([self.selectedViewController isKindOfClass:[UINavigationController class]]) {
+        
+        UINavigationController *navVC = self.selectedViewController;
+        
+        if (navVC.viewControllers.lastObject.hidesBottomBarWhenPushed) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tabBar setHidden:YES];
+            });
+        }
+    }
+    
+    if (![UIDevice.currentDevice.modelName isEqualToString:@"iPhone X"]) {
+        //Simulator
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+            if (screenSize.height == 812.0f) {
+                
+                return;
+            }
+        }
+        
+        CGRect tabFrame = self.tabBar.frame; //self.TabBar is IBOutlet of your TabBar
+        tabFrame.size.height = 45;
+        tabFrame.origin.y = self.view.frame.size.height - 45;
+        self.tabBar.frame = tabFrame;
+    }
 }
 
 //MARK: - Notification

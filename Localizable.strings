@@ -209,6 +209,7 @@
 "QM_STR_LOGOUT" = "Logout";
 "QM_STR_VERSION" = "Version";
 "QM_STR_POWERED_BY_QUICKBLOX" = "Powered by QuickBlox";
+"QM_STR_OPEN_SETTINGS" = "Open Settings";
 
 // *********** Feedback screen ***********
 "QM_STR_BUG" = "Bug";

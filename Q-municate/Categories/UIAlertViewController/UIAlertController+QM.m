@@ -12,7 +12,7 @@
 @implementation UIViewController(QMAlertController)
 
 - (void)presentAlertControllerWithStatus:(NSString *)status
-                       withButtonHandler:(dispatch_block_t)buttonTapBlock {
+                       buttonHandler:(dispatch_block_t)buttonTapBlock {
     
     UIAlertController *alertController =
     [UIAlertController qm_infoAlertControllerWithStatus:status

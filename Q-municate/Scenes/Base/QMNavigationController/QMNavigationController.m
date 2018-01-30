@@ -34,7 +34,6 @@ UINavigationBarDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         self.navigationBar.prefersLargeTitles = YES;
@@ -42,7 +41,9 @@ UINavigationBarDelegate
 #endif
 }
 
-- (void)showNotificationWithType:(QMNotificationPanelType)notificationType message:(NSString *)message duration:(NSTimeInterval)duration {
+- (void)showNotificationWithType:(QMNotificationPanelType)notificationType
+                         message:(NSString *)message
+                        duration:(NSTimeInterval)duration {
     
     if ([self.navigationBar isKindOfClass:[QMNavigationBar class]]) {
         

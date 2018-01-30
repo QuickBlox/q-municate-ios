@@ -27,6 +27,8 @@
 #import <QMImageLoader.h>
 #import "QMMediaUploadService.h"
 
+#import <notify.h>
+
 static const NSUInteger kQMUnauthorizedErrorCode = 401;
 
 @interface QMShareRootViewController()
@@ -78,7 +80,6 @@ QMShareEtxentionOperationDelegate>
     
     [super viewWillAppear:animated];
     
-    NSLog(@"current user = %@", QBSession.currentSession.currentUser);
     if (QBSession.currentSession.currentUser.ID == 0) {
         
         dispatch_block_t completion = ^{
@@ -121,7 +122,7 @@ QMShareEtxentionOperationDelegate>
     __weak typeof(self) weakSelf = self;
     
     [self presentAlertControllerWithStatus:status
-                         withButtonHandler:^{
+                         buttonHandler:^{
                              
                              __strong typeof(weakSelf) strongSelf = weakSelf;
                              
@@ -210,9 +211,9 @@ QMShareEtxentionOperationDelegate>
 }
 
 //MARK: - QMShareControllerDelegate
+-(void)shareTableViewController:(QMShareTableViewController *)shareTableViewController
+didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
 
-- (void)didTapShareBarButtonWithSelectedItems:(NSArray *)selectedItems {
-    
     NSParameterAssert(self.shareItem);
     
     if (self.shareOperation.isSending) {
@@ -221,7 +222,7 @@ QMShareEtxentionOperationDelegate>
     
     if (!self.internetConnection.isReachable) {
         [self presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                             withButtonHandler:nil];
+                             buttonHandler:nil];
         return;
     }
     
@@ -239,22 +240,25 @@ QMShareEtxentionOperationDelegate>
                                     recipients:selectedItems
                                     completion:^(BOOL completed,
                                                  QMRecipientOperationResultDetails * _Nonnull resultDetails)
-    {
-        
+     {
+         
+         
          __strong typeof(weakSelf) strongSelf = weakSelf;
          [strongSelf.shareTableViewController
           dismissLoadingAlertControllerAnimated:YES
           withCompletion:^{
-
+              
               if (completed) {
                   if (resultDetails.unsentRecipients.allKeys.count > 0) {
                       NSString *errorText =
                       @"Something went wrong. The message wasn’t sent to recipients that remain selected.";
                       [strongSelf presentAlertControllerWithStatus:errorText
-                                                 withButtonHandler:nil];
+                                                 buttonHandler:nil];
                       [strongSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
                   }
                   else {
+                      
+                      notify_post(kQMDidUpdateDialogsNotification.UTF8String);
                       [strongSelf completeShare:nil];
                   }
               }
@@ -267,11 +271,11 @@ QMShareEtxentionOperationDelegate>
     self.shareOperation = shareOperation;
 }
 
-- (void)didCancelSharing {
+- (void)shareTableViewControllerDidCancelSharing:(QMShareTableViewController *)shareTableViewController {
     [self cancelShare];
 }
 
-- (void)didTapCancelBarButton {
+- (void)shareTableViewControllerDidTapCancelBarButton:(QMShareTableViewController *)shareTableViewController {
     [self dismiss];
 }
 
@@ -319,16 +323,18 @@ QMShareEtxentionOperationDelegate>
 - (BFTask *)taskSendMessageViaRest:(QBChatMessage *)message {
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
+        
         self.shareOperation.objectToCancel =
         (id <QMCancellableObject>)[QBRequest sendMessage:message
                                             successBlock:^(QBResponse * _Nonnull __unused response,
                                                            QBChatMessage * _Nonnull __unused tMessage)
                                    {
-                                       
-                                       [self postUpdateNotificationsForDialogWithID:tMessage.dialogID];
-                                       
-                                       [[self qmTaskSaveChangesForMessage:tMessage] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-                                           [source setResult:tMessage];
+                                       [qmTaskSaveToCache(tMessage) continueWithBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull t) {
+                                           dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                               qmPostNotificationsForDialogID(t.result.dialogID);
+                                               [source setResult:tMessage];
+                                           });
+                        
                                            return nil;
                                        }];
                                    }
@@ -338,7 +344,6 @@ QMShareEtxentionOperationDelegate>
                                    }];
     });
 }
-
 
 //MARK: - Configuration
 
@@ -376,9 +381,9 @@ QMShareEtxentionOperationDelegate>
     [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // reachability block could possibly be called in background thread
-           // [weakSelf cancelShare];
+            // [weakSelf cancelShare];
             [weakSelf presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                                     withButtonHandler:nil];
+                                     buttonHandler:nil];
         });
     }];
     
@@ -428,9 +433,10 @@ QMShareEtxentionOperationDelegate>
 
 //MARK: - Helpers
 
-- (BFTask *)qmTaskSaveChangesForMessage:(QBChatMessage *)message {
+
+static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
     
-    NSParameterAssert(message.dialogID);
+    NSCParameterAssert(message.dialogID);
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         
@@ -440,11 +446,14 @@ QMShareEtxentionOperationDelegate>
          ^{
              QBChatDialog *dialog =
              [QMExtensionCache.chatCache dialogByID:message.dialogID];
-             dialog.updatedAt = message.dateSent;
              
-             [QMExtensionCache.chatCache insertOrUpdateDialog:dialog completion:^{
-                 [source setResult:message];
-             }];
+             updateDialog(dialog,message);
+             
+             [QMExtensionCache.chatCache insertOrUpdateDialog:dialog
+                                                   completion:
+              ^{
+                  [source setResult:message];
+              }];
          }];
     });
 }
@@ -469,7 +478,7 @@ QMShareEtxentionOperationDelegate>
         return [BFTask taskWithError:error];
     }
     
-
+    
     [SVProgressHUD showWithStatus:NSLocalizedString(@"QM_EXT_SHARE_PROCESS_TITLE", nil)];
     
     return [[QMShareTasks loadItemsForItemProviders:providers] continueWithExecutor:BFExecutor.mainThreadExecutor
@@ -517,23 +526,6 @@ QMShareEtxentionOperationDelegate>
     }];
 }
 
-- (void)presentAlertControllerWithStatus:(NSString *)errorStatus
-                       withButtonHandler:(dispatch_block_t)buttonTapBlock {
-    
-    UIAlertController *alertController =
-    [UIAlertController qm_infoAlertControllerWithStatus:errorStatus
-                                         buttonTapBlock:buttonTapBlock];
-    
-    if (self.presentedViewController) {
-        [self.presentedViewController presentViewController:alertController
-                                                   animated:YES
-                                                 completion:nil];
-    }
-    else {
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-}
-
 - (void)updateDialogsDataSource {
     
     [[self taskDialogsDataSource] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBChatDialog *> *> * _Nonnull t) {
@@ -545,24 +537,27 @@ QMShareEtxentionOperationDelegate>
     }];
 }
 
-- (void)postUpdateNotificationsForDialogWithID:(NSString *)dialogID {
-    
-    NSParameterAssert(dialogID.length);
-    
-    NSString *observerName =
-    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, dialogID];
-    
-    [[QBDarwinNotificationCenter defaultCenter] postNotificationName:observerName];
-    [[QBDarwinNotificationCenter defaultCenter] postNotificationName:kQMDidUpdateDialogsNotification];
-}
-
 - (void)cancelShare {
-    
-    [self.shareTableViewController dismissLoadingAlertControllerAnimated:YES
-                                                          withCompletion:nil];
     [self.shareOperation cancel];
 }
 
 
+static void qmPostNotificationsForDialogID(NSString *dialogID) {
+    
+    NSCParameterAssert(dialogID.length);
+    NSString *observerName =
+    [NSString stringWithFormat:@"%@:%@", kQMDidUpdateDialogNotificationPrefix, dialogID];
+    
+    notify_post(observerName.UTF8String);
+}
+
+static inline void updateDialog(QBChatDialog *dialog,
+                                QBChatMessage *message) {
+    
+    dialog.lastMessageUserID = message.senderID;
+    dialog.lastMessageText = message.text;
+    dialog.lastMessageDate = message.dateSent;
+    dialog.updatedAt = message.dateSent;
+}
 
 @end

@@ -15,28 +15,28 @@ PODS:
   - FBSDKShareKit (4.29.0):
     - FBSDKCoreKit
   - FFCircularProgressView (0.5)
-  - Firebase/Auth (4.8.0):
+  - Firebase/Auth (4.8.1):
     - Firebase/Core
-    - FirebaseAuth (= 4.4.1)
-  - Firebase/Core (4.8.0):
-    - FirebaseAnalytics (= 4.0.5)
-    - FirebaseCore (= 4.0.13)
-  - FirebaseAnalytics (4.0.5):
+    - FirebaseAuth (= 4.4.2)
+  - Firebase/Core (4.8.1):
+    - FirebaseAnalytics (= 4.0.7)
+    - FirebaseCore (= 4.0.14)
+  - FirebaseAnalytics (4.0.7):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseAuth (4.4.1):
+  - FirebaseAuth (4.4.2):
     - FirebaseAnalytics (~> 4.0)
     - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.13):
+  - FirebaseCore (4.0.14):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
   - FirebaseInstanceID (2.0.8):
     - FirebaseCore (~> 4.0)
-  - FirebaseUI/Auth (4.5.0):
+  - FirebaseUI/Auth (4.5.1):
     - Firebase/Auth (~> 4.2)
-  - FirebaseUI/Phone (4.5.0):
+  - FirebaseUI/Phone (4.5.1):
     - FirebaseUI/Auth
   - FLAnimatedImage (1.0.12)
   - Flurry-iOS-SDK/FlurrySDK (8.3.1)
@@ -59,13 +59,13 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - NYTPhotoViewer (1.1.0):
-    - NYTPhotoViewer/AnimatedGifSupport (= 1.1.0)
-    - NYTPhotoViewer/Core (= 1.1.0)
-  - NYTPhotoViewer/AnimatedGifSupport (1.1.0):
-    - FLAnimatedImage (~> 1.0.8)
+  - NYTPhotoViewer (2.0.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 2.0.0)
+    - NYTPhotoViewer/Core (= 2.0.0)
+  - NYTPhotoViewer/AnimatedGifSupport (2.0.0):
+    - FLAnimatedImage (~> 1.0.12)
     - NYTPhotoViewer/Core
-  - NYTPhotoViewer/Core (1.1.0)
+  - NYTPhotoViewer/Core (2.0.0)
   - QMCVDevelopment (0.5.1):
     - FFCircularProgressView
     - QMCVDevelopment/Categories (= 0.5.1)
@@ -117,7 +117,7 @@ PODS:
     - QMCVDevelopment/Utils
     - SDWebImage
     - TTTAttributedLabel
-  - QMServicesDevelopment (0.5.5):
+  - QMServicesDevelopment (0.6):
     - Bolts (>= 1.9.0)
   - Reachability (3.2)
   - SAMKeychain (1.5.3)
@@ -137,9 +137,9 @@ DEPENDENCIES:
   - FirebaseUI/Phone (~> 4.0)
   - Flurry-iOS-SDK/FlurrySDK (<= 8.3.1)
   - libextobjc/EXTScope (~> 0.4.1)
-  - NYTPhotoViewer (~> 1.1.0)
-  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `feature/QMShareExtension`)
-  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `feature/IQMUNICATE-650`)
+  - NYTPhotoViewer (from `https://github.com/NYTimes/NYTPhotoViewer.git`, tag `v2.0.0`)
+  - QMCVDevelopment (from `git@github.com:QuickBlox/QMChatViewController-ios.git`, branch `development`)
+  - QMServicesDevelopment (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
   - Reachability (~> 3.2)
   - SAMKeychain
   - SVProgressHUD
@@ -147,19 +147,25 @@ DEPENDENCIES:
   - UIDevice-Hardware (~> 0.1.11)
 
 EXTERNAL SOURCES:
+  NYTPhotoViewer:
+    :git: https://github.com/NYTimes/NYTPhotoViewer.git
+    :tag: v2.0.0
   QMCVDevelopment:
-    :branch: feature/QMShareExtension
+    :branch: development
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :branch: feature/IQMUNICATE-650
+    :branch: development
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
+  NYTPhotoViewer:
+    :git: https://github.com/NYTimes/NYTPhotoViewer.git
+    :tag: v2.0.0
   QMCVDevelopment:
-    :commit: 42740f15acf527563d2f2ce940a3370c1e7a8620
+    :commit: f1ca817956619497b21f785a0b177842503df082
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: fdc2225023f5d8fa67979ab58243bf0c5987a931
+    :commit: 420ee5205b294b228326752543dd07144eaa8910
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
@@ -170,21 +176,21 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
   FBSDKShareKit: 18a2cd118aef11dd657fe7e8b64bae5c719088b2
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
-  Firebase: 710decbbc6d9d48530e9a5dba3209740c3532e05
-  FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
-  FirebaseAuth: dc0dd403beca5b2b016aac89c2d0b8dad1c81926
-  FirebaseCore: 3c02ec652db3d03fdc8bc6d9154af3e20d64b6f5
+  Firebase: 2721056b8885eef90233b03f37be64358d35d262
+  FirebaseAnalytics: 617afa8c26b57a0c3f11361b248bc9e17bfd8dfd
+  FirebaseAuth: bd2738c5c1e92b108ba5f7f7335908097a4e50bb
+  FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
   FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
-  FirebaseUI: 883482fea73b73bbb488c55176f4c6ad128957eb
+  FirebaseUI: 1dc9c8a87a776b488a28a28541f029e60c824cfd
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
   GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  NYTPhotoViewer: e80e8767f3780d2df37c6f72cbab15d6c7232911
+  NYTPhotoViewer: 34b8bd6bcc297466adec1668f9a01249d73c90e6
   QMCVDevelopment: 521cac3a8abf5c40c16f9aa45d590f7b01c3baba
-  QMServicesDevelopment: 025569df757b87dbd7e304dce392bb888284b9be
+  QMServicesDevelopment: 3749a800221ce209f4a9912406f1592b4ceb42f4
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
@@ -192,6 +198,6 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05
 
-PODFILE CHECKSUM: d1c457fd75901be9f4f822e5ae491227c7a11069
+PODFILE CHECKSUM: 23c6321c5974bd0e414a602c4d817e7f08d09f37
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.4.0

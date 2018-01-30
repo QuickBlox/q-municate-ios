@@ -11,6 +11,6 @@
 @interface QMErrorsFactory : NSObject
 
 + (NSError *)errorNotLoggedInREST;
-+ (NSError *)validationErrorWithLocalizedDescription:(NSString *)localizedDescription;
++ (NSError *)errorWithLocalizedDescription:(NSString *)localizedDescription;
 
 @end
