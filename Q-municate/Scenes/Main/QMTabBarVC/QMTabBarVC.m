@@ -50,9 +50,7 @@ QMChatConnectionDelegate
     }
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
+- (void)fixTabBar {
     if ([self.selectedViewController isKindOfClass:[UINavigationController class]]) {
         
         UINavigationController *navVC = self.selectedViewController;
@@ -63,6 +61,18 @@ QMChatConnectionDelegate
             });
         }
     }
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [self fixTabBar];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    [self fixTabBar];
     
     if (![UIDevice.currentDevice.modelName isEqualToString:@"iPhone X"]) {
         //Simulator
