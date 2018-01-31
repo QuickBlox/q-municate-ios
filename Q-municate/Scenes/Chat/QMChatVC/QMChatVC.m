@@ -2039,6 +2039,7 @@ didPerformAction:(SEL)action
             [QMCore.instance.openGraphService preloadGraphItemForText:message.text ID:message.ID];
         }
         [self.chatDataSource addMessages:messages];
+        if (!self.progressView.hidden) [self stopSpinProgress];
     }
 }
 
