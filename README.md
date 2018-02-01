@@ -11,8 +11,21 @@ This guide is brought to you from QuickBlox iOS team in order to explain how you
 It is a step by step guide designed for all developer levels including beginners as we move from simple to more complex implementation. Depending on your skills and your project requirements you may choose which parts of this guide are to follow. Enjoy and if you need assistance from QuickBlox iOS team feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 Q-municate is a fully fledged chat application using the Quickblox API.
 
+<!-- TOC -->
 
-[toc]
+- [Q-municate 2.7.1](#q-municate-271)
+    - [1. Requirements & Software Environment](#1-requirements--software-environment)
+    - [2. QuickBlox modules](#2-quickblox-modules)
+    - [3. Features](#3-features)
+    - [4. Screens](#4-screens)
+    - [5. Audio and Video Calls](#5-audio-and-video-calls)
+    - [6. Extensions](#6-extensions)
+    - [7. Code explanation](#7-code-explanation)
+    - [8. How to build your own Chat app 😎](#8-how-to-build-your-own-chat-app-😎)
+    - [9. License](#9-license)
+
+<!-- /TOC -->
+
 
 ## 1. Requirements & Software Environment
 
@@ -414,4 +427,3 @@ If you want to build your own app using Q-municate as a basis, please follow our
 ## 9. License
 
 Apache License, Version 2.0. See [LICENSE](LICENSE) file.
-
