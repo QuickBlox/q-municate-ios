@@ -8,20 +8,20 @@ PODS:
   - Crashlytics (3.9.3):
     - Fabric (~> 1.7.2)
   - Fabric (1.7.2)
-  - FBSDKCoreKit (4.29.0):
+  - FBSDKCoreKit (4.30.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.29.0):
+  - FBSDKLoginKit (4.30.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.29.0):
-    - FBSDKCoreKit
+  - FBSDKShareKit (4.30.0):
+    - FBSDKCoreKit (~> 4.30.0)
   - FFCircularProgressView (0.5)
-  - Firebase/Auth (4.8.1):
+  - Firebase/Auth (4.8.2):
     - Firebase/Core
     - FirebaseAuth (= 4.4.2)
-  - Firebase/Core (4.8.1):
-    - FirebaseAnalytics (= 4.0.7)
+  - Firebase/Core (4.8.2):
+    - FirebaseAnalytics (= 4.0.9)
     - FirebaseCore (= 4.0.14)
-  - FirebaseAnalytics (4.0.7):
+  - FirebaseAnalytics (4.0.9):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
@@ -50,7 +50,7 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.3)
     - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
   - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
-  - GTMSessionFetcher/Core (1.1.12)
+  - GTMSessionFetcher/Core (1.1.13)
   - libextobjc/EXTScope (0.4.1):
     - libextobjc/RuntimeExtensions
   - libextobjc/RuntimeExtensions (0.4.1)
@@ -66,64 +66,64 @@ PODS:
     - FLAnimatedImage (~> 1.0.12)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (2.0.0)
-  - QMCVDevelopment (0.5.1):
+  - QMCVDevelopment (0.6):
     - FFCircularProgressView
-    - QMCVDevelopment/Categories (= 0.5.1)
-    - QMCVDevelopment/Protocols (= 0.5.1)
-    - QMCVDevelopment/QMChatDataSource (= 0.5.1)
-    - QMCVDevelopment/QMChatLocationSnapshotter (= 0.5.1)
-    - QMCVDevelopment/Sections (= 0.5.1)
-    - QMCVDevelopment/Utils (= 0.5.1)
-    - QMCVDevelopment/ViewModels (= 0.5.1)
-    - QMCVDevelopment/Views (= 0.5.1)
+    - QMCVDevelopment/Categories (= 0.6)
+    - QMCVDevelopment/Protocols (= 0.6)
+    - QMCVDevelopment/QMChatDataSource (= 0.6)
+    - QMCVDevelopment/QMChatLocationSnapshotter (= 0.6)
+    - QMCVDevelopment/Sections (= 0.6)
+    - QMCVDevelopment/Utils (= 0.6)
+    - QMCVDevelopment/ViewModels (= 0.6)
+    - QMCVDevelopment/Views (= 0.6)
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/Categories (0.5.1):
+  - QMCVDevelopment/Categories (0.6):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatLocationSnapshotter
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/Protocols (0.5.1):
+  - QMCVDevelopment/Protocols (0.6):
     - FFCircularProgressView
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/QMChatDataSource (0.5.1):
+  - QMCVDevelopment/QMChatDataSource (0.6):
     - FFCircularProgressView
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/QMChatLocationSnapshotter (0.5.1):
+  - QMCVDevelopment/QMChatLocationSnapshotter (0.6):
     - FFCircularProgressView
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/Sections (0.5.1):
+  - QMCVDevelopment/Sections (0.6):
     - FFCircularProgressView
     - QMCVDevelopment/QMChatDataSource
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/Utils (0.5.1):
+  - QMCVDevelopment/Utils (0.6):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/ViewModels (0.5.1):
+  - QMCVDevelopment/ViewModels (0.6):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - SDWebImage
     - TTTAttributedLabel
-  - QMCVDevelopment/Views (0.5.1):
+  - QMCVDevelopment/Views (0.6):
     - FFCircularProgressView
     - QMCVDevelopment/Categories
     - QMCVDevelopment/Protocols
     - QMCVDevelopment/Utils
     - SDWebImage
     - TTTAttributedLabel
-  - QMServicesDevelopment (0.6):
+  - QMServicesDevelopment (0.6.1):
     - Bolts (>= 1.9.0)
   - Reachability (3.2)
   - SAMKeychain (1.5.3)
-  - SDWebImage (4.2.3):
-    - SDWebImage/Core (= 4.2.3)
-  - SDWebImage/Core (4.2.3)
+  - SDWebImage (4.3.0):
+    - SDWebImage/Core (= 4.3.0)
+  - SDWebImage/Core (4.3.0)
   - SVProgressHUD (2.2.2)
   - TTTAttributedLabel (2.0.0)
   - UIDevice-Hardware (0.1.11)
@@ -162,22 +162,22 @@ CHECKOUT OPTIONS:
     :git: https://github.com/NYTimes/NYTPhotoViewer.git
     :tag: v2.0.0
   QMCVDevelopment:
-    :commit: f1ca817956619497b21f785a0b177842503df082
+    :commit: 4c999c036becead3049c6aa8aecf83b40f103327
     :git: git@github.com:QuickBlox/QMChatViewController-ios.git
   QMServicesDevelopment:
-    :commit: 420ee5205b294b228326752543dd07144eaa8910
+    :commit: 47874a5b3ea477f39d8917cd0046aca6cb333dc8
     :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
   Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
-  FBSDKCoreKit: 6f139173dc63a1deaff4430a55f2fe5bb222d2af
-  FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
-  FBSDKShareKit: 18a2cd118aef11dd657fe7e8b64bae5c719088b2
+  FBSDKCoreKit: 7c4bba2877781a131ab5d54c0a78c405d4307b62
+  FBSDKLoginKit: fe7a7e82373dc5daad92e1623219e86224ab1fb1
+  FBSDKShareKit: a9427574b51bde4f437262c3f118c4ccfddeef6c
   FFCircularProgressView: 683a4ab1e1bd613246a3dffa61503ffdebcde8d8
-  Firebase: 2721056b8885eef90233b03f37be64358d35d262
-  FirebaseAnalytics: 617afa8c26b57a0c3f11361b248bc9e17bfd8dfd
+  Firebase: 7d3b8cd837ad9fcd391657734c0d56dab8e9a5a3
+  FirebaseAnalytics: 388b630c15713f5dbf364071f5f3d6077fb52f4e
   FirebaseAuth: bd2738c5c1e92b108ba5f7f7335908097a4e50bb
   FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
   FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
@@ -185,15 +185,15 @@ SPEC CHECKSUMS:
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Flurry-iOS-SDK: 912b3eb78bee559883feb3b13263437b185e8fe9
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
-  GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
+  GTMSessionFetcher: 5bb1eae636127de695590f50e7d248483eb891e6
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NYTPhotoViewer: 34b8bd6bcc297466adec1668f9a01249d73c90e6
-  QMCVDevelopment: 521cac3a8abf5c40c16f9aa45d590f7b01c3baba
-  QMServicesDevelopment: 3749a800221ce209f4a9912406f1592b4ceb42f4
+  QMCVDevelopment: 8b724410db764d2d612968cad41048dbe48f3357
+  QMServicesDevelopment: bea9291900e039a2af592652696c6156ac852b3e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
-  SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
+  SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
   SVProgressHUD: 59b2d3dabacbd051576d21d32293ca7228dc18b0
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05

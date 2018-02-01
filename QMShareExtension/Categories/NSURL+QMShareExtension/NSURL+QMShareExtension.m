@@ -184,7 +184,7 @@ NSString *const QMGoogleMapsProvider = @"google";
                                                               longitude:longitude.doubleValue];
             }
         }
-        NSLog(@"location = %@", location);
+        QMLog(@"location = %@", location);
     }
     else {
         QMLog(@"REGEX error: %@", regexError);

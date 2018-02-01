@@ -26,7 +26,7 @@
 #import "QMConstants.h"
 #import <QMImageLoader.h>
 #import "QMMediaUploadService.h"
-
+#import "QMLog.h"
 #import <notify.h>
 
 static const NSUInteger kQMUnauthorizedErrorCode = 401;
@@ -462,13 +462,13 @@ static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
 - (BFTask *)qmTaskGetShareItem {
     
     NSArray *inputItems = self.extensionContext.inputItems;
-    NSLog(@"Input items = %@", inputItems);
+    QMLog(@"Input items = %@", inputItems);
     NSMutableArray *providers = [NSMutableArray array];
     for (NSExtensionItem *item in inputItems) {
         [providers addObjectsFromArray:item.attachments];
     }
     
-    NSLog(@"providers = %@", providers);
+    QMLog(@"providers = %@", providers);
     
     if (providers.count == 0) {
         NSString *errorText = NSLocalizedString(@"QM_EXT_SHARE_COMMON_ERROR", nil);
@@ -484,7 +484,7 @@ static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
     return [[QMShareTasks loadItemsForItemProviders:providers] continueWithExecutor:BFExecutor.mainThreadExecutor
                                                                    withSuccessBlock:
             ^id _Nullable(BFTask<NSArray<QMItemProviderResult *> *> * _Nonnull t) {
-                NSLog(@"QMItemProviderResults = %@", t.result);
+                QMLog(@"QMItemProviderResults = %@", t.result);
                 QMItemProviderResult *result = t.result.firstObject;
                 self.shareItem = result;
                 

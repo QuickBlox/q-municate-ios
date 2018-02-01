@@ -117,7 +117,6 @@
         // For each item, extend the task with a function to share with the item.
         task = [task continueWithBlock:^id(BFTask __unused *t) {
             if (self.isCancelled) {
-                NSLog(@"%@", NSStringFromSelector(_cmd));
                 return [BFTask cancelledTask];
             }
             
@@ -149,7 +148,6 @@
 - (BFTask <QBChatMessage *> *)taskMessageForRecipient:(id<QMShareItemProtocol>)recipient {
     
     if (self.isCancelled) {
-        NSLog(@"%@", NSStringFromSelector(_cmd));
         return [BFTask cancelledTask];
     }
     

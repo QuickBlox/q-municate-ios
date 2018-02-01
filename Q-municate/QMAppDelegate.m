@@ -40,7 +40,7 @@
     
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
-    [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
+    [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecOpus;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
     // Configuring app appearance

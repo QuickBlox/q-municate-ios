@@ -3613,7 +3613,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate.QMShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "afa7f9e4-dfa8-4771-9bca-2f17d54da5c5";
+				PROVISIONING_PROFILE = "0b010eea-a71f-455d-823b-3b15832bb5e8";
 				PROVISIONING_PROFILE_SPECIFIER = "Q-municate Share Extension Development";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
