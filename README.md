@@ -2,7 +2,6 @@
 
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517494748882_cover.png)
 
-
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls, etc.).
 We are inspired to give you chat application out of the box. You can customise this application depending on your needs. As always QuickBlox backend is at your service: https://quickblox.com/plans/
 Find the source code and more information about Q-municate, as well as installation guide, in our Developers section: https://quickblox.com/developers/q-municate
@@ -10,7 +9,6 @@ Find the source code and more information about Q-municate, as well as installat
 This guide is brought to you from QuickBlox iOS team in order to explain how you can build a communication app on iOS using QuickBlox API.
 It is a step by step guide designed for all developer levels including beginners as we move from simple to more complex implementation. Depending on your skills and your project requirements you may choose which parts of this guide are to follow. Enjoy and if you need assistance from QuickBlox iOS team feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 Q-municate is a fully fledged chat application using the Quickblox API.
-
 
 ## 1. Requirements & Software Environment
 - [Xcode 9](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/WhatsNewXcode/xcode_9/xcode_9.html) and later. 
@@ -23,7 +21,6 @@ Q-municate is a fully fledged chat application using the Quickblox API.
 - [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.29.0 and later.
 - [Firebase](https://fabric.io/kits/ios/digits) 4.8.1 and later.
 
-
 ## 2. QuickBlox modules
 
 Q-municate application uses following:
@@ -34,7 +31,6 @@ Q-municate application uses following:
 - [Video calling](http://quickblox.com/developers/VideoChat)
 - [Content](http://quickblox.com/developers/Content)
 - [Push Notifications](http://quickblox.com/developers/Messages)
-
 
 ## 3. Features
 
@@ -58,17 +54,16 @@ It includes such features as:
 - See other users profile
 - Pull to refresh for dialogs list, contacts list and user info page
 
-
 > Please note all these features are available in open source code, so you can customise your app depending on your needs.
+
 ## 4. Screens
 
-**4.1** **Welcome**
+**4.1 Welcome** 
 
 ![Figure 4.1 Welcome screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977157374_welcome.png)
 
 
 Available features:
-
 
 - Connect with Phone – this button allows user to enter the App with his/her phone number using Firebase. If tapped will be shown User Agreement pop-up.
 - Login by email or social button – By tapping this button action sheet with extra login methods will pop up. There is such methods as Facebook login and login by email/password.
@@ -78,8 +73,7 @@ Available features:
   
 > Please note, that there is no longer a possibility to sign up user using email and password method. You can only sign up using Phone number and/or Facebook credentials.
 
-**4.2** **Login with email/password**
-
+**4.2 Login with email/password**
 
 ![Figure 4.2 Login with email screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977175593_login_email.png)
 
@@ -94,7 +88,7 @@ Available features:
   - Done - performing login after fields validation using provided email and password
   - Forgot password - opens forgot password screen
 
-**4.3** **Forgot password**
+**4.3 Forgot password**
 
 ![Figure 4.3 Forgot password screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977185493_forgot_password.png)
 
@@ -104,14 +98,15 @@ Available features:
   - Back - returns user back to welcome screen
   - Reset - performing password reset
 
-**4.****4** ******Tab Bar**
+**4.4 Tab Bar**
+
 Tab bar is a main controller of the application. It consists of such pages:
 
 - Chat dialogs list (main page)
 - Contacts list
 - Settings
 
-**4.****5** ******Chat Dialogs List**
+**4.5 Chat Dialogs List**
 
 ![Figure 4.4 Dialogs screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977194742_chats.png)
 
@@ -133,7 +128,8 @@ If you will select only 1 contact - private chat will be opened (if existent) or
   - Right bar button - creates chat dialog
   - Back - return user back to chat dialogs page
 
-**4.****6** ******Chat**
+**4.6 Chat**
+
 There is a possibility to send:
 
 - Text messages
@@ -146,7 +142,7 @@ Available features:
 - Sharing and forwarding
 - Copying image attachmnets and text messages
 
-**4.****7** ******Private Chat**
+**4.7 Private Chat**
 
 ![Figure 4.6 Private chat screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977220481_private_chat.png)
 
@@ -157,7 +153,7 @@ Buttons:
 - Back - returns user back to chat dialogs list screen
 - Navigation bar title - redirects user to opponent profile page
 
-**4.****8** ******Group Chat**
+**4.8 Group Chat**
 
 ![Figure 4.7 Group chat screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977229548_group_chat.png)
 
@@ -168,7 +164,7 @@ Buttons:
 - Back - return user to chat dialogs list screen
 - Opponent user avatars - by tapping opponent user avatars in messages you will be redirected to the info page of that user
 
-**4.****9** ******Group** **Chat** **Info**
+**4.9 Group Chat Info**
 
 ![Figure 4.8 Group chat info screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977239195_group_info.png)
 
@@ -181,7 +177,7 @@ Fields/Buttons:
 - By tapping on any user in members list you will be redirected to their info page (except your own user in list)
 - By tapping Leave and remove chat field - you will leave existent group chat and delete it locally
 
-**4.10** **Contacts List**
+**4.10 Contacts List**
 
 ![Figure 4.9 Contacts list screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977255219_contacts.png)
 
@@ -195,7 +191,7 @@ Search:
 ![Figure 4.10 Search screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516968530350_ContactsSearch+1.png)
 
 
-**4.11** **User Info**
+**4.11 User Info**
 
 ![Figure 4.11 User info screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977275044_profile.png)
 
@@ -212,7 +208,7 @@ Other user actions:
 
 - Add contact - sending a contact request to user or accepting existing one
 
-**4.12** **Setting****s**
+**4.12 Settings**
 
 ![Figure 4.12 Settings screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977285595_settings.png)
 
@@ -220,22 +216,26 @@ Other user actions:
 Fields/Buttons
 
 - Full name, status and email fields will redirect you to update field screen, where you can change your info.
+
 ![Figure 4.13 User status screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977297040_status.png)
 
 - By tapping on avatar action sheet will be opened. You can either take a new picture or choose it from library to update your user avatar.
 - Push notification switch - you can either subscribe or unsubscribe from push notifications.
 - Tell a friend - opens share controller where you can share this awesome app with your friends :)
 - Give feedback - feedback screen, where you can send an email to us with bugs, improvements or suggestion information in order to help us make Q-municate better!
+
 ![Figure 4.14 Feedback screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977305837_feedback.png)
 
 ## 5. Calls
 
 Q-municate using QuickBlox WebRTC SDK as call service. You can find more information on it [here](http://quickblox.com/developers/Sample-webrtc-ios).
 
-**5.1** **Calls manager**
+**5.1 Calls manager**
+
 In order to manage calls we have created a [QMServices](https://github.com/QuickBlox/q-municate-services-ios) sub-service, and its name is QMCallManager. It is managing incoming and outgoing calls. See inline documentation of QMCallManager class for more information.
 
-**5.2** **Calls controller**
+**5.2 Calls controller**
+
 To display incoming, outgoing and active calls we have created a universal interface and defined into one view controller. Its name is QMCallViewController.
 Call controller has 6 states:
 
@@ -249,7 +249,8 @@ Call controller has 6 states:
 Call controller is been managed by QMCallManager, basically call manager allocating it with a specific state, whether it is an incoming or outgoing call, then call controller changing its state to active one if required user accepts it.
 For more information about code realisation see inline doc of QMCallViewController.
 
-**5.3** **Audio Call**
+**5.3 Audio Call**
+
 You can see down below Incoming, outgoing and active audio call screens.
 
 ![Figure 5.1 Audio call screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516983533322_AudioCallScreens.png)
@@ -265,7 +266,8 @@ Toolbar buttons
   - Speaker - whether sound should be played in speaker or receiver. Default for audio calls is receiver.
   - Decline - hanging up current all and closing controller
 
-**5.4** **Video Call**
+**5.4 Video Call**
+
 You can see down below Incoming, outgoing and active video call screens.
 
 ![Figure 5.1 Video call screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977747381_video_call.png)
@@ -285,13 +287,15 @@ By default sound for video calls is in speakers.
   
 
 **5.5** **Call Kit**
+
 CallKit allows to integrate calling services with other call-related apps on the system. CallKit provides the calling interface, and we handle the back-end communication with [our VoIP service](https://quickblox.com/developers/SimpleSample-messages_users-ios#Adding_support_for_VOIP_push_notifications). For incoming and outgoing calls, CallKit displays the same interfaces as the Phone app, giving Q-municate application a more native look and feel.
 
 ![Figure 5.1 Call controller screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517255409865_call_kit.png)
 
 ## 6. Extensions
 
-**6.1** **Share extension**
+**6.1 Share extension**
+
 [Share extension](https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/Share.html#//apple_ref/doc/uid/TP40014214-CH12-SW1) gives users a convenient way to share content with other entities.
 Available types for sharing:
 
@@ -305,7 +309,8 @@ Available types for sharing:
 ![Figure 6.1 Share extension screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516980034230_Untitled-1.png)
 
 
-**6.2** **Intent****s App** ******E****xtension(Siri****Kit** **for messaging)**
+**6.2 Intents App Extension(SiriKit for messaging)**
+
 An *Intents app extension* receives user request to send a message from [SiriKit](https://developer.apple.com/documentation/sirikit) and turns it into app-specific actions.
 
 ![Figure 6.2 Sending message via SIRI screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517494955322_siri-min.png)
@@ -315,10 +320,12 @@ An *Intents app extension* receives user request to send a message from [SiriKit
 You can see basic code explanation down below. For detailed one please see our inline documentation for header files in most classes. We have tried to describe as detailed as possible the purpose of every class and its methods. If you have any questions, feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 
 **7.1 Core**
+
 Q-municate using [QMServices](https://github.com/QuickBlox/q-municate-services-ios) as a main wrapper over QuickBlox iOS SDK. See its documentation for more information.
 As QMServices design required, we have created a subclass over QMServicesManager and named it QMCore. QMCore has its own managers, that adds more wrappers over methods in QMServices, chaining and performing them using [Bolts framework](https://github.com/BoltsFramework/Bolts-ObjC#bolts).
 
-**7.2** **Storyboards**
+**7.2 Storyboards**
+
 We have separated Q-municate for modules, such as:
 
 - Auth
