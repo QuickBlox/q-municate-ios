@@ -147,7 +147,7 @@ If you will select only 1 contact - private chat will be opened (if existent) or
   - Back - return user back to chat dialogs page
   
 
-**4.****7** **Chat**
+**4.7 Chat**
 
 There is a possibility to send:
 
@@ -161,7 +161,7 @@ Available features:
 - Sharing and forwarding
 - Copying image attachmnets and text messages
 
-**4.****8** **Private Chat**
+**4.8 Private Chat**
 
 
 ![Figure 4.6 Private chat screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977220481_private_chat.png)
@@ -173,7 +173,7 @@ Buttons:
 - Back - returns user back to chat dialogs list screen
 - Navigation bar title - redirects user to opponent profile page
 
-**4.****9** **Group Chat**
+**4.9 Group Chat**
 
 
 ![Figure 4.7 Group chat screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977229548_group_chat.png)
@@ -185,7 +185,7 @@ Buttons:
 - Back - return user to chat dialogs list screen
 - Opponent user avatars - by tapping opponent user avatars in messages you will be redirected to the info page of that user
 
-**4.****10** **Group Chat Info**
+**4.10 Group Chat Info**
 
 
 ![Figure 4.8 Group chat info screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977239195_group_info.png)
@@ -199,7 +199,7 @@ Fields/Buttons:
 - By tapping on any user in members list you will be redirected to their info page (except your own user in list)
 - By tapping Leave and remove chat field - you will leave existent group chat and delete it locally
 
-**4.1****1** **Contacts List**
+**4.11 Contacts List**
 
 
 ![Figure 4.9 Contacts list screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977255219_contacts.png)
@@ -215,7 +215,7 @@ Search:
 ![Figure 4.10 Search screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516968530350_ContactsSearch+1.png)
 
 
-**4.1****2** **User Info**
+**4.12 User Info**
 
 
 ![Figure 4.11 User info screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977275044_profile.png)
@@ -233,7 +233,7 @@ Other user actions:
 
 - Add contact - sending a contact request to user or accepting existing one
 
-**4.1****3** **Settings**
+**4.13 Settings**
 
 
 ![Figure 4.12 Settings screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977285595_settings.png)
@@ -318,12 +318,11 @@ By default sound for video calls is in speakers.
   - Microphone - disables microphone for current call
   - Decline - hanging up current all and closing controller
 
-**5.5** **Call Kit**
+**5.5 Call Kit**
 
 CallKit allows to integrate calling services with other call-related apps on the system. CallKit provides the calling interface, and we handle the back-end communication with [our VoIP service](https://quickblox.com/developers/SimpleSample-messages_users-ios#Adding_support_for_VOIP_push_notifications). For incoming and outgoing calls, CallKit displays the same interfaces as the Phone app, giving Q-municate application a more native look and feel.
 
 ![Figure 5.1 Call controller screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517255409865_call_kit.png)
-
 
 
 ## 6. Extensions
@@ -344,11 +343,11 @@ Available types for sharing:
 
 
 **6.2 Intents App Extension(SiriKit for messaging)**
+
 An *Intents app extension* receives user request to send a message from [SiriKit](https://developer.apple.com/documentation/sirikit) and turns it into app-specific actions.
 
 
 ![Figure 6.2 Sending message via SIRI screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517494955322_siri-min.png)
-
 
 
 ## 7. Code explanation
@@ -378,4 +377,3 @@ If you want to build your own app using Q-municate as a basis, please follow our
 ## 9. License
 
 Apache License, Version 2.0. See [LICENSE](#) file.
-
