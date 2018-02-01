@@ -413,5 +413,5 @@ If you want to build your own app using Q-municate as a basis, please follow our
 
 ## 9. License
 
-Apache License, Version 2.0. See [LICENSE](http://LICENSE) file.
+Apache License, Version 2.0. See [LICENSE](LICENSE) file.
 
