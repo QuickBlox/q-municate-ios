@@ -374,6 +374,18 @@ Each module has its own storyboard, all storyboards are linked with storyboard l
 
 If you want to build your own app using Q-municate as a basis, please follow our [detailed guide here](http://quickblox.com/developers/Q-municate#How_to_build_your_own_Chat_app).
 
-## 9. License
+## 9. Contributing
+### Features
+1. Fork it ( https://github.com/[my-github-username]/q-municate-ios/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'My new feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+### Issues
+
+If you find an issue, please [create an issue](https://github.com/QuickBlox/q-municate-ios/issues).
+
+## 10. License
 
 Apache License, Version 2.0. See [LICENSE](#) file.
