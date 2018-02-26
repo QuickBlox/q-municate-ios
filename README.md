@@ -1,6 +1,7 @@
 # Q-municate 2.7.1
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517494748882_cover.png)
+
+![](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517567392151_retina_cover-min.png)
 
 
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls, etc.).
@@ -10,6 +11,22 @@ This guide is brought to you from QuickBlox iOS team in order to explain how you
 It is a step by step guide designed for all developer levels including beginners as we move from simple to more complex implementation. Depending on your skills and your project requirements you may choose which parts of this guide are to follow. Enjoy and if you need assistance from QuickBlox iOS team feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 Q-municate is a fully fledged chat application using the Quickblox API.
 
+<!-- TOC -->
+
+- [Q-municate 2.7.1](#q-municate-271)
+    - [1. Requirements & Software Environment](#1-requirements--software-environment)
+    - [2. QuickBlox modules](#2-quickblox-modules)
+    - [3. Features](#3-features)
+    - [4. Screens](#4-screens)
+    - [5. Audio and Video Calls](#5-audio-and-video-calls)
+    - [6. Extensions](#6-extensions)
+    - [7. Code explanation](#7-code-explanation)
+    - [8. How to build your own Chat app 😎](#8-how-to-build-your-own-chat-app)
+    - [9. Contributing](#9-contributing)
+    - [10. License](#10-license)
+
+<!-- /TOC -->
+
 
 ## 1. Requirements & Software Environment
 
@@ -18,11 +35,43 @@ Q-municate is a fully fledged chat application using the Quickblox API.
 - iOS 9.1 and later.
 - [QuickBlox iOS SDK](http://quickblox.com/developers/IOS) 2.15 and later.
 - [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.6.3 and later.
-- [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.6.1 and later.
+- [QMServices](https://github.com/QuickBlox/q-municate-services-ios)  Q-municate API is based on [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.6.1 and later.
 - [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios) 0.6 and later.
 - [Bolts](https://github.com/BoltsFramework/Bolts-ObjC#bolts) 1.9.0 and later.
 - [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.29.0 and later.
 - [Firebase](https://fabric.io/kits/ios/digits) 4.8.1 and later.
+
+**1.1** [**QuickBlox iOS SDK**](http://quickblox.com/developers/IOS)
+
+[![CocoaPods](https://img.shields.io/cocoapods/v/QuickBlox.svg)](https://cocoapods.org/pods/QuickBlox)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/QuickBlox.svg)](https://cocoapods.org/pods/QuickBlox)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/QuickBlox.svg)](https://cocoapods.org/pods/QuickBlox)
+
+QuickBlox - Communication & cloud backend platform which brings superpowers to your mobile apps.
+
+**1.2 QMServices**
+
+[![CocoaPods](https://img.shields.io/cocoapods/v/QMServices.svg)](https://cocoapods.org/pods/QMServices)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/QMServices.svg)](https://cocoapods.org/pods/QMServices)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/QMServices.svg)](https://cocoapods.org/pods/QMServices)
+
+Q-municate architecture  for chat, authorization, messages, dialogs and users is based on [QMServices](https://github.com/QuickBlox/q-municate-services-ios) -
+easy-to-use services for QuickBlox SDK, for speeding up development of iOS chat applications.
+
+
+- Inbox persistent storage for messages, dialogs and users
+- Inbox memory storage for messages, dialogs and users
+- Bolts version of all methods. See [Bolts](https://github.com/BoltsFramework/Bolts-ObjC) for more information.
+
+**1.3  WebRTC**
+
+[![CocoaPods](https://img.shields.io/cocoapods/v/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
+
+Q-municate uses [WebRTC](https://en.wikipedia.org/wiki/WebRTC) for video and audio calling meaning it’s a great cross-platform solution. WebRTC itself it open-source, so you can modify the code as much as you wish, or you can trust the thousands of skilled developers who contributed to it’s development.
+
+[The VideoChat code sample](https://github.com/QuickBlox/quickblox-ios-sdk/tree/master/sample-videochat-webrtc) allows you to easily add video calling and audio calling features into your iOS app. Enable a video call function similar to FaceTime or Skype using code sample as a basis.
 
 
 ## 2. QuickBlox modules
@@ -258,7 +307,7 @@ Fields/Buttons:
 
 
 
-## 5. Calls
+## 5. Audio and Video Calls
 
 Q-municate using QuickBlox WebRTC SDK as call service. You can find more information on it [here](http://quickblox.com/developers/Sample-webrtc-ios).
 
@@ -325,6 +374,7 @@ CallKit allows to integrate calling services with other call-related apps on the
 ![Figure 5.1 Call controller screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517255409865_call_kit.png)
 
 
+
 ## 6. Extensions
 
 **6.1 Share extension**
@@ -348,6 +398,7 @@ An *Intents app extension* receives user request to send a message from [SiriKit
 
 
 ![Figure 6.2 Sending message via SIRI screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517494955322_siri-min.png)
+
 
 
 ## 7. Code explanation
@@ -375,6 +426,7 @@ Each module has its own storyboard, all storyboards are linked with storyboard l
 If you want to build your own app using Q-municate as a basis, please follow our [detailed guide here](http://quickblox.com/developers/Q-municate#How_to_build_your_own_Chat_app).
 
 ## 9. Contributing
+
 ### Features
 1. Fork it ( https://github.com/[my-github-username]/q-municate-ios/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
@@ -388,4 +440,4 @@ If you find an issue, please [create an issue](https://github.com/QuickBlox/q-mu
 
 ## 10. License
 
-Apache License, Version 2.0. See [LICENSE](#) file.
+Apache License, Version 2.0. See [LICENSE](LICENSE) file.
