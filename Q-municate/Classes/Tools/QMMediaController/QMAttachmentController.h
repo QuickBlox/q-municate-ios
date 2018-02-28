@@ -7,10 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QMChatViewController.h>
+#import <QMChatViewController/QMChatViewController.h>
 
 @interface QMAttachmentController : NSObject //<QMAttachmentControllerProtocol>
-
-
 
 @end

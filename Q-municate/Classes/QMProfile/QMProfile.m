@@ -9,7 +9,7 @@
 #import "QMProfile.h"
 #import "QMContent.h"
 #import "QMTasks.h"
-#import <SAMKeychain.h>
+#import <SAMKeychain/SAMKeychain.h>
 #import "QMCore.h"
 
 static NSString * const kQMUserDataKey = @"userData";

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <QMImageView.h>
+#import <QMChatViewController/QMImageView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

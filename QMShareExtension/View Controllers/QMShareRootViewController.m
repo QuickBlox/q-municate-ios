@@ -9,22 +9,20 @@
 #import "QMShareRootViewController.h"
 #import "QMShareTableViewController.h"
 #import "QMShareTasks.h"
-
 #import "QMShareEtxentionOperation.h"
 #import "QMExtensionCache.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import "QBSettings+Qmunicate.h"
-
 #import <Bolts/Bolts.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 #import <Reachability/Reachability.h>
+#import <QMChatViewController/QMImageLoader.h>
 #import "QBUUser+QMShareItemProtocol.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import "UIImage+QM.h"
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "UIAlertController+QM.h"
 #import "QMConstants.h"
-#import <QMImageLoader.h>
 #import "QMMediaUploadService.h"
 #import "QMLog.h"
 #import <notify.h>

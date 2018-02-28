@@ -25,7 +25,7 @@
 #import "QMNoResultsCell.h"
 #import "QMSearchCell.h"
 
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     

@@ -7,10 +7,10 @@
 //
 
 #import "QMImagePreview.h"
-#import <QMImageLoader.h>
-
-#import <NYTPhotoViewer/NYTPhotoViewer.h>
 #import "QMPhoto.h"
+
+#import <QMChatViewController/QMChatViewController.h>
+#import <NYTPhotoViewer/NYTPhotoViewer.h>
 
 @implementation QMImagePreview
 

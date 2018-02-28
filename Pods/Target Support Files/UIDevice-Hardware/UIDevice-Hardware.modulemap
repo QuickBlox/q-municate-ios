@@ -1,0 +1,6 @@
+framework module UIDevice_Hardware {
+  umbrella header "UIDevice-Hardware-umbrella.h"
+
+  export *
+  module * { export * }
+}

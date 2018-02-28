@@ -10,7 +10,7 @@
 #import "QMShareItemProtocol.h"
 #import <Bolts/Bolts.h>
 #import <Quickblox/Quickblox.h>
-#import <QMServices.h>
+#import <QMServices/QMServices.h>
 
 
 @interface QMRecipientOperationResultDetails()

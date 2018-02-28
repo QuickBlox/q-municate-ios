@@ -10,7 +10,7 @@
 #import "QMCore.h"
 #import "QMNotification.h"
 #import "QMMessagesHelper.h"
-#import <QMDateUtils.h>
+#import <QMChatViewController/QMDateUtils.h>
 
 @interface QMContactManager ()
 

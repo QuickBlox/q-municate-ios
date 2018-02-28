@@ -9,7 +9,7 @@
 #import "QMMessageIntentHandler.h"
 
 #import <Intents/Intents.h>
-#import <QMServices.h>
+#import <QMServices/QMServices.h>
 #import "QMSiriHelper.h"
 #import "NSString+QMSiriUtils.h"
 

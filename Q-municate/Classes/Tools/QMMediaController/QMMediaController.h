@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QMChatViewController/QMChatViewController.h>
 
 #import "QMMediaViewDelegate.h"
-#import <QMChatViewController.h>
 
 @protocol QMMediaControllerDelegate;
 

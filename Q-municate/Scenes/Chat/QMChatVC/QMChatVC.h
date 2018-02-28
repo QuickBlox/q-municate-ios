@@ -6,7 +6,7 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMChatViewController.h"
+#import <QMChatViewController/QMChatViewController.h>
 
 /**
  *  Chat view controller.

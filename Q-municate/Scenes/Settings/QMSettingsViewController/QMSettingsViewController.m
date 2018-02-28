@@ -7,20 +7,20 @@
 //
 
 #import "QMSettingsViewController.h"
-#import "QMTableSectionHeaderView.h"
-#import "QMColors.h"
 #import "QMUpdateUserViewController.h"
-#import "QMImagePicker.h"
-#import "QMTasks.h"
-#import "QMCore.h"
-#import "QMProfile.h"
-#import <QMImageView.h>
+#import "QMTableSectionHeaderView.h"
 #import "QMNavigationController.h"
 #import "QMSettingsFooterView.h"
-
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
 #import "SVProgressHUD.h"
+#import "QMImagePicker.h"
+#import "QMProfile.h"
+#import "QMColors.h"
+#import "QMTasks.h"
+#import "QMCore.h"
+
+#import <NYTPhotoViewer/NYTPhotoViewer.h>
+#import <QMChatViewController/QMChatViewController.h>
 
 static const CGFloat kQMDefaultSectionHeaderHeight = 24.0f;
 static const CGFloat kQMStatusSectionHeaderHeight = 40.0f;
@@ -111,8 +111,9 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)configureUserData:(QBUUser *)userData {
-    
-    [self.avatarImageView setImageWithURL:[NSURL URLWithString:userData.avatarUrl]
+   
+    NSString *url = userData.avatarUrl;
+    [self.avatarImageView setImageWithURL:[NSURL URLWithString:url]
                                     title:userData.fullName
                            completedBlock:nil];
     

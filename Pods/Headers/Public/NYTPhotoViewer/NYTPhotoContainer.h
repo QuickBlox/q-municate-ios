@@ -1,1 +1,0 @@
-../../../NYTPhotoViewer/NYTPhotoViewer/Protocols/NYTPhotoContainer.h

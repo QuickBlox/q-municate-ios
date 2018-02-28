@@ -7,7 +7,7 @@
 //
 
 #import "QMTableViewCell.h"
-#import <QMImageView.h>
+#import <QMChatViewController/QMChatViewController.h>
 
 @interface QMTableViewCell ()
 

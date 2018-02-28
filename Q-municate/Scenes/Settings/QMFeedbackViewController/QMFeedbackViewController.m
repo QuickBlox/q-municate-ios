@@ -9,9 +9,9 @@
 #import "QMFeedbackViewController.h"
 #import "QMColors.h"
 #import "REMessageUI.h"
+#import "SVProgressHUD.h"
 
-#import <UIDevice-Hardware.h>
-#import <SVProgressHUD.h>
+#import <UIDevice_Hardware/UIDevice-Hardware.h>
 
 static const CGFloat kQMTextCellMinHeight = 64.0f;
 static NSString *const kQMBundleVersion = @"CFBundleVersion";
