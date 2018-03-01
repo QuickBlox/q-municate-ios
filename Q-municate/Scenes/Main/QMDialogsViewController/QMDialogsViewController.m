@@ -17,7 +17,7 @@
 #import "QMChatVC.h"
 #import "QMCore.h"
 #import "QMTasks.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QBChatDialog+OpponentID.h"
 #import "QMSplitViewController.h"
 #import "QMNavigationController.h"
