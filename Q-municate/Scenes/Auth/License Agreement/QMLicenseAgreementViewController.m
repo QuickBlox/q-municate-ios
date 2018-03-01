@@ -7,7 +7,7 @@
 //
 
 #import "QMLicenseAgreementViewController.h"
-#import <SVProgressHUD/SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QMCore.h"
 
 NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
