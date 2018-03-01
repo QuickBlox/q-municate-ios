@@ -55,7 +55,8 @@
     [[UITextField appearance] setTintColor:QMSecondaryApplicationColor()];
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
-    [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setBorderWidth:1];
+    [SVProgressHUD setBorderColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
     
     // Configuring external frameworks
