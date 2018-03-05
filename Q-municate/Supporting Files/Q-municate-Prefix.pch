@@ -14,7 +14,7 @@
 
 #import "SegueIdentifiers.h"
 #import "QMConstants.h"
-#import <QMServicesDevelopment/QMServices.h>
+#import <QMServices/QMServices.h>
 #import <libextobjc/EXTScope.h>
 #import "QMLog.h"
 #import "QMHelpers.h"

@@ -6,20 +6,23 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 def services
     
-#    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-#    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
+#    pod 'QMServices', :path => '../q-municate-services-ios'
+#    pod 'QMServices', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
+    pod 'QMServices',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
 end
 
 def chat_view_controller
     
-#    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+#    pod 'QMChatViewController', :path => '../QMChatViewController-ios/'
+    pod 'QMChatViewController', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
 end
-
 
 target 'Q-municate' do
     
+    use_frameworks!
+    
+#    pod 'Quickblox', :path => '../SDK-ios'
+
     chat_view_controller
     services
     
@@ -44,13 +47,13 @@ target 'Q-municate' do
 end
 
 target 'QMSiriExtension' do
-    
+    use_frameworks!
     services
     
 end
 
 target 'QMShareExtension' do
-    
+    use_frameworks!
     services
     chat_view_controller
     
@@ -63,7 +66,7 @@ post_install do |installer|
     #Settings for extensions
     installer.pods_project.targets.each do |target|
         case target.name
-            when 'Bolts','QMCVDevelopment','SVProgressHUD'
+            when 'Bolts','QMChatViewController','SVProgressHUD'
             target.build_configurations.each do |config|
                 config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
             end

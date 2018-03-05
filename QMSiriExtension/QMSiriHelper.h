@@ -6,7 +6,7 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import <QMServices.h>
+#import <QMServices/QMServices.h>
 
 @class INPerson;
 

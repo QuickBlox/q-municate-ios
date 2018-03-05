@@ -24,13 +24,13 @@
 #import "QMSplitViewController.h"
 #import "QMMessagesHelper.h"
 #import "NSURL+QMShareExtension.h"
+#import <QMChatViewController/QMDateUtils.h>
+#import <QMChatViewController/UIImageView+QMLocationSnapshot.h>
 
 // helpers
 #import "QMChatButtonsFactory.h"
 #import "UIImage+fixOrientation.h"
 #import "QBChatDialog+OpponentID.h"
-#import <QMDateUtils.h>
-#import <UIImageView+QMLocationSnapshot.h>
 #import "QBChatMessage+QMCallNotifications.h"
 #import "QMAudioRecorder.h"
 #import "QMMediaController.h"
@@ -42,14 +42,13 @@
 #import "QMActivityItem.h"
 #import "QMShareHelper.h"
 #import "UIAlertController+QM.h"
+#import "SVProgressHUD.h"
 
 // external
-#import <SVProgressHUD.h>
 #import <MobileCoreServices/UTCoreTypes.h>
+#import <SafariServices/SafariServices.h>
 #import <AVKit/AVKit.h>
 #import <notify.h>
-
-@import SafariServices;
 
 static const float kQMAttachmentCellSize = 180.0f;
 static const NSTimeInterval kQMMaxAttachmentDuration = 30.0f;

@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <Bolts/BFTask.h>
-#import <QMServicesDevelopment/QMServices.h>
-#import <QMServicesDevelopment/QMChatTypes.h>
-#import <QMServicesDevelopment/QMMediaBlocks.h>
+#import <QMServices/QMServices.h>
+#import <QMServices/QMChatTypes.h>
+#import <QMServices/QMMediaBlocks.h>
 
 @class QBChatAttachment;
 @class QBUUser;

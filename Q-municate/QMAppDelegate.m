@@ -10,19 +10,18 @@
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QMColors.h"
-
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import <Flurry.h>
-#import <SVProgressHUD/SVProgressHUD.h>
-#import <Intents/Intents.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FirebaseCore/FirebaseCore.h>
-#import <FirebaseAuth/FirebaseAuth.h>
-
+#import "SVProgressHUD.h"
 #import "UIScreen+QMLock.h"
 #import "UIImage+Cropper.h"
 #import "QBSettings+Qmunicate.h"
+
+#import <Intents/Intents.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <Flurry_iOS_SDK/Flurry.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
 
 @interface QMAppDelegate () <QMPushNotificationManagerDelegate, QMAuthServiceDelegate>
 
@@ -56,7 +55,8 @@
     [[UITextField appearance] setTintColor:QMSecondaryApplicationColor()];
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
-    [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setBorderWidth:1];
+    [SVProgressHUD setBorderColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
     
     // Configuring external frameworks

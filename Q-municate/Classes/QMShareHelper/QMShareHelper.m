@@ -9,7 +9,7 @@
 #import "QMShareHelper.h"
 #import "QMMessagesHelper.h"
 #import "QMCore.h"
-#import <QMCVDevelopment/QMImageLoader.h>
+#import <QMChatViewController/QMImageLoader.h>
 
 
 @interface QMShareHelper() <QMShareEtxentionOperationDelegate>

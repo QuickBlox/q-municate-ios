@@ -10,10 +10,10 @@
 #import "QMCore.h"
 #import "QMNavigationController.h"
 #import "QMChatVC.h"
-#import <QMDateUtils.h>
-#import <QMImageView.h>
+#import <QMChatViewController/QMDateUtils.h>
+#import <QMChatViewController/QMImageView.h>
 #import "QBChatDialog+OpponentID.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QMSplitViewController.h"
 
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>

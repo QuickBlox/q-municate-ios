@@ -7,7 +7,7 @@
 //
 
 #import "QMCallInfoView.h"
-#import <QMImageView.h>
+#import <QMChatViewController/QMImageView.h>
 
 /**
  *  XIB names

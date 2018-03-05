@@ -1,1 +1,0 @@
-../../../NYTPhotoViewer/NYTPhotoViewer/NYTPhotoViewController.h

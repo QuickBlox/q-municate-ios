@@ -7,7 +7,7 @@
 //
 
 #import "QMTableViewCell.h"
-#import <QMImageView.h>
+#import <QMChatViewController/QMChatViewController.h>
 
 @interface QMTableViewCell ()
 
@@ -39,7 +39,6 @@
     return NSStringFromClass([self class]);
 }
 
-
 + (CGFloat)height {
     return 0;
 }
@@ -48,6 +47,7 @@
     [super awakeFromNib];
     
     _avatarImage.imageViewType = QMImageViewTypeCircle;
+    _avatarImage.tapGestureRecognizer.cancelsTouchesInView = NO;
     _titleLabel.text = nil;
     _bodyLabel.text = nil;
 }

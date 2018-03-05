@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "QBChatAttachment+QMFactory.h"
-#import <QMCVDevelopment/UIImage+QM.h>
+#import <QMChatViewController/UIImage+QM.h>
 
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
 static const NSUInteger kQMMaxImageSize = 1000; //in pixels

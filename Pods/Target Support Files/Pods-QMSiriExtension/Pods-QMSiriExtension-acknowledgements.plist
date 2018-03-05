@@ -80,7 +80,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
 			<key>License</key>
 			<string>BSD</string>
 			<key>Title</key>
-			<string>QMServicesDevelopment</string>
+			<string>QMServices</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

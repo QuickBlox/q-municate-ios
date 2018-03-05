@@ -13,7 +13,7 @@
 #import "QMSoundManager.h"
 #import "QBChatDialog+OpponentID.h"
 #import "QMHelpers.h"
-#import <UIDevice-Hardware.h>
+#import <UIDevice_Hardware/UIDevice-Hardware.h>
 
 @interface QMTabBarVC ()
 

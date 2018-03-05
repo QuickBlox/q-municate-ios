@@ -17,7 +17,7 @@
 #import "QMNavigationController.h"
 #import "QMUserInfoViewController.h"
 #import "NSArray+Intersection.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QMSplitViewController.h"
 
 static const CGFloat kQMSectionHeaderHeight = 32.0f;
