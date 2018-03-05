@@ -70,6 +70,11 @@ QMTagFieldViewDelegate
     
     NSArray *tagIDs = [self.tagFieldView tagIDs];
     
+    if (![QMCore.instance isInternetConnected]) {
+         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
+        return;
+    }
+    
     if (tagIDs.count > 1) {
         // creating group chat
         
@@ -83,9 +88,8 @@ QMTagFieldViewDelegate
         @weakify(self);
         self.dialogCreationTask = [[[QMCore.instance.chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
-            @strongify(self);
             [SVProgressHUD dismiss];
-            
+            @strongify(self);            
             if (!task.isFaulted) {
                 
                 chatDialog = task.result;
