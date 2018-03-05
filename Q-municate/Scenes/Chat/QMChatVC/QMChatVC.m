@@ -221,6 +221,7 @@ TTTAttributedLabelDelegate
     
     UIMenuItem *shareItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_SHARE", nil)
                                                        action:@selector(share)];
+    
     UIMenuItem *forwardItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"QM_STR_FORWARD", nil)
                                                          action:@selector(forward)];
     
@@ -369,7 +370,7 @@ TTTAttributedLabelDelegate
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = YES;
     
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -471,11 +472,11 @@ TTTAttributedLabelDelegate
     }
     
     [[QMCore.instance.chatService messagesWithChatDialogID:self.chatDialog.ID
-                                           iterationBlock:nil]
+                                            iterationBlock:nil]
      continueWithBlock:^id(BFTask<NSArray<QBChatMessage *> *> * __unused t) {
-        if (!self.progressView.hidden) [self stopSpinProgress];
-        return nil;
-    }];
+         if (!self.progressView.hidden) [self stopSpinProgress];
+         return nil;
+     }];
 }
 
 - (void)syncWithCache {
@@ -531,9 +532,7 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
     
     if (![QMCore.instance isInternetConnected]) {
         
-        [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeWarning
-                                                                              message:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
-                                                                             duration:kQMDefaultNotificationDismissTime];
+        [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
         return NO;
     }
     
@@ -1994,7 +1993,9 @@ didPerformAction:(SEL)action
         
         if (error == nil) {
             
-            [self.onlineTitleView setStatus:[NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil), self.chatDialog.occupantIDs.count, onlineUsers.count]];
+            NSString *status = [NSString stringWithFormat:NSLocalizedString(@"QM_STR_GROUP_CHAT_STATUS_STRING", nil),
+                                self.chatDialog.occupantIDs.count, onlineUsers.count];
+            [self.onlineTitleView setStatus:status];
         }
     }];
 }
@@ -2262,30 +2263,30 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
         
         self.contactRequestTask =
         [[[QMCore.instance.contactManager rejectAddContactRequest:opponentUser]
-           continueWithSuccessBlock:^id _Nullable(BFTask * __unused t) {
-            
-            return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
-            
-           }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
-               // Run after async data updates (multicast delegate)
-               dispatch_async(dispatch_get_main_queue(), ^{
-                   
-                   if (!t.isFaulted) {
-                       
-                       if (self.splitViewController.isCollapsed) {
-                           
-                           [self.navigationController popViewControllerAnimated:YES];
-                       }
-                       else {
-                           [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
-                       }
-                   }
-                   
-                   [(QMNavigationController *)self.navigationController dismissNotificationPanel];
-               });
-               
-               return nil;
-        }];
+          continueWithSuccessBlock:^id _Nullable(BFTask * __unused t) {
+              
+              return [QMCore.instance.chatService deleteDialogWithID:self.chatDialog.ID];
+              
+          }] continueWithBlock:^id _Nullable(BFTask * _Nonnull t) {
+              // Run after async data updates (multicast delegate)
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  
+                  if (!t.isFaulted) {
+                      
+                      if (self.splitViewController.isCollapsed) {
+                          
+                          [self.navigationController popViewControllerAnimated:YES];
+                      }
+                      else {
+                          [(QMSplitViewController *)self.splitViewController showPlaceholderDetailViewController];
+                      }
+                  }
+                  
+                  [(QMNavigationController *)self.navigationController dismissNotificationPanel];
+              });
+              
+              return nil;
+          }];
     }
 }
 
