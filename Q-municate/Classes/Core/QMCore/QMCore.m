@@ -161,7 +161,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     NSString *errorMessage = nil;
     
-    if (![self isInternetConnected]) {
+    if (![self isInternetConnected] || response.status == NSURLErrorTimedOut) {
         
         errorMessage = NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil);
     }
