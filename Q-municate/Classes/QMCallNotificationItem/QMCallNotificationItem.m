@@ -93,7 +93,7 @@ static UIImage *incomingVideoIcon() {
 - (instancetype)initWithCallNotificationMessage:(QBChatMessage *)message {
     
     self = [super init];
-    if (self != nil) {
+    if (self) {
         
         switch (message.callNotificationState) {
             
