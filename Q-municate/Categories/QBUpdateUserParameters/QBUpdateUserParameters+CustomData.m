@@ -73,9 +73,6 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 
 @implementation QBUpdateUserParameters (CustomData)
 
-@dynamic avatarUrl;
-@dynamic status;
-@dynamic isImport;
 
 //MARK: - Is import
 

@@ -21,7 +21,7 @@
 @implementation QMForgotPasswordViewController
 
 - (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidAppear:(BOOL)animated {

@@ -7,23 +7,22 @@
 //
 
 #import "QMUserInfoViewController.h"
-#import "QMCore.h"
+#import "UIViewController+SmartDeselection.h"
 #import "QMNavigationController.h"
-#import "QMChatVC.h"
-#import <QMChatViewController/QMDateUtils.h>
-#import <QMChatViewController/QMImageView.h>
 #import "QBChatDialog+OpponentID.h"
-#import "SVProgressHUD.h"
 #import "QMSplitViewController.h"
-
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
-#import <CoreTelephony/CTCarrier.h>
-
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
-
 #import "QMImagePreview.h"
+#import "SVProgressHUD.h"
 #import "QMCallManager.h"
 #import "REMessageUI.h"
+#import "QMChatVC.h"
+#import "QMCore.h"
+
+#import <QMChatViewController/QMDateUtils.h>
+#import <QMChatViewController/QMImageView.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <NYTPhotoViewer/NYTPhotosViewController.h>
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
@@ -74,7 +73,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update

@@ -8,6 +8,7 @@
 
 #import "QMSettingsViewController.h"
 #import "QMUpdateUserViewController.h"
+#import "UIViewController+SmartDeselection.h"
 #import "QMTableSectionHeaderView.h"
 #import "QMNavigationController.h"
 #import "QMSettingsFooterView.h"

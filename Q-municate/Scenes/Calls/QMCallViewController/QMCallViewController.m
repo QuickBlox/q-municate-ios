@@ -96,7 +96,7 @@ QBRTCAudioSessionDelegate
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

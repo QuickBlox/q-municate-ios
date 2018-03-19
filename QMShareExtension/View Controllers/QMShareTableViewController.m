@@ -8,7 +8,6 @@
 
 #import "QMShareTableViewController.h"
 #import <Quickblox/Quickblox.h>
-#import <MobileCoreServices/MobileCoreServices.h>
 #import "QMShareTableViewCell.h"
 #import "QMExtensionCache.h"
 #import "QMColors.h"

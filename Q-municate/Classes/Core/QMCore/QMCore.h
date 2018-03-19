@@ -6,8 +6,6 @@
 //  Copyright © 2016 Quickblox. All rights reserved.
 //
 
-#import "QMServicesManager.h"
-
 #import "QMProfile.h"
 
 #import "QMContactManager.h"

@@ -11,7 +11,7 @@
 #import "QMErrorsFactory.h"
 #import "QMFacebook.h"
 #import "QMContent.h"
-
+#import "QBUpdateUserParameters+CustomData.h"
 #import <FirebaseCore/FirebaseCore.h>
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <Bolts/Bolts.h>

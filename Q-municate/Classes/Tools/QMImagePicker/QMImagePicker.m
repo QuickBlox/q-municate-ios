@@ -24,7 +24,7 @@ static const NSUInteger kQMMaxFileSize = 100; //in MBs
 @implementation QMImagePicker
 
 - (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (instancetype)init {

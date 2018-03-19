@@ -22,7 +22,7 @@
 @implementation QMLogInViewController
 
 - (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewWillAppear:(BOOL)animated {

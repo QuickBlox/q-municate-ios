@@ -38,7 +38,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -96,7 +96,6 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
             break;
         
         case QMUpdateUserFieldStatus:
-            
             
             [self configureWithKeyPath:qm_keypath(QBUUser, status)
                                  title:NSLocalizedString(@"QM_STR_STATUS", nil)

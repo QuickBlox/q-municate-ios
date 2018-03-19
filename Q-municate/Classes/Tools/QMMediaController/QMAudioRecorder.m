@@ -57,8 +57,6 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         [options setValue:@(AVAudioQualityHigh) forKey:AVEncoderAudioQualityKey]; //channels
         [options setValue:@(16) forKey:AVEncoderBitDepthHintKey]; //channels
         
-        
-        
         // Initiate and prepare the recorder
         _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:options error:&error];
         _recorder.delegate = self;

@@ -8,7 +8,7 @@
 
 #import "QMActivityItem.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "QMConstants.h"
+#import <QMServices/QMLog.h>
 
 @interface QMActivityItem()
 
@@ -164,7 +164,7 @@ NSDictionary *QMTypeIdentifiersDictionary() {
 }
 
 - (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 @end
