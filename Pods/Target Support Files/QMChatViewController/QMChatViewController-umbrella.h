@@ -57,7 +57,6 @@
 #import "QMCollectionViewFlowLayoutInvalidationContext.h"
 #import "QMChatCollectionView.h"
 #import "QMInputToolbar.h"
-#import "QMToolbarContainer.h"
 #import "QMToolbarContentView.h"
 #import "QMPlaceHolderTextView.h"
 #import "QMAudioRecordButton.h"
