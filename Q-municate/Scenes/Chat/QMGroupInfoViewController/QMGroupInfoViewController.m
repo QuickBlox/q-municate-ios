@@ -35,7 +35,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

@@ -1,3 +1,7 @@
+# 2018-03-06 -- v2.0.10
+- Improved documentation on InstanceID usage for GDPR.
+- Improved the keypair handling during GCM to FCM migration. If you are migrating from GCM to FCM, we encourage you to update to this version and above.
+
 # 2018-02-06 -- v2.0.9
 - Improved support for language targeting for FCM service. Server updates happen more efficiently when language changes.
 - Improved support for FCM token auto generation enable/disable functions.

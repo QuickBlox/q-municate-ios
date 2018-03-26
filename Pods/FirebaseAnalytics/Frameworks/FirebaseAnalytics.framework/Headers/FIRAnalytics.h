@@ -78,7 +78,7 @@ NS_SWIFT_NAME(Analytics)
 /// <a href="https://www.google.com/policies/privacy">Google's Privacy Policy</a>
 ///
 /// @param userID The user ID to ascribe to the user of this app on this device, which must be
-///     non-empty and no more than 36 characters long. Setting userID to nil removes the user ID.
+///     non-empty and no more than 256 characters long. Setting userID to nil removes the user ID.
 + (void)setUserID:(nullable NSString *)userID;
 
 /// Sets the current screen name, which specifies the current visual context in your app. This helps

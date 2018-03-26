@@ -9,7 +9,7 @@
 #import "QMShareDataSource.h"
 #import "QMShareViewProtocol.h"
 #import <Quickblox/Quickblox.h>
-#import "QMServicesManager.h"
+#import <QMServices/QMServicesManager.h>
 #import "QMAlphabetizer.h"
 #import "QMShareTableViewCell.h"
 #import "QMNoResultsCell.h"

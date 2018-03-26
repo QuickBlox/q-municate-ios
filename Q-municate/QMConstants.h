@@ -11,16 +11,6 @@
 
 #import <CoreLocation/CLLocation.h>
 
-#ifdef DEBUG
-
-#define ILog(...) do { NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
-
-#else
-
-#define ILog(...) do { } while (0)
-
-#endif
-
 #define qm_keypath(__CLASS__, __KEY__)                      \
 ({                                                          \
     while (1) {                                             \
@@ -31,7 +21,6 @@
     }                                                       \
     NSStringFromSelector(@selector(__KEY__));               \
 })
-
 
 // storyboards
 static NSString *const kQMMainStoryboard = @"Main";

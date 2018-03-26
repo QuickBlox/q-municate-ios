@@ -8,6 +8,7 @@
 
 #import "QMDialogsViewController.h"
 #import "QMSearchResultsController.h"
+#import "UIViewController+SmartDeselection.h"
 #import "QMDialogsDataSource.h"
 #import "QMDialogsSearchDataSource.h"
 #import "QMDialogCell.h"
@@ -53,7 +54,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

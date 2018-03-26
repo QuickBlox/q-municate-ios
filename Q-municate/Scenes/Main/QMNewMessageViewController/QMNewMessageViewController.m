@@ -38,7 +38,7 @@ QMTagFieldViewDelegate
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update

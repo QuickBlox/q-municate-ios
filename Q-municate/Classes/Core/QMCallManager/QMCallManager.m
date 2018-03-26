@@ -356,7 +356,7 @@ QBChatDelegate
 
 - (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
     
-    ILog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
+    QMSLog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
 }
 
 - (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)__unused userID {
