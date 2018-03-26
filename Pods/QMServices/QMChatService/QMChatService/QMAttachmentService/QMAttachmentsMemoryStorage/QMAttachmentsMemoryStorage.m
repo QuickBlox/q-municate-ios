@@ -80,6 +80,10 @@
 
 #pragma mark - QMMemeoryStorageProtocol
 
+- (BOOL)isEmpty {
+    return self.attachmentsStorage.count == 0;
+}
+
 - (void)free {
     
     [self.attachmentsStorage removeAllObjects];

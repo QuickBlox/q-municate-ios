@@ -11,11 +11,11 @@
 #import "QMChatResources.h"
 
 @implementation UIButton (QMAnimated)
-
+    
 - (void)qm_setImage:(UIImage *)image {
     [self qm_setImage:image animated:YES];
 }
-
+    
 - (void)qm_setImage:(UIImage *)buttonImage
            animated:(BOOL)animated  {
     
@@ -37,22 +37,22 @@
         imageSetBlock();
     }
 }
-
-@end
+    
+    @end
 
 @implementation QMBaseMediaCell
-
-@synthesize viewState = _viewState;
-@synthesize messageID = _messageID;
-@synthesize mediaHandler = _mediaHandler;
-@synthesize duration = _duration;
-@synthesize currentTime = _currentTime;
-@synthesize progress = _progress;
-@synthesize image = _image;
-@synthesize thumbnailImage = _thumbnailImage;
-@synthesize cancellable = _cancellable;
-@synthesize playable = _playable;
-
+    
+    @synthesize viewState = _viewState;
+    @synthesize messageID = _messageID;
+    @synthesize mediaHandler = _mediaHandler;
+    @synthesize duration = _duration;
+    @synthesize currentTime = _currentTime;
+    @synthesize progress = _progress;
+    @synthesize image = _image;
+    @synthesize thumbnailImage = _thumbnailImage;
+    @synthesize cancellable = _cancellable;
+    @synthesize playable = _playable;
+    
 - (void)awakeFromNib {
     
     [super awakeFromNib];
@@ -73,7 +73,7 @@
                                  animated:YES];
     }
 }
-
+    
 - (void)prepareForReuse {
     
     [super prepareForReuse];
@@ -90,7 +90,7 @@
                                  animated:YES];
     }
 }
-
+    
 - (void)setCurrentTime:(NSTimeInterval)currentTime
               animated:(BOOL)animated {
     
@@ -106,17 +106,17 @@
     self.durationLabel.text = [self timestampString:currentTime
                                         forDuration:_duration];
 }
-
-
+    
+    
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
     [self setCurrentTime:currentTime
                 animated:NO];
 }
-
+    
 - (void)showLoadingError:(NSError *)error {
     
 }
-
+    
 - (void)setProgress:(CGFloat)progress {
     
     if (self.viewState != QMMediaViewStateLoading) {
@@ -136,15 +136,15 @@
         [self.circularProgress setProgress:progress];
     }
 }
-
+    
 - (void)setDuration:(NSTimeInterval)duration {
     
     _duration = duration;
     
     self.durationLabel.text = [self timestampString:duration];
 }
-
-
+    
+    
 - (void)setThumbnailImage:(UIImage *)image {
     
     _thumbnailImage = image;
@@ -152,40 +152,40 @@
     self.previewImageView.image = image;
     [self.previewImageView setNeedsLayout];
 }
-
-
+    
+    
 - (void)qm_setImage:(UIImage *)image
-        animated:(BOOL)animated {
+           animated:(BOOL)animated {
     
     _image = image;
     if (animated) {
-    [UIView transitionWithView:self.previewImageView
-                      duration:0.2f
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^{
-                        self.previewImageView.image = image;
-                    } completion:^(BOOL finished) {
-                        [self.previewImageView setNeedsLayout];
-                    }];
+        [UIView transitionWithView:self.previewImageView
+                          duration:0.2f
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            self.previewImageView.image = image;
+                        } completion:^(BOOL finished) {
+                            [self.previewImageView setNeedsLayout];
+                        }];
     }
     else {
         self.previewImageView.image = image;
         [self.previewImageView setNeedsLayout];
     }
 }
-
+    
 - (void)setImage:(UIImage *)image {
     //animate only if the image wasn't been set before
     [self qm_setImage:image
              animated:_image ? NO : YES];
 }
-
-
+    
+    
 - (IBAction)activateMedia:(id)sender {
     
     [self.mediaHandler didTapMediaButton:self];
 }
-
+    
 - (NSString *)timestampString:(NSTimeInterval)duration {
     
     if (duration < 60) {
@@ -197,32 +197,32 @@
     
     return [NSString stringWithFormat:@"%d:%02d:%02d", (int)duration / 3600, (int)duration / 60, (int)duration % 60];
 }
-
+    
 - (NSString *)timestampString:(NSTimeInterval)currentTime
                   forDuration:(NSTimeInterval)duration
-{
-    
-    NSString *timestampString  = nil;
-    
-    if (duration < 60) {
-        if (currentTime < duration) {
-            timestampString = [NSString stringWithFormat:@"0:%02d", (int)round(currentTime)];
+    {
+        
+        NSString *timestampString  = nil;
+        
+        if (duration < 60) {
+            if (currentTime < duration) {
+                timestampString = [NSString stringWithFormat:@"0:%02d", (int)round(currentTime)];
+            }
+            else {
+                timestampString = [NSString stringWithFormat:@"0:%02d", (int)ceil(currentTime)];
+            }
+        }
+        else if (duration < 3600) {
+            timestampString = [NSString stringWithFormat:@"%d:%02d", (int)currentTime / 60, (int)currentTime % 60];
         }
         else {
-            timestampString = [NSString stringWithFormat:@"0:%02d", (int)ceil(currentTime)];
+            timestampString = [NSString stringWithFormat:@"%d:%02d:%02d", (int)currentTime / 3600, (int)currentTime / 60, (int)currentTime % 60];
         }
-    }
-    else if (duration < 3600) {
-        timestampString = [NSString stringWithFormat:@"%d:%02d", (int)currentTime / 60, (int)currentTime % 60];
-    }
-    else {
-        timestampString = [NSString stringWithFormat:@"%d:%02d:%02d", (int)currentTime / 3600, (int)currentTime / 60, (int)currentTime % 60];
+        
+        return timestampString;
     }
     
-    return timestampString;
-}
-
-
+    
 - (CALayer *)maskLayerFromImage:(UIImage *)image
                       withFrame:(CGRect)frame {
     
@@ -257,7 +257,7 @@
     
     return layer;
 }
-
+    
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     
     if ([touch.view isKindOfClass:[UIButton class]]) {
@@ -266,7 +266,7 @@
         return [super gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
     }
 }
-
+    
 - (void)setViewState:(QMMediaViewState)viewState {
     
     if (_viewState == viewState) {
@@ -276,9 +276,9 @@
     
     [self updateViewWithState:viewState];
 }
-
+    
 - (void)updateViewWithState:(QMMediaViewState)viewState {
-
+    
     if (viewState == QMMediaViewStateLoading) {
         self.mediaPlayButton.hidden = !self.cancellable;
         [self.circularProgress startSpinProgressBackgroundLayer];
@@ -297,28 +297,26 @@
     
     [self.mediaPlayButton qm_setImage:buttonImage];
 }
-
+    
 - (UIImage *)imageForButtonWithState:(QMMediaViewState)viewState {
     return nil;
 }
-
-static inline UIImage* QMPlayButtonImageForState(QMMediaViewState state) {
     
-    NSString *imageName = nil;
-    
-    switch (state) {
+    static inline UIImage* QMPlayButtonImageForState(QMMediaViewState state) {
+        
+        NSString *imageName = nil;
+        
+        switch (state) {
             
-        case QMMediaViewStateNotReady: imageName = @"ic_download"; break;
-        case QMMediaViewStateReady:    imageName = @"ic_play"; break;
-        case QMMediaViewStateLoading:  imageName = @"ic_cancel"; break;
-        case QMMediaViewStateActive:   imageName = @"ic_pause"; break;
-        case QMMediaViewStateError:    imageName = @"ic_retry"; break;
+            case QMMediaViewStateNotReady: imageName = @"ic_download"; break;
+            case QMMediaViewStateReady:    imageName = @"ic_play"; break;
+            case QMMediaViewStateLoading:  imageName = @"ic_cancel"; break;
+            case QMMediaViewStateActive:   imageName = @"ic_pause"; break;
+            case QMMediaViewStateError:    imageName = @"ic_retry"; break;
+        }
+        
+        UIImage *buttonImage = [QMChatResources imageNamed:imageName];
+        return [buttonImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     
-    UIImage *buttonImage =
-    [[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    
-    return buttonImage;
-}
-
-@end
+    @end

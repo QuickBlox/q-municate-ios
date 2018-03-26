@@ -81,14 +81,6 @@
 @property (assign, nonatomic) NSUInteger senderID;
 
 /**
- *  Float value that used as height for section header.
- *
- *  @discussion Set this value with data source method '- (CGFloat)heightForSectionHeader'.
- *  Section header will not be displayed if value is '0'.
- */
-@property (assign, nonatomic) CGFloat heightForSectionHeader;
-
-/**
  *  Specifies whether or not the view controller should automatically scroll to the most recent message
  *  when the view appears and when sending, receiving, and composing a new message.
  *

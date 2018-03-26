@@ -13,8 +13,65 @@
 @class QMToolbarContentView;
 @class QMAudioRecordButton;
 
+@protocol QMAudioRecordToolbarDelegate <NSObject>
+
+@optional
 /**
- *  The `QBChatMessageInputToolbarDelegate` protocol defines methods for interacting with
+ Asks the delegate if it can start the audio recording by touching the audio record button.
+ 
+ @param toolbar An instance of `QMInputToolbar`
+ @return YES if the audio recording should start or NO if it should not.
+ */
+- (BOOL)audioRecordingShouldStart:(QMInputToolbar *)toolbar;
+
+/**
+ This method is called when an audio recording has started.
+ 
+ @param toolbar An instance of `QMInputToolbar`
+ */
+- (void)audioRecordingStart:(QMInputToolbar *)toolbar;
+
+/**
+ This method is called when an audio recording has cancelled.
+ 
+ @param toolbar An instance of `QMInputToolbar`
+ */
+- (void)audioRecordingCancel:(QMInputToolbar *)toolbar;
+
+/**
+ This method is called when an audio recording has completed.
+ 
+ @param toolbar An instance of `QMInputToolbar`
+ */
+- (void)audioRecordingComplete:(QMInputToolbar *)toolbar;
+
+/**
+ This method is called when an audio recording has paused because of timeout.
+ @discussion: This mehod will be called only if 'audioRecordingMaximumDuration:' is adopted.
+ @param toolbar An instance of `QMInputToolbar`.
+ */
+- (void)audioRecordingPausedByTimeOut:(QMInputToolbar *)toolbar;
+
+/**
+ Tells the delegate to return the current duration.
+ 
+ @param toolbar An instance of `QMInputToolbar`
+ @return Current duration of the audio recorder.
+ */
+- (NSTimeInterval)audioRecordingDuration:(QMInputToolbar *)toolbar;
+
+/**
+ Tells the delegate to return the maximum duration.
+ 
+ @param toolbar An instance of `QMInputToolbar`
+ @return The maximum duration of the recorded audio.
+ */
+- (NSTimeInterval)audioRecordingMaximumDuration:(QMInputToolbar *)toolbar;
+
+@end
+
+/**
+ *  The `QMInputToolbarDelegate` protocol defines methods for interacting with
  *  a `QBChatMessageInputToolbar` object.
  */
 @protocol QMInputToolbarDelegate <UIToolbarDelegate>
@@ -44,59 +101,66 @@
 /**
  Asks the delegate if it can start the audio recording by touching the audio record button.
  
- @param toolbar An instance of `QBChatMessageInputToolbar`
+ @param toolbar An instance of `QMInputToolbar`
  @return YES if the audio recording should start or NO if it should not.
  */
-- (BOOL)messagesInputToolbarAudioRecordingShouldStart:(QMInputToolbar *)toolbar;
+- (BOOL)messagesInputToolbarAudioRecordingShouldStart:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingShouldStart");
 
 /**
  This method is called when an audio recording has started.
  
- @param toolbar An instance of `QBChatMessageInputToolbar`
+ @param toolbar An instance of `QMInputToolbar`
  */
-- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)toolbar;
+- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingStart");
 
 /**
  This method is called when an audio recording has cancelled.
  
- @param toolbar An instance of `QBChatMessageInputToolbar`
+ @param toolbar An instance of `QMInputToolbar`
  */
-- (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)toolbar;
+- (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingCancel");
 
 /**
  This method is called when an audio recording has completed.
  
- @param toolbar An instance of `QBChatMessageInputToolbar`
+ @param toolbar An instance of `QMInputToolbar`
  */
-- (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)toolbar;
+- (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingComplete");
 
 /**
  This method is called when an audio recording has paused because of timeout.
  @discussion: This mehod will be called only if 'inputPanelAudioRecordingMaximumDuration:' is adopted.
- @param toolbar An instance of `QBChatMessageInputToolbar`.
+ @param toolbar An instance of `QMInputToolbar`.
  */
-- (void)messagesInputToolbarAudioRecordingPausedByTimeOut:(QMInputToolbar *)toolbar;
+- (void)messagesInputToolbarAudioRecordingPausedByTimeOut:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingPausedByTimeOut");
 
 /**
  Tells the delegate to return the current duration.
  
- @param toolbar An instance of `QBChatMessageInputToolbar`
+ @param toolbar An instance of `QMInputToolbar`
  @return Current duration of the audio recorder.
  */
-- (NSTimeInterval)inputPanelAudioRecordingDuration:(QMInputToolbar *)toolbar;
+- (NSTimeInterval)inputPanelAudioRecordingDuration:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingDuration:");
 
 /**
  Tells the delegate to return the maximum duration.
  
- @param toolbar An instance of `QBChatMessageInputToolbar`
+ @param toolbar An instance of `QMInputToolbar`
  @return The maximum duration of the recorded audio.
  */
-- (NSTimeInterval)inputPanelAudioRecordingMaximumDuration:(QMInputToolbar *)toolbar;
+- (NSTimeInterval)inputPanelAudioRecordingMaximumDuration:(QMInputToolbar *)toolbar
+__deprecated_msg("Method deprecated. Use audioRecordingMaximumDuration:");
 
 @end
 
 /**
- *  An instance of `QBChatMessageInputToolbar` defines the input toolbar for
+ *  An instance of `QMInputToolbar` defines the input toolbar for
  *  composing a new message. It is displayed above and follow the movement of
  *  the system keyboard.
  */
@@ -106,6 +170,11 @@
  *  The object that acts as the delegate of the toolbar.
  */
 @property (weak, nonatomic) id<QMInputToolbarDelegate> delegate;
+
+/**
+ The object that acts as the audio record delegate of the toolbar
+ */
+@property (weak, nonatomic) id<QMAudioRecordToolbarDelegate> audioRecordDelegate;
 
 /**
  *  Returns the content view of the toolbar. This view contains all subviews of the toolbar.

@@ -59,11 +59,11 @@ static const CGFloat outerCircleMinScale = innerCircleRadius / outerCircleRadius
         _panRecognizer.cancelsTouchesInView = false;
         _panRecognizer.delegate = self;
         
-        UIImage *iconImage = [[UIImage imageNamed:@"ic_audio"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIImage *iconImage = [[QMChatResources imageNamed:@"ic_audio"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         _innerIconView = [[UIImageView alloc] initWithImage:iconImage];
         _innerIconView.tintColor = [UIColor whiteColor];
         
-        _iconView.image = [UIImage imageNamed:@"ic_audio"];
+        _iconView.image = [QMChatResources imageNamed:@"ic_audio"];
         [self addGestureRecognizer:_panRecognizer];
     }
     return self;

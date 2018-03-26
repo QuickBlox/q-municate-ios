@@ -103,19 +103,25 @@ NSComparator messageComparator = ^(QBChatMessage *obj1, QBChatMessage *obj2) {
         NSMutableArray *messageIDs = [NSMutableArray arrayWithCapacity:messages.count];
         NSMutableArray *messagesArray = [NSMutableArray arrayWithCapacity:messages.count];
         NSEnumerator *enumerator = [messages objectEnumerator];
-        if (_customDividerInterval > 0
-            && updateType == QMDataSourceActionTypeAdd) {
-            NSSortDescriptor *dateSentDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"dateSent"
-                                                                                 ascending:YES];
-            NSSortDescriptor *idDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ID"
-                                                                           ascending:YES];
+        
+        if (_customDividerInterval > 0 && updateType == QMDataSourceActionTypeAdd) {
+            
+            NSSortDescriptor *dateSentDescriptor =
+            [NSSortDescriptor sortDescriptorWithKey:@"dateSent" ascending:YES];
+            
+            NSSortDescriptor *idDescriptor =
+            [NSSortDescriptor sortDescriptorWithKey:@"ID" ascending:YES];
+            
             enumerator = [[messages sortedArrayUsingDescriptors:@[dateSentDescriptor, idDescriptor]] objectEnumerator];
         }
+        
         for (QBChatMessage *message in enumerator) {
             
             NSAssert(message.dateSent != nil, @"Message must have dateSent!");
             
-            if ([self shouldSkipMessage:message forDataSourceUpdateType:updateType]) {
+            BOOL messageExists = [self messageExists:message];
+            BOOL skip = (updateType == QMDataSourceActionTypeAdd ? messageExists : !messageExists);
+            if (skip) {
                 continue;
             }
             
@@ -140,13 +146,22 @@ NSComparator messageComparator = ^(QBChatMessage *obj1, QBChatMessage *obj2) {
             
             QBChatMessage *dividerMessage = nil;
             NSDate *removedDivider = nil;
-            [self handleMessage:message forUpdateType:updateType dividerMessage:&dividerMessage removedDivider:&removedDivider];
+            
+            [self handleMessage:message
+                  forUpdateType:updateType
+                 dividerMessage:&dividerMessage
+                 removedDivider:&removedDivider];
+            
             if (dividerMessage != nil) {
                 [messagesArray addObject:dividerMessage];
                 [messageIDs addObject:dividerMessage.ID];
             }
+            
             if (removedDivider != nil) {
-                NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatMessage *chatMessage, NSDictionary<NSString *,id> *bindings) {
+                
+                NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatMessage *chatMessage,
+                                                                               NSDictionary<NSString *,id> *bindings) {
+                    
                     return chatMessage.isDateDividerMessage && [chatMessage.dateSent isEqualToDate:removedDivider];
                 }];
                 
@@ -221,13 +236,6 @@ NSComparator messageComparator = ^(QBChatMessage *obj1, QBChatMessage *obj2) {
     }
     
     return [NSArray arrayWithArray:indexPaths];
-}
-
-- (BOOL)shouldSkipMessage:(QBChatMessage *)message forDataSourceUpdateType:(QMDataSourceActionType)updateType {
-    
-    BOOL messageExists = [self messageExists:message];
-    
-    return (updateType == QMDataSourceActionTypeAdd ? messageExists : !messageExists);
 }
 
 // MARK: - Helpers

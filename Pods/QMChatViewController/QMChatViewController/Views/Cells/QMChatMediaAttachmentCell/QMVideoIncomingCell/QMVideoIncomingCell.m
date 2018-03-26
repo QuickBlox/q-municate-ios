@@ -54,7 +54,7 @@
         case QMMediaViewStateError:    imageName = @"ic_retry-video"; break;
     }
     
-    return  [UIImage imageNamed:imageName];
+    return  [QMChatResources imageNamed:imageName];
 }
 
 @end

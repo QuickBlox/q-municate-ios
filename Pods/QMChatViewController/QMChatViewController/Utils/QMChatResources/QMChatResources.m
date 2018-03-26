@@ -8,49 +8,40 @@
 
 #import "QMChatResources.h"
 
-static inline NSBundle *bundle() {
-    
-    static NSBundle *bundle = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        NSString *path = [[NSBundle bundleForClass:[QMChatResources class]] pathForResource:@"QMChatViewController" ofType:@"bundle"];
-        bundle = [NSBundle bundleWithPath:path];
-        
-        if (bundle == nil) {
-            // if bundle with path is not existent that means that chat controller
-            // was installed as a source from github, using main bundle instead
-            bundle = [NSBundle mainBundle];
-        }
-    });
-    
-    return bundle;
-}
-
 @implementation QMChatResources
 
 + (NSBundle *)resourceBundle {
     
-    return bundle();
+    static NSBundle *_bundle = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        _bundle = [NSBundle bundleForClass:[QMChatResources class]];
+        NSURL *url = [_bundle URLForResource:@"QMChatViewController" withExtension:@"bundle"];
+        _bundle = [NSBundle bundleWithURL:url];
+        
+        if (_bundle == nil) {
+            // if bundle with path is not existent that means that chat controller
+            // was installed as a source from github, using main bundle instead
+            _bundle = [NSBundle mainBundle];
+        }
+    });
+    
+    return _bundle;
 }
 
 + (UIImage *)imageNamed:(NSString *)name {
     
-    UIImage *image = nil;
-    
-    NSString *path = [bundle() pathForResource:name ofType:@"png"];
-    
-    if (path != nil) {
-        image = [UIImage imageWithContentsOfFile:path];
-    }
+    UIImage *image = [UIImage imageNamed:name
+                                inBundle:[self resourceBundle]
+           compatibleWithTraitCollection:nil];
     
     return image;
 }
 
 + (UINib *)nibWithNibName:(NSString *)name {
     
-    return [UINib nibWithNibName:name bundle:bundle()];
+    return [UINib nibWithNibName:name bundle:[self resourceBundle]];
 }
 
 @end

@@ -119,11 +119,6 @@ PODS:
     - TTTAttributedLabel
   - QMServices (0.6.1):
     - Bolts (>= 1.9.0)
-  - Quickblox (2.16):
-    - Quickblox/Header (= 2.16)
-    - Quickblox/sources (= 2.16)
-  - Quickblox/Header (2.16)
-  - Quickblox/sources (2.16)
   - Reachability (3.2)
   - SAMKeychain (1.5.3)
   - SDWebImage (4.3.3):
@@ -143,9 +138,8 @@ DEPENDENCIES:
   - Flurry-iOS-SDK/FlurrySDK (<= 8.3.1)
   - libextobjc/EXTScope (~> 0.4.1)
   - NYTPhotoViewer (from `https://github.com/NYTimes/NYTPhotoViewer.git`, tag `v2.0.0`)
-  - QMChatViewController (from `../QMChatViewController-ios/`)
-  - QMServices (from `../q-municate-services-ios`)
-  - Quickblox (from `../SDK-ios`)
+  - QMChatViewController (from `https://github.com/QuickBlox/QMChatViewController-ios.git`, branch `development`)
+  - QMServices (from `git@github.com:QuickBlox/q-municate-services-ios.git`, branch `development`)
   - Reachability (~> 3.2)
   - SAMKeychain
   - SVProgressHUD
@@ -157,16 +151,22 @@ EXTERNAL SOURCES:
     :git: https://github.com/NYTimes/NYTPhotoViewer.git
     :tag: v2.0.0
   QMChatViewController:
-    :path: ../QMChatViewController-ios/
+    :branch: development
+    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
   QMServices:
-    :path: ../q-municate-services-ios
-  Quickblox:
-    :path: ../SDK-ios
+    :branch: development
+    :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 CHECKOUT OPTIONS:
   NYTPhotoViewer:
     :git: https://github.com/NYTimes/NYTPhotoViewer.git
     :tag: v2.0.0
+  QMChatViewController:
+    :commit: a19a521712d6d717eacdce7498a21c66c4502c0a
+    :git: https://github.com/QuickBlox/QMChatViewController-ios.git
+  QMServices:
+    :commit: 9e1fd7e1703a0ef4adf6e77b300a819ae07f8649
+    :git: git@github.com:QuickBlox/q-municate-services-ios.git
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
@@ -189,9 +189,8 @@ SPEC CHECKSUMS:
   libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   NYTPhotoViewer: 34b8bd6bcc297466adec1668f9a01249d73c90e6
-  QMChatViewController: 5caa59e36ed9d3b6fd41f6dbadad1a6aec28cc8c
-  QMServices: d4cd0e55fcf24947cafed007b3b8ead047fb0a0f
-  Quickblox: 1e2b21dcceab106d20dd885a1e0f8df7a92924f0
+  QMChatViewController: 05ea262eeffcc8d2b08fc3f6eff84a54c90cfe1f
+  QMServices: ef5d17ca86796a050f89a36b863a56e892219698
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
@@ -199,6 +198,6 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 8cffe8e127e4e82ff3af1e5386d4cd0ad000b656
   UIDevice-Hardware: 72b0ea097ed0b239fe88073e2b9ac0b18f75bc05
 
-PODFILE CHECKSUM: 2df6fd1ee57525552f518ca89a6e717cee9f6783
+PODFILE CHECKSUM: 814ef8d97e2bf9df5cd7d052e474d0c665d31097
 
 COCOAPODS: 1.4.0

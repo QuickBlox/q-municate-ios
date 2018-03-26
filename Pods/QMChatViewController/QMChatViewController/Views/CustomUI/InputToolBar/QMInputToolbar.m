@@ -20,11 +20,8 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
 @interface QMInputToolbar() <QMAudioRecordButtonProtocol, QMAudioRecordViewProtocol>
 
 @property (assign, nonatomic) BOOL isObserving;
-
 @property (assign, nonatomic, getter=isRecording) BOOL recording;
-
 @property (weak, nonatomic) QMAudioRecordView *audioRecordView;
-
 @property (strong, nonatomic) UIButton *sendButton;
 @property (strong, nonatomic) QMAudioRecordButton *audioRecordButtonItem;
 
@@ -39,7 +36,6 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     
     [super awakeFromNib];
     [self commonInit];
-    
 }
 
 - (instancetype)init {
@@ -183,7 +179,6 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     if (self.sendButtonOnRight) {
         
         self.contentView.rightBarButtonItem.enabled = hasText || hasTextAttachment;
-        
     }
     else {
         
@@ -323,12 +318,30 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
 
 - (void)recordButtonInteractionDidBegin {
     
-    if ([self.delegate messagesInputToolbarAudioRecordingShouldStart:self]) {
+    dispatch_block_t startRecording = ^{
         
         self.recording = YES;
         [self setShowRecordingInterface:true velocity:0.0f];
-        [self.delegate messagesInputToolbarAudioRecordingStart:self];
+        if ([self.delegate respondsToSelector:@selector(messagesInputToolbarAudioRecordingStart:)]) {
+            [self.delegate messagesInputToolbarAudioRecordingStart:self];
+        }
+        
+        if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingStart:)]) {
+            [self.audioRecordDelegate audioRecordingStart:self];
+        }
         [self startAudioRecording];
+    };
+    
+    if ([self.delegate respondsToSelector:@selector(messagesInputToolbarAudioRecordingShouldStart:)]) {
+        if ([self.delegate messagesInputToolbarAudioRecordingShouldStart:self]) {
+            startRecording();
+        }
+    }
+
+    if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingShouldStart:)]) {
+        if ([self.audioRecordDelegate audioRecordingShouldStart:self]) {
+            startRecording();
+        }
     }
 }
 
@@ -339,7 +352,12 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
         self.recording = NO;
         [self setShowRecordingInterface:false velocity:velocity];
         
-        [self.delegate messagesInputToolbarAudioRecordingCancel:self];
+        if ([self.delegate respondsToSelector:@selector(messagesInputToolbarAudioRecordingCancel:)]) {
+            [self.delegate messagesInputToolbarAudioRecordingCancel:self];
+        }
+        if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingCancel:)]) {
+            [self.audioRecordDelegate audioRecordingCancel:self];
+        }
     }
 }
 
@@ -349,8 +367,12 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
         self.recording = NO;
         
         [self setShowRecordingInterface:false velocity:0.0];
+        
         if ([self.delegate respondsToSelector:@selector(messagesInputToolbarAudioRecordingCancel:)]) {
             [self.delegate messagesInputToolbarAudioRecordingCancel:self];
+        }
+        if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingCancel:)]) {
+            [self.audioRecordDelegate audioRecordingCancel:self];
         }
     }
 }
@@ -362,7 +384,13 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
         self.recording = NO;
         [self setShowRecordingInterface:false velocity:velocity];
         
-        [self.delegate messagesInputToolbarAudioRecordingComplete:self];
+        if ([self.delegate respondsToSelector:@selector(messagesInputToolbarAudioRecordingComplete:)]) {
+            [self.delegate messagesInputToolbarAudioRecordingComplete:self];
+        }
+        
+        if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingComplete:)]) {
+            [self.audioRecordDelegate audioRecordingComplete:self];
+        }
     }
 }
 
@@ -389,12 +417,20 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     if ([self.delegate respondsToSelector:@selector(messagesInputToolbarAudioRecordingPausedByTimeOut:)]) {
         return [self.delegate messagesInputToolbarAudioRecordingPausedByTimeOut:self];
     }
+    
+    if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingPausedByTimeOut:)]) {
+        return [self.audioRecordDelegate audioRecordingPausedByTimeOut:self];
+    }
 }
 
 - (NSTimeInterval)maximumDuration {
     
     if ([self.delegate respondsToSelector:@selector(inputPanelAudioRecordingMaximumDuration:)]) {
         return [self.delegate inputPanelAudioRecordingMaximumDuration:self];
+    }
+    
+    if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingMaximumDuration:)]) {
+        return [self.audioRecordDelegate audioRecordingMaximumDuration:self];
     }
     
     return 0.0;
@@ -406,6 +442,10 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
         return [self.delegate inputPanelAudioRecordingDuration:self];
     }
     
+    if ([self.audioRecordDelegate respondsToSelector:@selector(audioRecordingDuration:)]) {
+        return [self.audioRecordDelegate audioRecordingDuration:self];
+    }
+    
     return 0.0;
 }
 
@@ -413,7 +453,7 @@ static void * kQMInputToolbarKeyValueObservingContext = &kQMInputToolbarKeyValue
     
     if (!_audioRecordButtonItem) {
         
-        UIImage *recordImage = [UIImage imageNamed:@"ic_audio"];
+        UIImage *recordImage = [QMChatResources imageNamed:@"ic_audio"];
         UIImage *normalImage = [recordImage imageMaskedWithColor:[UIColor lightGrayColor]];
         
         CGRect frame = CGRectMake(12, 0, recordImage.size.width, 32.0);

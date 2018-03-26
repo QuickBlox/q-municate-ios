@@ -383,7 +383,6 @@ static NSArray *qm_colors = nil;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(handleTapGesture:)];
-    
     [self addGestureRecognizer:tap];
     self.tapGestureRecognizer = tap;
     self.userInteractionEnabled = YES;

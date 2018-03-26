@@ -22,6 +22,7 @@ typedef NS_ENUM(NSUInteger, QMImageViewType) {
  Default QMUserImageViewType QMUserImageViewTypeNone
  */
 @property (assign, nonatomic) QMImageViewType imageViewType;
+@property (weak, nonatomic, readonly) UITapGestureRecognizer *tapGestureRecognizer;
 @property (strong, nonatomic, readonly) NSURL *url;
 
 @property (weak, nonatomic) id <QMImageViewDelegate> delegate;

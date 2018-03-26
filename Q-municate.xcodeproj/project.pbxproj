@@ -240,6 +240,9 @@
 		E3D2EEA41EF7C693002DC44E /* QMTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA31EF7C693002DC44E /* QMTableViewController.m */; };
 		E3D2EEA81EF7E71C002DC44E /* QMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEA71EF7E71C002DC44E /* QMViewController.m */; };
 		E3D2EEAB1EF7F6A2002DC44E /* QMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D2EEAA1EF7F6A2002DC44E /* QMNavigationController.m */; };
+		FB76395B2069431500CF6A58 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB76395A2069431400CF6A58 /* Quickblox.framework */; };
+		FB76395C2069431900CF6A58 /* Quickblox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB76395A2069431400CF6A58 /* Quickblox.framework */; };
+		FB76395D2069431900CF6A58 /* Quickblox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FB76395A2069431400CF6A58 /* Quickblox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FBE42BCC1FF6807D00F139E9 /* MPGNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = FBE42BCB1FF6807D00F139E9 /* MPGNotification.m */; };
 /* End PBXBuildFile section */
 
@@ -280,6 +283,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				E333FBA91F5461FA0095F224 /* QuickbloxWebRTC.framework in Embed Frameworks */,
+				FB76395D2069431900CF6A58 /* Quickblox.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -689,6 +693,7 @@
 		E3D2EEA91EF7F6A2002DC44E /* QMNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QMNavigationController.h; path = QMNavigationController/QMNavigationController.h; sourceTree = "<group>"; };
 		E3D2EEAA1EF7F6A2002DC44E /* QMNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QMNavigationController.m; path = QMNavigationController/QMNavigationController.m; sourceTree = "<group>"; };
 		F334A9F28F73239275E50842 /* Pods-Q-municate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Q-municate.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Q-municate/Pods-Q-municate.debug.xcconfig"; sourceTree = "<group>"; };
+		FB76395A2069431400CF6A58 /* Quickblox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quickblox.framework; path = External/Quickblox.framework; sourceTree = "<group>"; };
 		FBE42BCA1FF6807C00F139E9 /* MPGNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGNotification.h; sourceTree = "<group>"; };
 		FBE42BCB1FF6807D00F139E9 /* MPGNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGNotification.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -699,7 +704,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E333FBA81F5461FA0095F224 /* QuickbloxWebRTC.framework in Frameworks */,
+				FB76395C2069431900CF6A58 /* Quickblox.framework in Frameworks */,
 				C5699CD496624E1CEC10B7C2 /* Pods_Q_municate.framework in Frameworks */,
+				FB76395B2069431500CF6A58 /* Quickblox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2081,6 +2088,7 @@
 		69D57E5418ACC11C00A9900A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FB76395A2069431400CF6A58 /* Quickblox.framework */,
 				E0D3D9A41F4DCCBA006AB505 /* CoreTelephony.framework */,
 				E333FBA51F5461FA0095F224 /* QuickbloxWebRTC.framework */,
 				E03871CB1DDB354700554EB9 /* Intents.framework */,
@@ -2835,7 +2843,6 @@
 				"${BUILT_PRODUCTS_DIR}/NYTPhotoViewer/NYTPhotoViewer.framework",
 				"${BUILT_PRODUCTS_DIR}/QMChatViewController/QMChatViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/QMServices/QMServices.framework",
-				"${BUILT_PRODUCTS_DIR}/Quickblox/Quickblox.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SAMKeychain/SAMKeychain.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -2859,7 +2866,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NYTPhotoViewer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QMChatViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QMServices.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quickblox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAMKeychain.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",

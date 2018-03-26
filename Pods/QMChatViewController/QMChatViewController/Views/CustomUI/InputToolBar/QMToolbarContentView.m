@@ -10,7 +10,6 @@
 #import "UIView+QM.h"
 #import "QMChatResources.h"
 #import "QMAudioRecordButton.h"
-#import "QMToolbarContainer.h"
 
 const CGFloat kQMToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
@@ -33,9 +32,6 @@ const CGFloat kQMToolbarContentViewHorizontalSpacingDefault = 8.0f;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftHorizontalSpacingConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *rightHorizontalSpacingConstraint;
-
-@property (weak, nonatomic) QMToolbarContainer *rightToolbarContainer;
-@property (weak, nonatomic) QMToolbarContainer *leftToolbarContainer;
 
 @end
 

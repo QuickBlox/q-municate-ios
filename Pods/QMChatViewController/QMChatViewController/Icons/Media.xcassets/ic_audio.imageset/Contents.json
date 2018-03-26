@@ -10,7 +10,8 @@
     "author" : "xcode"
   },
   "properties" : {
-    "template-rendering-intent" : "template",
+    "compression-type" : "automatic",
+    "template-rendering-intent" : "original",
     "preserves-vector-representation" : true
   }
 }

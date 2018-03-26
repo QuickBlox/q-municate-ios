@@ -39,13 +39,6 @@
 - (NSUInteger)senderID;
 
 /**
- *  Height for section header.
- *
- *  @return height for header that used as section header
- */
-- (CGFloat)heightForSectionHeader;
-
-/**
  *  Asks the data source for the message data that corresponds to the specified item at indexPath in the collectionView.
  *
  *  @param collectionView The object representing the collection view requesting this information.

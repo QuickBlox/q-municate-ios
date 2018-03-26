@@ -996,7 +996,7 @@ static NSString* const kQMChatServiceDomain = @"com.q-municate.chatservice";
                  extendedRequest:(NSDictionary *)extendedParameters
                   iterationBlock:(void (^)(QBResponse *response, NSArray *messages, BOOL *stop))iterationBlock
                       completion:(void (^)(QBResponse *response, NSArray<QBChatMessage *>  *messages))completion {
-    
+
     dispatch_group_t messagesLoadGroup = dispatch_group_create();
     
     if ([[self.messagesMemoryStorage messagesWithDialogID:chatDialogID] count] == 0) {

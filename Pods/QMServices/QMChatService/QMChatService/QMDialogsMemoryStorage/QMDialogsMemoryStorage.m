@@ -181,6 +181,9 @@ updateDialog(QBChatDialog *src, QBChatDialog *res) {
 }
 
 //MARK: - QMMemoryStorageProtocol
+- (BOOL)isEmpty {
+    return self.dialogs.count == 0;
+}
 
 - (void)free {
     

@@ -1,6 +1,0 @@
-framework module Quickblox {
-  umbrella header "Quickblox-umbrella.h"
-
-  export *
-  module * { export * }
-}

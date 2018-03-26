@@ -3,29 +3,25 @@ platform :ios, '9.0'
 xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
-
 def services
-    
-#    pod 'QMServices', :path => '../q-municate-services-ios'
-#    pod 'QMServices', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServices',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
+    # pod 'QMServices', :path => '../q-municate-services-ios'
+   pod 'QMServices',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
 end
 
 def chat_view_controller
-    
-#    pod 'QMChatViewController', :path => '../QMChatViewController-ios/'
-    pod 'QMChatViewController', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
+    # pod 'QMChatViewController', :path => '../QMChatViewController-ios/'
+   pod 'QMChatViewController', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'development'
 end
 
 target 'Q-municate' do
-    
+
     use_frameworks!
-    
-#    pod 'Quickblox', :path => '../SDK-ios'
+
+    # pod 'Quickblox', :path => '../SDK-ios'
 
     chat_view_controller
     services
-    
+
     pod 'UIDevice-Hardware', '~> 0.1.11'
     pod 'SAMKeychain'
     pod 'Reachability', '~> 3.2'
@@ -33,7 +29,6 @@ target 'Q-municate' do
     pod 'libextobjc/EXTScope', '~> 0.4.1'
     pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
     pod 'NYTPhotoViewer', :git => 'https://github.com/NYTimes/NYTPhotoViewer.git', :tag => 'v2.0.0'
-    
     #Facebook
     pod 'FBSDKCoreKit'
     pod 'FBSDKShareKit'
@@ -43,23 +38,23 @@ target 'Q-municate' do
     pod 'Crashlytics'
     #Firebase
     pod 'FirebaseUI/Phone', '~> 4.0'
-    
+
 end
 
 target 'QMSiriExtension' do
     use_frameworks!
     services
-    
+
 end
 
 target 'QMShareExtension' do
     use_frameworks!
     services
     chat_view_controller
-    
+
     pod 'Reachability', '~> 3.2'
     pod 'SVProgressHUD'
-    
+
 end
 
 post_install do |installer|
@@ -77,9 +72,9 @@ post_install do |installer|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'SV_APP_EXTENSIONS'
             end
         end
-        
+
     end
-    
+
     #This script fixes an issue with application icon on iOS 11
     #MORE INFO: https://github.com/CocoaPods/CocoaPods/issues/7003
     installer.aggregate_targets.each do |target|
