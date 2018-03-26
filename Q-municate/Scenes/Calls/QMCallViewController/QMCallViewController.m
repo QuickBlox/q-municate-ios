@@ -96,7 +96,7 @@ QBRTCAudioSessionDelegate
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:_didBecomeActiveObserver];
-    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
@@ -801,7 +801,7 @@ QBRTCAudioSessionDelegate
     QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
     if (audioSession.isInitialized
         && ![audioSession audioSessionIsActivatedOutside:[AVAudioSession sharedInstance]]) {
-        QMLog(@"Deinitializing QBRTCAudioSession in CallViewController.");
+        QMSLog(@"Deinitializing QBRTCAudioSession in CallViewController.");
         [audioSession deinitialize];
     }
     

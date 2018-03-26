@@ -8,7 +8,7 @@
 
 #import "NSURL+QMShareExtension.h"
 #import <Bolts/Bolts.h>
-#import "QMLog.h"
+#import <QMServices/QMSLog.h>
 
 NSString *const QMAppleMapsHost = @"maps.apple.com";
 NSString *const QMAppleMapsPath = @"/maps";
@@ -23,7 +23,6 @@ NSString *const QMGoogleMapsHost = @"google.com";
 NSString *const QMGoogleMapsSearchPath = @"maps/search";
 NSString *const QMGoogleMapsPlacePath = @"maps/place";
 NSString *const QMGoogleMapsProvider = @"google";
-
 
 @implementation NSURL (QMShareExtension)
 
@@ -184,10 +183,10 @@ NSString *const QMGoogleMapsProvider = @"google";
                                                               longitude:longitude.doubleValue];
             }
         }
-        QMLog(@"location = %@", location);
+        QMSLog(@"location = %@", location);
     }
     else {
-        QMLog(@"REGEX error: %@", regexError);
+        QMSLog(@"REGEX error: %@", regexError);
     }
     
     return location;
@@ -212,7 +211,7 @@ NSString *const QMGoogleMapsProvider = @"google";
               if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
                   NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
                   if (statusCode != 200) {
-                      QMLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
+                      QMSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
                       NSError *responseError =
                       [NSError errorWithDomain:@"QMShareExtension"
                                           code:0
@@ -232,12 +231,12 @@ NSString *const QMGoogleMapsProvider = @"google";
                   [source setResult:[NSURL URLWithString:longUrl]];
               }
               else {
-                  QMLog(@"JSON parse error: %@", jsonParseError);
+                  QMSLog(@"JSON parse error: %@", jsonParseError);
                   [source setError:error];
               }
           }
           else {
-              QMLog(@"API request error: %@", error);
+              QMSLog(@"API request error: %@", error);
               [source setError:error];
           }
       }] resume];

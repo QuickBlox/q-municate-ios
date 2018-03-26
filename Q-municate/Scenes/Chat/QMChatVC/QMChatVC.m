@@ -202,7 +202,7 @@ TTTAttributedLabelDelegate
     
     [QMCore.instance.openGraphService cancelAllloads];
     
-    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -509,7 +509,7 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
              continueWithBlock:^id(BFTask *task) {
                  
                  if (task.isFaulted) {
-                     ILog(@"Problems while marking message as read! Error: %@", task.error);
+                     QMSLog(@"Problems while marking message as read! Error: %@", task.error);
                  }
                  else if (task.isCompleted) {
                      
@@ -2318,15 +2318,15 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     else if ([cell isKindOfClass:[QMBaseMediaCell class]]) {
         
         CGSize size =  [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
-        QMLog(@"size = %@", NSStringFromCGSize(size));
-        QMLog(@"messageID = %@", message.ID);
+        QMSLog(@"size = %@", NSStringFromCGSize(size));
+        QMSLog(@"messageID = %@", message.ID);
         
         [self.mediaController didTapContainer:(id<QMMediaViewDelegate>)cell];
     }
     else if ([cell isKindOfClass:[QMChatBaseLinkPreviewCell class]]) {
         
         CGSize cellSize = [self.collectionView.collectionViewLayout containerViewSizeForItemAtIndexPath:indexPath];
-        QMLog(@"cell size = %@", NSStringFromCGSize(cellSize));
+        QMSLog(@"cell size = %@", NSStringFromCGSize(cellSize));
         
         QMOpenGraphItem *og = QMCore.instance.openGraphService.memoryStorage[message.ID];
         NSParameterAssert(og);

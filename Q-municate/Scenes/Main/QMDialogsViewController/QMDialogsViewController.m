@@ -54,7 +54,7 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 - (void)dealloc {
     
     [[NSNotificationCenter defaultCenter] removeObserver:_observerWillEnterForeground];
-    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {

@@ -98,7 +98,7 @@ QMAttachmentContentServiceDelegate>
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
-    QMLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
+    QMSLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
     
     if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
@@ -224,7 +224,7 @@ QMAttachmentContentServiceDelegate>
                              view.image = transfomedImage;
                          }
                          if (error) {
-                             QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
+                             QMSLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
                          }
                      }

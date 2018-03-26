@@ -43,7 +43,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
                                                error:&setCategoryError];
         
         if (setCategoryError) {
-            QMLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
+            QMSLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
             
         }
         

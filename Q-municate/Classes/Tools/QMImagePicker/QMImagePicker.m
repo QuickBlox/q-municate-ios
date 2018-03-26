@@ -24,7 +24,7 @@ static const NSUInteger kQMMaxFileSize = 100; //in MBs
 @implementation QMImagePicker
 
 - (void)dealloc {
-    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (instancetype)init {
@@ -182,7 +182,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:resultMediaUrl.path
                                                                                             error:&attributesError];
             if (attributesError) {
-                QMLog(@"Error occurred while getting file attributes = %@", attributesError);
+                QMSLog(@"Error occurred while getting file attributes = %@", attributesError);
                 return;
             }
             

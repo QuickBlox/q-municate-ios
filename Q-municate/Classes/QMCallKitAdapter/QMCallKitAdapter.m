@@ -11,7 +11,6 @@
 #import <CallKit/CallKit.h>
 
 #import "QMHelpers.h"
-#import "QMLog.h"
 
 static const NSInteger QMDefaultMaximumCallsPerCallGroup = 1;
 static const NSInteger QMDefaultMaximumCallGroups = 1;
@@ -129,7 +128,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
 }
 
 - (void)reportIncomingCallWithUserID:(NSNumber *)userID session:(QBRTCSession *)session uuid:(NSUUID *)uuid onAcceptAction:(dispatch_block_t)onAcceptAction completion:(void (^)(BOOL))completion {
-    QMLog(@"[QMCallKitAdapter] Report incoming call %@", uuid);
+    QMSLog(@"[QMCallKitAdapter] Report incoming call %@", uuid);
     
     if (_session != nil) {
         // session in progress
@@ -155,7 +154,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
         update.supportsDTMF = NO;
         update.hasVideo = session.conferenceType == QBRTCConferenceTypeVideo;
         
-        QMLog(@"[QMCallKitAdapter] Activating audio session.");
+        QMSLog(@"[QMCallKitAdapter] Activating audio session.");
         QBRTCAudioSession *audioSession = [QBRTCAudioSession instance];
         audioSession.useManualAudio = YES;
         if (!audioSession.isInitialized) {
@@ -219,7 +218,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
         // webrtc need AVAudioSessionCategoryPlayAndRecord
         NSError *err = nil;
         if (![[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:&err]) {
-            QMLog(@"[QMCallKitAdapter] Error setting category for webrtc workaround.");
+            QMSLog(@"[QMCallKitAdapter] Error setting category for webrtc workaround.");
         }
     }
     
@@ -293,7 +292,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
 }
 
 - (void)provider:(CXProvider *)__unused provider didActivateAudioSession:(AVAudioSession *)audioSession {
-    QMLog(@"[QMCallKitAdapter] Activated audio session.");
+    QMSLog(@"[QMCallKitAdapter] Activated audio session.");
     QBRTCAudioSession *rtcAudioSession = [QBRTCAudioSession instance];
     [rtcAudioSession audioSessionDidActivate:audioSession];
     // enabling audio now
@@ -301,12 +300,12 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
 }
 
 - (void)provider:(CXProvider *)__unused provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
-    QMLog(@"[QMCallKitAdapter] Dectivated audio session.");
+    QMSLog(@"[QMCallKitAdapter] Dectivated audio session.");
     [[QBRTCAudioSession instance] audioSessionDidDeactivate:audioSession];
     // deinitializing audio session after iOS deactivated it for us
     QBRTCAudioSession *session = [QBRTCAudioSession instance];
     if (session.isInitialized) {
-        QMLog(@"[QMCallKitAdapter] Deinitializing session in CallKit callback.");
+        QMSLog(@"[QMCallKitAdapter] Deinitializing session in CallKit callback.");
         [session deinitialize];
     }
 }
@@ -329,7 +328,7 @@ static inline void dispatchOnMainThread(dispatch_block_t block) {
 - (void)requestTransaction:(CXTransaction *)transaction completion:(void (^)(BOOL))completion {
     [_callController requestTransaction:transaction completion:^(NSError *error) {
         if (error != nil) {
-            QMLog(@"[QMCallKitAdapter] Error: %@", error);
+            QMSLog(@"[QMCallKitAdapter] Error: %@", error);
         }
         if (completion != nil) {
             completion(error == nil);

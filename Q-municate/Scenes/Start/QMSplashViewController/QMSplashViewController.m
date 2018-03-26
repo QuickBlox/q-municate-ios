@@ -12,7 +12,7 @@
 @implementation QMSplashViewController
 
 - (void)dealloc {
-    QMLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
