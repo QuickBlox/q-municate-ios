@@ -25,7 +25,7 @@
 #import "QMNoResultsCell.h"
 #import "QMSearchCell.h"
 
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
@@ -83,15 +83,6 @@ QMUsersServiceDelegate
     // subscribing for delegates
     [QMCore.instance.contactListService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
-    
-    // adding refresh control task
-    if (self.refreshControl) {
-        
-        self.refreshControl.backgroundColor = [UIColor clearColor];
-        [self.refreshControl addTarget:self
-                                action:@selector(updateContactsAndEndRefreshing)
-                      forControlEvents:UIControlEventValueChanged];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -100,23 +91,12 @@ QMUsersServiceDelegate
     if (self.searchController.isActive) {
         
         self.tabBarController.tabBar.hidden = YES;
-        
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.searchResultsController.tableView];
     }
     else {
-        
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.tableView];
-    }
-    
-    if (self.refreshControl.isRefreshing) {
-        // fix for freezing refresh control after tab bar switch
-        // if it is still active
-        CGPoint offset = self.tableView.contentOffset;
-        [self.refreshControl endRefreshing];
-        [self.refreshControl beginRefreshing];
-        self.tableView.contentOffset = offset;
     }
 }
 
@@ -311,16 +291,6 @@ QMUsersServiceDelegate
     }
     
     [self.searchResultsController.tableView reloadData];
-}
-
-- (void)updateContactsAndEndRefreshing {
-    
-    [[QMTasks taskUpdateContacts] continueWithBlock:^id(BFTask *__unused task) {
-        
-        [self.refreshControl endRefreshing];
-        
-        return nil;
-    }];
 }
 
 //MARK: - Actions

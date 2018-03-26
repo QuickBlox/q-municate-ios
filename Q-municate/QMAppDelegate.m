@@ -10,19 +10,18 @@
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QMColors.h"
-
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import <Flurry.h>
-#import <SVProgressHUD/SVProgressHUD.h>
-#import <Intents/Intents.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FirebaseCore/FirebaseCore.h>
-#import <FirebaseAuth/FirebaseAuth.h>
-
+#import "SVProgressHUD.h"
 #import "UIScreen+QMLock.h"
 #import "UIImage+Cropper.h"
 #import "QBSettings+Qmunicate.h"
+
+#import <Intents/Intents.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <Flurry_iOS_SDK/Flurry.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
 
 @interface QMAppDelegate () <QMPushNotificationManagerDelegate, QMAuthServiceDelegate>
 
@@ -40,7 +39,7 @@
     
     // QuickbloxWebRTC settings
     [QBRTCClient initializeRTC];
-    [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecISAC;
+    [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecOpus;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
     
     // Configuring app appearance
@@ -56,7 +55,8 @@
     [[UITextField appearance] setTintColor:QMSecondaryApplicationColor()];
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
-    [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setBorderWidth:1];
+    [SVProgressHUD setBorderColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
     
     // Configuring external frameworks
@@ -66,12 +66,6 @@
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
     [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
                                                          @"chat_endpoint" : [QBSettings chatEndpoint]}];
-    
-    // Handling push notifications if needed
-    if (launchOptions != nil) {
-        NSDictionary *pushNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        [QMCore instance].pushNotificationManager.pushNotification = pushNotification;
-    }
     
     // not returning this method as launch options are not ONLY related to facebook
     // for example when facebook returns NO in this method, callkit call from contacts
@@ -100,9 +94,7 @@
         
         [QMCore instance].pushNotificationManager.pushNotification = userInfo;
         // calling dispatch async for push notification handling to have priority in main queue
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
-        });
+        [[QMCore instance].pushNotificationManager handlePushNotificationWithDelegate:self];
     }
 }
 

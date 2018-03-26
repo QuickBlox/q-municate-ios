@@ -1,0 +1,6 @@
+framework module Pods_QMShareExtension {
+  umbrella header "Pods-QMShareExtension-umbrella.h"
+
+  export *
+  module * { export * }
+}

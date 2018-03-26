@@ -9,13 +9,14 @@
 #import "QMGroupInfoViewController.h"
 #import "QMGroupOccupantsViewController.h"
 #import "QMGroupNameViewController.h"
-#import "QMGroupHeaderView.h"
-#import "QMCore.h"
 #import "QMNavigationController.h"
-#import "QMImagePicker.h"
-#import <QMImageView.h>
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
+#import "QMGroupHeaderView.h"
 #import "QMImagePreview.h"
+#import "QMImagePicker.h"
+#import "QMCore.h"
+
+#import <NYTPhotoViewer/NYTPhotoViewer.h>
+#import <QMChatViewController/QMImageView.h>
 
 @interface QMGroupInfoViewController ()
 

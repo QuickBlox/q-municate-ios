@@ -9,7 +9,7 @@
 #import "QMWelcomeScreenViewController.h"
 #import "QMLicenseAgreement.h"
 #import "QMAlert.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 
 #import "QMFacebook.h"
 #import "QMCore.h"

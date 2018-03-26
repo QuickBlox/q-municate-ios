@@ -17,7 +17,7 @@
 #import "QMChatVC.h"
 #import "QMCore.h"
 #import "QMTasks.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QBChatDialog+OpponentID.h"
 #import "QMSplitViewController.h"
 #import "QMNavigationController.h"
@@ -30,8 +30,7 @@ static const NSInteger kQMUnauthorizedErrorCode = -1011;
 @interface QMDialogsViewController ()
 
 <QMUsersServiceDelegate, QMChatServiceDelegate, QMChatConnectionDelegate,
-UITableViewDelegate, UISearchControllerDelegate, UISearchResultsUpdating,
-QMPushNotificationManagerDelegate, QMDialogsDataSourceDelegate,
+UITableViewDelegate, UISearchControllerDelegate, UISearchResultsUpdating, QMDialogsDataSourceDelegate,
 QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *placeholderView;
@@ -73,14 +72,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
     [self registerNibs];
     
     [self performAutoLoginAndFetchData];
-    // adding refresh control task
-    if (self.refreshControl) {
-        
-        self.refreshControl.backgroundColor = [UIColor clearColor];
-        [self.refreshControl addTarget:self
-                                action:@selector(updateDataAndEndRefreshing)
-                      forControlEvents:UIControlEventValueChanged];
-    }
     
     @weakify(self);
     // adding notification for showing chat connection
@@ -121,7 +112,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
     [super viewWillAppear:animated];
     
     if (self.searchController.isActive) {
@@ -132,15 +122,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
         
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.tableView];
-    }
-    
-    if (self.refreshControl.isRefreshing) {
-        // fix for freezing refresh control after tab bar switch
-        // if it is still active
-        CGPoint offset = self.tableView.contentOffset;
-        [self.refreshControl endRefreshing];
-        [self.refreshControl beginRefreshing];
-        self.tableView.contentOffset = offset;
     }
 }
 
@@ -173,10 +154,6 @@ QMSearchResultsControllerDelegate, QMContactListServiceDelegate>
                         
                         return [QMCore.instance logout];
                     }
-        }
-        
-        if (QMCore.instance.pushNotificationManager.pushNotification != nil) {
-            [QMCore.instance.pushNotificationManager handlePushNotificationWithDelegate:self];
         }
         
         if (QMCore.instance.currentProfile.pushNotificationsEnabled) {
@@ -390,14 +367,6 @@ didReceiveNotificationMessage:(QBChatMessage *)message
     [self.tableView reloadData];
 }
 
-//MARK: - QMPushNotificationManagerDelegate
-
-- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager
-       didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
-    
-    [self performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
-}
-
 //MARK: - QMChatConnectionDelegate
 
 - (void)chatServiceChatHasStartedConnecting:(QMChatService *)__unused chatService {
@@ -540,17 +509,6 @@ didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
         self.tableView.tableHeaderView = self.searchController.searchBar;
 #endif
     }
-}
-
-- (void)updateDataAndEndRefreshing {
-    
-    [[[QMTasks taskFetchAllData] continueWithBlock:^id _Nullable(BFTask * __unused t) {
-        return [QMTasks taskUpdateContacts];
-    }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
-           [self.refreshControl endRefreshing];
-        return nil;
-    }];
-    
 }
 
 //MARK: - Register nibs

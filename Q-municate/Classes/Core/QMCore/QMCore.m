@@ -7,18 +7,20 @@
 //
 
 #import "QMCore.h"
-#import <Reachability.h>
 #import "QMFacebook.h"
 #import "QMNotification.h"
 #import "QMTasks.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QMImageLoader.h"
 #import "QMCallManager.h"
-#import <Intents/Intents.h>
 #import "NSString+QMTransliterating.h"
 
-#import <FirebaseCore/FirebaseCore.h>
+#import <Firebase/Firebase.h>
 #import <FirebaseAuth/FirebaseAuth.h>
+#import <Reachability/Reachability.h>
+#import <Intents/Intents.h>
+
+
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -159,7 +161,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     NSString *errorMessage = nil;
     
-    if (![self isInternetConnected]) {
+    if (![self isInternetConnected] || response.status == NSURLErrorTimedOut) {
         
         errorMessage = NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil);
     }
@@ -309,7 +311,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         return;
     }
     
-    [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+    [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id(BFTask<NSArray<QBUUser *> *> *t) {
         
         NSParameterAssert(IDs.count == t.result.count);
         

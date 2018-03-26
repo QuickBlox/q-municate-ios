@@ -189,7 +189,9 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         
     }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
         
-        [delegate pushNotificationManager:self didSucceedFetchingDialog:chatDialog];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegate pushNotificationManager:self didSucceedFetchingDialog:chatDialog];
+        });
         
         return nil;
     }];

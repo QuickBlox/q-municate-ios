@@ -9,20 +9,12 @@
 #import "QMMessageContactListViewController.h"
 #import "QMNewMessageContactListSearchDataSource.h"
 #import "QMContactsSearchDataProvider.h"
-
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
-
 #import "QMCore.h"
 
-@interface QMMessageContactListViewController ()
-
-<
-UITableViewDelegate,
-UIScrollViewDelegate,
-QMSearchDataProviderDelegate,
-QMUsersServiceDelegate
->
+@interface QMMessageContactListViewController ()<UITableViewDelegate, UIScrollViewDelegate,
+QMSearchDataProviderDelegate, QMUsersServiceDelegate>
 
 @property (strong, nonatomic) QMNewMessageContactListSearchDataSource *dataSource;
 

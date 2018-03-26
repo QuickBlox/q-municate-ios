@@ -1,340 +1,443 @@
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+# Q-municate 2.7.1
 
-- [Q-municate 2.0](#q-municate-20)
-	- [Q-municate iOS](#q-municate-ios)
-	- [Requirements](#requirements)
-	- [Software Environment](#software-environment)
-	- [First look into project](#first-look-into-project)
-		- [Welcome Screen](#welcome-screen)
-		- [Login with email/password page](#login-with-emailpassword-page)
-		- [Forgot password screen](#forgot-password-screen)
-		- [Tab Bar](#tab-bar)
-		- [Chat Dialogs List Screen](#chat-dialogs-list-screen)
-		- [New Message Screen](#new-message-screen)
-		- [Private Chat Screen](#private-chat-screen)
-		- [Group Chat Screen](#group-chat-screen)
-		- [Group Info Screen](#group-info-screen)
-		- [Contacts List Screen](#contacts-list-screen)
-		- [User Info Screen](#user-info-screen)
-		- [Settings Screen](#settings-screen)
-	- [Calls](#calls)
-		- [Calls manager](#calls-manager)
-		- [Calls controller](#calls-controller)
-		- [Audio Call](#audio-call)
-		- [Video Call](#video-call)
-	- [Code explanation](#code-explanation)
-		- [Core](#core)
-		- [Storyboards](#storyboards)
-	- [How to build your own Chat app](#how-to-build-your-own-chat-app)
-- [License](#license)
 
-# Q-municate 2.0
+![](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517567392151_retina_cover-min.png)
+
 
 Q-municate is an open source code of chat application with full range of communication features on board (such as messaging, file transfer, push notifications, audio/video calls, etc.).
-
 We are inspired to give you chat application out of the box. You can customise this application depending on your needs. As always QuickBlox backend is at your service: https://quickblox.com/plans/
-
 Find the source code and more information about Q-municate, as well as installation guide, in our Developers section: https://quickblox.com/developers/q-municate
-
-## Q-municate iOS
 This guide is brought to you from QuickBlox iOS team in order to explain how you can build a communication app on iOS using QuickBlox API.
-
 It is a step by step guide designed for all developer levels including beginners as we move from simple to more complex implementation. Depending on your skills and your project requirements you may choose which parts of this guide are to follow. Enjoy and if you need assistance from QuickBlox iOS team feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
-
 Q-municate is a fully fledged chat application using the Quickblox API.
 
-## Q-municate application uses following QuickBlox modules:
+<!-- TOC -->
 
-* [Authentication](http://quickblox.com/developers/Authentication_and_Authorization)
-* [Users](http://quickblox.com/developers/Users)
-* [Chat](http://quickblox.com/developers/Chat)
-* [Video calling](http://quickblox.com/developers/VideoChat)
-* [Content](http://quickblox.com/developers/Content)
-* [Push Notifications](http://quickblox.com/developers/Messages)
+- [Q-municate 2.7.1](#q-municate-271)
+    - [1. Requirements & Software Environment](#1-requirements--software-environment)
+    - [2. QuickBlox modules](#2-quickblox-modules)
+    - [3. Features](#3-features)
+    - [4. Screens](#4-screens)
+    - [5. Audio and Video Calls](#5-audio-and-video-calls)
+    - [6. Extensions](#6-extensions)
+    - [7. Code explanation](#7-code-explanation)
+    - [8. How to build your own Chat app 😎](#8-how-to-build-your-own-chat-app)
+    - [9. Contributing](#9-contributing)
+    - [10. License](#10-license)
 
-## It includes such features as:
-
-* Three sign-up methods as well as login – [Facebook](Facebook), [Twitter Digits](https://get.digits.com) (e.g. phone number) and with email/password
-* View list of all active chat dialogs with message history (private and group chat dialogs)
-* View, edit and leave group chat dialogs
-* View and remove private chat dialogs
-* Search: local dialogs search, contacts search and global users search
-* Create and participate in private and group dialogs
-* Managing, updating and removing dialogs
-* Audio and Video calls (using QuickBlox WebRTC Framework)
-* Edit own user profile
-* Reset password and logout
-* See other users profile
-* Pull to refresh for dialogs list, contacts list and user info page
-* Easy to add localisation
-
-Please note all these features are available in open source code, so you can customise your app depending on your needs.
-
-## Requirements
-
-* [Xcode 7](https://developer.apple.com/library/ios/documentation/DeveloperTools/Conceptual/WhatsNewXcode/Articles/xcode_7_0.html) and later.
-* [QuickBlox iOS SDK](http://quickblox.com/developers/IOS) 2.7.3 and later.
-* [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.1.1 and later.
-* [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.4.1 and later.
-* [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios) 0.3.8 and later.
-* [Bolts](https://github.com/BoltsFramework/Bolts-ObjC#bolts) 1.5.0 and later.
-* [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.11 and later.
-* [Twitter Digits](https://fabric.io/kits/ios/digits) 1.15 and later.
+<!-- /TOC -->
 
 
-## Software Environment
+## 1. Requirements & Software Environment
 
-* The iOS application runs on any Apple device that supports iOS 8.1 and later.
-* The iOS application is developed as native IOS application.
-* The iOS application has English language interface and easy to add localisation.
-* The App supports both landscape and portrait mode.
 
-_______
+- [Xcode 9](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/WhatsNewXcode/xcode_9/xcode_9.html) and later.
+- iOS 9.1 and later.
+- [QuickBlox iOS SDK](http://quickblox.com/developers/IOS) 2.15 and later.
+- [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.6.3 and later.
+- [QMServices](https://github.com/QuickBlox/q-municate-services-ios)  Q-municate API is based on [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.6.1 and later.
+- [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios) 0.6 and later.
+- [Bolts](https://github.com/BoltsFramework/Bolts-ObjC#bolts) 1.9.0 and later.
+- [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.29.0 and later.
+- [Firebase](https://fabric.io/kits/ios/digits) 4.8.1 and later.
 
-## First look into project
-### Welcome Screen
+**1.1** [**QuickBlox iOS SDK**](http://quickblox.com/developers/IOS)
 
-<center><img src="Screenshots/WelcomeScreen.png" width="320"></center>
+[![CocoaPods](https://img.shields.io/cocoapods/v/QuickBlox.svg)](https://cocoapods.org/pods/QuickBlox)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/QuickBlox.svg)](https://cocoapods.org/pods/QuickBlox)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/QuickBlox.svg)](https://cocoapods.org/pods/QuickBlox)
 
-#### Available features:
-#### Buttons:
-* Connect with Phone – this button allows user to enter the App with his/her phone number using Twitter Digits. If tapped will be shown User Agreement pop-up.
-* Login by email or social button – By tapping this button action sheet with extra login methods will pop up. There is such methods as Facebook login and login by email/password.
-* Login with Facebook allows user to enter the App with his/her Facebook credentials. If tapped will be shown User Agreement pop-up.
-* If App has passed Facebook authorisation successfully, the App will redirect user into chat dialogs list screen.
-* Login by email/password allows user to enter the App if he/she provides correct and valid email and password. By tapping on this button user will be redirected to the login screen.
+QuickBlox - Communication & cloud backend platform which brings superpowers to your mobile apps.
 
-###### Please note, that there is no longer a possibility to sign up user using email and password method. You can only sign up using Phone number and/or Facebook credentials.
+**1.2 QMServices**
 
-### Login with email/password page
+[![CocoaPods](https://img.shields.io/cocoapods/v/QMServices.svg)](https://cocoapods.org/pods/QMServices)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/QMServices.svg)](https://cocoapods.org/pods/QMServices)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/QMServices.svg)](https://cocoapods.org/pods/QMServices)
 
-<center><img src="Screenshots/EmailLoginScreen.png" width="320"></center>
+Q-municate architecture  for chat, authorization, messages, dialogs and users is based on [QMServices](https://github.com/QuickBlox/q-municate-services-ios) -
+easy-to-use services for QuickBlox SDK, for speeding up development of iOS chat applications.
 
-#### Available features:
-#### Fields set:
 
-* Email – text/numeric/symbolic fields 3 chars min - no border, mandatory (email symbols validation included)
-* Password – text/numeric/symbolic field 8-40 chars (should contain alphanumeric and punctuation characters only) , mandatory
+- Inbox persistent storage for messages, dialogs and users
+- Inbox memory storage for messages, dialogs and users
+- Bolts version of all methods. See [Bolts](https://github.com/BoltsFramework/Bolts-ObjC) for more information.
 
-#### Buttons
+**1.3  WebRTC**
 
-* Back - returns user back to welcome screen
-* Done - performing login after fields validation using provided email and password
-* Forgot password - opens forgot password screen
+[![CocoaPods](https://img.shields.io/cocoapods/v/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
+[![CocoaPods](https://img.shields.io/cocoapods/dt/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
+[![CocoaPods](https://img.shields.io/cocoapods/dm/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
 
-### Forgot password screen
+Q-municate uses [WebRTC](https://en.wikipedia.org/wiki/WebRTC) for video and audio calling meaning it’s a great cross-platform solution. WebRTC itself it open-source, so you can modify the code as much as you wish, or you can trust the thousands of skilled developers who contributed to it’s development.
 
-<center><img src="Screenshots/ForgotPasswordScreen.png" width="320"></center>
+[The VideoChat code sample](https://github.com/QuickBlox/quickblox-ios-sdk/tree/master/sample-videochat-webrtc) allows you to easily add video calling and audio calling features into your iOS app. Enable a video call function similar to FaceTime or Skype using code sample as a basis.
 
-#### Fields set:
 
-* Email – text/numeric/symbolic fields 3 chars min - no border, mandatory (email symbols validation included)
+## 2. QuickBlox modules
 
-#### Buttons
+Q-municate application uses following:
 
-* Back - returns user back to welcome screen
-* Reset - performing password reset
+- [Authentication](http://quickblox.com/developers/Authentication_and_Authorization)
+- [Users](http://quickblox.com/developers/Users)
+- [Chat](http://quickblox.com/developers/Chat)
+- [Video calling](http://quickblox.com/developers/VideoChat)
+- [Content](http://quickblox.com/developers/Content)
+- [Push Notifications](http://quickblox.com/developers/Messages)
 
-### Tab Bar
 
-Tab bar is a main controller of the application. It is consists of such pages:
+## 3. Features
 
-* Chat dialogs list (main page)
-* Contacts list
-* Settings
+It includes such features as:
 
-### Chat Dialogs List Screen
+- The App supports both landscape and portrait mode.
+- The iOS application has English language interface and easy to add localisation.
+- Three sign-up methods as well as login – [Facebook](https://developers.facebook.com/docs/ios/), [Firebase](https://firebase.google.com/docs/ios/setup) (phone number) and with email/password
+- Call Kit
+- Share extension
+- Siri extension for messaging
+- View list of all active chat dialogs with message history (private and group chat dialogs)
+- View, edit and leave group chat dialogs
+- View and remove private chat dialogs
+- Search: local dialogs search, contacts search and global users search
+- Create and participate in private and group dialogs
+- Managing, updating and removing dialogs
+- Audio and Video calls (using QuickBlox WebRTC Framework)
+- Edit own user profile
+- Reset password and logout
+- See other users profile
+- Pull to refresh for dialogs list, contacts list and user info page
 
-<center><img src="Screenshots/DialogsListScreen.png" width="320"></center>
 
-#### Search
+> Please note all these features are available in open source code, so you can customise your app depending on your needs.
 
-Search allows user to filter existing dialogs in local cache by its names.
 
-#### Buttons
+## 4. Screens
 
-* Right bar button - redirects user to new dialog screen
+**4.1 Welcome**
 
-### New Message Screen
 
-<center><img src="Screenshots/NewMessageScreen.png" width="320"></center>
+![Figure 4.1 Welcome screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977157374_welcome.png)
+
+
+Available features:
+
+- Connect with Phone – this button allows user to enter the App with his/her phone number using Firebase. If tapped will be shown User Agreement pop-up.
+- Login by email or social button – By tapping this button action sheet with extra login methods will pop up. There is such methods as Facebook login and login by email/password.
+- Login with Facebook allows user to enter the App with his/her Facebook credentials. If tapped will be shown User Agreement pop-up.
+- If App has passed Facebook authorisation successfully, the App will redirect user into chat dialogs list screen.
+- Login by email/password allows user to enter the App if he/she provides correct and valid email and password. By tapping on this button user will be redirected to the login screen.
+
+
+> Please note, that there is no longer a possibility to sign up user using email and password method. You can only sign up using Phone number and/or Facebook credentials.
+
+**4.2 Login with email/password**
+
+
+![Figure 4.2 Login with email screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977175593_login_email.png)
+
+
+Available features:
+
+- Fields set:
+  - Email – text/numeric/symbolic fields 3 chars min - no border, mandatory (email symbols validation included)
+  - Password – text/numeric/symbolic field 8-40 chars (should contain alphanumeric and punctuation characters only) , mandatory
+- Buttons:
+  - Back - returns user back to welcome screen
+  - Done - performing login after fields validation using provided email and password
+  - Forgot password - opens forgot password screen
+
+**4.3 Forgot password**
+
+
+![Figure 4.3 Forgot password screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977185493_forgot_password.png)
+
+
+
+- Fields set:
+  - Email – text/numeric/symbolic fields 3 chars min - no border, mandatory (email symbols validation included)
+- Buttons:
+  - Back - returns user back to welcome screen
+  - Reset - performing password reset
+
+**4.4 Tab Bar**
+
+Tab bar is a main controller of the application. It consists of such pages:
+
+- Chat dialogs list (main page)
+- Contacts list
+- Settings
+
+**4.5 Chat Dialogs List**
+
+
+![Figure 4.4 Dialogs screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977194742_chats.png)
+
+
+
+- Search:
+  - Search allows user to filter existing dialogs in local cache by its names.
+- Buttons:
+  - Right bar button - redirects user to new dialog screen
+  
+
+**4.6 New Message**
+
+
+![Figure 4.5 New message screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977203691_new_message.png)
+
 
 If you will select only 1 contact - private chat will be opened (if existent) or created if needed. Otherwise group chat will be created.
 
-#### Search
+- Search:
+  - Tag field allows you to search through contacts full names.
+- Buttons:
+  - Right bar button - creates chat dialog
+  - Back - return user back to chat dialogs page
+  
 
-Tag field allows you to search through contacts full names.
+**4.7 Chat**
 
-#### Buttons
+There is a possibility to send:
 
-* Right bar button - creates chat dialog
-* Back - return user back to chat dialogs page
+- Text messages
+- Images from gallery and camera
+- Videos from gallery and camera
+- Audio records using input toolbar right button
 
-### Private Chat Screen
+Available features:
 
-<center><img src="Screenshots/ChatScreen.png" width="320"></center>
+- Sharing and forwarding
+- Copying image attachmnets and text messages
 
-#### Buttons
+**4.8 Private Chat**
 
-* Right bar buttons - Audio and Video call buttons, you can only call user if he is in your contact list
-* Back - returns user back to chat dialogs list screen
-* Navigation bar title - redirects user to opponent profile page
 
-### Group Chat Screen
+![Figure 4.6 Private chat screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977220481_private_chat.png)
 
-<center><img src="Screenshots/GroupChatScreen.png" width="320"></center>
 
-#### Buttons
+Buttons:
 
-* Right bar button and navigation bar title - redirects user to group chat info screen
-* Back - return user to chat dialogs list screen
-* Opponent user avatars - by tapping opponent user avatars in messages you will be redirected to the info page of that user
+- Right bar buttons - Audio and Video call buttons, you can only call user if he is in your contact list
+- Back - returns user back to chat dialogs list screen
+- Navigation bar title - redirects user to opponent profile page
 
-### Group Info Screen
+**4.9 Group Chat**
 
-<center><img src="Screenshots/GroupInfoScreen.png" width="320"></center>
 
-#### Fields/Buttons
+![Figure 4.7 Group chat screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977229548_group_chat.png)
 
-* By tapping on group avatar you can change it with either take a new photo or selecting it from library
-* By tapping on group name you will be redirected to group name change screen
-* By tapping on Add member field you will be redirected to contacts screen in order to select users to add
-* By tapping on any user in members list you will be redirected to their info page (except your own user in list)
-* By tapping Leave and remove chat field - you will leave existent group chat and delete it locally
 
-### Contacts List Screen
+Buttons:
 
-<center><img src="Screenshots/ContactsListScreen.png" width="320"></center>
+- Right bar button and navigation bar title - redirects user to group chat info screen
+- Back - return user to chat dialogs list screen
+- Opponent user avatars - by tapping opponent user avatars in messages you will be redirected to the info page of that user
 
-#### Search
+**4.10 Group Chat Info**
 
-Search has two scopes buttons:
 
-* Local search - allows user to filter existing contacts by their names.
-* Global search - allows user to find users and see their profiles by full names.
+![Figure 4.8 Group chat info screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977239195_group_info.png)
 
-<center><img src="Screenshots/ContactsSearch.png" width="500"></center>
 
-### User Info Screen
+Fields/Buttons:
 
-<center><img src="Screenshots/UserInfoScreen.png" width="320"></center>
+- By tapping on group avatar you can change it by taking a new photo or selecting it from library
+- By tapping on group name you will be redirected to group name change screen
+- By tapping on Add member field you will be redirected to contacts screen in order to select users to add
+- By tapping on any user in members list you will be redirected to their info page (except your own user in list)
+- By tapping Leave and remove chat field - you will leave existent group chat and delete it locally
 
-#### Fields/Buttons
+**4.11 Contacts List**
 
-Contacts actions:
 
-* Send message - opens chat with user, if there is no chat yet - creates it
-* Audio Call - audio call to user
-* Video Call - video call to user
-* Remove Contact and Chat - deleting user from contact list and chat with him
+![Figure 4.9 Contacts list screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977255219_contacts.png)
+
+
+Search:
+
+- Search has two scopes buttons:
+  - Local search - allows user to filter existing contacts by their names.
+  - Global search - allows user to find users and see their profiles by full names.
+
+
+![Figure 4.10 Search screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516968530350_ContactsSearch+1.png)
+
+
+**4.12 User Info**
+
+
+![Figure 4.11 User info screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977275044_profile.png)
+
+
+Fields/Buttons
+
+- Contacts actions:
+- Send message - opens chat with user, if there is no chat yet - creates it
+- Audio Call - audio call to user
+- Video Call - video call to user
+- Remove Contact and Chat - deleting user from contact list and chat with him
 
 Other user actions:
 
-* Add contact - sending a contact request to user or accepting existing one
+- Add contact - sending a contact request to user or accepting existing one
 
-### Settings Screen
+**4.13 Settings**
 
-<center><img src="Screenshots/SettingsScreen.png" width="320"></center>
 
-#### Fields/Buttons
+![Figure 4.12 Settings screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977285595_settings.png)
 
-* Full name, status and email fields will redirect you to update field screen, where you can change your info.
 
-<center><img src="Screenshots/SettingsUpdateScreen.png" width="320"></center>
+Fields/Buttons:
 
-* By tapping on avatar action sheet will be opened. You can either take a new picture or choose it from library to update your user avatar.
-* Push notification switch - you can either subscribe or unsubscribe from push notifications.
-* Tell a friend - opens share controller where you can share this awesome app with your friends :)
-* Give feedback - feedback screen, where you can send an email to us with bugs, improvements or suggestion information in order to help us make Q-municate better!
+- Full name, status and email fields will redirect you to update field screen, where you can change your info.
 
-<center><img src="Screenshots/FeedbackScreen.png" width="320"></center>
 
-## Calls
+![Figure 4.13 User status screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977297040_status.png)
+
+
+
+- By tapping on avatar action sheet will be opened. You can either take a new picture or choose it from library to update your user avatar.
+- Push notification switch - you can either subscribe or unsubscribe from push notifications.
+- Tell a friend - opens share controller where you can share this awesome app with your friends :)
+- Give feedback - feedback screen, where you can send an email to us with bugs, improvements or suggestion information in order to help us make Q-municate better!
+
+
+![Figure 4.14 Feedback screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977305837_feedback.png)
+
+
+
+## 5. Audio and Video Calls
 
 Q-municate using QuickBlox WebRTC SDK as call service. You can find more information on it [here](http://quickblox.com/developers/Sample-webrtc-ios).
 
-### Calls manager
+**5.1 Calls manager**
 
 In order to manage calls we have created a [QMServices](https://github.com/QuickBlox/q-municate-services-ios) sub-service, and its name is QMCallManager. It is managing incoming and outgoing calls. See inline documentation of QMCallManager class for more information.
 
-### Calls controller
+**5.2 Calls controller**
 
 To display incoming, outgoing and active calls we have created a universal interface and defined into one view controller. Its name is QMCallViewController.
 Call controller has 6 states:
 
-* Incoming audio call
-* Incoming video call
-* Outgoing audio call
-* Outgoing video call
-* Active audio call
-* Active video call
+- Incoming audio call
+- Incoming video call
+- Outgoing audio call
+- Outgoing video call
+- Active audio call
+- Active video call
 
 Call controller is been managed by QMCallManager, basically call manager allocating it with a specific state, whether it is an incoming or outgoing call, then call controller changing its state to active one if required user accepts it.
 For more information about code realisation see inline doc of QMCallViewController.
 
-### Audio Call
+**5.3 Audio Call**
 
 You can see down below Incoming, outgoing and active audio call screens.
 
-<center><img src="Screenshots/AudioCallScreens.png" width="1000"></center>
 
-#### Toolbar buttons
+![Figure 5.1 Audio call screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516983533322_AudioCallScreens.png)
 
-Incoming call:
 
-* Decline - declines call and closes received session and controller
-* Accept - accepts call and changes call controller state to Active audio call
+Toolbar buttons
 
-Outgoing and active call:
+- Incoming call:
+  - Decline - declines call and closes received session and controller
+  - Accept - accepts call and changes call controller state to Active audio call
+- Outgoing and active call:
+  - Microphone - disables microphone for current call
+  - Speaker - whether sound should be played in speaker or receiver. Default for audio calls is receiver.
+  - Decline - hanging up current all and closing controller
 
-* Microphone - disables microphone for current call
-* Speaker - whether sound should be played in speaker or receiver. Default for audio calls is receiver.
-* Decline - hanging up current all and closing controller
-
-### Video Call
+**5.4 Video Call**
 
 You can see down below Incoming, outgoing and active video call screens.
 
-<center><img src="Screenshots/VideCallScreens.png" width="1000"></center>
 
-By default sound for video calls is in speakers
+![Figure 5.1 Video call screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516977747381_video_call.png)
 
-Incoming call:
 
-* Decline - declines call and closes received session and controller
-* Accept - accepts call and changes call controller state to Active video call
+By default sound for video calls is in speakers.
 
-Outgoing and active call:
+- Incoming call:
+  - Decline - declines call and closes received session and controller
+  - Accept - accepts call and changes call controller state to Active video call
+- Outgoing and active call:
+  - Camera - enables/disables camera for current call
+  - Camera rotation - changes camera for current call (front/back)
+  - Microphone - disables microphone for current call
+  - Decline - hanging up current all and closing controller
 
-* Camera - enables/disables camera for current call
-* Camera rotation - changes camera for current call (front/back)
-* Microphone - disables microphone for current call
-* Decline - hanging up current all and closing controller
+**5.5 Call Kit**
 
-## Code explanation
+CallKit allows to integrate calling services with other call-related apps on the system. CallKit provides the calling interface, and we handle the back-end communication with [our VoIP service](https://quickblox.com/developers/SimpleSample-messages_users-ios#Adding_support_for_VOIP_push_notifications). For incoming and outgoing calls, CallKit displays the same interfaces as the Phone app, giving Q-municate application a more native look and feel.
+
+![Figure 5.1 Call controller screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517255409865_call_kit.png)
+
+
+
+## 6. Extensions
+
+**6.1 Share extension**
+
+[Share extension](https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/Share.html#//apple_ref/doc/uid/TP40014214-CH12-SW1) gives users a convenient way to share content with other entities.
+Available types for sharing:
+
+- Locations
+- URL
+- Images
+- Videos
+- Audios
+
+
+![Figure 6.1 Share extension screen](https://d2mxuefqeaa7sj.cloudfront.net/s_93E53399630C968604A237F0EAB1B99A1C51B88BD402C4A305A46BBA63CA3D8B_1516980034230_Untitled-1.png)
+
+
+**6.2 Intents App Extension(SiriKit for messaging)**
+
+An *Intents app extension* receives user request to send a message from [SiriKit](https://developer.apple.com/documentation/sirikit) and turns it into app-specific actions.
+
+
+![Figure 6.2 Sending message via SIRI screen](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517494955322_siri-min.png)
+
+
+
+## 7. Code explanation
 
 You can see basic code explanation down below. For detailed one please see our inline documentation for header files in most classes. We have tried to describe as detailed as possible the purpose of every class and its methods. If you have any questions, feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 
-### Core
+**7.1 Core**
 
 Q-municate using [QMServices](https://github.com/QuickBlox/q-municate-services-ios) as a main wrapper over QuickBlox iOS SDK. See its documentation for more information.
-
 As QMServices design required, we have created a subclass over QMServicesManager and named it QMCore. QMCore has its own managers, that adds more wrappers over methods in QMServices, chaining and performing them using [Bolts framework](https://github.com/BoltsFramework/Bolts-ObjC#bolts).
 
-### Storyboards
+**7.2 Storyboards**
 
 We have separated Q-municate for modules, such as:
 
-* Auth
-* Main
-* Chat
-* Settings
+- Auth
+- Main
+- Chat
+- Settings
 
 Each module has its own storyboard, all storyboards are linked with storyboard links (feature available since Xcode 7 and iOS 8+).
 
-## How to build your own Chat app
+## 8. How to build your own Chat app
 
 If you want to build your own app using Q-municate as a basis, please follow our [detailed guide here](http://quickblox.com/developers/Q-municate#How_to_build_your_own_Chat_app).
- 
-# License
+
+## 9. Contributing
+
+### Features
+1. Fork it ( https://github.com/[my-github-username]/q-municate-ios/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'My new feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
+
+### Issues
+
+If you find an issue, please [create an issue](https://github.com/QuickBlox/q-municate-ios/issues).
+
+## 10. License
+
 Apache License, Version 2.0. See [LICENSE](LICENSE) file.
