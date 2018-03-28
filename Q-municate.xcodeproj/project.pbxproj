@@ -2808,7 +2808,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quickblox.framework/strip-framework.sh\"";
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quickblox.framework/strip-framework.sh\"";
 		};
 		584B79C41C452A7A00356FB9 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2911,7 +2911,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/QuickbloxWebRTC.framework/strip-framework.sh\"";
+			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/QuickbloxWebRTC.framework/strip-framework.sh\"";
 		};
 		E38D9249A28F87BADEA652EE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
