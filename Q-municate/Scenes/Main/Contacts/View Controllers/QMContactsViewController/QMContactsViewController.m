@@ -11,7 +11,7 @@
 #import "QMContactsSearchDataSource.h"
 #import "QMGlobalSearchDataSource.h"
 #import "QMContactsSearchDataProvider.h"
-
+#import "UIViewController+SmartDeselection.h"
 #import "QMUserInfoViewController.h"
 #import "QMSearchResultsController.h"
 

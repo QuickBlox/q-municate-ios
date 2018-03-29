@@ -98,7 +98,7 @@ QMAttachmentContentServiceDelegate>
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
-    QMLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
+    QMSLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
     
     if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
@@ -150,10 +150,9 @@ QMAttachmentContentServiceDelegate>
         CGSize targetSize = ((QMBaseMediaCell*)view).previewImageView.bounds.size;
         QMImageTransform *transform =
         [QMImageTransform transformWithSize:targetSize
-                       customTransformBlock:^UIImage * _Nullable(NSURL * _Nonnull __unused imageURL,
-                                                                 UIImage * _Nonnull originalImage) {
-                           return [originalImage imageWithCornerRadius:4
-                                                            targetSize:targetSize];
+                       customTransformBlock:^UIImage *(NSURL * __unused imageURL,
+                                                       UIImage * originalImage) {
+                           return [originalImage imageWithCornerRadius:4 targetSize:targetSize];
                        }];
         
         NSURL *url = [attachment remoteURLWithToken:NO];
@@ -163,7 +162,7 @@ QMAttachmentContentServiceDelegate>
             if (attachment.image) {
                 
                 [transform applyTransformForImage:attachment.image
-                                  completionBlock:^(UIImage * _Nonnull transformedImage) {
+                                  completionBlock:^(UIImage *transformedImage) {
                                       [QMImageLoader.instance.imageCache storeImage:attachment.image
                                                                              forKey:message.ID
                                                                          completion:nil];
@@ -184,7 +183,7 @@ QMAttachmentContentServiceDelegate>
             else if (tempImage) {
                 
                 [transform applyTransformForImage:tempImage
-                                  completionBlock:^(UIImage * _Nonnull transformedImage) {
+                                  completionBlock:^(UIImage *transformedImage) {
                                       [QMImageLoader.instance.imageCache storeImage:tempImage
                                                                              forKey:url.absoluteString
                                                                          completion:^{
@@ -204,7 +203,7 @@ QMAttachmentContentServiceDelegate>
                                                        options:SDWebImageHighPriority | SDWebImageContinueInBackground | SDWebImageAllowInvalidSSLCertificates
                                                       progress:^(NSInteger receivedSize,
                                                                  NSInteger expectedSize,
-                                                                 NSURL * _Nullable __unused targetURL)
+                                                                 NSURL *__unused targetURL)
                  {
                      if ([view.messageID isEqualToString:message.ID]) {
                          CGFloat progress = receivedSize/(float)expectedSize;
@@ -212,12 +211,12 @@ QMAttachmentContentServiceDelegate>
                              view.progress = progress;
                          });
                      }
-                 } completed:^(UIImage * _Nullable __unused image,
-                               UIImage * _Nullable transfomedImage,
-                               NSError * _Nullable error,
+                 } completed:^(UIImage *__unused image,
+                               UIImage * transfomedImage,
+                               NSError * error,
                                SDImageCacheType __unused cacheType,
                                BOOL __unused finished,
-                               NSURL * _Nonnull __unused imageURL) {
+                               NSURL *__unused imageURL) {
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          if (transfomedImage) {
@@ -225,7 +224,7 @@ QMAttachmentContentServiceDelegate>
                              view.image = transfomedImage;
                          }
                          if (error) {
-                             QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
+                             QMSLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
                          }
                      }

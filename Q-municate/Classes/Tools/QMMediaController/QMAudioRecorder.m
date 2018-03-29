@@ -43,7 +43,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
                                                error:&setCategoryError];
         
         if (setCategoryError) {
-            QMLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
+            QMSLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
             
         }
         
@@ -56,8 +56,6 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         //encoder
         [options setValue:@(AVAudioQualityHigh) forKey:AVEncoderAudioQualityKey]; //channels
         [options setValue:@(16) forKey:AVEncoderBitDepthHintKey]; //channels
-        
-        
         
         // Initiate and prepare the recorder
         _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:options error:&error];

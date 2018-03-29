@@ -78,6 +78,10 @@
 
 // MARK: QMMemoryStorageProtocol
 
+- (BOOL)isEmpty {
+    return self.contactsMemoryStorage.count == 0;
+}
+
 - (void)free {
     
     [self.contactsMemoryStorage removeAllObjects];

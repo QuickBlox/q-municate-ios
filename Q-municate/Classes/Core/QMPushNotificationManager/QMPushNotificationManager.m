@@ -265,7 +265,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         }];
         
         // Do the work associated with the task.
-        QMLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
+        QMSLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
         
         [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
             
@@ -331,7 +331,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 // MARK: - PKPushRegistryDelegate protocol
 
 - (void)pushRegistry:(PKPushRegistry *)__unused registry didUpdatePushCredentials:(PKPushCredentials *)pushCredentials forType:(PKPushType)__unused type {
-    QMLog(@"Created VOIP push token.");
+    QMSLog(@"Created VOIP push token.");
     NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
     QBMSubscription *subscription = [QBMSubscription subscription];
@@ -342,24 +342,24 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     @weakify(self);
     [QBRequest createSubscription:subscription successBlock:^(QBResponse * __unused response, NSArray * __unused objects) {
         @strongify(self);
-        QMLog(@"Create VOIP Subscription request - Success");
+        QMSLog(@"Create VOIP Subscription request - Success");
         QBMSubscription *voipSubscription = objects.firstObject;
         self.voipSubscriptionID = voipSubscription.ID;
     } errorBlock:^(QBResponse *response) {
-        QMLog(@"Create VOIP Subscription request - Error: %@", [response.error reasons]);
+        QMSLog(@"Create VOIP Subscription request - Error: %@", [response.error reasons]);
     }];
 }
 
 - (void)pushRegistry:(PKPushRegistry *)__unused registry didInvalidatePushTokenForType:(PKPushType)__unused type {
-    QMLog(@"Invalidated VOIP push token.");
+    QMSLog(@"Invalidated VOIP push token.");
     @weakify(self);
     [QBRequest deleteSubscriptionWithID:_voipSubscriptionID
                            successBlock:^(QBResponse * __unused response) {
-                               QMLog(@"Unregister VOIP Subscription request - Success");
+                               QMSLog(@"Unregister VOIP Subscription request - Success");
                                @strongify(self);
                                self.voipSubscriptionID = 0;
                            } errorBlock:^(QBResponse *response) {
-                               QMLog(@"Unregister VOIP Subscription request - Error: %@", [response.error reasons]);
+                               QMSLog(@"Unregister VOIP Subscription request - Error: %@", [response.error reasons]);
                            }];
 }
 

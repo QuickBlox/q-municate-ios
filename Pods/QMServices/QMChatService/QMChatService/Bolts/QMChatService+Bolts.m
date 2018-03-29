@@ -306,6 +306,8 @@ static NSString *const kQMChatServiceDomain = @"com.q-municate.chatservice";
                             completion:^(QBResponse *response,
                                          NSArray<QBChatMessage *> *messages)
          {
+             
+             
              if (response.success) {
                  [source setResult:messages];
              }

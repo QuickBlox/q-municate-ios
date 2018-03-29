@@ -161,6 +161,10 @@ const struct QMUsersSearchKeyStruct QMUsersSearchKey = {
 
 //MARK: - QMMemoryStorageProtocol
 
+- (BOOL)isEmpty {
+    return self.users.count == 0;
+}
+
 - (void)free {
     
     [self.users removeAllObjects];

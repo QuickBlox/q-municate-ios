@@ -71,6 +71,10 @@
 
 //MARK: QMMemoryStorageProtocol
 
+- (BOOL)isEmpty {
+    return self.messagesInQueue.count == 0;
+}
+
 - (void)free {
     
     [self.messagesInQueue removeAllObjects];

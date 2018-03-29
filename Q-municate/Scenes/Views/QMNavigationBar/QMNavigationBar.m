@@ -7,6 +7,7 @@
 //
 
 #import "QMNavigationBar.h"
+#import "QMHelpers.h"
 
 @interface QMNavigationBar () {
     BOOL _showNotification;

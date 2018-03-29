@@ -42,6 +42,10 @@
     return item;
 }
 
+- (BOOL)isEmpty {
+    return _memoryStorage.count == 0;
+}
+
 - (void)free {
     [_memoryStorage removeAllObjects];
 }
