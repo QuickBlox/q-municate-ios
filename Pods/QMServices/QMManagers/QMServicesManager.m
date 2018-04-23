@@ -7,8 +7,8 @@
 //
 
 #import "QMServicesManager.h"
-#import "_CDMessage.h"
-#import "_CDDialog.h"
+#import "_QMCDMessage.h"
+#import "_QMCDDialog.h"
 
 #import "QMSLog.h"
 
@@ -283,7 +283,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
 - (void)cachedDialogs:(QMCacheCollection)block {
     
     NSArray<QBChatDialog *> *dialogs =
-    [QMChatCache.instance dialogsSortedBy:CDDialogAttributes.lastMessageDate
+    [QMChatCache.instance dialogsSortedBy:QMCDDialogAttributes.lastMessageDate
                                 ascending:YES
                             withPredicate:nil];
     block(dialogs);
@@ -293,7 +293,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
                             block:(QMCacheCollection)block {
     
     NSArray<QBChatDialog *> *dialogs =
-    [QMChatCache.instance dialogsSortedBy:CDDialogAttributes.lastMessageDate
+    [QMChatCache.instance dialogsSortedBy:QMCDDialogAttributes.lastMessageDate
                                 ascending:YES
                             withPredicate:predicate];
     block(dialogs);
@@ -309,7 +309,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
     
     NSArray<QBChatMessage *> *result =
     [QMChatCache.instance messagesWithDialogId:dialogID
-                                      sortedBy:CDMessageAttributes.messageID
+                                      sortedBy:QMCDMessageAttributes.messageID
                                      ascending:NO];
     block(result);
 }
@@ -318,7 +318,7 @@ didReceiveNotificationMessage:(QBChatMessage *)message
                               block:(nullable QMCacheCollection)block {
 
     [QMChatCache.instance messagesWithPredicate:predicate
-                                       sortedBy:CDMessageAttributes.messageID
+                                       sortedBy:QMCDMessageAttributes.messageID
                                       ascending:NO
                                      completion:block];
 }

@@ -93,8 +93,8 @@ QMChatDataSourceDelegate, QMAudioRecordToolbarDelegate>
     self.systemInputToolbar.frame = CGRectMake(0, 0, 0, kQMSystemInputToolbarDebugHeight);
     self.systemInputToolbar.hostViewFrameChangeBlock = ^(UIView *view, BOOL animated) {
         
-        CGFloat pos = view.superview.frame.size.height - view.frame.origin.y ;
-        
+       CGFloat pos = weakSelf.view.frame.size.height - [view.superview convertPoint:view.frame.origin toView:weakSelf.view].y;
+
         if (weakSelf.inputToolbar.contentView.textView.isFirstResponder) {
             
             if (view.superview.frame.origin.y > 0 && pos == 0) {
@@ -103,11 +103,11 @@ QMChatDataSourceDelegate, QMAudioRecordToolbarDelegate>
         }
 
         const CGFloat v = [weakSelf inputToolBarStartPos];
-        
-        if (pos < v ) {
+
+        if (pos < v || !view) {
             pos = v;
         }
-        
+
         [weakSelf setToolbarBottomConstraintValue:pos animated:animated];
     };
     
@@ -282,11 +282,7 @@ QMChatDataSourceDelegate, QMAudioRecordToolbarDelegate>
 #pragma mark - View lifecycle
 
 - (NSUInteger)inputToolBarStartPos {
-    
-    if (self.tabBarItem) {
-        return self.tabBarController.tabBar.frame.size.height;
-    }
-    
+
     return 0;
 }
 
@@ -798,7 +794,6 @@ QMChatDataSourceDelegate, QMAudioRecordToolbarDelegate>
     self.toolbarBottomLayoutGuide.constant = constraintValue;
     
     if (animated) {
-        
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             

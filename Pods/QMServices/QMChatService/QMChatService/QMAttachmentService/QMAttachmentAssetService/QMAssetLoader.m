@@ -311,15 +311,15 @@ static inline NSArray *QMAssetKeysArrayForOptions(QMAssetLoaderKeyOptions option
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if (_completion) {
-            _completion(result.duration,
+        if (self.completion) {
+            self.completion(result.duration,
                         result.mediaSize,
                         result.image,
                         error);
         }
         
-        [_preloadTimeout cancelTimeout];
-        _completion = nil;
+        [self.preloadTimeout cancelTimeout];
+        self.completion = nil;
         
     });
     

@@ -11,15 +11,13 @@
 
 #import "QBChatAttachment+QMCustomParameters.h"
 
-@interface QMAttachmentStoreService() {
-    NSFileManager *_fileManager;
-}
+@interface QMAttachmentStoreService()
 
 @property (nonatomic, strong) NSMutableDictionary *imagesMemoryStorage;
 @property (nonatomic, readwrite) QMAttachmentsMemoryStorage *attachmentsMemoryStorage;
 @property (nonatomic, strong, nullable) dispatch_queue_t storeServiceQueue;
 @property (strong, nonatomic, nonnull) NSString *diskMediaCachePath;
-
+@property (nonatomic) NSFileManager *fileManager;
 @end
 
 @implementation QMAttachmentStoreService
@@ -43,9 +41,7 @@
                                                      name:UIApplicationDidReceiveMemoryWarningNotification
                                                    object:nil];
         _diskMediaCachePath = mediaCacheDir();
-        dispatch_sync(_storeServiceQueue, ^{
-            _fileManager = [NSFileManager new];
-        });
+        _fileManager = [NSFileManager new];
     }
     
     return self;
@@ -54,7 +50,6 @@
 - (void)dealloc {
     QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
-
 
 //MARK: - QMMediaStoreServiceDelegate
 
@@ -77,7 +72,7 @@
         NSString *path = mediaPath(dialogID, messageID, attachment);
         NSData *data = nil;
         
-        if ([_fileManager fileExistsAtPath:path]) {
+        if ([self.fileManager fileExistsAtPath:path]) {
             
             NSError *error;
             data = [NSData dataWithContentsOfFile:path
@@ -116,7 +111,7 @@
      {
          UIImage *image = nil;
          if (data) {
-             UIImage *image = [UIImage imageWithData:data];
+             image = [UIImage imageWithData:data];
              self.imagesMemoryStorage[messageID] = image;
          }
          dispatch_async(dispatch_get_main_queue(), ^{
@@ -149,11 +144,11 @@
 }
 
 - (void)storeAttachment:(QBChatAttachment *)attachment
-              withData:(nullable NSData *)data
-             cacheType:(QMAttachmentCacheType)cacheType
-             messageID:(NSString *)messageID
-              dialogID:(NSString *)dialogID
-            completion:(void(^)(NSURL *fileURL))completion {
+               withData:(nullable NSData *)data
+              cacheType:(QMAttachmentCacheType)cacheType
+              messageID:(NSString *)messageID
+               dialogID:(NSString *)dialogID
+             completion:(void(^)(NSURL *fileURL))completion {
     
     NSAssert(attachment.ID, @"No ID");
     NSAssert(messageID, @"No ID");
@@ -213,13 +208,13 @@
                                              messageID,
                                              attachment);
             
-            if (![_fileManager fileExistsAtPath:[pathToFile stringByDeletingLastPathComponent]]) {
-                [_fileManager createDirectoryAtPath:[pathToFile stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:NULL];
+            if (![self.fileManager fileExistsAtPath:[pathToFile stringByDeletingLastPathComponent]]) {
+                [self.fileManager createDirectoryAtPath:[pathToFile stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:NULL];
             }
             
             QMSLog(@"CREATE FILE AT PATH %@", pathToFile);
             
-            if  (![_fileManager createFileAtPath:pathToFile contents:data attributes:nil]) {
+            if  (![self.fileManager createFileAtPath:pathToFile contents:data attributes:nil]) {
                 QMSLog(@"Error was code: %d - message: %s", errno, strerror(errno));
                 completion(nil);
                 return;
@@ -260,11 +255,11 @@
         
         dispatch_async(self.storeServiceQueue, ^{
             
-            [_fileManager removeItemAtPath:self.diskMediaCachePath error:nil];
-            [_fileManager createDirectoryAtPath:self.diskMediaCachePath
-                    withIntermediateDirectories:YES
-                                     attributes:nil
-                                          error:NULL];
+            [self.fileManager removeItemAtPath:self.diskMediaCachePath error:nil];
+            [self.fileManager createDirectoryAtPath:self.diskMediaCachePath
+                        withIntermediateDirectories:YES
+                                         attributes:nil
+                                              error:NULL];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 clearMemoryBlock();
@@ -288,9 +283,9 @@
     
     dispatch_async(self.storeServiceQueue, ^{
         
-        NSString *dialogPath = [_diskMediaCachePath stringByAppendingPathComponent:dialogID];
-        [_fileManager removeItemAtPath:dialogPath
-                                 error:nil];
+        NSString *dialogPath = [self.diskMediaCachePath stringByAppendingPathComponent:dialogID];
+        [self.fileManager removeItemAtPath:dialogPath
+                                     error:nil];
         
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -307,13 +302,13 @@
     
     dispatch_async(self.storeServiceQueue, ^{
         
-        NSString *dialogPath = [_diskMediaCachePath stringByAppendingPathComponent:dialogID];
+        NSString *dialogPath = [self.diskMediaCachePath stringByAppendingPathComponent:dialogID];
         
         for (NSString *messageID in messagesIDs) {
             
             NSString *messagePath = [dialogPath stringByAppendingPathComponent:messageID];
-            [_fileManager removeItemAtPath:messagePath
-                                     error:nil];
+            [self.fileManager removeItemAtPath:messagePath
+                                         error:nil];
         }
         
         if (completion) {
@@ -335,8 +330,6 @@
                             completion:completion];
 }
 
-
-
 //MARK: - Helpers
 - (NSURL *)fileURLForAttachment:(QBChatAttachment *)attachment
                       messageID:(NSString *)messageID
@@ -345,7 +338,7 @@
     __block NSURL *fileURL = nil;
     dispatch_sync(self.storeServiceQueue, ^{
         NSString *path = mediaPath(dialogID, messageID, attachment);
-        if ([_fileManager fileExistsAtPath:path]) {
+        if ([self.fileManager fileExistsAtPath:path]) {
             fileURL = [NSURL fileURLWithPath:path];
         }
     });
@@ -437,7 +430,7 @@
 - (NSUInteger)sizeForPath:(NSString *)path {
     __block NSUInteger size = 0;
     dispatch_sync(self.storeServiceQueue, ^{
-        NSDirectoryEnumerator *fileEnumerator = [_fileManager enumeratorAtPath:self.diskMediaCachePath];
+        NSDirectoryEnumerator *fileEnumerator = [self.fileManager enumeratorAtPath:self.diskMediaCachePath];
         for (NSString *fileName in fileEnumerator) {
             NSString *filePath = [self.diskMediaCachePath stringByAppendingPathComponent:fileName];
             NSDictionary<NSString *, id> *attrs = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
@@ -474,13 +467,10 @@ static NSString* mediaCacheDir() {
 static NSString* mediaPath(NSString *dialogID, NSString *messsageID, QBChatAttachment *attachment)   {
     
     NSString *mediaPatch =
-    [[mediaCacheDir() stringByAppendingPathComponent:dialogID]
-     stringByAppendingPathComponent:messsageID];
+    [[mediaCacheDir() stringByAppendingPathComponent:dialogID] stringByAppendingPathComponent:messsageID];
     
     NSString *filePath =
-    [NSString stringWithFormat:@"/attachment-%@.%@",
-     messsageID,
-     attachment.fileExtension];
+    [NSString stringWithFormat:@"/attachment-%@.%@", messsageID, attachment.fileExtension];
     
     return [mediaPatch stringByAppendingPathComponent:filePath];
 }

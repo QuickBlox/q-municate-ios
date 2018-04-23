@@ -178,30 +178,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface QMAuthService(DEPRECATED)
-
-/**
- Login with twitter digits auth headers
- 
- @param authHeaders Taken from '-[DGTOAuthSigning OAuthEchoHeadersToVerifyCredentials]'
- @param completion  completion block with response and user profile
- @return Cancelable request
- */
-
-- (QBRequest *)loginWithTwitterDigitsAuthHeaders:(NSDictionary *)authHeaders
-                                      completion:(nullable void(^)(QBResponse *response, QBUUser * _Nullable userProfile))completion
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.5 Use 'logInWithFirebaseProjectID:accessToken:successBlock:errorBlock:'.");
-
-
-/**
- Login with twitter digits using Bolts.
- 
- @param authHeaders Taken from '-[DGTOAuthSigning OAuthEchoHeadersToVerifyCredentials]'
- @return BFTask with QBUUser instance
- */
-- (BFTask<QBUUser *> *)loginWithTwitterDigitsAuthHeaders:(NSDictionary *)authHeaders
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 0.5 Use 'logInWithFirebaseProjectID:accessToken:'.");
-
-@end
-
 NS_ASSUME_NONNULL_END

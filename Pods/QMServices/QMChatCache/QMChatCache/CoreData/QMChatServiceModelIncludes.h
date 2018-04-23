@@ -1,3 +1,3 @@
-#import "CDAttachment.h"
-#import "CDDialog.h"
-#import "CDMessage.h"
+#import "QMCDAttachment.h"
+#import "QMCDDialog.h"
+#import "QMCDMessage.h"

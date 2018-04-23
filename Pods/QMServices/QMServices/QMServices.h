@@ -31,3 +31,30 @@
 #import <QMServices/QMContactListMemoryStorage.h>
 #import <QMServices/QMMessagesMemoryStorage.h>
 #import <QMServices/QMAsynchronousOperation.h>
+/*temp
+#import <Foundation/Foundation.h>
+#import <Quickblox/Quickblox.h>
+#import <Bolts/Bolts.h>
+
+#import <QMDBStorage.h>
+#import <QMChatCache.h>
+#import <QMUsersCache.h>
+#import <QMOpenGraphCache.h>
+#import <QMContactListCache.h>
+#import <QMServicesManager.h>
+#import <QMServices/QMSLog.h>
+
+#import <QMContactListService.h>
+#import <QMChatService.h>
+#import <QMAuthService.h>
+#import <QMUsersService.h>
+
+#import <QBChatMessage+QMCustomParameters.h>
+#import <QBChatAttachment+QMCustomData.h>
+#import <QBChatAttachment+QMFactory.h>
+#import <QBChatAttachment+QMCustomParameters.h>
+#import <QMUsersMemoryStorage.h>
+#import <QMContactListMemoryStorage.h>
+#import <QMMessagesMemoryStorage.h>
+#import <QMAsynchronousOperation.h>
+*/

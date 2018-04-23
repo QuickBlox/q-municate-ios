@@ -57,21 +57,6 @@
     });
 }
 
-- (BFTask *)loginWithTwitterDigitsAuthHeaders:(NSDictionary *)authHeaders {
-    
-    return make_task(^(BFTaskCompletionSource *source) {
-        
-        [self loginWithTwitterDigitsAuthHeaders:authHeaders
-                                     completion:^(QBResponse *response,
-                                                  QBUUser *userProfile)
-         {
-             response.success ?
-             [source setResult:userProfile] :
-             [source setError:response.error.error];
-         }];
-    });
-}
-
 - (BFTask *)loginWithFacebookSessionToken:(NSString *)sessionToken {
     
     return make_task(^(BFTaskCompletionSource *source) {

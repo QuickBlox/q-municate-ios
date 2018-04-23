@@ -153,7 +153,7 @@ static NSString *const kQMKeyImageURL = @"ogImage";
                       dispatch_group_leave(group);
                   }];
                  
-                 dispatch_group_notify(group, _ogsQueue, ^{
+                 dispatch_group_notify(group, self.ogsQueue, ^{
                      
                      weakSelf.memoryStorage[ID] = openGraphItem;
                      [weakSelf.multicastDelegate openGraphSerivce:weakSelf

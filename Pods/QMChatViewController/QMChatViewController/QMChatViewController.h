@@ -38,8 +38,9 @@
 #import "QMChatIncomingLinkPreviewCell.h"
 #import "QMChatOutgoingLinkPreviewCell.h"
 
-@interface QMChatViewController : UIViewController <QMChatCollectionViewDataSource, QMChatCollectionViewDelegateFlowLayout, UITextViewDelegate>
+NS_ASSUME_NONNULL_BEGIN
 
+@interface QMChatViewController : UIViewController <QMChatCollectionViewDataSource, QMChatCollectionViewDelegateFlowLayout, UITextViewDelegate>
 
 @property (strong, nonatomic) QMChatDataSource *chatDataSource;
 /**
@@ -108,7 +109,7 @@
  *
  *  @return Configured attributed string.
  */
-- (NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem;
+- (nullable NSAttributedString *)attributedStringForItem:(QBChatMessage *)messageItem;
 
 /**
  *  Method to create chat message top label attributed string (Usually - chat message owner name). Have to be overriden in subclasses.
@@ -117,7 +118,7 @@
  *
  *  @return Configured attributed string.
  */
-- (NSAttributedString *)topLabelAttributedStringForItem:(QBChatMessage *)messageItem;
+- (nullable NSAttributedString *)topLabelAttributedStringForItem:(QBChatMessage *)messageItem;
 
 /**
  *  Method to create chat message bottom label attributed string (Usually - chat message date sent). Have to be overriden in subclasses.
@@ -126,7 +127,7 @@
  *
  *  @return Configured attributed string.
  */
-- (NSAttributedString *)bottomLabelAttributedStringForItem:(QBChatMessage *)messageItem;
+- (nullable NSAttributedString *)bottomLabelAttributedStringForItem:(QBChatMessage *)messageItem;
 
 /**
  *  Collection Cell View class for specific message. Have to be overriden in subclasses. Defaults cells are supplied with QMChatViewController.
@@ -251,6 +252,11 @@
 - (void)finishReceivingMessageAnimated:(BOOL)animated;
 
 /**
+ Input bar start pos
+ */
+- (NSUInteger)inputToolBarStartPos;
+
+/**
  *  Scrolls the collection view such that the bottom most cell is completely visible, above the `inputToolbar`.
  *
  *  @param animated Pass `YES` if you want to animate scrolling, `NO` if it should be immediate.
@@ -280,3 +286,5 @@
 - (void)viewWillAppear:(BOOL)animated NS_REQUIRES_SUPER;
 
 @end
+
+NS_ASSUME_NONNULL_END

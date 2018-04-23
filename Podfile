@@ -4,12 +4,12 @@ xcodeproj 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
 def services
-    # pod 'QMServices', :path => '../q-municate-services-ios'
-   pod 'QMServices',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
+#     pod 'QMServices', :path => '../q-municate-services-ios'
+     pod 'QMServices',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
 end
 
 def chat_view_controller
-    # pod 'QMChatViewController', :path => '../QMChatViewController-ios/'
+#     pod 'QMChatViewController', :path => '../QMChatViewController-ios/'
    pod 'QMChatViewController', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'development'
 end
 
@@ -22,13 +22,13 @@ target 'Q-municate' do
     chat_view_controller
     services
 
-    pod 'UIDevice-Hardware', '~> 0.1.11'
+    pod 'UIDevice-Hardware'
     pod 'SAMKeychain'
-    pod 'Reachability', '~> 3.2'
-    pod 'TTTAttributedLabel', '~> 2.0'
-    pod 'libextobjc/EXTScope', '~> 0.4.1'
-    pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
-    pod 'NYTPhotoViewer', :git => 'https://github.com/NYTimes/NYTPhotoViewer.git', :tag => 'v2.0.0'
+    pod 'Reachability'
+    pod 'TTTAttributedLabel'
+    pod 'libextobjc/EXTScope'
+    pod 'Flurry-iOS-SDK/FlurrySDK'
+    pod 'NYTPhotoViewer'
     #Facebook
     pod 'FBSDKCoreKit'
     pod 'FBSDKShareKit'
@@ -44,7 +44,6 @@ end
 target 'QMSiriExtension' do
     use_frameworks!
     services
-
 end
 
 target 'QMShareExtension' do

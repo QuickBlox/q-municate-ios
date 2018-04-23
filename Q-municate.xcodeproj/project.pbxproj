@@ -2606,7 +2606,6 @@
 				E07BC21B1DDF5FD900B8D3B0 /* Sources */,
 				E07BC21C1DDF5FD900B8D3B0 /* Frameworks */,
 				E07BC21D1DDF5FD900B8D3B0 /* Resources */,
-				E911BC553233DD014AE11AC7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2625,7 +2624,6 @@
 				E0CA1F441F84F78A00E9B293 /* Sources */,
 				E0CA1F451F84F78A00E9B293 /* Frameworks */,
 				E0CA1F461F84F78A00E9B293 /* Resources */,
-				F94AD707CEDF6BCDE4AAF85B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2947,60 +2945,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E911BC553233DD014AE11AC7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMChatCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMContactListCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMUsersCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMOpenGraphCacheModel.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMChatCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMContactListCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMUsersCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMOpenGraphCacheModel.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QMSiriExtension/Pods-QMSiriExtension-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F94AD707CEDF6BCDE4AAF85B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-QMShareExtension/Pods-QMShareExtension-resources.sh",
-				"${PODS_ROOT}/../../QMChatViewController-ios/QMChatViewController/Icons/Media.xcassets",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMChatViewController/QMChatViewController.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMChatCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMContactListCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMUsersCacheModel.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/QMServices/QMOpenGraphCacheModel.bundle",
-				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Media.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMChatViewController.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMChatCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMContactListCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMUsersCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QMOpenGraphCacheModel.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SVProgressHUD.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QMShareExtension/Pods-QMShareExtension-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

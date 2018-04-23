@@ -40,14 +40,10 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
 
 + (instancetype)asynchronousOperationWithID:(NSString *)operationID {
     
-    
     QMAsynchronousOperation *operation = [QMAsynchronousOperation operation];
     
     if (operationID.length != 0) {
         operation.operationID = operationID;
-        
-    }
-    else {
     }
     
     return operation;
@@ -62,9 +58,8 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
     self = [super init];
     
     if (self) {
-        NSString *identifier = @"QMAsyncOperationSerialQueue";
-        _dispatchQueue = dispatch_queue_create([identifier UTF8String], DISPATCH_QUEUE_SERIAL);
-        
+        const char *identifier = "QMAsyncOperationSerialQueue";
+        _dispatchQueue = dispatch_queue_create(identifier, DISPATCH_QUEUE_SERIAL);
         dispatch_queue_set_specific(_dispatchQueue, (__bridge const void *)(_dispatchQueue),
                                     (__bridge void *)(self), NULL);
     }
@@ -74,10 +69,9 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
 
 //MARK: - Control
 
-- (BOOL)isExecuting
-{
-    __block BOOL isExecuting;
+- (BOOL)isExecuting {
     
+    __block BOOL isExecuting = NO;
     [self performBlockAndWait:^{
         isExecuting = self.state == QMAsynchronousOperationStateStateExecuting;
     }];
@@ -87,8 +81,7 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
 
 - (BOOL)isCancelled {
     
-    __block BOOL isCancelled;
-    
+    __block BOOL isCancelled = NO;
     [self performBlockAndWait:^{
         isCancelled = self.state == QMAsynchronousOperationStateStateCancelled;
     }];
@@ -98,8 +91,7 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
 
 - (BOOL)isFinished {
     
-    __block BOOL isFinished;
-    
+    __block BOOL isFinished = NO;
     [self performBlockAndWait:^{
         isFinished =
         self.state == QMAsynchronousOperationStateStateFinished ||
@@ -118,7 +110,6 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
         }
         
         __block BOOL isExecuting = YES;
-        
         [self performBlockAndWait:^{
             // Ignore this call if the operation is already executing or if has finished already
             if (self.state != QMAsynchronousOperationStateStateReady) {
@@ -163,20 +154,20 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
     }
 }
 
-- (void)setState:(QMAsynchronousOperationState)state
-{
+- (void)setState:(QMAsynchronousOperationState)state {
+    
     [self performBlockAndWait:^{
         
         if ([self isExecuting]) {
             [self willChangeValueForKey:@"isFinished"];
             [self willChangeValueForKey:@"isExecuting"];
-            _state = state;
+            self->_state = state;
             [self didChangeValueForKey:@"isExecuting"];
             [self didChangeValueForKey:@"isFinished"];
         }
         else {
             [self willChangeValueForKey:@"isExecuting"];
-            _state = state;
+            self->_state = state;
             [self didChangeValueForKey:@"isExecuting"];
         }
     }];
@@ -197,7 +188,6 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
         }
     }];
 }
-
 
 - (BOOL)isAsynchronous {
     return YES;
@@ -251,7 +241,6 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
 - (void)asyncTask {
     
     NSParameterAssert(self.asyncOperationBlock != nil);
-    
     // Invoke execution block
     __weak typeof(self)weakSelf = self;
     self.asyncOperationBlock(^{
@@ -271,7 +260,6 @@ static inline NSString *QMKeyPathForState(QMAsynchronousOperationState state) {
 - (nullable QMAsynchronousOperation *)operationWithID:(NSString *)operationID {
     
     QMAsynchronousOperation *operation = nil;
-    
     for (QMAsynchronousOperation *op in [self operations]) {
         if ([op.operationID isEqualToString:operationID]) {
             operation = op;

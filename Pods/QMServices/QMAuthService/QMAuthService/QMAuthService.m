@@ -146,36 +146,6 @@ static NSString *const kQMTwitterAuthSocialProvider  = @"twitter";
     return request;
 }
 
-- (QBRequest *)loginWithTwitterDigitsAuthHeaders:(NSDictionary *)authHeaders
-                                      completion:(void(^)(QBResponse *response, QBUUser *userProfile))completion {
-    
-    QBRequest *request =
-    [QBRequest logInWithTwitterDigitsAuthHeaders:authHeaders
-                                    successBlock:^(QBResponse *response, QBUUser *user)
-     {
-         
-         user.password = QBSession.currentSession.sessionDetails.token;
-         
-         if ([self.multicastDelegate respondsToSelector:@selector(authService:didLoginWithUser:)]) {
-             [self.multicastDelegate authService:self didLoginWithUser:user];
-         }
-         
-         if (completion) {
-             completion(response, user);
-         }
-         
-     } errorBlock:^(QBResponse *response) {
-         
-         [self.serviceManager handleErrorResponse:response];
-         
-         if (completion) {
-             completion(response, nil);
-         }
-     }];
-    
-    return request;
-}
-
 - (QBRequest *)logInWithFirebaseProjectID:(NSString *)projectID
                               accessToken:(NSString *)accessToken
                                       completion:(void(^)(QBResponse *response,

@@ -27,7 +27,7 @@ NSString *QM_errorSummaryFromErrorCode(NSInteger errorCode)
     NSString *summary = [errorCodes objectForKey:@(errorCode)];
     if (summary == nil)
     {
-        summary = [NSString stringWithFormat:@"Unknown Core Data Error Code (%zd)", errorCode];
+        summary = [NSString stringWithFormat:@"Unknown Core Data Error Code (%tu)", errorCode];
     }
     return summary;
 }
@@ -82,7 +82,7 @@ NSString *QM_errorSummaryFromErrorCode(NSInteger errorCode)
     {
         return [[self userInfo] valueForKey:@"conflictList"];
     }
-    return [NSString stringWithFormat:@"(%zd) %@ [%@]", errorCode, QM_errorSummaryFromErrorCode(errorCode), [self QM_validationErrorObject] ?: [[self userInfo] valueForKey:@"reason"]];
+    return [NSString stringWithFormat:@"(%tu) %@ [%@]", errorCode, QM_errorSummaryFromErrorCode(errorCode), [self QM_validationErrorObject] ?: [[self userInfo] valueForKey:@"reason"]];
 }
 
 - (NSString *)QM_coreDataDescription;
