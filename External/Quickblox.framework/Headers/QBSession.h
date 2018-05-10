@@ -5,7 +5,7 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 @class QBUUser;
 @class QBASession;
@@ -78,16 +78,6 @@ FOUNDATION_EXPORT NSNotificationName const kQBLogoutNotification;
  @param updateSessionBlock updateSessionBlock before the end of this block you should call startSessionWithDetails:
  */
 - (void)startSessionWithDetails:(QBASession *)session updateSessionBlock:(dispatch_block_t)updateSessionBlock;
-
-@end
-
-@interface QBSession (DEPRECATED)
-
-/**
- *  Token valid state
- */
-@property (nonatomic, readonly, getter=isTokenValid) BOOL tokenValid
-DEPRECATED_MSG_ATTRIBUTE("Deprecated in 2.15. Use tokenHasExpired");
 
 @end
 
