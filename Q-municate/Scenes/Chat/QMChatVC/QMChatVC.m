@@ -559,7 +559,7 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
 
 - (BOOL)messageSendingAllowed {
     
-    if (self.isForbiddenToSend) {
+    if ([self isForbiddenToSend]) {
         
         [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil)
                         actionSuccess:NO
@@ -1732,7 +1732,7 @@ didPerformAction:(SEL)action
 
 - (void)stopTyping {
     
-    if (self.isForbiddenToSend) {
+    if ([self isForbiddenToSend]) {
         return;
     }
     
@@ -1743,7 +1743,7 @@ didPerformAction:(SEL)action
 
 - (void)sendIsTypingStatus {
     
-    if (!QBChat.instance.isConnected || self.isForbiddenToSend) {
+    if (!QBChat.instance.isConnected || [self isForbiddenToSend]) {
         return;
     }
     
