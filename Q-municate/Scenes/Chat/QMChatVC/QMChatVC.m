@@ -559,17 +559,13 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
 
 - (BOOL)messageSendingAllowed {
     
-    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+    if (self.isForbiddenToSend) {
         
-        if (![QMCore.instance.contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
-            
-            [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil)
-                            actionSuccess:NO
-                         inViewController:self];
-            return NO;
-        }
+        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CANT_SEND_MESSAGES", nil)
+                        actionSuccess:NO
+                     inViewController:self];
+        return NO;
     }
-    
     
     return [self.deferredQueueManager shouldSendMessagesInDialogWithID:self.chatDialog.ID];
 }
@@ -1725,7 +1721,20 @@ didPerformAction:(SEL)action
 
 //MARK: - Typing status
 
+- (BOOL)isForbiddenToSend {
+    if (self.chatDialog.type == QBChatDialogTypePrivate) {
+        if (![QMCore.instance.contactManager isFriendWithUserID:[self.chatDialog opponentID]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (void)stopTyping {
+    
+    if (self.isForbiddenToSend) {
+        return;
+    }
     
     [self.typingTimer invalidate];
     self.typingTimer = nil;
@@ -1734,8 +1743,7 @@ didPerformAction:(SEL)action
 
 - (void)sendIsTypingStatus {
     
-    if (![QBChat instance].isConnected) {
-        
+    if (!QBChat.instance.isConnected || self.isForbiddenToSend) {
         return;
     }
     
@@ -1749,7 +1757,12 @@ didPerformAction:(SEL)action
         [self.chatDialog sendUserIsTyping];
     }
     
-    self.typingTimer = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(stopTyping) userInfo:nil repeats:NO];
+    self.typingTimer =
+    [NSTimer scheduledTimerWithTimeInterval:4.0
+                                     target:self
+                                   selector:@selector(stopTyping)
+                                   userInfo:nil
+                                    repeats:NO];
 }
 
 //MARK: - Actions
