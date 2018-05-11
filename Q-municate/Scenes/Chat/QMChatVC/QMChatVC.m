@@ -82,6 +82,7 @@ static NSString * const kQMTextAttachmentSpacing = @"  ";
 QMChatServiceDelegate,
 QMChatConnectionDelegate,
 QMContactListServiceDelegate,
+QMAudioRecordToolbarDelegate,
 QMDeferredQueueManagerDelegate,
 QMChatActionsHandler,
 QMChatCellDelegate,
@@ -257,6 +258,7 @@ TTTAttributedLabelDelegate
     
     self.inputToolbar.contentView.textView.placeHolder = NSLocalizedString(@"QM_STR_INPUTTOOLBAR_PLACEHOLDER", nil);
     self.view.backgroundColor = QMChatBackgroundColor();
+    self.inputToolbar.audioRecordDelegate = self;
     
     // setting up properties
     self.detailedCells = [NSMutableSet set];
@@ -592,9 +594,9 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
 
 //MARK:- Toolbar actions
 
-//MARK: QMInputToolbarDelegate
+//MARK: QMAudioRecordToolbarDelegate
 
-- (BOOL)messagesInputToolbarAudioRecordingShouldStart:(QMInputToolbar *)__unused toolbar {
+- (BOOL)audioRecordingShouldStart:(QMInputToolbar *)__unused toolbar {
     
     BOOL recordingIsEnabled = NO;
     
@@ -645,34 +647,34 @@ didAddMessagesToMemoryStorage:(NSArray<QBChatMessage *> *)__unused messages
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)messagesInputToolbarAudioRecordingStart:(QMInputToolbar *)__unused toolbar {
+- (void)audioRecordingStart:(QMInputToolbar *)__unused toolbar {
     
     [self startAudioRecording];
 }
 
-- (void)messagesInputToolbarAudioRecordingCancel:(QMInputToolbar *)__unused toolbar {
+- (void)audioRecordingCancel:(QMInputToolbar *)__unused toolbar {
     
     [self cancellAudioRecording];
 }
 
-- (void)messagesInputToolbarAudioRecordingComplete:(QMInputToolbar *)__unused toolbar {
+- (void)audioRecordingComplete:(QMInputToolbar *)__unused toolbar {
     
     [self finishAudioRecording];
 }
 
-- (void)messagesInputToolbarAudioRecordingPausedByTimeOut:(QMInputToolbar *)__unused toolbar {
+- (void)audioRecordingPausedByTimeOut:(QMInputToolbar *)__unused toolbar {
     
     if (self.currentAudioRecorder != nil) {
         [self.currentAudioRecorder pauseRecording];
     }
 }
 
-- (NSTimeInterval)inputPanelAudioRecordingMaximumDuration:(QMInputToolbar *)__unused toolbar {
+- (NSTimeInterval)audioRecordingMaximumDuration:(QMInputToolbar *)__unused toolbar {
     
     return self.currentAudioRecorder.maximumDuration;
 }
 
-- (NSTimeInterval)inputPanelAudioRecordingDuration:(QMInputToolbar *)__unused toolbar {
+- (NSTimeInterval)audioRecordingDuration:(QMInputToolbar *)__unused toolbar {
     
     if (self.currentAudioRecorder != nil) {
         return [self.currentAudioRecorder currentTime];
