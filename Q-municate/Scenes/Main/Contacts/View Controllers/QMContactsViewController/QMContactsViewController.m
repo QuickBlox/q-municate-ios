@@ -175,16 +175,22 @@ QMUsersServiceDelegate
                     
                     if ([QMCore.instance isInternetConnected]) {
                         
-                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil)
+                                        actionSuccess:NO
+                                     inViewController:self];
                     }
                     else {
                         
-                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO inViewController:self];
+                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
+                                        actionSuccess:NO
+                                     inViewController:self];
                     }
                 }
                 else if (QBChat.instance.isConnecting) {
                     
-                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CONNECTION_IN_PROGRESS", nil) actionSuccess:NO inViewController:self];
+                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CONNECTION_IN_PROGRESS", nil)
+                                    actionSuccess:NO
+                                 inViewController:self];
                 }
             }
             
