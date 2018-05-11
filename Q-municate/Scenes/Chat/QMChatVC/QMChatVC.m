@@ -1732,13 +1732,11 @@ didPerformAction:(SEL)action
 
 - (void)stopTyping {
     
-    if ([self isForbiddenToSend]) {
-        return;
-    }
-    
     [self.typingTimer invalidate];
     self.typingTimer = nil;
-    [self.chatDialog sendUserStoppedTyping];
+    if (![self isForbiddenToSend]) {
+         [self.chatDialog sendUserStoppedTyping];
+    }
 }
 
 - (void)sendIsTypingStatus {
