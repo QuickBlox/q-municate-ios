@@ -31,13 +31,12 @@ target 'Q-municate' do
     pod 'NYTPhotoViewer'
     #Facebook
     pod 'FBSDKCoreKit'
-    pod 'FBSDKShareKit'
     pod 'FBSDKLoginKit'
     #Twitter
     pod 'Fabric'
     pod 'Crashlytics'
     #Firebase
-    pod 'FirebaseUI/Phone', '~> 4.0'
+    pod 'FirebaseUI/Phone'
 
 end
 
@@ -51,7 +50,7 @@ target 'QMShareExtension' do
     services
     chat_view_controller
 
-    pod 'Reachability', '~> 3.2'
+    pod 'Reachability'
     pod 'SVProgressHUD'
 
 end

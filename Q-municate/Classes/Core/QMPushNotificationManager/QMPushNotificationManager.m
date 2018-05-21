@@ -278,7 +278,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                     && ![[QMCore instance].contactManager isFriendWithUserID:opponentUserID]) {
                     
                     if (completionHandler) {
-                        
                         completionHandler();
                     }
                     

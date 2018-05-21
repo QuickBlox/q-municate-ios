@@ -30,7 +30,7 @@
 @implementation QMAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
+    
     application.applicationIconBadgeNumber = 0;
     
     // Quickblox settings
@@ -64,8 +64,9 @@
     [[FIRAuth auth] useAppLanguage];
     [Fabric with:@[CrashlyticsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
-    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
-                                                         @"chat_endpoint" : [QBSettings chatEndpoint]}];
+    [Flurry logEvent:@"connect_to_chat"
+      withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
+                       @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
     // not returning this method as launch options are not ONLY related to facebook
     // for example when facebook returns NO in this method, callkit call from contacts
@@ -77,6 +78,7 @@
 }
 
 - (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
     
     if ([[FIRAuth auth] canHandleNotification:userInfo]) {
         completionHandler(UIBackgroundFetchResultNoData);
@@ -117,16 +119,13 @@
     
     [FBSDKAppEvents activateApp];
 }
-
-- (BOOL)application:(UIApplication *)application
+- (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    
-    BOOL urlWasIntendedForFacebook = [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                                                    openURL:url
-                                                                          sourceApplication:sourceApplication
-                                                                                 annotation:annotation];
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    BOOL urlWasIntendedForFacebook =
+    [[FBSDKApplicationDelegate sharedInstance] application:app
+                                                   openURL:url
+                                                   options:options];
     return urlWasIntendedForFacebook;
 }
 
@@ -145,14 +144,14 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
     FIRAuthAPNSTokenType firTokenType;
-
+    
     if (QMCurrentApplicationZone == QMApplicationZoneProduction) {
         firTokenType = FIRAuthAPNSTokenTypeProd;
     }
     else {
         firTokenType = FIRAuthAPNSTokenTypeSandbox;
     }
-
+    
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
