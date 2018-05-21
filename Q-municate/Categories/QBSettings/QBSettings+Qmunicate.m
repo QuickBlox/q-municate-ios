@@ -34,9 +34,9 @@
             
         case QMApplicationZoneProduction:
             
-            self.applicationID = 70758;
-            self.authKey = @"Mh2495m6OGP7an8";
-            self.authSecret = @"TXKeJfYw5WUVn93";
+            self.applicationID = 13318;
+            self.authKey = @"WzrAY7vrGmbgFfP";
+            self.authSecret = @"xS2uerEveGHmEun";
             self.accountKey = @"6Qyiz3pZfNsex1Enqnp7";
             
             break;
