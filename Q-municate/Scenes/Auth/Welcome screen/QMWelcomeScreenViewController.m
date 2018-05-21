@@ -18,7 +18,7 @@
 
 #import <FirebaseCore/FirebaseCore.h>
 #import <FirebaseAuth/FirebaseAuth.h>
-#import <FirebasePhoneAuthUI/FUIPhoneAuth.h>
+#import <FirebasePhoneAuthUI.h>
 
 static NSString * const kQMFacebookIDField = @"id";
 

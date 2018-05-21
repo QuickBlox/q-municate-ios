@@ -19,15 +19,15 @@
  *
  *  This api initializes the consent object. This object needs to be registered with the SDK.
  *
- *  @param inGDPRScope:             @c YES states that GDPR laws apply
+ *  @param isGDPRScope             @c YES states that GDPR laws apply
  *                                  The default value is @c NO
  *
- *  @param consentStrings:          NSDictionary* <NSString*,NSString*> => <consent sting format , consent string>.
+ *  @param consentStrings          NSDictionary* <NSString*,NSString*> => <consent sting format , consent string>.
  *
  *  @note  ConsentStrings must be provided if "isGDPRScope" is set to YES for the consent information to be valid
  *
  */
-- (FlurryConsent*) initWithGDPRScope:(BOOL)inGDPRScope andConsentStrings:(NSDictionary*)consentStrings;
+- (FlurryConsent*) initWithGDPRScope:(BOOL)isGDPRScope andConsentStrings:(NSDictionary*)consentStrings;
 
 
 /*!
@@ -39,7 +39,7 @@
  *  @see FlurrySessionBuilder#withConsent: to register the consent before starting Flurry. \n
  *       FlurryConsent#initWithGDPRScope:andConsentStrings to create the FlurryConsent object
  *
- *  @param consent:  The FlurryConsent object which contains the GDPR scope flag and the consent strings
+ *  @param consent  The FlurryConsent object which contains the GDPR scope flag and the consent strings
  *
  *  @return indicates if the consent information provided is valid or not
  *

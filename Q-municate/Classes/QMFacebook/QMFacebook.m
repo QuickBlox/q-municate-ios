@@ -10,7 +10,6 @@
 
 // facebook kit
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
