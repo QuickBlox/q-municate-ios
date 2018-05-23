@@ -20,8 +20,6 @@
 #import <Reachability/Reachability.h>
 #import <Intents/Intents.h>
 
-
-
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
 static NSString *const kQMBaseErrorKey = @"base";
@@ -42,7 +40,6 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     static QMCore *core = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        
         core = [[self alloc] init];
     });
     

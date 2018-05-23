@@ -12,15 +12,26 @@
 #import "QMMessagesHelper.h"
 #import <QMChatViewController/QMDateUtils.h>
 
-@interface QMContactManager ()
+@interface QMContactManager () <QBChatDelegate>
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
+@property (nonatomic) NSMutableArray<NSNumber *> *requests;
 
 @end
 
 @implementation QMContactManager
 
 @dynamic serviceManager;
+
+- (instancetype)initWithServiceManager:(id<QMServiceManagerProtocol>)serviceManager {
+    
+    self = [super initWithServiceManager:serviceManager];
+    if (self) {
+        _requests = [NSMutableArray array];
+        [QBChat.instance addDelegate:self];
+    }
+    return self;
+}
 
 //MARK: - Contacts management
 
@@ -29,7 +40,6 @@
     // determine whether we have already received contact request from user or not
     QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
     QBChatMessage *lastMessage = [self.serviceManager.chatService.messagesMemoryStorage lastMessageFromDialogID:chatDialog.ID];
-    
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     
     if (lastMessage.messageType == QMMessageTypeContactRequest
@@ -108,7 +118,6 @@
 - (NSString *)fullNameForUserID:(NSUInteger)userID {
     
     QBUUser *user = [self.serviceManager.usersService.usersMemoryStorage userWithID:userID];
-    
     NSString *fullName = user.fullName ?: [NSString stringWithFormat:@"%tu", userID];
     
     return fullName;
@@ -160,7 +169,6 @@
     for (QBUUser *user in friends) {
         
         if ([userIDs containsObject:@(user.ID)]) {
-            
             [mutableUsers removeObject:user];
         }
     }
@@ -191,22 +199,32 @@
 
 - (NSString *)onlineStatusForUser:(QBUUser *)user {
     
-    QBContactListItem *contactListItem =
-    [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     
     NSString *status = nil;
     
-    if (user.ID == self.serviceManager.currentProfile.userData.ID || contactListItem.isOnline) {
-        status = NSLocalizedString(@"QM_STR_ONLINE", nil);
+
+    if (!contactListItem) {
+        
+        if ([self isUserContactRequest:user.ID]) {
+            return @"Contact request";
+        }
+        
+        return nil;
     }
-    else if (!contactListItem.isOnline) {
+    
+    if (user.ID == self.serviceManager.currentProfile.userData.ID || contactListItem.isOnline) {
+        return NSLocalizedString(@"QM_STR_ONLINE", nil);
+    }
+    else {
         
         NSDate *statusDate = user.lastRequestAt;
         if (statusDate == nil) {
             statusDate = user.createdAt;
         }
         
-        status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil), [QMDateUtils formattedLastSeenString:statusDate withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
+        status = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"QM_STR_LAST_SEEN", nil),
+                  [QMDateUtils formattedLastSeenString:statusDate withTimePrefix:NSLocalizedString(@"QM_STR_TIME_PREFIX", nil)]];
         
         if (contactListItem.subscriptionState != QBPresenceSubscriptionStateNone) {
             // requesting update on activity
@@ -254,6 +272,25 @@
     QBContactListItem *item = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
     return item.isOnline;
+}
+
+// MARK: QBChatContactListProtocol
+
+- (void)chatDidReceiveContactAddRequestFromUser:(NSUInteger)userID {
+    NSParameterAssert(![self.requests containsObject:@(userID)]);
+    [self.requests addObject:@(userID)];
+}
+
+- (void)chatDidReceiveAcceptContactRequestFromUser:(NSUInteger)userID {
+    [self.requests removeObject:@(userID)];
+}
+
+- (void)chatDidReceiveRejectContactRequestFromUser:(NSUInteger)userID {
+    [self.requests removeObject:@(userID)];
+}
+
+- (BOOL)isUserContactRequest:(NSUInteger)userID {
+    return [self.requests containsObject:@(userID)];
 }
 
 @end
