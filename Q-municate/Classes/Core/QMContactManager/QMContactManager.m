@@ -15,7 +15,7 @@
 @interface QMContactManager () <QBChatDelegate>
 
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
-@property (nonatomic) NSMutableArray<NSNumber *> *requests;
+@property (nonatomic) NSMutableSet<NSNumber *> *requests;
 
 @end
 
@@ -27,7 +27,7 @@
     
     self = [super initWithServiceManager:serviceManager];
     if (self) {
-        _requests = [NSMutableArray array];
+        _requests = [NSMutableSet set];
         [QBChat.instance addDelegate:self];
     }
     return self;
@@ -277,7 +277,6 @@
 // MARK: QBChatContactListProtocol
 
 - (void)chatDidReceiveContactAddRequestFromUser:(NSUInteger)userID {
-    NSParameterAssert(![self.requests containsObject:@(userID)]);
     [self.requests addObject:@(userID)];
 }
 
