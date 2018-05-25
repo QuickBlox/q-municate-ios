@@ -191,7 +191,6 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)updateFullName {
-    
     // Full name
     self.fullNameLabel.text = self.user.fullName;
 }
@@ -206,21 +205,19 @@ NYTPhotosViewControllerDelegate
 - (void)updateUserIteractions {
     
     BOOL isFriend = [QMCore.instance.contactManager isFriendWithUserID:self.user.ID];
+    
     if (isFriend) {
-        
         [self.hiddenSections addIndex:QMUserInfoSectionAddAction];
     }
     else {
         
         [self.hiddenSections addIndex:QMUserInfoSectionContactInteractions];
-        
-        BOOL isAwaitingForApproval = [QMCore.instance.contactManager isContactListItemExistentForUserWithID:self.user.ID];
-        if (isAwaitingForApproval) {
-            
+        QBPresenseSubscriptionState state =
+        [QMCore.instance.contactManager subscriptionStateWithUserID:self.user.ID];
+
+        if (state == QBPresenceSubscriptionStateTo || state == QBPresenceSubscriptionStateNone) {
             [self.hiddenSections addIndex:QMUserInfoSectionAddAction];
-        }
-        else {
-            
+        } else {
             [self.hiddenSections addIndex:QMUserInfoSectionRemoveContact];
         }
     }
