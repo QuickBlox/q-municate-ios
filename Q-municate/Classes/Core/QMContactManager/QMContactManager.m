@@ -40,11 +40,9 @@
     // determine whether we have already received contact request from user or not
     QBChatDialog *chatDialog = [self.serviceManager.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
     QBChatMessage *lastMessage = [self.serviceManager.chatService.messagesMemoryStorage lastMessageFromDialogID:chatDialog.ID];
-    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     
     if (lastMessage.messageType == QMMessageTypeContactRequest
-        && lastMessage.senderID != self.serviceManager.currentProfile.userData.ID
-        && contactListItem == nil) {
+        && lastMessage.senderID != self.serviceManager.currentProfile.userData.ID) {
         
         return [self confirmAddContactRequest:user];
     }
@@ -199,17 +197,23 @@
 
 - (NSString *)onlineStatusForUser:(QBUUser *)user {
     
-    QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
+    QBContactListItem *contactListItem =
+    [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:user.ID];
     
     NSString *status = nil;
     
 
+    if (([self isUserContactRequest:user.ID]) ||
+        contactListItem.subscriptionState == QBPresenceSubscriptionStateFrom) {
+        return @"Contact request";
+    }
+    
+    if (contactListItem.subscriptionState == QBPresenceSubscriptionStateNone ||
+        contactListItem.subscriptionState == QBPresenceSubscriptionStateTo) {
+        return @"Pending accept";
+    }
+    
     if (!contactListItem) {
-        
-        if ([self isUserContactRequest:user.ID]) {
-            return @"Contact request";
-        }
-        
         return nil;
     }
     
@@ -228,7 +232,8 @@
         
         if (contactListItem.subscriptionState != QBPresenceSubscriptionStateNone) {
             // requesting update on activity
-            [[QBChat instance] lastActivityForUserWithID:contactListItem.userID completion:^(NSUInteger seconds, NSError * _Nullable error) {
+            [[QBChat instance] lastActivityForUserWithID:contactListItem.userID
+                                              completion:^(NSUInteger seconds, NSError * _Nullable error) {
                 if (error == nil) {
                     if (seconds != (NSUInteger)fabs([user.lastRequestAt timeIntervalSinceNow])) {
                         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:-(NSTimeInterval)seconds];
@@ -248,6 +253,10 @@
 
 //MARK: - States
 
+- (QBPresenseSubscriptionState)subscriptionStateWithUserID:(NSUInteger)userID {
+    return [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID].subscriptionState;
+}
+
 - (BOOL)isFriendWithUserID:(NSUInteger)userID {
     
     if (userID == self.serviceManager.currentProfile.userData.ID) {
@@ -257,7 +266,7 @@
     
     QBContactListItem *contactListItem = [self.serviceManager.contactListService.contactListMemoryStorage contactListItemWithUserID:userID];
     
-    return contactListItem != nil && contactListItem.subscriptionState != QBPresenceSubscriptionStateNone;
+    return contactListItem != nil && contactListItem.subscriptionState == QBPresenceSubscriptionStateBoth;
 }
 
 - (BOOL)isContactListItemExistentForUserWithID:(NSUInteger)userID {

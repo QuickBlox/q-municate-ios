@@ -104,11 +104,19 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Online status string for user.
  *
- *  @param user user instance
+ *  @param user QBUUser instance.
  *
- *  @return Online status string
+ *  @return Online status string.
  */
 - (NSString *)onlineStatusForUser:(QBUUser *)user;
+
+/**
+ Subscription state.
+
+ @param userID opponent user ID.
+ @return Subscription state. @see `QBPresenseSubscriptionState`
+ */
+- (QBPresenseSubscriptionState)subscriptionStateWithUserID:(NSUInteger)userID;
 
 /**
  *  Determines whether user with ID is friend.
