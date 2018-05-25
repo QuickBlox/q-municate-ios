@@ -396,7 +396,7 @@ TTTAttributedLabelDelegate
          [self.inputToolbar cancelAudioRecording];
          
          if (self.chatDialog.type == QBChatDialogTypePrivate) {
-             [self setOpponentOnlineStatus:NO];
+             [self updateOnlineStatus];
          }
      }];
 }
@@ -451,8 +451,7 @@ TTTAttributedLabelDelegate
 
 - (void)updateOpponentOnlineStatus {
     
-    BOOL isOnline = [QMCore.instance.contactManager isUserOnlineWithID:[self.chatDialog opponentID]];
-    [self setOpponentOnlineStatus:isOnline];
+    [self updateOnlineStatus];
 }
 
 - (NSArray *)storedMessages {
@@ -2013,23 +2012,15 @@ didPerformAction:(SEL)action
     }];
 }
 
-- (void)setOpponentOnlineStatus:(BOOL)isOnline {
+- (void)updateOnlineStatus {
     
     NSAssert(self.chatDialog.type == QBChatDialogTypePrivate, nil);
-    
+
     NSString *status = nil;
+    QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
     
-    if (isOnline) {
-        
-        status = NSLocalizedString(@"QM_STR_ONLINE", nil);
-    }
-    else {
-        
-        QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
-        
-        if (opponentUser) {
-            status = [QMCore.instance.contactManager onlineStatusForUser:opponentUser];
-        }
+    if (opponentUser) {
+        status = [QMCore.instance.contactManager onlineStatusForUser:opponentUser];
     }
     
     [self.onlineTitleView setStatus:status];
@@ -2093,7 +2084,6 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
         QBChatMessage *lastMessage = [self.chatDataSource messageForIndexPath:indexPath];
         if (lastMessage.messageType == QMMessageTypeContactRequest) {
-            
             [self.chatDataSource updateMessage:lastMessage];
         }
     }
@@ -2200,8 +2190,7 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     
     if (self.chatDialog.type == QBChatDialogTypePrivate) {
         // chat disconnected, updating title status for user
-        
-        [self setOpponentOnlineStatus:NO];
+        [self updateOnlineStatus];
     }
 }
 
@@ -2251,8 +2240,9 @@ didAddChatDialogsToMemoryStorage:(NSArray<QBChatDialog *> *)chatDialogs {
     
     QBUUser *opponentUser = [QMCore.instance.usersService.usersMemoryStorage userWithID:[self.chatDialog opponentID]];
     
-    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
-    
+    [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading
+                                                                          message:NSLocalizedString(@"QM_STR_LOADING", nil)
+                                                                         duration:0];
     if (accept) {
         
         NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
