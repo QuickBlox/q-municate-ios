@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBChatTypes.h>
+#import "QBChatTypes.h"
 
 @protocol QBChatDelegate;
 
@@ -82,8 +82,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/**
+ Methods provided connections to chat
+ */
 //MARK: - Connection
-
 @interface QBChat(Connection)
 
 /**

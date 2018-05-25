@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly, nullable) NSDictionary<NSString *, NSString *> *customParameters;
 
-//MARK: Keyed subscription for customParameters
+//MARK: Keyed subscripting for customParameters
 
 - (nullable NSString *)objectForKeyedSubscript:(NSString *)key;
 - (void)setObject:(nullable NSString *)obj forKeyedSubscript:(NSString *)key;

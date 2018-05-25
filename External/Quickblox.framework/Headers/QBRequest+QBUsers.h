@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBRequest.h>
+#import "QBRequest.h"
 
 @class QBUUser;
 @class QBGeneralResponsePage;
@@ -14,10 +14,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface QBRequest (QBUsers)
+
 typedef void(^qb_response_users_block_t)(QBResponse *response, QBGeneralResponsePage *page, NSArray<QBUUser *> *users);
 typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *user);
-
-@interface QBRequest (QBUsers)
 
 //MARK: - Get all Users for current account
 

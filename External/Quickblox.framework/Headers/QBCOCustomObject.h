@@ -12,63 +12,83 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /** 
- *  QBCOCustomObject class interface.
- *  This class represents QuickBlox custom object model.
- *
- *  @see http://quickblox.com/developers/Custom_Objects#Module_description
+ `QBCOCustomObject` class interface.
+ This class represents QuickBlox custom object model.
+ 
+ @see https://quickblox.com/developers/Custom_Objects#Module_description
  */
 @interface QBCOCustomObject : NSObject <NSCoding, NSCopying>
 
 /** 
- *  Object ID.
+ The id of custom object.
  */
 @property (nonatomic, copy, nullable) NSString *ID;
 
 /** 
- *  Relations: parent object's ID.
+ The Relations: parent object's ID.
  */
 @property (nonatomic, copy, nullable) NSString *parentID;
 
 /** 
- *  Date & time when record was created, filled automatically.
+ The Date & time when record was created.
  */
 @property (nonatomic, strong, nullable) NSDate *createdAt;
 
 /** 
- *  Date & time when record was updated, filled automatically.
+ The Date & time when record was updated
  */
 @property (nonatomic, strong, nullable) NSDate *updatedAt;
 
 /** 
- *  Class name.
+ The class name of the custom object.
  */
 @property (nonatomic, copy, nullable) NSString *className;
 
 /** 
- *  User's ID, which created current record.
+ The id of User, which created the current record.
  */
 @property (nonatomic, assign) NSUInteger userID;
 
 /** 
- *  Custom object's fields.
+ The Custom object's fields.
  */
 @property (nonatomic, strong, null_resettable) NSMutableDictionary <NSString *, id> *fields;
 
 /** 
- *  Object permissions.
+ The permissions of the custom object.
  */
 @property (nonatomic, strong, nullable) QBCOPermissions *permissions;
 
 /** 
- *  Create new custom object.
- *
- *  @return New instance of QBCustomObject.
+ Create new custom object.
+ 
+ @return New instance of QBCOCustomObject.
  */
 + (instancetype)customObject;
 
-//MARK: Keyed subscription
+/**
+ Create new custom object with class name
 
+ @param className The class name of the custom object.
+ @return New instance of QBCOCustomObject.
+ */
++ (instancetype)objectWithClassName:(NSString *)className;
+
+//MARK: Keyed subscripting for fields
+
+/**
+ Keyed subscripting for fields
+ 
+ How to use:
+ 
+     QBCOCustomObject *obj = [QBCOCustomObject objectWithClassName:@"Movie"];
+     obj[@"name"] = @"Terminator";
+     obj[@"description"] = @"Best movie ever!";
+     obj[@"raiting"] = @"5";
+ */
 - (nullable id)objectForKeyedSubscript:(NSString *)key;
+
+/** Keyed subscripting for fields */
 - (void)setObject:(nullable id)obj forKeyedSubscript:(NSString *)key;
 
 @end

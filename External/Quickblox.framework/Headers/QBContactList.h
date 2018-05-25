@@ -6,19 +6,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QBContactListItem.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class QBContactListItem;
-
 /**
- *  QBContactList class interface.
- *  Represents user's contact list.
+ QBContactList class interface.
+ Represents user's contact list.
  */
 @interface QBContactList : NSObject
 
 /**
- *  Current contacts.
+ Current contacts.
  */
 @property (nonatomic, readonly, nullable) NSArray<QBContactListItem *> *contacts;
 

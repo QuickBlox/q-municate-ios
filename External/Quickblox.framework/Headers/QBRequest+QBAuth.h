@@ -6,15 +6,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Quickblox/QBRequest.h>
+#import "QBRequest.h"
 
 @class QBUUser;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *tUser);
-
 @interface QBRequest (QBAuth)
+
+/**
+ The block with response user
+
+ @param response QBResponse instance
+ @param tUser QBUUser
+ */
+typedef void(^qb_response_user_block_t)(QBResponse *response, QBUUser *tUser);
 
 //MARK: - App authorization
 

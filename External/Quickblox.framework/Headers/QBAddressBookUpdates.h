@@ -11,6 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ QBAddressBookUpdates class interface.
+ This class represents the update details of an address book item.
+ */
 @interface QBAddressBookUpdates : NSObject
 
 /** The number of created objects */

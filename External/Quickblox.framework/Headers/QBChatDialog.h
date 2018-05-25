@@ -18,8 +18,7 @@ typedef NS_ENUM(NSUInteger, QBChatDialogType) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-
-typedef void(^QBChatCompletionBlock)(NSError * _Nullable error);
+typedef void(^QBCompletionBlock)(NSError * _Nullable error);
 typedef void(^QBUserIDBlock)(NSUInteger userID);
 typedef void(^QBOnlineUsersBlock)(NSMutableArray <NSNumber *> * _Nullable onlineUsers, NSError * _Nullable error);
 
@@ -140,7 +139,7 @@ typedef void(^QBOnlineUsersBlock)(NSMutableArray <NSNumber *> * _Nullable online
 /**
  Called whenever sent message was blocked on server.
  */
-@property (nonatomic, copy, nullable) QBChatCompletionBlock onBlockedMessage;
+@property (nonatomic, copy, nullable) QBCompletionBlock onBlockedMessage;
 
 /**
  Called whenever user is typing in current dialog.
@@ -193,7 +192,7 @@ typedef void(^QBOnlineUsersBlock)(NSMutableArray <NSNumber *> * _Nullable online
  @param message    Chat message to send.
  @param completion Completion block with failure error.
  */
-- (void)sendMessage:(QBChatMessage *)message completionBlock:(nullable QBChatCompletionBlock)completion;
+- (void)sendMessage:(QBChatMessage *)message completionBlock:(nullable QBCompletionBlock)completion;
 
 /**
  Sends group chat message to room, without room join.
@@ -205,7 +204,7 @@ typedef void(^QBOnlineUsersBlock)(NSMutableArray <NSNumber *> * _Nullable online
  
  @see http://quickblox.com/enterprise/
  */
-- (void)sendGroupChatMessageWithoutJoin:(QBChatMessage *)message completion:(nullable QBChatCompletionBlock)completion;
+- (void)sendGroupChatMessageWithoutJoin:(QBChatMessage *)message completion:(nullable QBCompletionBlock)completion;
 
 //MARK: - Join/leave
 
@@ -221,14 +220,14 @@ typedef void(^QBOnlineUsersBlock)(NSMutableArray <NSNumber *> * _Nullable online
  
  @param completion  Completion block with failure error.
  */
-- (void)joinWithCompletionBlock:(nullable QBChatCompletionBlock)completion;
+- (void)joinWithCompletionBlock:(nullable QBCompletionBlock)completion;
 
 /**
  Leave joined room.
  
  @param completion  Completion block with failure error.
  */
-- (void)leaveWithCompletionBlock:(nullable QBChatCompletionBlock)completion;
+- (void)leaveWithCompletionBlock:(nullable QBCompletionBlock)completion;
 
 /**
  Clears dialog occupants status blocks.
