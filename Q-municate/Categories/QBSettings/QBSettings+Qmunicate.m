@@ -2,8 +2,8 @@
 //  QBSettings+Qmunicate.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/3/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/3/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QBSettings+Qmunicate.h"
@@ -14,43 +14,39 @@
     
     switch (QMCurrentApplicationZone) {
             
-        case QMApplicationZoneDevelopment:
+            case QMApplicationZoneDevelopment: {
+                self.applicationID = 0;
+                self.authKey = @"";
+                self.authSecret = @"";
+                self.accountKey = @"";
+                self.apiEndpoint = @"";
+                self.chatEndpoint = @"";
+                
+                break;
+            }
             
-            self.applicationID = 36125;
-            self.authKey = @"gOGVNO4L9cBwkPE";
-            self.authSecret = @"JdqsMHCjHVYkVxV";
-            self.accountKey = @"6Qyiz3pZfNsex1Enqnp7";
+            case QMApplicationZoneProduction: {
+                
+                self.applicationID = 0;
+                self.authKey = @"";
+                self.authSecret = @"";
+                self.accountKey = @"";
+                self.apiEndpoint = @"";
+                self.chatEndpoint = @"";
+                
+                break;
+            }
             
-            break;
-            
-        case QMApplicationZoneDevelopment1:
-            
-            self.applicationID  = 63068;
-            self.authKey = @"BkWsMWL3XUqJdNr";
-            self.authSecret = @"bG8PFjwAx3JKFfS";
-            self.accountKey =  @"6Qyiz3pZfNsex1Enqnp7";
-            
-            break;
-            
-        case QMApplicationZoneProduction:
-            
-            self.applicationID = 13318;
-            self.authKey = @"WzrAY7vrGmbgFfP";
-            self.authSecret = @"xS2uerEveGHmEun";
-            self.accountKey = @"6Qyiz3pZfNsex1Enqnp7";
-            
-            break;
-            
-        case QMApplicationZoneQA:
-            
-            self.applicationID = 47;
-            self.authKey = @"7JE5cmpMwLd2S22";
-            self.authSecret = @"cB4kZeJE7Cbhvg-";
-            self.accountKey = @"QmXcTtxj8tTc9y3dJxRo";
-            self.apiEndpoint = @"https://apistage1.quickblox.com";
-            self.chatEndpoint = @"chatstage1.quickblox.com";
-            
-            break;
+            case QMApplicationZoneQA: {
+                self.applicationID = 0;
+                self.authKey = @"";
+                self.authSecret = @"";
+                self.accountKey = @"";
+                self.apiEndpoint = @"";
+                self.chatEndpoint = @"";
+                
+                break;
+            }
             
         default:
             break;
@@ -60,8 +56,8 @@
     self.autoReconnectEnabled = YES;
     self.carbonsEnabled = YES;
     
-//    self.logLevel =
-//    QMCurrentApplicationZone == QMApplicationZoneProduction ? QBLogLevelNothing : QBLogLevelDebug;
+    self.logLevel =
+    QMCurrentApplicationZone == QMApplicationZoneProduction ? QBLogLevelNothing : QBLogLevelDebug;
 }
 
 @end

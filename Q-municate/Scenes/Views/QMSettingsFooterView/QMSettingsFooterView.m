@@ -2,12 +2,13 @@
 //  QMSettingsFooterView.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/30/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/30/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMSettingsFooterView.h"
 #import "QMColors.h"
+#import <Quickblox/Quickblox.h>
 
 static UIColor *labelTextColor(void) {
     

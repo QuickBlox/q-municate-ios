@@ -2,13 +2,14 @@
 //  QMForgotPasswordTVC.m
 //  Qmunicate
 //
-//  Created by Andrey Ivanov on 30.06.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 30.06.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMForgotPasswordViewController.h"
 #import "QMTasks.h"
 #import "QMNavigationController.h"
+#import "QMSLog.h"
 
 @interface QMForgotPasswordViewController ()
 
@@ -32,7 +33,7 @@
 
 //MARK: - actions
 
-- (IBAction)pressResetPasswordBtn:(id)__unused sender {
+- (IBAction)pressResetPasswordBtn:(id) sender {
     
     if (self.task != nil) {
         // task in progress

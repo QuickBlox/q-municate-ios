@@ -2,8 +2,8 @@
 //  QMGlobalSearchDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/1/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/1/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMGlobalSearchDataSource.h"
@@ -19,7 +19,7 @@
     return self.items[indexPath.row];
 }
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return self.items.count > 0 ? [QMSearchCell height] : [QMNoResultsCell height];
 }
@@ -62,7 +62,7 @@
     return cell;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
     
     return self.items.count > 0 ? self.items.count : 1;
 }

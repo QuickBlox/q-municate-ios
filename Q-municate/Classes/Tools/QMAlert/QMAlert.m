@@ -2,8 +2,8 @@
 //  QMAlert.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/20/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/20/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMAlert.h"
@@ -19,7 +19,7 @@
                                           message:message
                                           preferredStyle:UIAlertControllerStyleAlert];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull __unused action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull  action) {
         
     }]];
     

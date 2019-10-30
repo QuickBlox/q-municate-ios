@@ -2,8 +2,8 @@
 //  QBChatMessage+QMCallNotifications.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 7/13/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 7/13/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QBChatMessage+QMCallNotifications.h"
@@ -86,7 +86,7 @@ static NSString * const kQMCallNotificationCallDurationKey = @"callDuration";
     
     NSMutableString *mutableString = [[NSMutableString alloc] init];
     
-    [calleeUserIDs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull __unused stop) {
+    [calleeUserIDs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull  stop) {
         
         [mutableString appendFormat:@"%tu,", idx];
     }];

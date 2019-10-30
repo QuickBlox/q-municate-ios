@@ -2,8 +2,8 @@
 //  QMExpandableTableViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 8/29/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 8/29/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMExpandableTableViewController.h"
@@ -127,8 +127,8 @@
     return numberOfExpandedRows;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView
-indentationLevelForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (NSInteger)tableView:(UITableView *)tableView
+indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 0;
 }
 

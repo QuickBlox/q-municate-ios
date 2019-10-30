@@ -1,4 +1,4 @@
-# Q-municate 2.7.1
+# Q-municate 3.0.0
 
 
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517567392151_retina_cover-min.png)
@@ -13,17 +13,19 @@ Q-municate is a fully fledged chat application using the Quickblox API.
 
 <!-- TOC -->
 
-- [Q-municate 2.7.1](#q-municate-271)
-    - [1. Requirements & Software Environment](#1-requirements--software-environment)
-    - [2. QuickBlox modules](#2-quickblox-modules)
-    - [3. Features](#3-features)
-    - [4. Screens](#4-screens)
-    - [5. Audio and Video Calls](#5-audio-and-video-calls)
-    - [6. Extensions](#6-extensions)
-    - [7. Code explanation](#7-code-explanation)
-    - [8. How to build your own Chat app 😎](#8-how-to-build-your-own-chat-app)
-    - [9. Contributing](#9-contributing)
-    - [10. License](#10-license)
+- [Q-municate 3.0.0](#q-municate-300)
+  - [1. Requirements & Software Environment](#1-requirements--software-environment)
+  - [2. QuickBlox modules](#2-quickblox-modules)
+  - [3. Features](#3-features)
+  - [4. Screens](#4-screens)
+  - [5. Audio and Video Calls](#5-audio-and-video-calls)
+  - [6. Extensions](#6-extensions)
+  - [7. Code explanation](#7-code-explanation)
+  - [8. How to build your own Chat app](#8-how-to-build-your-own-chat-app)
+  - [9. Contributing](#9-contributing)
+    - [Features](#features)
+    - [Issues](#issues)
+  - [10. License](#10-license)
 
 <!-- /TOC -->
 
@@ -31,15 +33,13 @@ Q-municate is a fully fledged chat application using the Quickblox API.
 ## 1. Requirements & Software Environment
 
 
-- [Xcode 9](https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/WhatsNewXcode/xcode_9/xcode_9.html) and later.
-- iOS 9.1 and later.
-- [QuickBlox iOS SDK](http://quickblox.com/developers/IOS) 2.15 and later.
-- [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.6.3 and later.
-- [QMServices](https://github.com/QuickBlox/q-municate-services-ios)  Q-municate API is based on [QMServices](https://github.com/QuickBlox/q-municate-services-ios) 0.6.1 and later.
-- [QMChatViewController](https://github.com/QuickBlox/QMChatViewController-ios) 0.6 and later.
-- [Bolts](https://github.com/BoltsFramework/Bolts-ObjC#bolts) 1.9.0 and later.
-- [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 4.29.0 and later.
-- [Firebase](https://fabric.io/kits/ios/digits) 4.8.1 and later.
+- [Xcode 10](https://developer.apple.com/xcode/whats-new/) and later.
+- iOS 10.3 and later.
+- [QuickBlox iOS SDK](http://quickblox.com/developers/IOS) 2.17.4 and later.
+- [QuickBlox WebRTC SDK](http://quickblox.com/developers/Sample-webrtc-ios) 2.7.4 and later.
+- [Bolts](https://github.com/BoltsFramework/Bolts-ObjC#bolts) 1.9.0 version.
+- [Facebook iOS SDK](https://developers.facebook.com/docs/ios) 5.6.0 version.
+- [Firebase](https://fabric.io/kits/ios/digits) 6.9.0 version.
 
 **1.1** [**QuickBlox iOS SDK**](http://quickblox.com/developers/IOS)
 
@@ -49,21 +49,7 @@ Q-municate is a fully fledged chat application using the Quickblox API.
 
 QuickBlox - Communication & cloud backend platform which brings superpowers to your mobile apps.
 
-**1.2 QMServices**
-
-[![CocoaPods](https://img.shields.io/cocoapods/v/QMServices.svg)](https://cocoapods.org/pods/QMServices)
-[![CocoaPods](https://img.shields.io/cocoapods/dt/QMServices.svg)](https://cocoapods.org/pods/QMServices)
-[![CocoaPods](https://img.shields.io/cocoapods/dm/QMServices.svg)](https://cocoapods.org/pods/QMServices)
-
-Q-municate architecture  for chat, authorization, messages, dialogs and users is based on [QMServices](https://github.com/QuickBlox/q-municate-services-ios) -
-easy-to-use services for QuickBlox SDK, for speeding up development of iOS chat applications.
-
-
-- Inbox persistent storage for messages, dialogs and users
-- Inbox memory storage for messages, dialogs and users
-- Bolts version of all methods. See [Bolts](https://github.com/BoltsFramework/Bolts-ObjC) for more information.
-
-**1.3  WebRTC**
+**1.2  WebRTC**
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
 [![CocoaPods](https://img.shields.io/cocoapods/dt/Quickblox-WebRTC.svg)](https://cocoapods.org/pods/Quickblox-WebRTC)
@@ -311,13 +297,8 @@ Fields/Buttons:
 
 Q-municate using QuickBlox WebRTC SDK as call service. You can find more information on it [here](http://quickblox.com/developers/Sample-webrtc-ios).
 
-**5.1 Calls manager**
+**5.1 Calls controller**
 
-In order to manage calls we have created a [QMServices](https://github.com/QuickBlox/q-municate-services-ios) sub-service, and its name is QMCallManager. It is managing incoming and outgoing calls. See inline documentation of QMCallManager class for more information.
-
-**5.2 Calls controller**
-
-To display incoming, outgoing and active calls we have created a universal interface and defined into one view controller. Its name is QMCallViewController.
 Call controller has 6 states:
 
 - Incoming audio call
@@ -328,9 +309,8 @@ Call controller has 6 states:
 - Active video call
 
 Call controller is been managed by QMCallManager, basically call manager allocating it with a specific state, whether it is an incoming or outgoing call, then call controller changing its state to active one if required user accepts it.
-For more information about code realisation see inline doc of QMCallViewController.
 
-**5.3 Audio Call**
+**5.2 Audio Call**
 
 You can see down below Incoming, outgoing and active audio call screens.
 
@@ -348,7 +328,7 @@ Toolbar buttons
   - Speaker - whether sound should be played in speaker or receiver. Default for audio calls is receiver.
   - Decline - hanging up current all and closing controller
 
-**5.4 Video Call**
+**5.3 Video Call**
 
 You can see down below Incoming, outgoing and active video call screens.
 
@@ -367,7 +347,7 @@ By default sound for video calls is in speakers.
   - Microphone - disables microphone for current call
   - Decline - hanging up current all and closing controller
 
-**5.5 Call Kit**
+**5.4 Call Kit**
 
 CallKit allows to integrate calling services with other call-related apps on the system. CallKit provides the calling interface, and we handle the back-end communication with [our VoIP service](https://quickblox.com/developers/SimpleSample-messages_users-ios#Adding_support_for_VOIP_push_notifications). For incoming and outgoing calls, CallKit displays the same interfaces as the Phone app, giving Q-municate application a more native look and feel.
 
@@ -405,12 +385,7 @@ An *Intents app extension* receives user request to send a message from [SiriKit
 
 You can see basic code explanation down below. For detailed one please see our inline documentation for header files in most classes. We have tried to describe as detailed as possible the purpose of every class and its methods. If you have any questions, feel free to let us know by creating an [issue](https://github.com/QuickBlox/q-municate-ios/issues).
 
-**7.1 Core**
-
-Q-municate using [QMServices](https://github.com/QuickBlox/q-municate-services-ios) as a main wrapper over QuickBlox iOS SDK. See its documentation for more information.
-As QMServices design required, we have created a subclass over QMServicesManager and named it QMCore. QMCore has its own managers, that adds more wrappers over methods in QMServices, chaining and performing them using [Bolts framework](https://github.com/BoltsFramework/Bolts-ObjC#bolts).
-
-**7.2 Storyboards**
+**7.1 Storyboards**
 
 We have separated Q-municate for modules, such as:
 

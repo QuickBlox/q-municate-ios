@@ -2,11 +2,12 @@
 //  QMAudioRecorder.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 3/1/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 3/1/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMAudioRecorder.h"
+#import "QMSLog.h"
 
 static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
@@ -155,7 +156,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     }
 }
 
-- (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)__unused recorder
+- (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)recorder
                                    error:(NSError * __nullable)error {
     
     [[AVAudioSession sharedInstance] setCategory:_oldSessionCategory error:nil];

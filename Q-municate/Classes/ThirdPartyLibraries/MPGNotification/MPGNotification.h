@@ -3,11 +3,11 @@
 //  MPGNotification
 //
 //  Created by Gaurav Wadhwani on 28/06/14.
-//  Copyright (c) 2014 Mappgic. All rights reserved.
+//  Copyright © 2014 Mappgic. All rights reserved.
 //
 //    The MIT License (MIT)
 //
-//    Copyright (c) 2014 Gaurav Wadhwani
+//    Copyright © 2014 Gaurav Wadhwani
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal

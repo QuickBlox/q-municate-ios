@@ -2,11 +2,12 @@
 //  QMCallNotificationItem.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 7/14/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 7/14/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/Quickblox.h>
 
 @interface QMCallNotificationItem : NSObject
 

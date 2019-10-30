@@ -2,13 +2,13 @@
 //  NSURL+QMShareExtension.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/20/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/20/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "NSURL+QMShareExtension.h"
 #import <Bolts/Bolts.h>
-#import <QMServices/QMSLog.h>
+#import "QMSLog.h"
 
 NSString *const QMAppleMapsHost = @"maps.apple.com";
 NSString *const QMAppleMapsPath = @"/maps";
@@ -169,7 +169,7 @@ NSString *const QMGoogleMapsProvider = @"google";
         NSArray *matches = [regex matchesInString:googleURL
                                           options:0
                                             range:NSMakeRange(0, [googleURL length])];
-
+        
         NSTextCheckingResult *mathResult = matches.firstObject;
         
         if (mathResult.numberOfRanges > 2) {
@@ -179,8 +179,8 @@ NSString *const QMGoogleMapsProvider = @"google";
             if (fabs(latitude.doubleValue) > DBL_EPSILON &&
                 fabs(longitude.doubleValue) > DBL_EPSILON) {
                 
-                  location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
-                                                              longitude:longitude.doubleValue];
+                location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
+                                                      longitude:longitude.doubleValue];
             }
         }
         QMSLog(@"location = %@", location);

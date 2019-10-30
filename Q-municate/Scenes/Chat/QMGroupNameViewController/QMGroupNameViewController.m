@@ -2,8 +2,8 @@
 //  QMGroupNameViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/23/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/23/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMGroupNameViewController.h"
@@ -39,7 +39,7 @@
 
 //MARK: - Actions
 
-- (IBAction)saveButtonPressed:(UIBarButtonItem *)__unused sender {
+- (IBAction)saveButtonPressed:(UIBarButtonItem *)sender {
     
     QMNavigationController *navigationController = (id)self.navigationController;
     

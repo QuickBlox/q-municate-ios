@@ -1,57 +1,57 @@
 
-platform :ios, '9.0'
-xcodeproj 'Q-municate.xcodeproj'
+platform :ios, '10.3'
+project 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
-def services
-#     pod 'QMServices', :path => '../q-municate-services-ios'
-     pod 'QMServices',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
-end
-
-def chat_view_controller
-#     pod 'QMChatViewController', :path => '../QMChatViewController-ios/'
-   pod 'QMChatViewController', :git => 'https://github.com/QuickBlox/QMChatViewController-ios.git', :branch => 'development'
-end
+# ignore all warnings from all pods
+inhibit_all_warnings!
 
 target 'Q-municate' do
 
     use_frameworks!
 
-    # pod 'Quickblox', :path => '../SDK-ios'
-
-    chat_view_controller
-    services
-
-    pod 'UIDevice-Hardware'
-    pod 'SAMKeychain'
-    pod 'Reachability'
-    pod 'TTTAttributedLabel'
-    pod 'libextobjc/EXTScope'
-    pod 'Flurry-iOS-SDK/FlurrySDK'
-    pod 'NYTPhotoViewer'
+    pod 'UIDevice-Hardware', '~> 0.1.13'
+    pod 'SAMKeychain', '~> 1.5.3'
+    pod 'Reachability', '~> 3.2'
+    pod 'TTTAttributedLabel', '~> 2.0.0'
+    pod 'libextobjc/EXTScope', '~> 0.6'
+    pod 'Flurry-iOS-SDK/FlurrySDK', '~> 10.0.1'
+    pod 'NYTPhotoViewer', '~> 2.0.0'
     #Facebook
-    pod 'FBSDKCoreKit'
-    pod 'FBSDKLoginKit'
-    #Twitter
-    pod 'Fabric'
-    pod 'Crashlytics'
+    pod 'FBSDKCoreKit', '~> 5.6.0'
+    pod 'FBSDKLoginKit', '~> 5.6.0'
     #Firebase
-    pod 'FirebaseUI/Phone'
-
+    pod 'FirebaseUI/Phone', '~> 8.1.0'
+    #ChatUI
+    pod 'FFCircularProgressView', '~> 0.5'
+    pod 'SDWebImage', '~> 5.2.0'
+    #Chat Service
+    pod 'QuickBlox', '~> 2.17.4'
+    pod 'Quickblox-WebRTC', '~> 2.7.4'
+    
 end
 
 target 'QMSiriExtension' do
     use_frameworks!
-    services
+    
+    #Chat Service
+    pod 'Bolts', '~> 1.9.0'
+    pod 'QuickBlox', '~> 2.17.4'
+
 end
 
 target 'QMShareExtension' do
     use_frameworks!
-    services
-    chat_view_controller
 
-    pod 'Reachability'
-    pod 'SVProgressHUD'
+    pod 'Reachability', '~> 3.2'
+    pod 'SVProgressHUD', '~> 2.2.5'
+    #ChatUI
+    pod 'FFCircularProgressView', '~> 0.5'
+    pod 'SDWebImage', '~> 5.2.0'
+    pod 'TTTAttributedLabel', '~> 2.0.0'
+    #Chat Service
+    pod 'Bolts', '~> 1.9.0'
+    pod 'QuickBlox', '~> 2.17.4'
 
 end
 
@@ -59,7 +59,7 @@ post_install do |installer|
     #Settings for extensions
     installer.pods_project.targets.each do |target|
         case target.name
-            when 'Bolts','QMChatViewController','SVProgressHUD'
+            when 'Bolts','SVProgressHUD'
             target.build_configurations.each do |config|
                 config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
             end

@@ -2,8 +2,8 @@
 //  SplashControllerViewController.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 13/02/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 13/02/2014.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMWelcomeScreenViewController.h"
@@ -16,9 +16,9 @@
 #import "QMContent.h"
 #import "QMTasks.h"
 
-#import <FirebaseCore/FirebaseCore.h>
-#import <FirebaseAuth/FirebaseAuth.h>
-#import <FirebasePhoneAuthUI.h>
+@import FirebaseCore;
+@import FirebaseAuth;
+@import FirebaseUI.FUIPhoneAuth;
 
 static NSString * const kQMFacebookIDField = @"id";
 
@@ -57,7 +57,7 @@ static NSString * const kQMFacebookIDField = @"id";
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_FACEBOOK", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                           [QMLicenseAgreement checkAcceptedUserAgreementInViewController:self completion:^(BOOL success) {
                                                               // License agreement check
@@ -70,7 +70,7 @@ static NSString * const kQMFacebookIDField = @"id";
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGIN_WITH_EMAIL", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                           [self performSegueWithIdentifier:kQMSceneSegueLogin sender:nil];
                                                       }]];
@@ -137,7 +137,6 @@ static NSString * const kQMFacebookIDField = @"id";
 - (void)performPhoneLogin {
     
     FUIAuth *authUI = [FUIAuth defaultAuthUI];
-    authUI.signInWithEmailHidden = YES;
     authUI.delegate = self;
     FUIPhoneAuth *phoneAuth = [[FUIPhoneAuth alloc] initWithAuthUI:authUI];
     authUI.providers = @[phoneAuth];
@@ -147,11 +146,10 @@ static NSString * const kQMFacebookIDField = @"id";
 
 // MARK: - FUIAuthDelegate delegate
 
-- (void)authUI:(FUIAuth *)__unused authUI didSignInWithUser:(FIRUser *)fuser error:(NSError *)ferror {
-    
-    if (ferror != nil) {
+- (void)authUI:(FUIAuth *)authUI didSignInWithAuthDataResult:(FIRAuthDataResult *)authDataResult error:(NSError *)error {
+    if (error != nil) {
         
-        if (ferror.userInfo.count > 0) {
+        if (error.userInfo.count > 0) {
             // only notify user if something happened in error
             // error without user info is cancel
             [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_UNKNOWN_ERROR", nil) actionSuccess:NO inViewController:self];
@@ -162,7 +160,8 @@ static NSString * const kQMFacebookIDField = @"id";
     
     [SVProgressHUD show];
     @weakify(self);
-    [fuser getIDTokenWithCompletion:^(NSString * _Nullable token, NSError * _Nullable __unused error) {
+ 
+    [authDataResult.user getIDTokenWithCompletion:^(NSString * _Nullable token, NSError * _Nullable  completionError) {
         @strongify(self);
         
         [[[QMCore instance].authService logInWithFirebaseProjectID:[authUI auth].app.options.projectID accessToken:token] continueWithBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull task) {

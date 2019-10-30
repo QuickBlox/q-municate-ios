@@ -2,8 +2,8 @@
 //  QMViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 6/19/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 6/19/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMViewController.h"

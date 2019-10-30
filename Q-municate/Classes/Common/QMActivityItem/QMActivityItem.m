@@ -2,13 +2,13 @@
 //  QMActivityItem.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 10/18/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/18/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMActivityItem.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-#import <QMServices/QMSLog.h>
+#import "QMSLog.h"
 
 @interface QMActivityItem()
 
@@ -83,12 +83,12 @@
 
 //MARK: - UIActivityItemSource
 
-- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)__unused activityViewController {
+- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
     return self.placeholderItem;
 }
 
-- (nullable id)activityViewController:(UIActivityViewController *)__unused activityViewController
-                  itemForActivityType:(nullable UIActivityType)__unused activityType {
+- (nullable id)activityViewController:(UIActivityViewController *)activityViewController
+                  itemForActivityType:(nullable UIActivityType) activityType {
     
     NSExtensionItem *item = [[NSExtensionItem alloc] init];
     
@@ -101,8 +101,8 @@
     
     [itemProvider registerItemForTypeIdentifier:typeIdentifier
                                     loadHandler:^(NSItemProviderCompletionHandler  _Null_unspecified completionHandler,
-                                                  Class __unused  _Null_unspecified __unsafe_unretained expectedValueClass,
-                                                  NSDictionary * __unused _Null_unspecified options) {
+                                                  Class   _Null_unspecified __unsafe_unretained expectedValueClass,
+                                                  NSDictionary *  _Null_unspecified options) {
                                         if (self.loadHandlerBlock) {
                                             self.loadHandlerBlock(completionHandler, activityType);
                                         }
@@ -113,12 +113,12 @@
     
     [self.additionalTypeIdentifiers enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key,
                                                                         QMActivityItemResultBlock  _Nonnull obj,
-                                                                        BOOL * __unused _Nonnull stop) {
+                                                                        BOOL *  _Nonnull stop) {
         
         [itemProvider registerItemForTypeIdentifier:key
                                         loadHandler:^(NSItemProviderCompletionHandler  _Null_unspecified completionHandler,
-                                                      Class __unused  _Null_unspecified __unsafe_unretained expectedValueClass,
-                                                      NSDictionary * __unused _Null_unspecified options) {
+                                                      Class   _Null_unspecified __unsafe_unretained expectedValueClass,
+                                                      NSDictionary *  _Null_unspecified options) {
                                             obj(completionHandler,activityType);
                                         }];
     }];
@@ -128,8 +128,8 @@
     return item;
 }
 
-- (NSString *)activityViewController:(UIActivityViewController *)__unused activityViewController
-   dataTypeIdentifierForActivityType:(NSString *)__unused activityType {
+- (NSString *)activityViewController:(UIActivityViewController *)activityViewController
+   dataTypeIdentifierForActivityType:(NSString *)activityType {
     return self.typeIdentifier;
 }
 

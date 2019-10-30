@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>265299067289-691cusdf63h5sisbrjgbke0spst6tuva.apps.googleusercontent.com</string>
+	<string>925980545669-85hofki94agos76vjmbcq6cail05rkib.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.265299067289-691cusdf63h5sisbrjgbke0spst6tuva</string>
+	<string>com.googleusercontent.apps.925980545669-85hofki94agos76vjmbcq6cail05rkib</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA1ct7vTHMnvCAJaiHFrjQfwJGZD04xHr0</string>
+	<string>AIzaSyA9VKtoOkVB6jZ17BLXgeStb9qHIMxivyo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>265299067289</string>
+	<string>925980545669</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.quickblox.qmunicate</string>
 	<key>PROJECT_ID</key>
-	<string>teak-perigee-572</string>
+	<string>q-municate-d1527</string>
 	<key>STORAGE_BUCKET</key>
-	<string>teak-perigee-572.appspot.com</string>
+	<string>q-municate-d1527.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:265299067289:ios:708e56f0e2d1dd3f</string>
+	<string>1:925980545669:ios:708e56f0e2d1dd3f</string>
 	<key>DATABASE_URL</key>
-	<string>https://teak-perigee-572.firebaseio.com</string>
+	<string>https://q-municate-d1527.firebaseio.com</string>
 </dict>
 </plist>

@@ -2,8 +2,8 @@
 //  UIScreen+QMLock.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 3/22/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 3/22/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "UIScreen+QMLock.h"
@@ -33,7 +33,7 @@ static void *kQMLockedOrientationObjectKey = &kQMLockedOrientationObjectKey;
 
 - (void)qm_lockCurrentOrientation {
     
-    self.qm_lockedInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    self.qm_lockedInterfaceOrientation = UIApplication.sharedApplication.statusBarOrientation;
 }
 
 - (void)qm_unlockCurrentOrientation {

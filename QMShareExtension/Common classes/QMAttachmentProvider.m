@@ -2,15 +2,15 @@
 //  QMAttachmentProvider.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/30/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/30/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMAttachmentProvider.h"
 #import <AVFoundation/AVFoundation.h>
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "QBChatAttachment+QMFactory.h"
-#import <QMChatViewController/UIImage+QM.h>
+#import "UIImage+QM.h"
 
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
 static const NSUInteger kQMMaxImageSize = 1000; //in pixels
@@ -108,7 +108,7 @@ static inline NSURL *uniqueOutputFileURLWithFileExtension(NSString * fileExtensi
 
 
 - (BFTask <QBChatAttachment*> *)taskAttachmentWithImage:(UIImage *)image
-                                        typeIdentifiers:(NSArray *)__unused typeIdentifiers {
+                                        typeIdentifiers:(NSArray *)typeIdentifiers {
     
     CGFloat fileSize = image.dataRepresentation.length/1024.0f/1024.0f;
     

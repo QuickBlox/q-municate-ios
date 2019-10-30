@@ -2,8 +2,8 @@
 //  QMLocationViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 7/4/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 7/4/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMLocationViewController.h"
@@ -153,15 +153,15 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
-                                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                          [UIApplication.sharedApplication openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
                                                       }]];
     
     [self presentViewController:alertController animated:YES completion:nil];
@@ -187,7 +187,7 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
 
 //MARK: - CLLocationManagerDelegate
 
-- (void)locationManager:(CLLocationManager *)__unused manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     
     switch (status) {
             
@@ -212,7 +212,7 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
 
 //MARK: - MKMapViewDelegate
 
-- (void)mapView:(MKMapView *)__unused mapView didUpdateUserLocation:(MKUserLocation *)__unused userLocation {
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     
     _userLocationChanged = YES;
     
@@ -223,13 +223,13 @@ static const CGFloat kQMLocationPinXShift = 3.5f;
     }
 }
 
-- (void)mapView:(MKMapView *)__unused mapView regionWillChangeAnimated:(BOOL)__unused animated {
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL) animated {
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     [_pinView setPinRaised:YES animated:YES];
 }
 
-- (void)mapView:(MKMapView *)__unused mapView regionDidChangeAnimated:(BOOL)__unused animated {
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL) animated {
     
     self.navigationItem.rightBarButtonItem.enabled = YES;
     

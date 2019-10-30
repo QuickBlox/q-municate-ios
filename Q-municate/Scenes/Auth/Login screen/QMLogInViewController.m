@@ -2,8 +2,8 @@
 //  QMLogInViewController.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 13/02/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 13/02/2014.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMLogInViewController.h"
@@ -39,7 +39,7 @@
 
 //MARK: - Actions
 
-- (IBAction)done:(id)__unused sender {
+- (IBAction)done:(id) sender {
     
     [self.view endEditing:YES];
     

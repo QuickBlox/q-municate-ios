@@ -2,8 +2,8 @@
 //  QMNoContactsCell.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/16/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/16/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMNoContactsCell.h"

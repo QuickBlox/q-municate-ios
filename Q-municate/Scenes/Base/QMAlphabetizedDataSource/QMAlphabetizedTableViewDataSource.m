@@ -2,8 +2,8 @@
 //  QMAlphabetizedDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/19/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/19/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMAlphabetizedTableViewDataSource.h"
@@ -46,17 +46,17 @@
 
 //MARK: - UITableViewDataSource
 
-- (NSString *)tableView:(UITableView *)__unused tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
     return self.isEmpty ? @"" : self.sectionIndexTitles[section];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)__unused tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
     return self.isEmpty ? 1 : self.sectionIndexTitles.count;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (self.isEmpty) {
         

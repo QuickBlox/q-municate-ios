@@ -2,12 +2,13 @@
 //  QMImagePicker.m
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 11.08.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 11.08.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
+#import "QMSLog.h"
 
 static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
 static const NSUInteger kQMMaxFileSize = 100; //in MBs

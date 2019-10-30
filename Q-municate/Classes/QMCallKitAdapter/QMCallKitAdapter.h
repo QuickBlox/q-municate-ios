@@ -2,11 +2,12 @@
 //  QMCallKitAdapter.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 11/30/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/30/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <Quickblox/Quickblox.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

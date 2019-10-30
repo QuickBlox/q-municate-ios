@@ -2,14 +2,13 @@
 //  QMMessageIntentHandler.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/24/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 11/24/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMMessageIntentHandler.h"
 
 #import <Intents/Intents.h>
-#import <QMServices/QMServices.h>
 #import "QMSiriHelper.h"
 #import "NSString+QMSiriUtils.h"
 

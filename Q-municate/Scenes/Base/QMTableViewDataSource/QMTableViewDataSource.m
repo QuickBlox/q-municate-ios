@@ -2,8 +2,8 @@
 //  QMTableViewDataSource.m
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 01.04.15.
-//  Copyright (c) 2015 Quickblox. All rights reserved.
+//  Created by Injoit on 01.04.15.
+//  Copyright © 2015 QuickBlox. All rights reserved.
 //
 
 #import "QMTableViewDataSource.h"
@@ -12,27 +12,27 @@
 @implementation QMTableViewDataSource
 
 
-- (id)objectAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath {
     
     return nil;
 }
 
-- (NSIndexPath *)indexPathForObject:(id)__unused object {
+- (NSIndexPath *)indexPathForObject:(id) object {
     
     return nil;
 }
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return 0.0f;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
     
     return self.items.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)__unused tableView cellForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return nil;
 }

@@ -2,8 +2,8 @@
 //  QMCallWindow.h
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 2/25/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 2/25/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

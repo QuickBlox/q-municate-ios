@@ -2,8 +2,8 @@
 //  Q_municate_Tests.m
 //  Q-municate Tests
 //
-//  Created by Andrey Ivanov on 06.08.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 06.08.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>

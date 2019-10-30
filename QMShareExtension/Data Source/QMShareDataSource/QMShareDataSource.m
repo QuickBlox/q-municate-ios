@@ -2,14 +2,13 @@
 //  QMShareDataSource.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/9/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/9/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareDataSource.h"
 #import "QMShareViewProtocol.h"
 #import <Quickblox/Quickblox.h>
-#import <QMServices/QMServicesManager.h>
 #import "QMAlphabetizer.h"
 #import "QMShareTableViewCell.h"
 #import "QMNoResultsCell.h"
@@ -184,13 +183,13 @@ static const NSUInteger kContactsSection = 0;
 
 @implementation QMShareDataSource (QMCollectionViewDataSource)
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)__unused collectionView {
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
 
 
-- (NSInteger)collectionView:(UICollectionView *)__unused collectionView
-     numberOfItemsInSection:(NSInteger)__unused section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger) section {
     
     return self.items.count;
 }
@@ -205,7 +204,7 @@ static const NSUInteger kContactsSection = 0;
     
     [self configureView:cell withItem:item];
     
-    cell.tapBlock = ^(QMShareCollectionViewCell *__unused tappedCell) {
+    cell.tapBlock = ^(QMShareCollectionViewCell * tappedCell) {
         [collectionView.delegate collectionView:collectionView
                        didSelectItemAtIndexPath:indexPath];
     };
@@ -218,7 +217,7 @@ static const NSUInteger kContactsSection = 0;
 
 @implementation QMShareDataSource (QMTableViewDataSource)
 
-- (NSString *)tableView:(UITableView *)__unused tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
     NSString *titleForHeader;
     
@@ -235,12 +234,12 @@ static const NSUInteger kContactsSection = 0;
     return titleForHeader;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)__unused tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
     return self.isEmpty ? 1 : (self.alphabetizedDataSource ? self.sectionIndexTitles.count : 1);
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (self.isEmpty) {
         return 1;
@@ -255,7 +254,7 @@ static const NSUInteger kContactsSection = 0;
     }
 }
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [QMShareTableViewCell height];
 }
 
@@ -309,7 +308,7 @@ static const NSUInteger kContactsSection = 0;
     return self.contactsDataSource != nil;
 }
 
-- (NSString *)tableView:(UITableView *)__unused tableView
+- (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section {
     
     if (self.showContactsSection) {
@@ -323,12 +322,12 @@ titleForHeaderInSection:(NSInteger)section {
     return [super tableView:tableView titleForHeaderInSection:section];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)__unused tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSInteger numberOfSections = [super numberOfSectionsInTableView:tableView];
     return self.showContactsSection ? numberOfSections + 1 : numberOfSections;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (self.showContactsSection) {
         if (section == kContactsSection) {
@@ -353,7 +352,7 @@ titleForHeaderInSection:(NSInteger)section {
     }
 }
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (self.showContactsSection &&
         indexPath.section == kContactsSection) {
@@ -454,8 +453,8 @@ didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (BOOL)collectionView:(UICollectionView *)__unused collectionView
-shouldSelectItemAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (BOOL)collectionView:(UICollectionView *)collectionView
+shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
 

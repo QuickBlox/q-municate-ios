@@ -2,15 +2,15 @@
 //  QMMessageMediator.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/2/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/2/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareEtxentionOperation.h"
 #import "QMShareItemProtocol.h"
 #import <Bolts/Bolts.h>
 #import <Quickblox/Quickblox.h>
-#import <QMServices/QMServices.h>
+#import "QBChatMessage+QMCustomParameters.h"
 
 
 @interface QMRecipientOperationResultDetails()
@@ -115,7 +115,7 @@
     for (id <QMShareItemProtocol> shareItem in itemsToShare) {
         
         // For each item, extend the task with a function to share with the item.
-        task = [task continueWithBlock:^id(BFTask __unused *t) {
+        task = [task continueWithBlock:^id(BFTask  *t) {
             if (self.isCancelled) {
                 return [BFTask cancelledTask];
             }
@@ -134,7 +134,7 @@
         }];
     }
     
-    return [task continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused t) {
+    return [task continueWithBlock:^id _Nullable(BFTask * _Nonnull  t) {
         return  [BFTask taskWithResult:resultDetails];
     }];
 }

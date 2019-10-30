@@ -2,8 +2,8 @@
 //  QMGroupInfoViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 4/5/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 4/5/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMGroupInfoViewController.h"
@@ -16,7 +16,7 @@
 #import "QMCore.h"
 
 #import <NYTPhotoViewer/NYTPhotoViewer.h>
-#import <QMChatViewController/QMImageView.h>
+#import "QMImageView.h"
 
 @interface QMGroupInfoViewController ()
 
@@ -76,13 +76,13 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 //MARK: - QMGroupHeaderViewDelegate
 
-- (void)groupHeaderView:(QMGroupHeaderView *)__unused groupHeaderView didTapAvatar:(QMImageView *)avatarImageView {
+- (void)groupHeaderView:(QMGroupHeaderView *)groupHeaderView didTapAvatar:(QMImageView *)avatarImageView {
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                           if (![QMCore.instance isInternetConnected]) {
                                                               
@@ -95,7 +95,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                           if (![QMCore.instance isInternetConnected]) {
                                                               
@@ -110,7 +110,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OPEN_IMAGE", nil)
                                                             style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                          handler:^(UIAlertAction * _Nonnull  action) {
                                                               
                                                               [QMImagePreview previewImageWithURL:[NSURL URLWithString:self.chatDialog.photo] inViewController:self];
                                                           }]];
@@ -140,7 +140,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 //MARK: - QMImagePickerResultHandler
 
-- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
+- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     [(QMNavigationController *)self.navigationController showNotificationWithType:QMNotificationPanelTypeLoading message:NSLocalizedString(@"QM_STR_LOADING", nil) duration:0];
     
@@ -156,7 +156,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 //MARK: - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
     if ([chatDialog isEqual:self.chatDialog]) {
         
@@ -164,7 +164,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
     
     if ([dialogs containsObject:self.chatDialog]) {
         
@@ -174,7 +174,7 @@ QMChatConnectionDelegate,NYTPhotosViewControllerDelegate >
 
 //MARK: - NYTPhotosViewControllerDelegate
 
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+- (UIView *)photosViewController:(NYTPhotosViewController *)photosViewController referenceViewForPhoto:(id<NYTPhoto>) photo {
     
     return self.headerView.avatarImage;
 }

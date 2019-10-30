@@ -2,8 +2,8 @@
 //  QMShareCollectionViewCell.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/9/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/9/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareCollectionViewCell.h"
@@ -86,7 +86,7 @@ static UIImage *deselectedCheckImage() {
     
 }
 
-- (void)imageViewDidTap:(QMImageView *)__unused imageView {
+- (void)imageViewDidTap:(QMImageView *)imageView {
     if (self.tapBlock) {
         self.tapBlock(self);
     }

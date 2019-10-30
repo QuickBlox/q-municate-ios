@@ -2,8 +2,8 @@
 //  QMSplitViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 8/25/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 8/25/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMSplitViewController.h"
@@ -49,7 +49,7 @@ NSString *const kViewControllerNoSelection = @"ViewControllerNoSelection";
 }
 
 - (UIViewController *)splitViewController:(UISplitViewController *)splitViewController
-separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__unused primaryViewController {
+separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)primaryViewController {
     
     UITabBarController *masterVC = splitViewController.viewControllers.firstObject;
     QMNavigationController *selectedNavigationController = (QMNavigationController *)masterVC.selectedViewController;
@@ -97,16 +97,16 @@ separateSecondaryViewControllerFromPrimaryViewController:(UIViewController *)__u
               withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
     
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull  context) {
         self.view.backgroundColor = self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
-    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull  context) {
         [UIView animateWithDuration:0.2 animations:^{
             self.view.backgroundColor = !self.isCollapsed ? [UIColor grayColor] : [UIColor whiteColor];
         }];
     }];
 }
 
-- (BOOL)splitViewController:(UISplitViewController *)__unused splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
 
     if ([secondaryViewController.restorationIdentifier isEqualToString:kViewControllerNoSelection]) {
         // controller is a placeholder

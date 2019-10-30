@@ -2,8 +2,8 @@
 //  UIScreen+QMLock.h
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 3/22/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 3/22/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

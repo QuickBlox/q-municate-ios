@@ -1,6 +1,0 @@
-framework module Pods_Q_municate {
-  umbrella header "Pods-Q-municate-umbrella.h"
-
-  export *
-  module * { export * }
-}

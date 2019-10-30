@@ -2,8 +2,8 @@
 //  QMSplashViewController.h
 //  Q-municate
 //
-//  Created by lysenko.mykhayl on 3/24/14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 3/24/14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

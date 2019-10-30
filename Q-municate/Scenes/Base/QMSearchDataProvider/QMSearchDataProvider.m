@@ -2,23 +2,23 @@
 //  QMSearchDataProvider.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/2/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/2/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMSearchDataProvider.h"
 
 @implementation QMSearchDataProvider
 
-- (void)performSearch:(NSString *)__unused searchText {
+- (void)performSearch:(NSString *)searchText {
     
     if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
         
         [self.delegate searchDataProviderDidFinishDataFetching:self];
     }
 }
-- (void)performSearch:(NSString *)__unused searchText
-           dataSource:(QMDataSource *)__unused dataSource {
+- (void)performSearch:(NSString *)searchText
+           dataSource:(QMDataSource *)dataSource {
     
     if ([self.delegate respondsToSelector:@selector(searchDataProviderDidFinishDataFetching:)]) {
         

@@ -2,12 +2,12 @@
 //  QMMessageNotification.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/16/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/16/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMMessageNotification.h"
-#import <QMChatViewController/QMImageLoader.h>
+#import "QMImageLoader.h"
 
 static UIColor *backgroundColor() {
     
@@ -60,12 +60,12 @@ const CGRect QMMessageNotificationIconRect = (CGRect){(CGPoint){0,0}, (CGSize){3
          transform:[QMImageTransform transformWithType:QMImageTransformTypeCircle size:CGSizeMake(30, 30)]
          options:SDWebImageHighPriority
          progress:nil
-         completed:^(UIImage * _Nullable __unused image,
+         completed:^(UIImage * _Nullable  image,
                      UIImage * _Nullable transfomedImage,
-                     NSError * _Nullable __unused error,
-                     SDImageCacheType __unused cacheType,
-                     BOOL __unused finished,
-                     NSURL * _Nonnull __unused imageURL) {
+                     NSError * _Nullable  error,
+                     SDImageCacheType  cacheType,
+                     BOOL  finished,
+                     NSURL * _Nonnull  imageURL) {
              @strongify(self);
              
              if (transfomedImage != nil) {

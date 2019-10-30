@@ -2,8 +2,8 @@
 //  QMCallKitAdapter.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 11/30/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/30/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMCallKitAdapter.h"
@@ -11,6 +11,7 @@
 #import <CallKit/CallKit.h>
 
 #import "QMHelpers.h"
+#import "QMSLog.h"
 
 static const NSInteger QMDefaultMaximumCallsPerCallGroup = 1;
 static const NSInteger QMDefaultMaximumCallGroups = 1;
@@ -95,7 +96,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
         action.contactIdentifier = contactIdentifier;
         
         CXTransaction *transaction = [[CXTransaction alloc] initWithAction:action];
-        [self requestTransaction:transaction completion:^(__unused BOOL succeed) {
+        [self requestTransaction:transaction completion:^( BOOL succeed) {
             CXCallUpdate *update = [[CXCallUpdate alloc] init];
             update.remoteHandle = handle;
             update.localizedCallerName = contactIdentifier;
@@ -189,10 +190,10 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
 
 // MARK: - CXProviderDelegate protocol
 
-- (void)providerDidReset:(CXProvider *)__unused provider {
+- (void)providerDidReset:(CXProvider *)provider {
 }
 
-- (void)provider:(CXProvider *)__unused provider performStartCallAction:(CXStartCallAction *)action {
+- (void)provider:(CXProvider *)provider performStartCallAction:(CXStartCallAction *)action {
     if (_session == nil) {
         [action fail];
         return;
@@ -206,7 +207,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
     });
 }
 
-- (void)provider:(CXProvider *)__unused provider performAnswerCallAction:(CXAnswerCallAction *)action {
+- (void)provider:(CXProvider *)provider performAnswerCallAction:(CXAnswerCallAction *)action {
     if (_session == nil) {
         [action fail];
         return;
@@ -235,7 +236,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
     });
 }
 
-- (void)provider:(CXProvider *)__unused provider performEndCallAction:(CXEndCallAction *)action {
+- (void)provider:(CXProvider *)provider performEndCallAction:(CXEndCallAction *)action {
     if (_session == nil) {
         [action fail];
         return;
@@ -274,7 +275,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
     });
 }
 
-- (void)provider:(CXProvider *)__unused provider performSetMutedCallAction:(CXSetMutedCallAction *)action {
+- (void)provider:(CXProvider *)provider performSetMutedCallAction:(CXSetMutedCallAction *)action {
     if (_session == nil) {
         [action fail];
         return;
@@ -291,7 +292,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
     });
 }
 
-- (void)provider:(CXProvider *)__unused provider didActivateAudioSession:(AVAudioSession *)audioSession {
+- (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {
     QMSLog(@"[QMCallKitAdapter] Activated audio session.");
     QBRTCAudioSession *rtcAudioSession = [QBRTCAudioSession instance];
     [rtcAudioSession audioSessionDidActivate:audioSession];
@@ -299,7 +300,7 @@ static const NSInteger QMDefaultMaximumCallGroups = 1;
     rtcAudioSession.audioEnabled = YES;
 }
 
-- (void)provider:(CXProvider *)__unused provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
+- (void)provider:(CXProvider *)provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
     QMSLog(@"[QMCallKitAdapter] Dectivated audio session.");
     [[QBRTCAudioSession instance] audioSessionDidDeactivate:audioSession];
     // deinitializing audio session after iOS deactivated it for us

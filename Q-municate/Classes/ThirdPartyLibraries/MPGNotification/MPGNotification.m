@@ -3,11 +3,11 @@
 //  MPGNotification
 //
 //  Created by Gaurav Wadhwani on 28/06/14.
-//  Copyright (c) 2014 Mappgic. All rights reserved.
+//  Copyright © 2014 Mappgic. All rights reserved.
 //
 //    The MIT License (MIT)
 //
-//    Copyright (c) 2014 Gaurav Wadhwani
+//    Copyright © 2014 Gaurav Wadhwani
 //
 //    Permission is hereby granted, free of charge, to any person obtaining a copy
 //    of this software and associated documentation files (the "Software"), to deal
@@ -273,14 +273,14 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
 
 #pragma mark - UIScrollView Delegate
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)__unused scrollView {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
     if (self.notificationDragged == NO) {
         self.notificationDragged = YES;
     }
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)__unused scrollView willDecelerate:(BOOL)decelerate {
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (!decelerate &&
         [self _notificationOffScreen] &&
         self.notificationRevealed) {
@@ -289,7 +289,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)__unused scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if ([self _notificationOffScreen] &&
         self.notificationRevealed) {
         [self _destroyNotification];
@@ -298,7 +298,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
 
 #pragma mark - UIDynamicAnimator Delegate
 
-- (void)dynamicAnimatorDidPause:(UIDynamicAnimator *)__unused animator{
+- (void)dynamicAnimatorDidPause:(UIDynamicAnimator *)animator{
     [self _destroyNotification];
 }
 
@@ -540,7 +540,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
             
             [UIView animateWithDuration:kLinearAnimationTime animations:^{
                 self.contentOffset = CGPointZero;
-            } completion:^(BOOL __unused finished) {
+            } completion:^(BOOL  finished) {
                 [self _startDismissTimerIfSet];
             }];
             
@@ -612,7 +612,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
                 
                 [UIView animateWithDuration:kLinearAnimationTime animations:^{
                     self.contentOffset = CGPointMake(0, CGRectGetHeight(self.bounds));
-                } completion:^(BOOL __unused finished){
+                } completion:^(BOOL  finished){
                     [self _destroyNotification];
                 }];
                 break;
@@ -643,7 +643,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
     
 }
 
-- (void)_backgroundTapped:(UITapGestureRecognizer *)__unused tapRecognizer {
+- (void)_backgroundTapped:(UITapGestureRecognizer *)tapRecognizer {
     
     [self _responderTapped:self.backgroundView];
     
@@ -651,7 +651,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
 
 #pragma mark - Private Methods
 
-- (void)deviceOrientationDidChange:(NSNotification *)__unused notification {
+- (void)deviceOrientationDidChange:(NSNotification *)notification {
 #ifdef __IPHONE_11_0
     if (@available(iOS 11.0, *)) {
         if (self.notificationRevealed) {
@@ -695,7 +695,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
 }
 
 - (UIWindow *)_topAppWindow {
-    return ([UIApplication sharedApplication].keyWindow) ?: [[UIApplication sharedApplication].windows lastObject];
+    return (UIApplication.sharedApplication.keyWindow) ?: [UIApplication.sharedApplication.windows lastObject];
 }
 
 - (void)_startDismissTimerIfSet {
@@ -736,7 +736,7 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
         self.notificationDestroyed = YES;
         
         if (self.hostViewController == nil) {
-            [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:self.windowLevel];
+            [[[UIApplication.sharedApplication delegate] window] setWindowLevel:self.windowLevel];
         }
         
         [self _dismissBlockHandler];
@@ -782,11 +782,11 @@ static const CGFloat kColorAdjustmentLight = 0.35f;
         
         UIWindow *window = [self _topAppWindow];
         
-        self.windowLevel = [[[[UIApplication sharedApplication] delegate] window] windowLevel];
+        self.windowLevel = [[[UIApplication.sharedApplication delegate] window] windowLevel];
         
         // Update windowLevel to make sure status bar does not interfere with the notification
         UIWindowLevel windowLevelShift = iosMajorVersion() > 10 ? -1 : 1;
-        [[[[UIApplication sharedApplication] delegate] window] setWindowLevel:UIWindowLevelStatusBar+windowLevelShift];
+        [[[UIApplication.sharedApplication delegate] window] setWindowLevel:UIWindowLevelStatusBar+windowLevelShift];
         
         // add the notification to the screen
         [window.subviews.lastObject addSubview:self];

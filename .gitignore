@@ -5,6 +5,9 @@ Q-municate/.idea/
 .DS_Store
 Q-municate/.DS_Store
 
+Pods/
+Q-municate/Pods/
+
 ## Standard Xcode.gitignore from https://github.com/github/gitignore/blob/master/Global/Xcode.gitignore
 build/
 *.pbxuser

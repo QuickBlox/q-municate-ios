@@ -2,8 +2,8 @@
 //  QMNotification.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 4/18/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 4/18/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMNotification.h"
@@ -107,7 +107,7 @@ static NSString * const kQMVoipPushNotificationParam = @"ios_voip";
     
     event.message = jsonString;
     
-    [QBRequest createEvent:event successBlock:^(QBResponse *__unused response, NSArray *__unused events) {
+    [QBRequest createEvent:event successBlock:^(QBResponse * response, NSArray * events) {
         
         [source setResult:nil];
         

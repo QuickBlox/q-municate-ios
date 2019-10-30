@@ -2,14 +2,14 @@
 //  QMImagePreview.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 8/30/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 8/30/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMImagePreview.h"
 #import "QMPhoto.h"
 
-#import <QMChatViewController/QMChatViewController.h>
+#import "QMChatViewController.h"
 #import <NYTPhotoViewer/NYTPhotoViewer.h>
 
 @implementation QMImagePreview
@@ -40,11 +40,11 @@
                          options:SDWebImageHighPriority
                         progress:nil
                        completed:^(UIImage * _Nullable image,
-                                   UIImage * _Nullable __unused transfomedImage,
+                                   UIImage * _Nullable  transfomedImage,
                                    NSError * _Nullable  error,
-                                   SDImageCacheType __unused cacheType,
-                                   BOOL __unused finished,
-                                   NSURL * _Nonnull __unused imageURL) {
+                                   SDImageCacheType  cacheType,
+                                   BOOL  finished,
+                                   NSURL * _Nonnull  imageURL) {
                            
                            if (!error && image) {
                                photo.image = [loader originalImageWithURL:imageURL];

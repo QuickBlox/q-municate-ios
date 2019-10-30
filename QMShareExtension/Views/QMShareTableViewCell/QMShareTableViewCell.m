@@ -2,8 +2,8 @@
 //  QMShareTableViewCell.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/5/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/5/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareTableViewCell.h"
@@ -93,7 +93,7 @@ static UIImage *deselectedCheckImage() {
                                  animations:^{
                                      self.checkmarkImageView.transform = CGAffineTransformMakeScale(1.2f, 1.2f);
                                  }
-                                 completion:^(BOOL __unused finished) {
+                                 completion:^(BOOL  finished) {
                                      [UIView animateWithDuration:0.2
                                                       animations:^{
                                                           self.checkmarkImageView.transform = CGAffineTransformIdentity;

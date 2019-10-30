@@ -2,8 +2,8 @@
 //  QMForgotPasswordTVC.h
 //  Qmunicate
 //
-//  Created by Andrey Ivanov on 30.06.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 30.06.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMTableViewController.h"

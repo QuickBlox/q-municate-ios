@@ -2,8 +2,8 @@
 //  QBUpdateUserParameters+CustomData.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 9/28/15.
-//  Copyright © 2015 Quickblox. All rights reserved.
+//  Created by Injoit on 9/28/15.
+//  Copyright © 2015 QuickBlox. All rights reserved.
 //
 
 #import <Quickblox/Quickblox.h>
