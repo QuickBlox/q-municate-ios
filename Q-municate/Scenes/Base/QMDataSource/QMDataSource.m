@@ -2,8 +2,8 @@
 //  QMDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 10/10/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/10/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMDataSource.h"
@@ -21,12 +21,12 @@
     return self;
 }
 
-- (id)objectAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath {
     
     return nil;
 }
 
-- (NSIndexPath *)indexPathForObject:(id)__unused object {
+- (NSIndexPath *)indexPathForObject:(id) object {
     
     return nil;
 }
@@ -36,7 +36,7 @@
     [self.items addObjectsFromArray:items];
 }
 
-- (void)updateItems:(NSArray *)__unused items {
+- (void)updateItems:(NSArray *)items {
     NSAssert(NO, @"Should be implemented in subclass");
 }
 

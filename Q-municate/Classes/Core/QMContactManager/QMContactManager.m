@@ -2,15 +2,15 @@
 //  QMContactManager.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/25/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/25/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMContactManager.h"
 #import "QMCore.h"
 #import "QMNotification.h"
 #import "QMMessagesHelper.h"
-#import <QMDateUtils.h>
+#import "QMDateUtils.h"
 
 @interface QMContactManager ()
 
@@ -41,7 +41,7 @@
     else {
         
         return [[[self.serviceManager.contactListService addUserToContactListRequest:user]
-                 continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+                 continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull  task) {
                      
                      return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
                      
@@ -62,7 +62,7 @@
 - (BFTask *)confirmAddContactRequest:(QBUUser *)user {
     
     return [[self.serviceManager.contactListService acceptContactRequest:user.ID]
-            continueWithSuccessBlock:^id(BFTask *__unused task) {
+            continueWithSuccessBlock:^id(BFTask * task) {
                 return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:YES
                                                                                    toOpponentID:user.ID];
             }];
@@ -71,7 +71,7 @@
 - (BFTask *)rejectAddContactRequest:(QBUUser *)user {
     
     return [[self.serviceManager.contactListService rejectContactRequest:user.ID]
-            continueWithSuccessBlock:^id(BFTask *__unused task) {
+            continueWithSuccessBlock:^id(BFTask * task) {
                 return [self.serviceManager.chatService sendMessageAboutAcceptingContactRequest:NO
                                                                                    toOpponentID:user.ID];
             }];
@@ -82,7 +82,7 @@
     __block QBChatDialog *chatDialog = nil;
     
     return [[[[self.serviceManager.contactListService removeUserFromContactListWithUserID:user.ID]
-              continueWithSuccessBlock:^id(BFTask *__unused task) {
+              continueWithSuccessBlock:^id(BFTask * task) {
                   
                   return [self.serviceManager.chatService createPrivateChatDialogWithOpponent:user];
                   
@@ -97,7 +97,7 @@
                                                         saveToHistory:YES
                                                         saveToStorage:NO];
                   
-              }] continueWithBlock:^id _Nullable(BFTask * __unused t) {
+              }] continueWithBlock:^id _Nullable(BFTask *  t) {
                   
                   return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
               }];

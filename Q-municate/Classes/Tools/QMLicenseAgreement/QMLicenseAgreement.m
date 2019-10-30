@@ -2,8 +2,8 @@
 //  QMLicenseAgreement.m
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 26.08.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 26.08.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMLicenseAgreement.h"

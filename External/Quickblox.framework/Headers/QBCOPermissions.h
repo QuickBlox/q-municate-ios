@@ -5,8 +5,8 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
-#import <Quickblox/QBCustomObjectsEnums.h>
+#import <Foundation/Foundation.h>
+#import "QBCustomObjectsEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

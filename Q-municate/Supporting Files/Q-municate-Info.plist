@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.7.1</string>
+	<string>3.0.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -29,29 +29,15 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb605405446247805</string>
-				<string>com.googleusercontent.apps.265299067289-691cusdf63h5sisbrjgbke0spst6tuva</string>
+				<string>fb896726920715357</string>
+				<string>com.googleusercontent.apps.925980545669-85hofki94agos76vjmbcq6cail05rkib</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2271</string>
-	<key>Fabric</key>
-	<dict>
-		<key>APIKey</key>
-		<string>7aea78439bec41a9005c7488bb6751c5e33fe270</string>
-		<key>Kits</key>
-		<array>
-			<dict>
-				<key>KitInfo</key>
-				<dict/>
-				<key>KitName</key>
-				<string>Crashlytics</string>
-			</dict>
-		</array>
-	</dict>
+	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>605405446247805</string>
+	<string>896726920715357</string>
 	<key>FacebookDisplayName</key>
 	<string>Q-municate</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -65,29 +51,8 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>amazonaws.com</key>
-			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSThirdPartyExceptionMinimumTLSVersion</key>
-				<string>TLSv1.0</string>
-				<key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
-				<false/>
-			</dict>
-			<key>amazonaws.com.cn</key>
-			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSThirdPartyExceptionMinimumTLSVersion</key>
-				<string>TLSv1.0</string>
-				<key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
-				<false/>
-			</dict>
-		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Taking pictures, video calls</string>
@@ -105,10 +70,9 @@
 	<string>Messaging</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>voip</string>
-		<string>audio</string>
 		<string>fetch</string>
 		<string>remote-notification</string>
+		<string>voip</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>

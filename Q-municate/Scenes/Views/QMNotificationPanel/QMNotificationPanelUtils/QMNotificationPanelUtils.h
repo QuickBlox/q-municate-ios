@@ -2,8 +2,8 @@
 //  QMNotificationUtils.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/22/16.
-//  Copyright © 2016 Vitaliy Gorbachov. All rights reserved.
+//  Created by Injoit on 3/22/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

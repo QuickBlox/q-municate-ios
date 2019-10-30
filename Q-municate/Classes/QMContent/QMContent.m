@@ -2,11 +2,12 @@
 //  QMContent.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMContent.h"
+#import <Quickblox/Quickblox.h>
 
 static const CGFloat kQMContentUploadJPEGCompressionQuality = 0.4f;
 static NSString *const kQMContentImageFileName = @"image";
@@ -53,10 +54,10 @@ static NSString *const kQMContentImageFileName = @"image";
                   fileName:fileName
                contentType:contentType
                   isPublic:isPublic
-              successBlock:^(QBResponse * _Nonnull __unused response, QBCBlob * _Nonnull blob) {
+              successBlock:^(QBResponse * _Nonnull  response, QBCBlob * _Nonnull blob) {
                   
                   [source setResult:blob];
-              } statusBlock:^(QBRequest * _Nonnull __unused request, QBRequestStatus * _Nullable status) {
+              } statusBlock:^(QBRequest * _Nonnull  request, QBRequestStatus * _Nullable status) {
                   
                   if (progress) progress(status.percentOfCompletion);
               } errorBlock:^(QBResponse * _Nonnull response) {

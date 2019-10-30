@@ -2,13 +2,12 @@
 //  QMShareTableViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/4/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/4/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareTableViewController.h"
 #import <Quickblox/Quickblox.h>
-#import <MobileCoreServices/MobileCoreServices.h>
 #import "QMShareTableViewCell.h"
 #import "QMExtensionCache.h"
 #import "QMColors.h"
@@ -310,7 +309,7 @@ QMShareContactsDelegate>
 //MARK: - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)__unused
-tableView heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [QMShareTableViewCell height];
 }
 
@@ -331,7 +330,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 //MARK: - UISearchControllerDelegate
 
-- (void)willDismissSearchController:(UISearchController *)__unused searchController {
+- (void)willDismissSearchController:(UISearchController *)searchController {
     
     [self updateShareButton];
     [self.tableView reloadData];
@@ -348,13 +347,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     searchController.searchResultsController.view.hidden = NO;
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider
-             didUpdateData:(NSArray *)__unused data {
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider
+             didUpdateData:(NSArray *)data {
     
 }
 
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
     
     if (self.searchDataSource.showContactsSection) {
         QMShareContactsTableViewCell *contactsCell =
@@ -379,13 +378,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 //MARK: - QMSearchResultsControllerDelegate
 
-- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController
-         willBeginScrollResults:(UIScrollView *)__unused scrollView {
+- (void)searchResultsController:(QMSearchResultsController *)searchResultsController
+         willBeginScrollResults:(UIScrollView *)scrollView {
     
     [self.searchController.searchBar endEditing:YES];
 }
 
-- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController
+- (void)searchResultsController:(QMSearchResultsController *)searchResultsController
                 didSelectObject:(id)object {
     
     NSIndexPath *indexPath = [self.searchDataSource indexPathForObject:object];
@@ -409,7 +408,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull  context) {
         if (self.searchController.isActive) {
             self.searchController.active = NO;
         }
@@ -421,8 +420,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 //MARK: - QMShareContactsDelegate
 
-- (void)contactsDataSource:(nonnull QMShareDataSource *)__unused contactsDataSource
-        didSelectRecipient:(nonnull id<QMShareItemProtocol>)__unused recipient {
+- (void)contactsDataSource:(nonnull QMShareDataSource *)contactsDataSource
+        didSelectRecipient:(nonnull id<QMShareItemProtocol>) recipient {
     
     [self.shareDataSource selectItem:recipient
                              forView:[self.tableView cellForRowAtIndexPath:[self.shareDataSource indexPathForObject:recipient]]];

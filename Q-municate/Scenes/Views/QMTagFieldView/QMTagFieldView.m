@@ -2,8 +2,8 @@
 //  QMTagView.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/19/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/19/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
@@ -17,12 +17,12 @@
 
 @implementation QMTagFieldScrollView
 
-- (BOOL)touchesShouldCancelInContentView:(UIView *)__unused view {
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view {
     
     return YES;
 }
 
-- (void)scrollRectToVisible:(CGRect)__unused rect animated:(BOOL)__unused animated {
+- (void)scrollRectToVisible:(CGRect) rect animated:(BOOL) animated {
     // disabling auto scrolling to text field
     // after text field become first responder by not calling super
 }
@@ -233,7 +233,7 @@
 
 - (void)removeTagsAtIndexes:(NSIndexSet *)indexSet {
     
-    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, __unused BOOL *stop) {
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index,  BOOL *stop) {
         
         QMTagView *tagView = self.tagsList[index];
         if ([tagView isFirstResponder]) {
@@ -246,7 +246,7 @@
             tagView.transform = CGAffineTransformMakeScale(0.1f, 0.1f);
             tagView.alpha = 0.0f;
             
-        } completion:^(__unused BOOL finished) {
+        } completion:^( BOOL finished) {
             
             [tagView removeFromSuperview];
         }];
@@ -315,7 +315,7 @@
         temporaryImageView.alpha = 0.0f;
         self.scrollView.alpha = 1.0f;
         
-    } completion:^(__unused BOOL finished) {
+    } completion:^( BOOL finished) {
         
         [temporaryImageView removeFromSuperview];
         [temporaryImageViewContainer removeFromSuperview];
@@ -491,7 +491,7 @@
     [self setNeedsLayout];
 }
 
-- (void)tagViewDidResignFirstResponder:(QMTagView *)__unused tagView {
+- (void)tagViewDidResignFirstResponder:(QMTagView *)tagView {
     
     if (self.tagAnimations == nil) {
         
@@ -582,7 +582,7 @@
     }
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)__unused range replacementString:(NSString *)__unused string {
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange) range replacementString:(NSString *)string {
     
     if (textField == _textField) {
         
@@ -600,12 +600,12 @@
     }
 }
 
-- (void)textFieldDidBecomeFirstResponder:(QMTextField *)__unused textField {
+- (void)textFieldDidBecomeFirstResponder:(QMTextField *)textField {
     
     [self setNeedsLayout];
 }
 
-- (void)textFieldDidResignFirstResponder:(QMTextField *)__unused textField {
+- (void)textFieldDidResignFirstResponder:(QMTextField *)textField {
     
     if (self.tagAnimations == nil) {
         

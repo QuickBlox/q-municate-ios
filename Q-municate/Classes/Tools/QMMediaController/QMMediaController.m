@@ -2,8 +2,8 @@
 //  QMMediaController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 2/19/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 2/19/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMMediaController.h"
@@ -98,7 +98,7 @@ QMAttachmentContentServiceDelegate>
     
     QMMessageAttachmentStatus attachmentStatus = [self.attachmentsService attachmentStatusForMessage:message];
     
-    QMLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
+    QMSLog(@"attStatus = %d messageID:%@", attachmentStatus, message.ID);
     
     if (attachmentStatus == QMMessageAttachmentStatusNotLoaded) {
         view.viewState = QMMediaViewStateNotReady;
@@ -150,10 +150,9 @@ QMAttachmentContentServiceDelegate>
         CGSize targetSize = ((QMBaseMediaCell*)view).previewImageView.bounds.size;
         QMImageTransform *transform =
         [QMImageTransform transformWithSize:targetSize
-                       customTransformBlock:^UIImage * _Nullable(NSURL * _Nonnull __unused imageURL,
-                                                                 UIImage * _Nonnull originalImage) {
-                           return [originalImage imageWithCornerRadius:4
-                                                            targetSize:targetSize];
+                       customTransformBlock:^UIImage *(NSURL *  imageURL,
+                                                       UIImage * originalImage) {
+                           return [originalImage imageWithCornerRadius:4 targetSize:targetSize];
                        }];
         
         NSURL *url = [attachment remoteURLWithToken:NO];
@@ -163,10 +162,10 @@ QMAttachmentContentServiceDelegate>
             if (attachment.image) {
                 
                 [transform applyTransformForImage:attachment.image
-                                  completionBlock:^(UIImage * _Nonnull transformedImage) {
-                                      [QMImageLoader.instance.imageCache storeImage:attachment.image
-                                                                             forKey:message.ID
-                                                                         completion:nil];
+                                  completionBlock:^(UIImage *transformedImage) {
+                                      [(SDImageCache *)QMImageLoader.instance.imageCache storeImage:attachment.image
+                                                                                             forKey:message.ID
+                                                                                         completion:nil];
                                       view.image = transformedImage;
                                   }];
             }
@@ -175,8 +174,8 @@ QMAttachmentContentServiceDelegate>
         }
         else {
             
-            UIImage *cachedImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:[transform keyWithURL:url]];
-            UIImage *tempImage = [QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
+            UIImage *cachedImage = [(SDImageCache *)QMImageLoader.instance.imageCache imageFromCacheForKey:[transform keyWithURL:url]];
+            UIImage *tempImage = [(SDImageCache *)QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
             if (cachedImage) {
                 view.viewState = QMMediaViewStateReady;
                 view.image = cachedImage;
@@ -184,8 +183,8 @@ QMAttachmentContentServiceDelegate>
             else if (tempImage) {
                 
                 [transform applyTransformForImage:tempImage
-                                  completionBlock:^(UIImage * _Nonnull transformedImage) {
-                                      [QMImageLoader.instance.imageCache storeImage:tempImage
+                                  completionBlock:^(UIImage *transformedImage) {
+                                      [(SDImageCache *)QMImageLoader.instance.imageCache storeImage:tempImage
                                                                              forKey:url.absoluteString
                                                                          completion:^{
                                                                              if ([view.messageID isEqualToString:message.ID]) {
@@ -204,7 +203,7 @@ QMAttachmentContentServiceDelegate>
                                                        options:SDWebImageHighPriority | SDWebImageContinueInBackground | SDWebImageAllowInvalidSSLCertificates
                                                       progress:^(NSInteger receivedSize,
                                                                  NSInteger expectedSize,
-                                                                 NSURL * _Nullable __unused targetURL)
+                                                                 NSURL * targetURL)
                  {
                      if ([view.messageID isEqualToString:message.ID]) {
                          CGFloat progress = receivedSize/(float)expectedSize;
@@ -212,12 +211,12 @@ QMAttachmentContentServiceDelegate>
                              view.progress = progress;
                          });
                      }
-                 } completed:^(UIImage * _Nullable __unused image,
-                               UIImage * _Nullable transfomedImage,
-                               NSError * _Nullable error,
-                               SDImageCacheType __unused cacheType,
-                               BOOL __unused finished,
-                               NSURL * _Nonnull __unused imageURL) {
+                 } completed:^(UIImage * image,
+                               UIImage * transfomedImage,
+                               NSError * error,
+                               SDImageCacheType  cacheType,
+                               BOOL  finished,
+                               NSURL * imageURL) {
                      
                      if ([view.messageID isEqualToString:message.ID]) {
                          if (transfomedImage) {
@@ -225,7 +224,7 @@ QMAttachmentContentServiceDelegate>
                              view.image = transfomedImage;
                          }
                          if (error) {
-                             QMLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
+                             QMSLog(@"_IMAGE error %@ messageID:%@",error, message.ID);
                              [view showLoadingError:error];
                          }
                      }
@@ -241,12 +240,12 @@ QMAttachmentContentServiceDelegate>
         if (image) {
             view.image = image;
             view.viewState = QMMediaViewStateReady;
-            [QMImageLoader.instance.imageCache storeImage:image
+            [(SDImageCache *)QMImageLoader.instance.imageCache storeImage:image
                                                    forKey:message.ID
                                                completion:nil];
         }
         else {
-            image = [QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
+            image = [(SDImageCache *)QMImageLoader.instance.imageCache imageFromCacheForKey:message.ID];
             
             if (image) {
                 view.image = image;
@@ -281,7 +280,7 @@ QMAttachmentContentServiceDelegate>
                          if ([view.messageID isEqualToString:message.ID]) {
                              if (thumbnailImage) {
                                  view.image = thumbnailImage;
-                                 [QMImageLoader.instance.imageCache storeImage:thumbnailImage forKey:message.ID completion:nil];
+                                 [(SDImageCache *)QMImageLoader.instance.imageCache storeImage:thumbnailImage forKey:message.ID completion:nil];
                              }
                              if (durationSeconds > 0) {
                                  view.duration = lround(durationSeconds);
@@ -403,10 +402,10 @@ QMAttachmentContentServiceDelegate>
 
 //MARK: - QMChatAttachmentService Delegate
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
+- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
      didChangeLoadingProgress:(CGFloat)progress
                    forMessage:(QBChatMessage *)message
-                   attachment:(QBChatAttachment *)__unused attachment {
+                   attachment:(QBChatAttachment *)attachment {
     
     id <QMMediaViewDelegate> view = [self.viewController viewForMessage:message];
     if (view) {
@@ -414,7 +413,7 @@ QMAttachmentContentServiceDelegate>
     }
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
+- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
    didChangeUploadingProgress:(CGFloat)progress
                    forMessage:(QBChatMessage *)message {
     
@@ -523,10 +522,10 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
                  
                  NSString *key = [QMImageLoader.instance cacheKeyForURL:remoteURL];
                  
-                 [QMImageLoader.instance.imageCache queryCacheOperationForKey:key
+                 [(SDImageCache *)QMImageLoader.instance.imageCache queryCacheOperationForKey:key
                                                                          done:^(UIImage * _Nullable image,
-                                                                                NSData * __unused _Nullable data,
-                                                                                SDImageCacheType __unused cacheType)
+                                                                                NSData *  _Nullable data,
+                                                                                SDImageCacheType  cacheType)
                   {
                       
                       NYTPhotosViewController *photosViewController = (NYTPhotosViewController *)self.presentedViewController;
@@ -649,8 +648,8 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
     return QMCore.instance.chatService.chatAttachmentService;
 }
 
-- (void)chatAttachmentService:(QMChatAttachmentService *)__unused chatAttachmentService
-    didChangeAttachmentStatus:(QMMessageAttachmentStatus)__unused status
+- (void)chatAttachmentService:(QMChatAttachmentService *)chatAttachmentService
+    didChangeAttachmentStatus:(QMMessageAttachmentStatus) status
                    forMessage:(QBChatMessage *)message {
     
     QBChatAttachment *attachment = message.attachments.firstObject;
@@ -778,17 +777,17 @@ didUpdateStatus:(QMAudioPlayerStatus *)status {
 
 //MARK: - NYTPhotosViewControllerDelegate
 
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController
-           referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+- (UIView *)photosViewController:(NYTPhotosViewController *)photosViewController
+           referenceViewForPhoto:(id<NYTPhoto>) photo {
     return self.photoReferenceView;
 }
 
 
 //MARK: - QMAttachmentContentServiceDelegate
 
-- (BOOL)attachmentContentService:(QMAttachmentContentService *)__unused contentService
+- (BOOL)attachmentContentService:(QMAttachmentContentService *)contentService
         shouldDownloadAttachment:(QBChatAttachment *)attachment
-                       messageID:(NSString *)__unused messageID {
+                       messageID:(NSString *)messageID {
     
     return
     attachment.attachmentType == QMAttachmentContentTypeImage ||

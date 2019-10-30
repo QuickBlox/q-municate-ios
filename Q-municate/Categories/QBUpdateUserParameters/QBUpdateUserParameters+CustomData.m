@@ -2,11 +2,12 @@
 //  QBUpdateUserParameters+CustomData.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 9/28/15.
-//  Copyright © 2015 Quickblox. All rights reserved.
+//  Created by Injoit on 9/28/15.
+//  Copyright © 2015 QuickBlox. All rights reserved.
 //
 
 #import <objc/runtime.h>
+#import <Quickblox/QBUpdateUserParameters.h>
 
 NSString *const kQMAvatarUrlUpdateKey = @"avatar_url";
 NSString *const kQMStatusUpdateKey = @"status";
@@ -73,9 +74,6 @@ NSString *const kQMIsImportUpdateKey = @"is_import";
 
 @implementation QBUpdateUserParameters (CustomData)
 
-@dynamic avatarUrl;
-@dynamic status;
-@dynamic isImport;
 
 //MARK: - Is import
 

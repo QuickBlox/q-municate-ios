@@ -5,9 +5,9 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
-#import <Quickblox/QBRequest.h>
-#import <Quickblox/QBCompletionTypes.h>
+#import <Foundation/Foundation.h>
+#import "QBRequest.h"
+#import "QBCompletionTypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

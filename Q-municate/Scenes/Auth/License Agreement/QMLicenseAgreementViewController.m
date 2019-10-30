@@ -2,15 +2,15 @@
 //  QMLicenseAgreementViewController.m
 //  Qmunicate
 //
-//  Created by Igor Alefirenko on 10/07/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 10/07/2014.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMLicenseAgreementViewController.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QMCore.h"
 
-NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
+NSString *const kQMAgreementUrl = @"https://q-municate.com/terms-of-use";
 
 @interface QMLicenseAgreementViewController () <UIWebViewDelegate>
 
@@ -23,7 +23,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (void)viewDidLoad {
@@ -35,12 +35,11 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
         self.navigationItem.rightBarButtonItem = nil;
     }
     
-    [SVProgressHUD show];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:kQMAgreementUrl]];
     [self.webView loadRequest:request];
 }
 
-- (IBAction)done:(id)__unused sender {
+- (IBAction)done:(id) sender {
     
     [self dismissViewControllerSuccess:NO];
 }
@@ -59,7 +58,7 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
     }];
 }
 
-- (IBAction)acceptLicense:(id)__unused sender {
+- (IBAction)acceptLicense:(id) sender {
     
     QMCore.instance.currentProfile.userAgreementAccepted = YES;
     [self dismissViewControllerSuccess:YES];
@@ -67,12 +66,16 @@ NSString *const kQMAgreementUrl = @"http://q-municate.com/agreement";
 
 //MARK: - UIWebViewDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)__unused webView {
+- (void)webViewDidStartLoad:(UIWebView *)webView {
+    [SVProgressHUD show];
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
     
     [SVProgressHUD dismiss];
 }
 
-- (void)webView:(UIWebView *)__unused webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     
     [SVProgressHUD showErrorWithStatus:error.localizedDescription];
 }

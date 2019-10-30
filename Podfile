@@ -1,69 +1,65 @@
 
-platform :ios, '9.0'
-xcodeproj 'Q-municate.xcodeproj'
+platform :ios, '10.3'
+project 'Q-municate.xcodeproj'
 source 'https://github.com/CocoaPods/Specs.git'
 
-
-def services
-    
-#    pod 'QMServicesDevelopment', :path => '../q-municate-services-ios/'
-#    pod 'QMServicesDevelopment', :git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :tag => '0.5.3'
-    pod 'QMServicesDevelopment',:git => 'git@github.com:QuickBlox/q-municate-services-ios.git', :branch => 'development'
-end
-
-def chat_view_controller
-    
-#    pod 'QMCVDevelopment', :path => '../QMChatViewController-ios/'
-    pod 'QMCVDevelopment', :git => 'git@github.com:QuickBlox/QMChatViewController-ios.git', :branch => 'development'
-end
-
+# ignore all warnings from all pods
+inhibit_all_warnings!
 
 target 'Q-municate' do
-    
-    chat_view_controller
-    services
-    
-    pod 'UIDevice-Hardware', '~> 0.1.11'
-    pod 'SAMKeychain'
+
+    use_frameworks!
+
+    pod 'UIDevice-Hardware', '~> 0.1.13'
+    pod 'SAMKeychain', '~> 1.5.3'
     pod 'Reachability', '~> 3.2'
-    pod 'TTTAttributedLabel', '~> 2.0'
-    pod 'libextobjc/EXTScope', '~> 0.4.1'
-    pod 'Flurry-iOS-SDK/FlurrySDK', '<= 8.3.1'
-    pod 'NYTPhotoViewer', :git => 'https://github.com/NYTimes/NYTPhotoViewer.git', :tag => 'v2.0.0'
-    
+    pod 'TTTAttributedLabel', '~> 2.0.0'
+    pod 'libextobjc/EXTScope', '~> 0.6'
+    pod 'Flurry-iOS-SDK/FlurrySDK', '~> 10.0.1'
+    pod 'NYTPhotoViewer', '~> 2.0.0'
     #Facebook
-    pod 'FBSDKCoreKit'
-    pod 'FBSDKShareKit'
-    pod 'FBSDKLoginKit'
-    #Twitter
-    pod 'Fabric'
-    pod 'Crashlytics'
+    pod 'FBSDKCoreKit', '~> 5.6.0'
+    pod 'FBSDKLoginKit', '~> 5.6.0'
     #Firebase
-    pod 'FirebaseUI/Phone', '~> 4.0'
+    pod 'FirebaseUI/Phone', '~> 8.1.0'
+    #ChatUI
+    pod 'FFCircularProgressView', '~> 0.5'
+    pod 'SDWebImage', '~> 5.2.0'
+    #Chat Service
+    pod 'QuickBlox', '~> 2.17.4'
+    pod 'Quickblox-WebRTC', '~> 2.7.4'
     
 end
 
 target 'QMSiriExtension' do
+    use_frameworks!
     
-    services
-    
+    #Chat Service
+    pod 'Bolts', '~> 1.9.0'
+    pod 'QuickBlox', '~> 2.17.4'
+
 end
 
 target 'QMShareExtension' do
-    
-    services
-    chat_view_controller
-    
+    use_frameworks!
+
     pod 'Reachability', '~> 3.2'
-    pod 'SVProgressHUD'
-    
+    pod 'SVProgressHUD', '~> 2.2.5'
+    #ChatUI
+    pod 'FFCircularProgressView', '~> 0.5'
+    pod 'SDWebImage', '~> 5.2.0'
+    pod 'TTTAttributedLabel', '~> 2.0.0'
+    #Chat Service
+    pod 'Bolts', '~> 1.9.0'
+    pod 'QuickBlox', '~> 2.17.4'
+
 end
 
 post_install do |installer|
     #Settings for extensions
     installer.pods_project.targets.each do |target|
         case target.name
-            when 'Bolts','QMCVDevelopment','SVProgressHUD'
+            when 'Bolts','SVProgressHUD'
             target.build_configurations.each do |config|
                 config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'NO'
             end
@@ -74,9 +70,9 @@ post_install do |installer|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] << 'SV_APP_EXTENSIONS'
             end
         end
-        
+
     end
-    
+
     #This script fixes an issue with application icon on iOS 11
     #MORE INFO: https://github.com/CocoaPods/CocoaPods/issues/7003
     installer.aggregate_targets.each do |target|

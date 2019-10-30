@@ -2,16 +2,16 @@
 //  QMDialogsSearchDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 2/29/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 2/29/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMDialogsSearchDataSource.h"
 #import "QMDialogCell.h"
 #import "QMNoResultsCell.h"
 #import "QMCore.h"
-#import <QMDateUtils.h>
 #import "QBChatDialog+OpponentID.h"
+#import "QMDateUtils.h"
 
 @implementation QMDialogsSearchDataSource
 
@@ -20,7 +20,7 @@
     return self.items[indexPath.row];
 }
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return self.items.count > 0 ? [QMDialogCell height] : [QMNoResultsCell height];
 }
@@ -63,7 +63,7 @@
     return cell;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
     
     return self.items.count > 0 ? self.items.count : 1;
 }

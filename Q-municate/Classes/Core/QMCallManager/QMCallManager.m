@@ -2,8 +2,8 @@
 //  QMCallManager.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/10/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/10/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMCallManager.h"
@@ -141,7 +141,7 @@ QBChatDelegate
         
         [self prepareCallWindow];
         
-        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState roleState:callState];
         
         [self.session startCall:nil];
         self.hasActiveCall = YES;
@@ -155,7 +155,7 @@ QBChatDelegate
 - (void)prepareCallWindow {
     
     // hiding keyboard
-    [[UIApplication sharedApplication].keyWindow endEditing:YES];
+    [UIApplication.sharedApplication.keyWindow endEditing:YES];
     
     self.callWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
@@ -212,8 +212,9 @@ QBChatDelegate
 // MARK: - Methods
 
 - (void)performCallKitPreparations {
-    UIApplication *application = [UIApplication sharedApplication];
-    if (application.applicationState == UIApplicationStateBackground) {
+    UIApplication *application = UIApplication.sharedApplication;
+    if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground ||
+        UIApplication.sharedApplication.applicationState == UIApplicationStateInactive) {
         if (_backgroundTask == UIBackgroundTaskInvalid) {
             _backgroundTask = [application beginBackgroundTaskWithExpirationHandler:^{
                 [application endBackgroundTask:self.backgroundTask];
@@ -296,7 +297,7 @@ QBChatDelegate
     }
 }
 
-- (void)chatDidNotConnectWithError:(NSError *)__unused error {
+- (void)chatDidNotConnectWithError:(NSError *)error {
     if (self.onChatConnectedAction != nil) {
         self.onChatConnectedAction = nil;
     }
@@ -304,7 +305,7 @@ QBChatDelegate
 
 // MARK: - QBRTCClientDelegate
 
-- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)__unused userInfo {
+- (void)didReceiveNewSession:(QBRTCSession *)session userInfo:(NSDictionary *)userInfo {
     
     if (self.session != nil) {
         // session in progress
@@ -337,9 +338,10 @@ QBChatDelegate
             @strongify(self);
             // initializing controller
             QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateActiveVideoCall : QMCallStateActiveAudioCall;
+            QMCallState roleState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
             
             [self prepareCallWindow];
-            self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+            self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState roleState:roleState];
             
         } completion:nil];
     }
@@ -350,16 +352,16 @@ QBChatDelegate
         QMCallState callState = session.conferenceType == QBRTCConferenceTypeVideo ? QMCallStateIncomingVideoCall : QMCallStateIncomingAudioCall;
         
         [self prepareCallWindow];
-        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState];
+        self.callWindow.rootViewController = [QMCallViewController callControllerWithState:callState roleState:callState];
     }
 }
 
-- (void)session:(QBRTCSession *)__unused session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
+- (void)session:(QBRTCSession *)session updatedStatsReport:(QBRTCStatsReport *)report forUserID:(NSNumber *)userID {
     
-    ILog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
+    QMSLog(@"Stats report for userID: %@\n%@", userID, [report statsString]);
 }
 
-- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)__unused userID {
+- (void)session:(QBRTCSession *)session connectedToUser:(NSNumber *)userID {
     
     if (self.session == session) {
         // stopping calling sounds
@@ -389,7 +391,7 @@ QBChatDelegate
     }
     
     if (_backgroundTask != UIBackgroundTaskInvalid) {
-        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        [UIApplication.sharedApplication endBackgroundTask:_backgroundTask];
         _backgroundTask = UIBackgroundTaskInvalid;
     }
     
@@ -400,8 +402,9 @@ QBChatDelegate
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground
-            && self.backgroundTask == UIBackgroundTaskInvalid) {
+        if ((UIApplication.sharedApplication.applicationState == UIApplicationStateBackground ||
+             UIApplication.sharedApplication.applicationState == UIApplicationStateInactive) &&
+            self.backgroundTask == UIBackgroundTaskInvalid) {
             // dispatching chat disconnect in 1.5 second so message about call end
             // from webrtc does not cut mid sending (ideally webrtc should wait
             // untill message about hangup did send, which is not the case now)
@@ -609,28 +612,29 @@ QBChatDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_SETTINGS", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
-                                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                                                          [UIApplication.sharedApplication openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
                                                       }]];
     
-    UIViewController *viewController = [[[(UISplitViewController *)[UIApplication sharedApplication].keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
+    UIViewController *viewController = [[[(UISplitViewController *)UIApplication.sharedApplication.keyWindow.rootViewController viewControllers] firstObject] selectedViewController];
     [viewController presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)checkBackgroundActiveCall {
-    BOOL isBackground = [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
+    BOOL isBackground = (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground ||
+                         UIApplication.sharedApplication.applicationState == UIApplicationStateInactive);
     if (isBackground
         && !self.hasActiveCall) {
         
         if (_backgroundTask != UIBackgroundTaskInvalid) {
-            [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+            [UIApplication.sharedApplication endBackgroundTask:_backgroundTask];
             _backgroundTask = UIBackgroundTaskInvalid;
         }
         

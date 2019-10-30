@@ -2,27 +2,19 @@
 //  QMNewMessageContactListViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/18/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/18/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMMessageContactListViewController.h"
 #import "QMNewMessageContactListSearchDataSource.h"
 #import "QMContactsSearchDataProvider.h"
-
 #import "QMSelectableContactCell.h"
 #import "QMNoResultsCell.h"
-
 #import "QMCore.h"
 
-@interface QMMessageContactListViewController ()
-
-<
-UITableViewDelegate,
-UIScrollViewDelegate,
-QMSearchDataProviderDelegate,
-QMUsersServiceDelegate
->
+@interface QMMessageContactListViewController ()<UITableViewDelegate, UIScrollViewDelegate,
+QMSearchDataProviderDelegate, QMUsersServiceDelegate>
 
 @property (strong, nonatomic) QMNewMessageContactListSearchDataSource *dataSource;
 
@@ -105,7 +97,7 @@ QMUsersServiceDelegate
     }
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
@@ -124,12 +116,12 @@ QMUsersServiceDelegate
 
 //MARK: - QMSearchDataProviderDelegate
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
     
     [self.tableView reloadData];
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)data {
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
     
     [self.dataSource replaceItems:data];
     
@@ -150,7 +142,7 @@ QMUsersServiceDelegate
 
 // MARK: QMUsersServiceDelegate
 
-- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
+- (void)usersService:(QMUsersService *)usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     
     NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:users.count];
     for (QBUUser *user in users) {

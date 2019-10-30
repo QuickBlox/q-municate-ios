@@ -2,11 +2,11 @@
 //  QMSiriHelper.h
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/23/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 11/23/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
-#import <QMServices.h>
+#import <Quickblox/Quickblox.h>
 
 @class INPerson;
 

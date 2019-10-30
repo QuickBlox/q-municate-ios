@@ -2,8 +2,8 @@
 //  REMailCompose.h
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 07.01.14.
-//  Copyright (c) 2014 QuickBlox. All rights reserved.
+//  Created by Injoit on 07.01.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import <MessageUI/MessageUI.h>

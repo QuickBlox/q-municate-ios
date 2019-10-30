@@ -2,27 +2,24 @@
 //  AppDelegate.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 13/02/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 13/02/2014.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMAppDelegate.h"
 #import "QMCore.h"
 #import "QMImages.h"
 #import "QMColors.h"
-
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import <Flurry.h>
 #import <SVProgressHUD/SVProgressHUD.h>
-#import <Intents/Intents.h>
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FirebaseCore/FirebaseCore.h>
-#import <FirebaseAuth/FirebaseAuth.h>
-
 #import "UIScreen+QMLock.h"
 #import "UIImage+Cropper.h"
 #import "QBSettings+Qmunicate.h"
+
+#import <Intents/Intents.h>
+#import <Flurry_iOS_SDK/Flurry.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FirebaseCore/FirebaseCore.h>
+#import <FirebaseAuth/FirebaseAuth.h>
 
 @interface QMAppDelegate () <QMPushNotificationManagerDelegate, QMAuthServiceDelegate>
 
@@ -34,11 +31,11 @@
     
     application.applicationIconBadgeNumber = 0;
     
-    // Quickblox settings
+    // QuickBlox settings
     [QBSettings configure];
     [QMServicesManager enableLogging:QMCurrentApplicationZone != QMApplicationZoneProduction];
     
-    // QuickbloxWebRTC settings
+    // QuickBloxWebRTC settings
     [QBRTCClient initializeRTC];
     [QBRTCConfig mediaStreamConfiguration].audioCodec = QBRTCAudioCodecOpus;
     [QBRTCConfig setStatsReportTimeInterval:0.0f]; // set to 1.0f to enable stats report
@@ -56,16 +53,17 @@
     [[UITextField appearance] setTintColor:QMSecondaryApplicationColor()];
     [UITextField appearance].keyboardAppearance = UIKeyboardAppearanceDark;
     
-    [SVProgressHUD setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.92f]];
+    [SVProgressHUD setBorderWidth:1];
+    [SVProgressHUD setBorderColor:[[UIColor grayColor] colorWithAlphaComponent:0.1]];
     [SVProgressHUD setDefaultMaskType:SVProgressHUDMaskTypeClear];
     
     // Configuring external frameworks
     [FIRApp configure];
     [[FIRAuth auth] useAppLanguage];
-    [Fabric with:@[CrashlyticsKit]];
     [Flurry startSession:@"P8NWM9PBFCK2CWC8KZ59"];
-    [Flurry logEvent:@"connect_to_chat" withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
-                                                         @"chat_endpoint" : [QBSettings chatEndpoint]}];
+    [Flurry logEvent:@"connect_to_chat"
+      withParameters:@{@"app_id" : [NSString stringWithFormat:@"%tu", QBSettings.applicationID],
+                       @"chat_endpoint" : [QBSettings chatEndpoint]}];
     
     // not returning this method as launch options are not ONLY related to facebook
     // for example when facebook returns NO in this method, callkit call from contacts
@@ -76,7 +74,8 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)__unused application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
     
     if ([[FIRAuth auth] canHandleNotification:userInfo]) {
         completionHandler(UIBackgroundFetchResultNoData);
@@ -103,7 +102,7 @@
     [QMCore.instance.chatManager disconnectFromChatIfNeeded];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)__unused application {
+- (void)applicationWillEnterForeground:(UIApplication *)application {
     // sending presence after application becomes active,
     // or just restoring state if chat is disconnected
     if (QBChat.instance.manualInitialPresence) {
@@ -113,56 +112,53 @@
     [QMCore.instance login];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)__unused application {
+- (void)applicationDidBecomeActive:(UIApplication *)application {
     
     [FBSDKAppEvents activateApp];
 }
-
-- (BOOL)application:(UIApplication *)application
+- (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    
-    BOOL urlWasIntendedForFacebook = [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                                                    openURL:url
-                                                                          sourceApplication:sourceApplication
-                                                                                 annotation:annotation];
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    BOOL urlWasIntendedForFacebook =
+    [[FBSDKApplicationDelegate sharedInstance] application:app
+                                                   openURL:url
+                                                   options:options];
     return urlWasIntendedForFacebook;
 }
 
-- (UIInterfaceOrientationMask)application:(UIApplication *)__unused application supportedInterfaceOrientationsForWindow:(UIWindow *)__unused window {
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
     
     return [[UIScreen mainScreen] qm_allowedInterfaceOrientationMask];
 }
 
-- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)__unused notificationSettings {
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
     
     [application registerForRemoteNotifications];
 }
 
-- (void)application:(UIApplication *)__unused application
+- (void)application:(UIApplication *)application
 didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     [[QMCore instance].pushNotificationManager updateToken:deviceToken];
     FIRAuthAPNSTokenType firTokenType;
-
+    
     if (QMCurrentApplicationZone == QMApplicationZoneProduction) {
         firTokenType = FIRAuthAPNSTokenTypeProd;
     }
     else {
         firTokenType = FIRAuthAPNSTokenTypeSandbox;
     }
-
+    
     [[FIRAuth auth] setAPNSToken:deviceToken type:firTokenType];
 }
 
-- (void)application:(UIApplication *)__unused application
+- (void)application:(UIApplication *)application
 didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     
     [[QMCore instance].pushNotificationManager handleError:error];
 }
 
-- (void)application:(UIApplication *)__unused application
+- (void)application:(UIApplication *)application
 handleActionWithIdentifier:(NSString *)identifier
 forRemoteNotification:(NSDictionary *)userInfo
    withResponseInfo:(NSDictionary *)responseInfo
@@ -174,7 +170,9 @@ forRemoteNotification:(NSDictionary *)userInfo
                                                         completionHandler:completionHandler];
 }
 
-- (BOOL)application:(UIApplication *)__unused application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))__unused restorationHandler {
+- (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void(^)(NSArray<id<UIUserActivityRestoring>> * __nullable restorableObjects))restorationHandler {
     
     BOOL isCallIntent = [userActivity.activityType isEqualToString:INStartAudioCallIntentIdentifier] || [userActivity.activityType isEqualToString:INStartVideoCallIntentIdentifier];
     if (isCallIntent) {
@@ -186,7 +184,7 @@ forRemoteNotification:(NSDictionary *)userInfo
 
 //MARK: - QMPushNotificationManagerDelegate protocol
 
-- (void)pushNotificationManager:(QMPushNotificationManager *)__unused pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
+- (void)pushNotificationManager:(QMPushNotificationManager *)pushNotificationManager didSucceedFetchingDialog:(QBChatDialog *)chatDialog {
     UITabBarController *tabBarController = [[(UISplitViewController *)self.window.rootViewController viewControllers] firstObject];
     
     UIViewController *dialogsVC = [[(UINavigationController *)[[tabBarController viewControllers] firstObject] viewControllers] firstObject];

@@ -2,8 +2,8 @@
 //  QMImagePreview.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 8/30/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 8/30/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

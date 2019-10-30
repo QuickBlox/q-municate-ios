@@ -2,14 +2,14 @@
 //  QMProfile.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMProfile.h"
 #import "QMContent.h"
 #import "QMTasks.h"
-#import <SAMKeychain.h>
+#import <SAMKeychain/SAMKeychain.h>
 #import "QMCore.h"
 
 static NSString * const kQMUserDataKey = @"userData";
@@ -48,6 +48,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
         if (!exist) {
             [self clearProfile];
         }
+        [SAMKeychain setAccessibilityType: kSecAttrAccessibleAfterFirstUnlock];
     }
     
     return self;
@@ -77,7 +78,7 @@ static NSString * const kQMAppExists = @"QMAppExists";
             [[QMUsersCache instance] insertOrUpdateUser:self.userData];
         }
         else {
-            QMLog(@"QMProfile error %@", error);
+            QMSLog(@"QMProfile error %@", error);
         }
         
         return success;

@@ -2,8 +2,8 @@
 //  QMHelpers.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 7/19/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 7/19/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

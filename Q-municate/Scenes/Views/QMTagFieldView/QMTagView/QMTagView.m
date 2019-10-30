@@ -2,8 +2,8 @@
 //  QMTagView.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/19/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/19/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMTagView.h"
@@ -148,7 +148,7 @@ static UIImage *tokenBackgroundHighlightedImage() {
     return NO;
 }
 
-- (void)__unused insertText:(NSString *)__unused text {
+- (void) insertText:(NSString *)text {
     
 }
 

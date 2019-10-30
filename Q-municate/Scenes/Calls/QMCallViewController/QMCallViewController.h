@@ -2,8 +2,8 @@
 //  QMCallViewController.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/10/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/10/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -53,11 +53,12 @@ typedef NS_ENUM(NSUInteger, QMCallState) {
  *  Call view controller with state.
  *
  *  @param callState specific call view controller state
+ *  @param type specific session call type
  *
  *  @see QMCallManager class, QMCallState enum.
  *
  *  @return QMCallViewController with a specific state
  */
-+ (instancetype)callControllerWithState:(QMCallState)callState;
++ (instancetype)callControllerWithState:(QMCallState)callState roleState:(QMCallState)roleState;
 
 @end

@@ -2,8 +2,8 @@
 //  QMGroupAddUsersViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 4/20/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 4/20/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMGroupAddUsersViewController.h"
@@ -117,7 +117,7 @@ UISearchResultsUpdating
 
 //MARK: - Actions
 
-- (IBAction)doneButtonPressed:(UIBarButtonItem *)__unused sender {
+- (IBAction)doneButtonPressed:(UIBarButtonItem *)sender {
     
     if (self.task != nil) {
         // task in progress
@@ -164,19 +164,19 @@ UISearchResultsUpdating
     self.searchController.searchBar.text = nil;
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.dataSource heightForRowAtIndexPath:indexPath];
 }
 
 //MARK: - QMSearchDataProviderDelegate
 
-- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)__unused searchDataProvider {
+- (void)searchDataProviderDidFinishDataFetching:(QMSearchDataProvider *)searchDataProvider {
     
     [self.tableView reloadData];
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)__unused searchDataProvider didUpdateData:(NSArray *)data {
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
     
     [self replaceUsers];
     
@@ -195,7 +195,7 @@ UISearchResultsUpdating
 
 //MARK: - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogInMemoryStorage:(QBChatDialog *)chatDialog {
     
     if ([chatDialog.ID isEqualToString:self.chatDialog.ID] && ![self.chatDialog.occupantIDs isEqual:self.cachedOccupantIDs]) {
         
@@ -204,7 +204,7 @@ UISearchResultsUpdating
     }
 }
 
-- (void)chatService:(QMChatService *)__unused chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
+- (void)chatService:(QMChatService *)chatService didUpdateChatDialogsInMemoryStorage:(NSArray<QBChatDialog *> *)dialogs {
     
     if ([dialogs containsObject:self.chatDialog] && ![self.chatDialog.occupantIDs isEqual:self.cachedOccupantIDs]) {
         

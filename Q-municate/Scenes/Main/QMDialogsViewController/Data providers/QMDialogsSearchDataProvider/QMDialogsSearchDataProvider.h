@@ -2,8 +2,8 @@
 //  QMDialogsSearchDataProvider.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/2/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/2/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMSearchDataProvider.h"

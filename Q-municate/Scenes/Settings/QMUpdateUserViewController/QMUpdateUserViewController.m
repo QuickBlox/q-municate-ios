@@ -2,8 +2,8 @@
 //  QMUpdateUserViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/6/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/6/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMUpdateUserViewController.h"
@@ -38,7 +38,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -97,7 +97,6 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
         
         case QMUpdateUserFieldStatus:
             
-            
             [self configureWithKeyPath:qm_keypath(QBUUser, status)
                                  title:NSLocalizedString(@"QM_STR_STATUS", nil)
                                   text:currentUser.status
@@ -125,7 +124,7 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
 //MARK: - Actions
 
-- (IBAction)saveButtonPressed:(UIBarButtonItem *)__unused sender {
+- (IBAction)saveButtonPressed:(UIBarButtonItem *)sender {
     
     if (self.task != nil) {
         // task is in progress
@@ -186,8 +185,8 @@ static NSString *const kQMNotAcceptableCharacters = @"<>;";
 
 //MARK: - UITextFieldDelegate
 
-- (BOOL)textField:(UITextField *)__unused textField
-shouldChangeCharactersInRange:(NSRange)__unused range
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange) range
 replacementString:(NSString *)string  {
     
     if (self.updateUserField == QMUpdateUserFieldFullName) {
@@ -251,8 +250,8 @@ replacementString:(NSString *)string  {
 
 //MARK: - UITableViewDataSource
 
-- (NSString *)tableView:(UITableView *)__unused tableView
-titleForFooterInSection:(NSInteger)__unused section {
+- (NSString *)tableView:(UITableView *)tableView
+titleForFooterInSection:(NSInteger) section {
     return self.bottomText;
 }
 
@@ -279,8 +278,8 @@ titleForFooterInSection:(NSInteger)__unused section {
     return numberOfRows;
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView
-heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewAutomaticDimension;
 }
 

@@ -2,8 +2,8 @@
 //  QMShareTasks.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/20/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/20/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareTasks.h"
@@ -350,11 +350,11 @@ static NSSet<NSString *>*acceptableTypes() {
     
     NSMutableArray *dialogs = [NSMutableArray array];
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) =
-    ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *__unused dialogsUsersIDs, BOOL *__unused stop) {
+    ^(QBResponse * response, NSArray * dialogObjects, NSSet * dialogsUsersIDs, BOOL * stop) {
         [dialogs addObjectsFromArray:dialogObjects];
     };
     
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask *__unused task) {
+    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * task) {
         return [BFTask taskWithResult:dialogs.copy];
     };
     
@@ -451,7 +451,7 @@ static NSSet<NSString *>*acceptableTypes() {
 
 + (BFTask <QBChatDialog*> *)dialogForUser:(QBUUser *)user {
     
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*_Nullable dialog, NSDictionary<NSString *,id> * _Nullable __unused bindings) {
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog*_Nullable dialog, NSDictionary<NSString *,id> * _Nullable  bindings) {
         return dialog.type == QBChatDialogTypePrivate && [dialog.occupantIDs containsObject:@(user.ID)];
     }];
     
@@ -481,10 +481,10 @@ static NSSet<NSString *>*acceptableTypes() {
     
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         
-        [QBRequest createDialog:chatDialog successBlock:^(QBResponse *__unused response, QBChatDialog *createdDialog) {
+        [QBRequest createDialog:chatDialog successBlock:^(QBResponse * response, QBChatDialog *createdDialog) {
             [source setResult:createdDialog];
             
-        } errorBlock:^(QBResponse *__unused response) {
+        } errorBlock:^(QBResponse * response) {
             [source setError:response.error.error];
         }];
     });

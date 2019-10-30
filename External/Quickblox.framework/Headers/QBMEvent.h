@@ -5,9 +5,9 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
-#import <Quickblox/QBCEntity.h>
-#import <Quickblox/QBPushNotificationsEnums.h>
+#import <Foundation/Foundation.h>
+#import "QBCEntity.h"
+#import "QBPushNotificationsEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

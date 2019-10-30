@@ -2,8 +2,8 @@
 //  QMExpandableTableViewController.h
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 8/29/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 8/29/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMTableViewController.h"

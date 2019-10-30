@@ -5,31 +5,36 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QBCOFile : NSObject <NSCoding, NSCopying>
 
 /** 
- *  File name.
+ The name of the file .
  */
 @property (nonatomic, copy, nullable) NSString *name;
 
 /**
- *  File content type.
+ The content type of the file.
  */
 @property (nonatomic, copy, nullable) NSString *contentType;
 
 /**
- *  File data.
+ The data of the file.
  */
 @property (nonatomic, strong, nullable) NSData *data;
 
+/**
+ The Local url of the file.
+ */
+@property (nonatomic, strong, nullable) NSURL *fileURL;
+
 /** 
- *  Create file object.
- *
- *  @return New instance of QBCOFile
+ Create file object.
+ 
+ @return New instance of `QBCOFile`
  */
 + (instancetype)file;
 

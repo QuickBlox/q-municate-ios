@@ -2,21 +2,15 @@
 //  QMFacebook.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMFacebook.h"
 
 // facebook kit
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-
-static NSString * const kQMHomeUrl = @"http://q-municate.com";
-static NSString * const kQMLogoUrl = @"https://files.quickblox.com/ic_launcher.png";
-static NSString * const kQMAppName = @"Q-municate";
-static NSString * const kQMDataKey = @"data";
 
 static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/%@/picture?height=100&width=100&access_token=%@";
 
@@ -30,27 +24,20 @@ static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/
     
     if (!session) {
         
-        UINavigationController *navigationController = (UINavigationController *)[[UIApplication sharedApplication].windows.firstObject rootViewController];
+        UINavigationController *navigationController = (UINavigationController *)[UIApplication.sharedApplication.windows.firstObject rootViewController];
         
         FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-        [loginManager logInWithReadPermissions:@[@"email", @"public_profile", @"user_friends"]
-                            fromViewController:navigationController
-                                       handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-                                           
-                                           if (error) {
-                                               
-                                               [source setError:error];
-                                           }
-                                           else if (result.isCancelled) {
-                                               
-                                               [source cancel];
-                                               
-                                           }
-                                           else {
-                                               
-                                               [source setResult:result.token.tokenString];
-                                           }
-                                       }];
+        [loginManager logInWithPermissions:@[@"email", @"public_profile", @"user_friends"]
+                        fromViewController:navigationController
+                                   handler:^(FBSDKLoginManagerLoginResult * _Nullable result, NSError * _Nullable error) {
+                                       if (error) {
+                                           [source setError:error];
+                                       } else if (result.isCancelled) {
+                                           [source cancel];
+                                       } else {
+                                           [source setResult:result.token.tokenString];
+                                       }
+                                   }];
     }
     else {
         
@@ -72,9 +59,9 @@ static NSString * const kFBGraphGetPictureFormat = @"https://graph.facebook.com/
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
-    FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+    FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{}];
     
-    [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *__unused connection, id result, NSError *error) {
+    [friendsRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection * connection, id result, NSError *error) {
         
         error != nil ? [source setError:error] : [source setResult:result];
     }];

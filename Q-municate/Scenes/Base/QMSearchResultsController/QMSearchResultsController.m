@@ -2,8 +2,8 @@
 //  QMSearchResultsController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/17/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/17/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMSearchResultsController.h"
@@ -29,12 +29,12 @@
 
 //MARK: - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
-- (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     id obj = [self.searchDataSource objectAtIndexPath:indexPath];
     [self.delegate searchResultsController:self didSelectObject:obj];
@@ -68,7 +68,7 @@
     [self.tableView reloadData];
 }
 
-- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)__unused data {
+- (void)searchDataProvider:(QMSearchDataProvider *)searchDataProvider didUpdateData:(NSArray *)data {
     
     if ([self.tableView.dataSource isKindOfClass:[QMTableViewSearchDataSource class]]
         && self.searchDataSource.searchDataProvider != searchDataProvider) {

@@ -2,14 +2,15 @@
 //  QMMediaController.h
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 2/19/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 2/19/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import "QMChatViewController.h"
 
 #import "QMMediaViewDelegate.h"
-#import <QMChatViewController.h>
+#import "QMChatAttachmentService.h"
 
 @protocol QMMediaControllerDelegate;
 

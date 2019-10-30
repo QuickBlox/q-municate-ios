@@ -2,8 +2,8 @@
 //  IntentHandler.h
 //  QMSiriExtension
 //
-//  Created by Vitaliy Gurkovsky on 11/18/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 11/18/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <Intents/Intents.h>

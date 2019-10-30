@@ -5,7 +5,7 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 // Event types
 typedef NS_ENUM(NSUInteger, QBMEventType) {
     
@@ -29,7 +29,6 @@ typedef NS_ENUM(NSUInteger, QBMPushType) {
     QBMPushTypeAPNSVOIP,
     QBMPushTypeGCM,
     QBMPushTypeMPNS,
-    QBMPushTypeBBPS
 };
 
 // Notification channels
@@ -39,6 +38,5 @@ typedef NS_ENUM(NSUInteger, QBMNotificationChannel) {
     QBMNotificationChannelAPNS,
     QBMNotificationChannelAPNSVOIP,
     QBMNotificationChannelGCM,
-    QBMNotificationChannelMPNS,
-    QBMNotificationChannelBBPS
+    QBMNotificationChannelMPNS
 };

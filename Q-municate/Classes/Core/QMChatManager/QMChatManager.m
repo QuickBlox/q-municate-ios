@@ -2,8 +2,8 @@
 //  QMChatManager.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 4/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 4/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMChatManager.h"
@@ -25,7 +25,7 @@
 
 - (BFTask *)disconnectFromChat {
     
-    return [[self.serviceManager.chatService disconnect] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    return [[self.serviceManager.chatService disconnect] continueWithSuccessBlock:^id _Nullable(BFTask * _Nonnull  task) {
         
         if (self.serviceManager.currentProfile.userData != nil) {
             
@@ -40,7 +40,9 @@
 - (BFTask *)disconnectFromChatIfNeeded {
     
     BOOL chatNeedDisconnect =  [[QBChat instance] isConnected] || [[QBChat instance] isConnecting];
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground && !self.serviceManager.callManager.hasActiveCall && chatNeedDisconnect) {
+    if ((UIApplication.sharedApplication.applicationState == UIApplicationStateBackground ||
+         UIApplication.sharedApplication.applicationState == UIApplicationStateInactive) &&
+        !self.serviceManager.callManager.hasActiveCall && chatNeedDisconnect) {
         
         return [self disconnectFromChat];
     }
@@ -108,7 +110,7 @@
     
     return [[self.serviceManager.chatService
              sendNotificationMessageAboutLeavingDialog:chatDialog withNotificationText:kQMDialogsUpdateNotificationMessage]
-            continueWithBlock:^id(BFTask *__unused task) {
+            continueWithBlock:^id(BFTask * task) {
                 return [self.serviceManager.chatService deleteDialogWithID:chatDialog.ID];
             }];
 }
@@ -124,7 +126,7 @@
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
-    [QBRequest sendMessage:message successBlock:^(QBResponse * __unused response, QBChatMessage *createdMessage) {
+    [QBRequest sendMessage:message successBlock:^(QBResponse *  response, QBChatMessage *createdMessage) {
         
         [source setResult:createdMessage];
         

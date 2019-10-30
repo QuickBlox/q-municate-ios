@@ -2,8 +2,8 @@
 //  QMContactsSearchDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/17/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/17/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMContactsSearchDataSource.h"
@@ -13,7 +13,7 @@
 
 @implementation QMContactsSearchDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return self.isEmpty ? [QMNoResultsCell height] : [QMContactCell height];
 }

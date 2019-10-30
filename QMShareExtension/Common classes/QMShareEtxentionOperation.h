@@ -2,15 +2,16 @@
 //  QMMessageMediator.h
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/2/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/2/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <Bolts/BFTask.h>
-#import <QMServicesDevelopment/QMServices.h>
-#import <QMServicesDevelopment/QMChatTypes.h>
-#import <QMServicesDevelopment/QMMediaBlocks.h>
+#import <Quickblox/Quickblox.h>
+#import "QMChatTypes.h"
+#import "QMMediaBlocks.h"
+#import "QMAsynchronousOperation.h"
 
 @class QBChatAttachment;
 @class QBUUser;

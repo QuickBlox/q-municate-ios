@@ -2,11 +2,13 @@
 //  QMTasks.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <Bolts/Bolts.h>
+#import <Quickblox/Quickblox.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

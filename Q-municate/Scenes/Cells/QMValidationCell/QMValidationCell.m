@@ -3,7 +3,7 @@
 //  Q-municate
 //
 //
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMValidationCell.h"

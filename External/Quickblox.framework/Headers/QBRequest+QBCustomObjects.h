@@ -5,9 +5,9 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
-#import <Quickblox/QBRequest.h>
-#import <Quickblox/QBCustomObjectsConsts.h>
+#import <Foundation/Foundation.h>
+#import "QBRequest.h"
+#import "QBCustomObjectsConsts.h"
 
 @class QBResponsePage;
 @class QBCOCustomObject;

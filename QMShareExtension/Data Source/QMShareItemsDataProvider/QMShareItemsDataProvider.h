@@ -2,8 +2,8 @@
 //  QMShareItemsDataProvider.h
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/10/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/10/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

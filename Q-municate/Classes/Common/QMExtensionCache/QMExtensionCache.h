@@ -2,13 +2,17 @@
 //  QMExtensionCache.h
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/5/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/5/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 
-#import "QMServices.h"
+//#import "QMServices.h"
 #import <Foundation/Foundation.h>
+#import <Quickblox/Quickblox.h>
+#import "QMContactListCache.h"
+#import "QMChatCache.h"
+#import "QMUsersCache.h"
 
 @interface QMExtensionCache : NSObject
 

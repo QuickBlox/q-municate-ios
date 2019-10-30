@@ -4,9 +4,14 @@
 //  Created by QuickBlox team
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
-@import Foundation;
-#import <Quickblox/QBCEntity.h>
-#import <Quickblox/QBContentEnums.h>
+#import <Foundation/Foundation.h>
+#if __has_include("QBCEntity.h")
+#import "QBCEntity.h"
+#import "QBContentEnums.h"
+#else
+#import <QBCEntity.h>
+#import <QBContentEnums.h>
+#endif
 
 /**
  *  QBCBlobObjectAccess class interface.

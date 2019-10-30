@@ -2,24 +2,14 @@
 //  QMConstants.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/19/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/19/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #ifndef QMConstants_h
 #define QMConstants_h
 
 #import <CoreLocation/CLLocation.h>
-
-#ifdef DEBUG
-
-#define ILog(...) do { NSLog(@"%s %@", __PRETTY_FUNCTION__, [NSString stringWithFormat:__VA_ARGS__]); } while(0)
-
-#else
-
-#define ILog(...) do { } while (0)
-
-#endif
 
 #define qm_keypath(__CLASS__, __KEY__)                      \
 ({                                                          \
@@ -31,7 +21,6 @@
     }                                                       \
     NSStringFromSelector(@selector(__KEY__));               \
 })
-
 
 // storyboards
 static NSString *const kQMMainStoryboard = @"Main";

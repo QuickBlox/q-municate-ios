@@ -2,12 +2,12 @@
 //  QMTableViewCell.m
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 23.03.15.
-//  Copyright (c) 2015 Quickblox. All rights reserved.
+//  Created by Injoit on 23.03.15.
+//  Copyright © 2015 QuickBlox. All rights reserved.
 //
 
 #import "QMTableViewCell.h"
-#import <QMImageView.h>
+#import "QMChatViewController.h"
 
 @interface QMTableViewCell ()
 
@@ -39,7 +39,6 @@
     return NSStringFromClass([self class]);
 }
 
-
 + (CGFloat)height {
     return 0;
 }
@@ -48,6 +47,7 @@
     [super awakeFromNib];
     
     _avatarImage.imageViewType = QMImageViewTypeCircle;
+    _avatarImage.tapGestureRecognizer.cancelsTouchesInView = NO;
     _titleLabel.text = nil;
     _bodyLabel.text = nil;
 }

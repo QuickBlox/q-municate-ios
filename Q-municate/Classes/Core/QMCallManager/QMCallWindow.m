@@ -2,8 +2,8 @@
 //  QMCallWindow.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 2/25/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 2/25/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMCallWindow.h"
@@ -57,7 +57,7 @@
 //            break;
 //    }
 //}
-//- (UIView *) hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
 //    
 //    // See if the hit is anywhere in our view hierarchy
 //    UIView *hitTestResult = [super hitTest:point withEvent:event];

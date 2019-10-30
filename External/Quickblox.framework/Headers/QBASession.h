@@ -5,8 +5,12 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
-#import <Quickblox/QBCEntity.h>
+#import <Foundation/Foundation.h>
+#if __has_include("QBCEntity.h")
+#import "QBCEntity.h"
+#else
+#import <QBCEntity.h>
+#endif
 
 
 NS_ASSUME_NONNULL_BEGIN

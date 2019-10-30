@@ -6,17 +6,11 @@
 
 #ifdef __OBJC__
 
-#import <Quickblox/Quickblox.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <QuickbloxWebRTC/QuickbloxWebRTC.h>
-
-#import "QBUpdateUserParameters+CustomData.h"
-#import "UIViewController+SmartDeselection.h"
-
 #import "SegueIdentifiers.h"
 #import "QMConstants.h"
-#import <QMServicesDevelopment/QMServices.h>
 #import <libextobjc/EXTScope.h>
-#import "QMLog.h"
 #import "QMHelpers.h"
 
 #endif

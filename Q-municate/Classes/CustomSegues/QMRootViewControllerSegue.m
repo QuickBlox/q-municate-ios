@@ -2,8 +2,8 @@
 //  QMRootViewControllerSegue.m
 //  Q-municate
 //
-//  Created by Igor Alefirenko on 13/02/2014.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 13/02/2014.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMRootViewControllerSegue.h"
@@ -13,7 +13,7 @@
 
 - (void)perform {
     
-    QMAppDelegate *delegate = (QMAppDelegate *)[UIApplication sharedApplication].delegate;
+    QMAppDelegate *delegate = (QMAppDelegate *)UIApplication.sharedApplication.delegate;
     delegate.window.rootViewController = self.destinationViewController;
 }
 

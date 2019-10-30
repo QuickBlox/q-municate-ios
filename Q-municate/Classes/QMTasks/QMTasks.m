@@ -2,8 +2,8 @@
 //  QMTasks.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMTasks.h"
@@ -11,7 +11,7 @@
 #import "QMErrorsFactory.h"
 #import "QMFacebook.h"
 #import "QMContent.h"
-
+#import "QBUpdateUserParameters+CustomData.h"
 #import <FirebaseCore/FirebaseCore.h>
 #import <FirebaseAuth/FirebaseAuth.h>
 #import <Bolts/Bolts.h>
@@ -27,7 +27,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
-    [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull __unused response, QBUUser * _Nullable user) {
+    [QBRequest updateCurrentUser:updateParameters successBlock:^(QBResponse * _Nonnull  response, QBUUser * _Nullable user) {
         
         user.password = updateParameters.password ?: QMCore.instance.currentProfile.userData.password;
         [QMCore.instance.currentProfile synchronizeWithUserData:user];
@@ -59,7 +59,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
     
     BFTaskCompletionSource* source = [BFTaskCompletionSource taskCompletionSource];
     
-    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull __unused response) {
+    [QBRequest resetUserPasswordWithEmail:email successBlock:^(QBResponse * _Nonnull  response) {
         
         [source setResult:nil];
         
@@ -161,13 +161,13 @@ static const NSUInteger kQMUsersPageLimit = 100;
     QMCore *core = QMCore.instance;
     
     void (^iterationBlock)(QBResponse *, NSArray *, NSSet *, BOOL *) =
-    ^(QBResponse *__unused response, NSArray *__unused dialogObjects, NSSet *dialogsUsersIDs, BOOL *__unused stop) {
+    ^(QBResponse * response, NSArray * dialogObjects, NSSet *dialogsUsersIDs, BOOL * stop) {
         
         if (dialogsUsersIDs.count > 0) {
             
             [self sliceArray:dialogsUsersIDs.allObjects
                        limit:kQMUsersPageLimit
-                   enumerate:^(NSArray *slice, NSRange __unused range)
+                   enumerate:^(NSArray *slice, NSRange  range)
             {
                 BFTask<NSArray<QBUUser *> *> *task = [core.usersService getUsersWithIDs:slice];
                 [usersLoadingTasks addObject:task];
@@ -244,7 +244,7 @@ static const NSUInteger kQMUsersPageLimit = 100;
         [tasks addObject:task];
     }];
     
-    BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask * __unused t) {
+    BFTask *task = [[BFTask taskForCompletionOfAllTasks:[tasks copy]] continueWithSuccessBlock:^id(BFTask *  t) {
         core.currentProfile.lastUserFetchDate = [NSDate date];
         [core.currentProfile synchronize];
         return nil;

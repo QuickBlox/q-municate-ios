@@ -2,8 +2,8 @@
 //  QMPushNotificationManager.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/10/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/10/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMBaseService.h"
@@ -91,11 +91,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable BFTask *)subscribeForPushNotifications;
 
 /**
- *  Unsubscribe from push notifications.
+ *  Unregister from push notifications.
  *
  *  @return BFTask with result
  */
-- (BFTask *)unSubscribeFromPushNotifications;
+- (BFTask *)unregisterFromPushNotificationsAndUnsubscribe;
+
+/**
+ *  Unregister and unsubscribe from push and voip notifications.
+ *
+ *  @return BFTask with result
+ */
+- (BFTask *)unregisterFromAllNotificationsAndUnsubscribe;
 
 /**
  *  Handle push notification with delegate.
@@ -107,7 +114,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (BFTask *)registerAndSubscribeForPushNotifications;
-- (BFTask *)unregisterFromPushNotificationsAndUnsubscribe:(BOOL)shouldUnsubscribe;
 
 - (void)handleActionWithIdentifier:(NSString *)identifier
                 remoteNotification:(NSDictionary *)userInfo

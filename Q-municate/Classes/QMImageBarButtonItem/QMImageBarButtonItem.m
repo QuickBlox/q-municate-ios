@@ -3,7 +3,7 @@
 //  QMImageBarButtonItem.m
 //  Q-municate
 //
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMImageBarButtonItem.h"

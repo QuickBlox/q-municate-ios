@@ -2,8 +2,8 @@
 //  QMTabBarVC.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/17/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/17/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMTabBarVC.h"
@@ -13,7 +13,7 @@
 #import "QMSoundManager.h"
 #import "QBChatDialog+OpponentID.h"
 #import "QMHelpers.h"
-#import <UIDevice-Hardware.h>
+#import <UIDevice_Hardware/UIDevice-Hardware.h>
 
 @interface QMTabBarVC ()
 
@@ -95,7 +95,8 @@ QMChatConnectionDelegate
 
 - (void)showNotificationForMessage:(QBChatMessage *)chatMessage {
     
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+    if (UIApplication.sharedApplication.applicationState == UIApplicationStateBackground ||
+        UIApplication.sharedApplication.applicationState == UIApplicationStateInactive) {
         // no need to show notification s if app is active in background
         // e.g. call kit
         return;
@@ -141,16 +142,16 @@ QMChatConnectionDelegate
     if (hasActiveCall || isiOS8) {
         // using hvc if active call or visible keyboard on ios8 devices
         // due to notification triggering window to be hidden
-        hvc = [UIApplication sharedApplication].keyWindow.rootViewController;
+        hvc = UIApplication.sharedApplication.keyWindow.rootViewController;
     }
     
     if (!hasActiveCall) {
         // not showing reply button in active call
-        buttonHandler = ^(MPGNotification * __unused notification, NSInteger buttonIndex) {
+        buttonHandler = ^(MPGNotification *  notification, NSInteger buttonIndex) {
             
             if (buttonIndex == 1) {
                 
-                [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
+                [UIApplication.sharedApplication sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
                 UINavigationController *navigationController = self.viewControllers.firstObject;
                 UIViewController *dialogsVC = navigationController.viewControllers.firstObject;
                 [dialogsVC performSegueWithIdentifier:kQMSceneSegueChat sender:chatDialog];
@@ -173,7 +174,7 @@ didAddMessageToMemoryStorage:(QBChatMessage *)message
         
         QBChatDialog *chatDialog = [chatService.dialogsMemoryStorage chatDialogWithID:dialogID];
         [[[QMCore instance].usersService getUserWithID:[chatDialog opponentID] forceLoad:YES]
-         continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull __unused task) {
+         continueWithSuccessBlock:^id _Nullable(BFTask<QBUUser *> * _Nonnull  task) {
              
              [self showNotificationForMessage:message];
              

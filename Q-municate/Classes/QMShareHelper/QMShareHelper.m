@@ -2,14 +2,14 @@
 //  QMShareHelper.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/10/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/10/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareHelper.h"
 #import "QMMessagesHelper.h"
 #import "QMCore.h"
-#import <QMCVDevelopment/QMImageLoader.h>
+#import "QMImageLoader.h"
 
 
 @interface QMShareHelper() <QMShareEtxentionOperationDelegate>
@@ -71,7 +71,7 @@
 
 //MARK: - QMShareEtxentionOperationDelegate
 
-- (BFTask <QBChatDialog *> *)taskForOperation:(QMShareEtxentionOperation *)__unused operation
+- (BFTask <QBChatDialog *> *)taskForOperation:(QMShareEtxentionOperation *)operation
                                 dialogForUser:(QBUUser *)user {
     QBChatDialog *privateDialog = [QMCore.instance.chatService.dialogsMemoryStorage privateChatDialogWithOpponentID:user.ID];
     if (privateDialog) {
@@ -83,7 +83,7 @@
 }
 
 
-- (BFTask *)taskForOperation:(QMShareEtxentionOperation *)__unused operation
+- (BFTask *)taskForOperation:(QMShareEtxentionOperation *)operation
                  sendMessage:(QBChatMessage *)message {
     
     [self.sendingMessages addObject:message];

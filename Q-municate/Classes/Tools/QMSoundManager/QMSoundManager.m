@@ -2,8 +2,8 @@
 //  QMSoundManager.m
 //  Qmunicate
 //
-//  Created by Andrey Ivanov on 01.07.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 01.07.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import "QMSoundManager.h"
@@ -33,7 +33,7 @@ static NSString * const kQMSoundManagerSettingKey = @"kQMSoundManagerSettingKey"
     [notifcationCenter removeObserver:self];
 }
 
-void systemServicesSoundCompletion(SystemSoundID  soundID, void *__unused data) {
+void systemServicesSoundCompletion(SystemSoundID  soundID, void * data) {
     
     void(^completion)(void) = [QMSoundManager.instance completionBlockForSoundID:soundID];
     
@@ -347,7 +347,7 @@ void systemServicesSoundCompletion(SystemSoundID  soundID, void *__unused data) 
 
 //MARK: - Did Receive Memory Warning Notification
 
-- (void)didReceiveMemoryWarningNotification:(NSNotification *)__unused notification {
+- (void)didReceiveMemoryWarningNotification:(NSNotification *)notification {
     
     [self unloadSoundIDs];
 }

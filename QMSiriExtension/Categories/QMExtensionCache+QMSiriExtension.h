@@ -2,8 +2,8 @@
 //  QMExtensionCache+QMSiriExtension.h
 //  QMSiriExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/12/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/12/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMExtensionCache.h"

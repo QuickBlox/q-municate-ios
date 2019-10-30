@@ -2,28 +2,27 @@
 //  QMUserInfoViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/23/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/23/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMUserInfoViewController.h"
-#import "QMCore.h"
+#import "UIViewController+SmartDeselection.h"
 #import "QMNavigationController.h"
-#import "QMChatVC.h"
-#import <QMDateUtils.h>
-#import <QMImageView.h>
 #import "QBChatDialog+OpponentID.h"
-#import <SVProgressHUD.h>
 #import "QMSplitViewController.h"
-
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
-#import <CoreTelephony/CTCarrier.h>
-
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
-
 #import "QMImagePreview.h"
+#import "SVProgressHUD.h"
 #import "QMCallManager.h"
 #import "REMessageUI.h"
+#import "QMChatVC.h"
+#import "QMCore.h"
+
+#import "QMDateUtils.h"
+#import "QMImageView.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <NYTPhotoViewer/NYTPhotosViewController.h>
 
 static const CGFloat kQMStatusCellMinHeight = 65.0f;
 
@@ -74,7 +73,7 @@ NYTPhotosViewControllerDelegate
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -269,7 +268,7 @@ NYTPhotosViewControllerDelegate
     __block BOOL chatDialogFound = NO;
     
     @weakify(self);
-    [self.navigationController.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger __unused idx, BOOL * _Nonnull stop) {
+    [self.navigationController.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger  idx, BOOL * _Nonnull stop) {
         // enumerating through all view controllers due to
         // navigation stack could have more than one chat view controller
         @strongify(self);
@@ -371,7 +370,7 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleCancel
                                                       handler:nil]];
     
-    void (^makeCallAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
+    void (^makeCallAction)(UIAlertAction *action) = ^void(UIAlertAction *  action) {
         
         NSError *error = nil;
         
@@ -415,12 +414,12 @@ NYTPhotosViewControllerDelegate
                                                         style:UIAlertActionStyleCancel
                                                       handler:nil]];
     
-    void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction * __unused action) {
+    void (^removeAction)(UIAlertAction *action) = ^void(UIAlertAction *  action) {
         
         [SVProgressHUD show];
         
         self.task = [[QMCore.instance.contactManager removeUserFromContactList:self.user]
-                     continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task)
+                     continueWithBlock:^id _Nullable(BFTask * _Nonnull  task)
                      {
                          if (self.splitViewController.isCollapsed) {
                              [self.navigationController popViewControllerAnimated:YES];
@@ -458,7 +457,7 @@ NYTPhotosViewControllerDelegate
     
     __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
-    self.task = [[QMCore.instance.contactManager addUserToContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
+    self.task = [[QMCore.instance.contactManager addUserToContactList:self.user] continueWithBlock:^id _Nullable(BFTask * _Nonnull  task) {
         
         [navigationController dismissNotificationPanel];
         return nil;
@@ -529,7 +528,7 @@ NYTPhotosViewControllerDelegate
     }
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForHeaderInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
     if (![self shouldHaveHeaderForSection:section]) {
         
@@ -564,10 +563,10 @@ NYTPhotosViewControllerDelegate
 }
 
 
-- (void)tableView:(UITableView *)__unused tableView
+- (void)tableView:(UITableView *)tableView
     performAction:(SEL)action
 forRowAtIndexPath:(NSIndexPath *)indexPath
-       withSender:(id)__unused sender{
+       withSender:(id) sender{
     
     if (action == @selector(copy:)) {
         
@@ -588,7 +587,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (BOOL)tableView:(UITableView *)__unused tableView
+- (BOOL)tableView:(UITableView *)tableView
 shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     self.selectedIndexPathForMenu = indexPath;
@@ -599,10 +598,10 @@ shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (BOOL)tableView:(UITableView *)__unused tableView
+- (BOOL)tableView:(UITableView *)tableView
  canPerformAction:(SEL)action
-forRowAtIndexPath:(NSIndexPath *)__unused indexPath
-       withSender:(id)__unused sender{
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id) sender{
     
     return action == @selector(copy:);
 }
@@ -618,7 +617,7 @@ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
     [self.tableView reloadData];
 }
 
-- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     [self performDataUpdate];
     [self performLastSeenUpdate];
@@ -627,7 +626,7 @@ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
 
 //MARK: - QMImageViewDelegate
 
-- (void)imageViewDidTap:(QMImageView *)__unused imageView {
+- (void)imageViewDidTap:(QMImageView *)imageView {
     
     NSString *avatarURL = self.user.avatarUrl;
     if (avatarURL.length > 0) {
@@ -638,14 +637,14 @@ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
 
 //MARK: - NYTPhotosViewControllerDelegate
 
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+- (UIView *)photosViewController:(NYTPhotosViewController *)photosViewController referenceViewForPhoto:(id<NYTPhoto>) photo {
     
     return self.avatarImageView;
 }
 
 // MARK: - QMUsersServiceListenerProtocol
 
-- (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
+- (void)usersService:(QMUsersService *)usersService didUpdateUser:(QBUUser *)user {
     self.user = user;
     [self performDataUpdate];
     [self.tableView reloadData];
@@ -678,7 +677,7 @@ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
 - (BOOL)canMakeAPhoneCall:(NSError **)error {
     
     // Check if the device can place a phone call
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
+    if ([UIApplication.sharedApplication canOpenURL:[NSURL URLWithString:@"tel://"]]) {
         // Device supports phone calls
         CTTelephonyNetworkInfo *netInfo = [[CTTelephonyNetworkInfo alloc] init];
         CTCarrier *carrier = [netInfo subscriberCellularProvider];
@@ -769,7 +768,7 @@ forRowAtIndexPath:(NSIndexPath *)__unused indexPath
                                                object:nil];
 }
 
-- (void)didReceiveMenuWillHideNotification:(NSNotification *)__unused notification {
+- (void)didReceiveMenuWillHideNotification:(NSNotification *)notification {
     self.selectedIndexPathForMenu = nil;
 }
 

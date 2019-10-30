@@ -2,8 +2,8 @@
 //  QMGroupOccupantsDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 4/5/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 4/5/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMGroupOccupantsDataSource.h"
@@ -101,12 +101,12 @@ static const NSUInteger kQMNumberOfSections = 1;
     }
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)__unused tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
     return kQMNumberOfSections;
 }
 
-- (NSInteger)tableView:(UITableView *)__unused tableView numberOfRowsInSection:(NSInteger)__unused section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger) section {
     
     return self.items.count + kQMStaticCellsCount;
 }

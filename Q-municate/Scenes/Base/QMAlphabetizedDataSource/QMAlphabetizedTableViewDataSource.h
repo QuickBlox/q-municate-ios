@@ -2,8 +2,8 @@
 //  QMAlphabetizedDataSource.h
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/19/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/19/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 
@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return QMAlphabetizedDataSource instance
  */
-- (nullable instancetype)initWithKeyPath:(NSString *) keyPath;
+- (nullable instancetype)initWithKeyPath:(NSString *)keyPath;
 
 /**
  *  Init QMAlphabetizedDataSource using a search data provider and a specific key path.

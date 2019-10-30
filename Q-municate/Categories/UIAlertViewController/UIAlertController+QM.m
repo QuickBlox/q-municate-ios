@@ -2,8 +2,8 @@
 //  UIAlertController+QM.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/20/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/20/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "UIAlertController+QM.h"
@@ -78,7 +78,7 @@
     
     [alertController addAction:[UIAlertAction actionWithTitle:buttonTitle
                                                         style:style
-                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                                      handler:^(UIAlertAction * _Nonnull  action)
                                 {
                                     buttonTapBlock ? buttonTapBlock() : nil;
                                 }]];

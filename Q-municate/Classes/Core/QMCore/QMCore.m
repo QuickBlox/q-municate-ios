@@ -2,23 +2,25 @@
 //  QMCore.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/8/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/8/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMCore.h"
-#import <Reachability.h>
 #import "QMFacebook.h"
 #import "QMNotification.h"
 #import "QMTasks.h"
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 #import "QMImageLoader.h"
 #import "QMCallManager.h"
-#import <Intents/Intents.h>
 #import "NSString+QMTransliterating.h"
 
-#import <FirebaseCore/FirebaseCore.h>
+#import <Firebase/Firebase.h>
 #import <FirebaseAuth/FirebaseAuth.h>
+#import <Reachability/Reachability.h>
+#import <Intents/Intents.h>
+
+
 
 static NSString *const kQMLastActivityDateKey = @"last_activity_date";
 static NSString *const kQMErrorKey = @"errors";
@@ -96,7 +98,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     // setting reachable block
     @weakify(self);
-    [_internetConnection setReachableBlock:^(Reachability __unused *reachability) {
+    [_internetConnection setReachableBlock:^(Reachability  *reachability) {
         
         @strongify(self);
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -106,7 +108,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     }];
     
     // setting unreachable block
-    [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
+    [_internetConnection setUnreachableBlock:^(Reachability  *reachability) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             // reachability block could possibly be called in background thread
@@ -159,7 +161,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
     
     NSString *errorMessage = nil;
     
-    if (![self isInternetConnected]) {
+    if (![self isInternetConnected] || response.status == NSURLErrorTimedOut) {
         
         errorMessage = NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil);
     }
@@ -233,13 +235,13 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         [[FIRAuth auth] signOut:nil];
     }
     [self.currentProfile clearProfile];
-    
-    [[QMImageLoader instance].imageCache clearDiskOnCompletion:^{
-        [[QMImageLoader instance].imageCache clearMemory];
+    SDImageCache *qmCache = (SDImageCache *)[QMImageLoader instance].imageCache;
+    [qmCache clearDiskOnCompletion:^{
+        [qmCache clearMemory];
     }];
     
-    [[self.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:YES]
-     continueWithBlock:^id(BFTask * __unused t)
+    [[self.pushNotificationManager unregisterFromAllNotificationsAndUnsubscribe]
+     continueWithBlock:^id(BFTask *  t)
      {
          [super logoutWithCompletion:^{
              [source setResult:nil];
@@ -260,11 +262,11 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 //MARK: - QMChatServiceDelegate
 
-- (void)chatService:(QMChatService *)__unused chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
+- (void)chatService:(QMChatService *)chatService didAddChatDialogsToMemoryStorage:(NSArray *)chatDialogs {
     
     [super chatService:chatService didAddChatDialogsToMemoryStorage:chatDialogs];
     
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog *_Nullable dialog, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(QBChatDialog *_Nullable dialog, NSDictionary<NSString *,id> * _Nullable bindings) {
         return dialog.type == QBChatDialogTypeGroup && dialog.name.length;
     }];
     
@@ -299,7 +301,7 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 //MARK: - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService
+- (void)contactListService:(QMContactListService *)contactListService
       contactListDidChange:(QBContactList *)contactList {
     
     [[QMContactListCache instance] insertOrUpdateContactListItemsWithContactList:contactList completion:nil];
@@ -309,12 +311,12 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
         return;
     }
     
-    [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> * _Nonnull t) {
+    [[self.usersService getUsersWithIDs:IDs] continueWithSuccessBlock:^id(BFTask<NSArray<QBUUser *> *> *t) {
         
         NSParameterAssert(IDs.count == t.result.count);
         
         NSPredicate *predicate =
-        [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> *__unused bindings) {
+        [NSPredicate predicateWithBlock:^BOOL(QBUUser *user, NSDictionary<NSString *,id> * bindings) {
             return user.fullName.length > 0;
         }];
         
@@ -338,14 +340,14 @@ static NSString *const kQMOpenGraphCacheNameKey = @"q-municate-open-graph";
 
 //MARK:QMOpenGraphServiceDelegate
 
-- (void)openGraphSerivce:(QMOpenGraphService *) __unused openGraphSerivce
+- (void)openGraphSerivce:(QMOpenGraphService *)openGraphSerivce
 didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     
     [QMOpenGraphCache.instance insertOrUpdateOpenGraphItem:openGraphItem
                                                 completion:nil];
 }
 
-- (void)openGraphSerivce:(QMOpenGraphService *) __unused openGraphSerivce
+- (void)openGraphSerivce:(QMOpenGraphService *)openGraphSerivce
            hasFaviconURL:(NSURL *)url
               completion:(dispatch_block_t)completion {
     
@@ -353,17 +355,17 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
                                        transform:nil
                                          options:SDWebImageHighPriority
                                         progress:nil
-                                       completed:^(UIImage * __unused image,
-                                                   UIImage * __unused transfomedImage,
-                                                   NSError * __unused error,
-                                                   SDImageCacheType __unused cacheType,
-                                                   BOOL __unused finished,
-                                                   NSURL * __unused imageURL) {
+                                       completed:^(UIImage *  image,
+                                                   UIImage *  transfomedImage,
+                                                   NSError *  error,
+                                                   SDImageCacheType  cacheType,
+                                                   BOOL  finished,
+                                                   NSURL *  imageURL) {
                                            completion();
                                        }];
 }
 
-- (void)openGraphSerivce:(QMOpenGraphService *)__unused openGraphSerivce
+- (void)openGraphSerivce:(QMOpenGraphService *)openGraphSerivce
              hasImageURL:(NSURL *)url
               completion:(dispatch_block_t)completion {
     
@@ -371,12 +373,12 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
                                        transform:nil
                                          options:SDWebImageHighPriority
                                         progress:nil
-                                       completed:^(UIImage * __unused image,
-                                                   UIImage * __unused transfomedImage,
-                                                   NSError * __unused error,
-                                                   SDImageCacheType __unused cacheType,
-                                                   BOOL __unused finished,
-                                                   NSURL * __unused imageURL) {
+                                       completed:^(UIImage *  image,
+                                                   UIImage *  transfomedImage,
+                                                   NSError *  error,
+                                                   SDImageCacheType  cacheType,
+                                                   BOOL  finished,
+                                                   NSURL *  imageURL) {
                                            completion();
                                        }];
 }
@@ -397,7 +399,7 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     
     if (self.cachedVocabularyStrings.count > 0) {
         
-        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *  _Nullable string, NSDictionary<NSString *,id> *__unused _Nullable bindings) {
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(NSString *  _Nullable string, NSDictionary<NSString *,id> * _Nullable bindings) {
             return ![string canBeConvertedToEncoding:NSISOLatin1StringEncoding];
         }];
         
@@ -416,17 +418,17 @@ didAddOpenGraphItemToMemoryStorage:(QMOpenGraphItem *)openGraphItem {
     }
 }
 
-- (void)authServiceDidLogOut:(QMAuthService *)__unused authService {
+- (void)authServiceDidLogOut:(QMAuthService *)authService {
     
     NSParameterAssert(QBSession.currentSession.tokenHasExpired == YES);
     NSParameterAssert(QBSession.currentSession.sessionDetails.token == nil);
 }
 
-- (void)authService:(QMAuthService *)__unused authService
-   didLoginWithUser:(QBUUser *)__unused user {
+- (void)authService:(QMAuthService *)authService
+   didLoginWithUser:(QBUUser *)user {
     
     if (iosMajorVersion() > 9) {
-        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus __unused status) {
+        [INPreferences requestSiriAuthorization:^(INSiriAuthorizationStatus  status) {
             
         }];
     }

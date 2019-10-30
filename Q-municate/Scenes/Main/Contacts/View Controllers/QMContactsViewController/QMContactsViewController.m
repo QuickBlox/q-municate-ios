@@ -2,8 +2,8 @@
 //  QMContactsViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/16/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/16/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMContactsViewController.h"
@@ -11,7 +11,7 @@
 #import "QMContactsSearchDataSource.h"
 #import "QMGlobalSearchDataSource.h"
 #import "QMContactsSearchDataProvider.h"
-
+#import "UIViewController+SmartDeselection.h"
 #import "QMUserInfoViewController.h"
 #import "QMSearchResultsController.h"
 
@@ -25,7 +25,7 @@
 #import "QMNoResultsCell.h"
 #import "QMSearchCell.h"
 
-#import <SVProgressHUD.h>
+#import "SVProgressHUD.h"
 
 typedef NS_ENUM(NSUInteger, QMSearchScopeButtonIndex) {
     
@@ -83,15 +83,6 @@ QMUsersServiceDelegate
     // subscribing for delegates
     [QMCore.instance.contactListService addDelegate:self];
     [QMCore.instance.usersService addDelegate:self];
-    
-    // adding refresh control task
-    if (self.refreshControl) {
-        
-        self.refreshControl.backgroundColor = [UIColor clearColor];
-        [self.refreshControl addTarget:self
-                                action:@selector(updateContactsAndEndRefreshing)
-                      forControlEvents:UIControlEventValueChanged];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -100,23 +91,12 @@ QMUsersServiceDelegate
     if (self.searchController.isActive) {
         
         self.tabBarController.tabBar.hidden = YES;
-        
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.searchResultsController.tableView];
     }
     else {
-        
         // smooth rows deselection
         [self qm_smoothlyDeselectRowsForTableView:self.tableView];
-    }
-    
-    if (self.refreshControl.isRefreshing) {
-        // fix for freezing refresh control after tab bar switch
-        // if it is still active
-        CGPoint offset = self.tableView.contentOffset;
-        [self.refreshControl endRefreshing];
-        [self.refreshControl beginRefreshing];
-        self.tableView.contentOffset = offset;
     }
 }
 
@@ -195,16 +175,22 @@ QMUsersServiceDelegate
                     
                     if ([QMCore.instance isInternetConnected]) {
                         
-                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil) actionSuccess:NO inViewController:self];
+                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHAT_SERVER_UNAVAILABLE", nil)
+                                        actionSuccess:NO
+                                     inViewController:self];
                     }
                     else {
                         
-                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil) actionSuccess:NO inViewController:self];
+                        [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)
+                                        actionSuccess:NO
+                                     inViewController:self];
                     }
                 }
                 else if (QBChat.instance.isConnecting) {
                     
-                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CONNECTION_IN_PROGRESS", nil) actionSuccess:NO inViewController:self];
+                    [QMAlert showAlertWithMessage:NSLocalizedString(@"QM_STR_CONNECTION_IN_PROGRESS", nil)
+                                    actionSuccess:NO
+                                 inViewController:self];
                 }
             }
             
@@ -223,12 +209,12 @@ QMUsersServiceDelegate
 
 //MARK: - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [self.searchDataSource heightForRowAtIndexPath:indexPath];
 }
 
-- (void)tableView:(UITableView *)__unused tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     QBUUser *user = [(id <QMContactsSearchDataSourceProtocol>)self.searchDataSource userAtIndexPath:indexPath];
     
@@ -237,7 +223,7 @@ QMUsersServiceDelegate
 
 //MARK: - UIScrollViewDelegate
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)__unused scrollView {
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     
     [self.searchController.searchBar endEditing:YES];
 }
@@ -259,7 +245,7 @@ QMUsersServiceDelegate
     self.tabBarController.tabBar.hidden = YES;
 }
 
-- (void)willDismissSearchController:(UISearchController *)__unused searchController {
+- (void)willDismissSearchController:(UISearchController *)searchController {
     
     self.tableView.dataSource = self.dataSource;
     [self updateItemsFromContactList];
@@ -269,25 +255,25 @@ QMUsersServiceDelegate
 
 //MARK: - UISearchBarDelegate
 
-- (void)searchBar:(UISearchBar *)__unused searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
     
     [self updateDataSourceByScope:selectedScope];
     [self.searchResultsController performSearch:self.searchController.searchBar.text];
 }
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)__unused searchBar {
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     
     [self.globalSearchDataSource.globalSearchDataProvider cancel];
 }
 
 //MARK: - QMSearchResultsControllerDelegate
 
-- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController willBeginScrollResults:(UIScrollView *)__unused scrollView {
+- (void)searchResultsController:(QMSearchResultsController *)searchResultsController willBeginScrollResults:(UIScrollView *)scrollView {
     
     [self.searchController.searchBar endEditing:YES];
 }
 
-- (void)searchResultsController:(QMSearchResultsController *)__unused searchResultsController didSelectObject:(id)object {
+- (void)searchResultsController:(QMSearchResultsController *)searchResultsController didSelectObject:(id)object {
     
     [self performSegueWithIdentifier:kQMSceneSegueUserInfo sender:object];
 }
@@ -311,16 +297,6 @@ QMUsersServiceDelegate
     }
     
     [self.searchResultsController.tableView reloadData];
-}
-
-- (void)updateContactsAndEndRefreshing {
-    
-    [[QMTasks taskUpdateContacts] continueWithBlock:^id(BFTask *__unused task) {
-        
-        [self.refreshControl endRefreshing];
-        
-        return nil;
-    }];
 }
 
 //MARK: - Actions
@@ -351,8 +327,8 @@ QMUsersServiceDelegate
 
 //MARK: - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService
-      contactListDidChange:(QBContactList *)__unused contactList {
+- (void)contactListService:(QMContactListService *)contactListService
+      contactListDidChange:(QBContactList *)contactList {
     
     [self updateItemsFromContactList];
     [self.tableView reloadData];
@@ -361,19 +337,19 @@ QMUsersServiceDelegate
 
 //MARK: - QMUsersServiceDelegate
 
-- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
     [self.tableView reloadData];
 }
 
-- (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused users {
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
     [self.tableView reloadData];
 }
 
-- (void)usersService:(QMUsersService *)__unused usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
+- (void)usersService:(QMUsersService *)usersService didUpdateUsers:(NSArray<QBUUser *> *)users {
     
     [self updateItemsFromContactList];
     
@@ -420,7 +396,7 @@ QMUsersServiceDelegate
 - (void)viewWillTransitionToSize:(CGSize)size
        withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull __unused context) {
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull  context) {
         self.searchController.active = NO;
     } completion:nil];
     

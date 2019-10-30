@@ -2,8 +2,8 @@
 //  QMPushNotificationManager.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/10/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/10/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMPushNotificationManager.h"
@@ -22,32 +22,110 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 @property (weak, nonatomic) QMCore <QMServiceManagerProtocol>*serviceManager;
 @property (copy, nonatomic) QBTokenCompletionBlock tokenCompletionBlock;
 @property (copy, nonatomic, nullable, readwrite) NSData *deviceToken;
+@property (nonatomic, strong) NSMutableSet<QBMSubscription *>*subscriptions;
 
 @property (strong, nonatomic) PKPushRegistry *voipRegistry;
-@property (assign, nonatomic) NSUInteger voipSubscriptionID;
 
 @end
 
 @implementation QMPushNotificationManager
-
 @dynamic serviceManager;
 
-- (BFTask *)unregisterFromPushNotificationsAndUnsubscribe:(BOOL)shouldUnsubscribe {
+- (NSMutableSet<QBMSubscription *> *)subscriptions {
+    if (!_subscriptions) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSData *data = [defaults objectForKey:@"_subscriptions"];
+        NSMutableSet *subscriptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        _subscriptions = subscriptions ?: [NSMutableSet set];
+    }
+    return _subscriptions;
+}
+
+- (void)synchronizeSubscriptions {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.subscriptions];
+    [defaults setObject:data forKey:@"_subscriptions"];
+    [defaults synchronize];
+}
+
+- (BFTask *)unregisterFromAllNotificationsAndUnsubscribe {
+    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
+    
+    [UIApplication.sharedApplication unregisterForRemoteNotifications];
+    
+    self.voipRegistry = nil;
+    
+    dispatch_group_t serviceGroup = dispatch_group_create();
+    NSSet<QBMSubscription *>*subscriptions = self.subscriptions.copy;
+    for (QBMSubscription *subscription in subscriptions) {
+        dispatch_group_enter(serviceGroup);
+        NSString *chanel = subscription.notificationChannel ==
+        QBMNotificationChannelAPNSVOIP ? @"VOIP" : @"PUSH";
+        [NSString stringWithFormat:@"Unregister %@ Subscription request", chanel];
+        [QBRequest deleteSubscriptionWithID:subscription.ID
+                               successBlock:^(QBResponse *  response) {
+                                   QMSLog([chanel stringByAppendingString:@" - Success"]);
+                                   dispatch_group_leave(serviceGroup);
+                               } errorBlock:^(QBResponse *response) {
+                                   NSString *errorMessage = [NSString stringWithFormat:@" - Error: %@",
+                                                             [response.error reasons]];
+                                   QMSLog([chanel stringByAppendingString:errorMessage]);
+                                   dispatch_group_leave(serviceGroup);
+                               }];
+        
+    }
+    @weakify(self);
+    dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^{
+        @strongify(self);
+        [self.subscriptions removeAllObjects];
+        [self synchronizeSubscriptions];
+       [source setResult:nil];
+    });
+    
+    return source.task;
+}
+
+- (BFTask *)unregisterFromPushNotificationsAndUnsubscribe {
     
     BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
     
-    [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-    
-    if (shouldUnsubscribe) {
-        self.voipRegistry = nil;
-        [[self unSubscribeFromPushNotifications] continueWithBlock:^id _Nullable(BFTask * __unused _Nonnull t) {
-            [source setResult:nil];
-            return nil;
-        }];
+    dispatch_group_t serviceGroup = dispatch_group_create();
+    NSSet<QBMSubscription *>*subscriptions = self.subscriptions.copy;
+    NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSMutableArray *toDelete = @[].mutableCopy;
+    for (QBMSubscription *subscription in subscriptions) {
+        if (subscription.notificationChannel != QBMNotificationChannelAPNS ||
+            ![subscription.deviceUDID isEqualToString:deviceIdentifier]) {
+            continue;
+        }
+        dispatch_group_enter(serviceGroup);
+        NSString *chanel =  @"PUSH";
+        [NSString stringWithFormat:@"Unregister %@ Subscription request", chanel];
+        [QBRequest deleteSubscriptionWithID:subscription.ID
+                               successBlock:^(QBResponse *  response) {
+                                   [UIApplication.sharedApplication unregisterForRemoteNotifications];
+                                   QMSLog([chanel stringByAppendingString:@" - Success"]);
+                                   [toDelete addObject:subscription];
+                                   dispatch_group_leave(serviceGroup);
+                               } errorBlock:^(QBResponse *response) {
+                                   [UIApplication.sharedApplication unregisterForRemoteNotifications];
+                                   NSString *errorMessage = [NSString stringWithFormat:@" - Error: %@",
+                                                             [response.error reasons]];
+                                   QMSLog([chanel stringByAppendingString:errorMessage]);
+                                   [toDelete addObject:subscription];
+                                   dispatch_group_leave(serviceGroup);
+                               }];
+        
     }
-    else {
+    @weakify(self);
+    dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^{
+        @strongify(self);
+        for (QBMSubscription *subscription in toDelete) {
+            [self.subscriptions removeObject:subscription];
+        }
+        [self synchronizeSubscriptions];
         [source setResult:nil];
-    }
+    });
     
     return source.task;
 }
@@ -97,30 +175,21 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     subscription.deviceUDID = deviceIdentifier;
     subscription.deviceToken = self.deviceToken;
     
-    [QBRequest createSubscription:subscription successBlock:^(QBResponse * _Nonnull __unused response, NSArray<QBMSubscription *> * _Nullable __unused objects) {
-     
-        subscription.deviceToken = self.deviceToken;
-        [source setResult:subscription];
-        
-    } errorBlock:^(QBResponse * _Nonnull response) {
-        [source setError:response.error.error];
-    }];
-    
-    return source.task;
-}
-
-- (BFTask *)unSubscribeFromPushNotifications {
-    
-    BFTaskCompletionSource *source = [BFTaskCompletionSource taskCompletionSource];
-    
-    NSString *deviceIdentifier = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    [QBRequest unregisterSubscriptionForUniqueDeviceIdentifier:deviceIdentifier
-                                                  successBlock:^(QBResponse * _Nonnull __unused response)
-     {
-         [source setResult:nil];
-     } errorBlock:^(QBError * _Nullable error) {
-         [source setError:error.error];
-     }];
+    @weakify(self);
+    [QBRequest createSubscription:subscription
+                     successBlock:^(QBResponse * _Nonnull  response,
+                                    NSArray<QBMSubscription *> * _Nullable  objects) {
+                         @strongify(self);
+                         for (QBMSubscription *subscription in objects) {
+                             if ([subscription.deviceUDID isEqualToString:deviceIdentifier]) {
+                                 [self.subscriptions addObject:subscription];
+                             }
+                         }
+                         [self synchronizeSubscriptions];
+                         [source setResult:subscription];
+                     } errorBlock:^(QBResponse * _Nonnull response) {
+                         [source setError:response.error.error];
+                     }];
     
     return source.task;
 }
@@ -149,52 +218,50 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     
     [[[[self.serviceManager.chatService fetchDialogWithID:dialogID]
        continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
-        
-        if (task.result != nil) {
-            
-            chatDialog = task.result;
-            
-            return [self.serviceManager.usersService getUsersWithIDs:task.result.occupantIDs];
-        }
-        
-        if ([delegate respondsToSelector:@selector(pushNotificationManagerDidStartLoadingDialogFromServer:)]) {
-            [delegate pushNotificationManagerDidStartLoadingDialogFromServer:self];
-        }
-        
-        return [self.serviceManager.chatService loadDialogWithID:dialogID];
-        
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
-        
-        if (task.isFaulted) {
-            
-            if ([delegate respondsToSelector:@selector(pushNotificationManager:didFailFetchingDialogWithError:)]) {
-                [delegate pushNotificationManager:self didFailFetchingDialogWithError:task.error];
-            }
-        }
-        else {
-            
-            if ([task.result isKindOfClass:[QBChatDialog class]]) {
-                
-                if ([delegate respondsToSelector:@selector(pushNotificationManagerDidFinishLoadingDialogFromServer:)]) {
-                    [delegate pushNotificationManagerDidFinishLoadingDialogFromServer:self];
-                }
-                
-                chatDialog = (QBChatDialog *)task.result;
-                
-                return [self.serviceManager.usersService getUsersWithIDs:chatDialog.occupantIDs];
-            }
-        }
-        
-        return nil;
-        
-    }] continueWithBlock:^id _Nullable(BFTask * _Nonnull __unused task) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [delegate pushNotificationManager:self didSucceedFetchingDialog:chatDialog];
-        });
-        
-        return nil;
-    }];
+           if (task.result != nil) {
+               
+               chatDialog = task.result;
+               
+               return [self.serviceManager.usersService getUsersWithIDs:task.result.occupantIDs];
+           }
+           
+           if ([delegate respondsToSelector:@selector(pushNotificationManagerDidStartLoadingDialogFromServer:)]) {
+               [delegate pushNotificationManagerDidStartLoadingDialogFromServer:self];
+           }
+           
+           return [self.serviceManager.chatService loadDialogWithID:dialogID];
+       }] continueWithBlock:^id _Nullable(BFTask * _Nonnull task) {
+           
+           if (task.isFaulted) {
+               
+               if ([delegate respondsToSelector:@selector(pushNotificationManager:didFailFetchingDialogWithError:)]) {
+                   [delegate pushNotificationManager:self didFailFetchingDialogWithError:task.error];
+               }
+           }
+           else {
+               
+               if ([task.result isKindOfClass:[QBChatDialog class]]) {
+                   
+                   if ([delegate respondsToSelector:@selector(pushNotificationManagerDidFinishLoadingDialogFromServer:)]) {
+                       [delegate pushNotificationManagerDidFinishLoadingDialogFromServer:self];
+                   }
+                   
+                   chatDialog = (QBChatDialog *)task.result;
+                   
+                   return [self.serviceManager.usersService getUsersWithIDs:chatDialog.occupantIDs];
+               }
+           }
+           
+           return nil;
+           
+       }] continueWithBlock:^id _Nullable(BFTask * _Nonnull  task) {
+           
+           dispatch_async(dispatch_get_main_queue(), ^{
+               [delegate pushNotificationManager:self didSucceedFetchingDialog:chatDialog];
+           });
+           
+           return nil;
+       }];
 }
 
 - (void)registerForPushNotifications {
@@ -222,7 +289,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                                                         settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
                                                         categories:categories];
     
-    [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
+    [UIApplication.sharedApplication registerUserNotificationSettings:notificationSettings];
     
     // subscribing for PKPushRegistry
     // only if call kit supported
@@ -241,7 +308,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                  completionHandler:(dispatch_block_t)completionHandler {
     
     if ([identifier isEqualToString:kQMNotificationActionTextAction]) {
-   
+        
         NSString *text = responseInfo[UIUserNotificationActionResponseTypedTextKey];
         
         NSCharacterSet *whiteSpaceSet = [NSCharacterSet whitespaceCharacterSet];
@@ -256,7 +323,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         
         NSString *dialogID = userInfo[kQMPushNotificationDialogIDKey];
         
-        UIApplication *application = [UIApplication sharedApplication];
+        UIApplication *application = UIApplication.sharedApplication;
         
         __block UIBackgroundTaskIdentifier task = [application beginBackgroundTaskWithExpirationHandler:^{
             
@@ -265,7 +332,7 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
         }];
         
         // Do the work associated with the task.
-        QMLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
+        QMSLog(@"Started background task timeremaining = %f", [application backgroundTimeRemaining]);
         
         [[[QMCore instance].chatService fetchDialogWithID:dialogID] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull t) {
             
@@ -278,7 +345,6 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
                     && ![[QMCore instance].contactManager isFriendWithUserID:opponentUserID]) {
                     
                     if (completionHandler) {
-                        
                         completionHandler();
                     }
                     
@@ -330,8 +396,8 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
 
 // MARK: - PKPushRegistryDelegate protocol
 
-- (void)pushRegistry:(PKPushRegistry *)__unused registry didUpdatePushCredentials:(PKPushCredentials *)pushCredentials forType:(PKPushType)__unused type {
-    QMLog(@"Created VOIP push token.");
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)pushCredentials forType:(PKPushType) type {
+    QMSLog(@"Created VOIP push token.");
     NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     
     QBMSubscription *subscription = [QBMSubscription subscription];
@@ -340,30 +406,59 @@ typedef void(^QBTokenCompletionBlock)(NSData *token, NSError *error);
     subscription.deviceToken = pushCredentials.token;
     
     @weakify(self);
-    [QBRequest createSubscription:subscription successBlock:^(QBResponse * __unused response, NSArray * __unused objects) {
+    [QBRequest createSubscription:subscription successBlock:^(QBResponse *  response, NSArray *  objects) {
         @strongify(self);
-        QMLog(@"Create VOIP Subscription request - Success");
-        QBMSubscription *voipSubscription = objects.firstObject;
-        self.voipSubscriptionID = voipSubscription.ID;
+        QMSLog(@"Create VOIP Subscription request - Success");
+        for (QBMSubscription *subscription in objects) {
+            if ([subscription.deviceUDID isEqualToString:deviceIdentifier]) {
+                [self.subscriptions addObject:subscription];
+            }
+        }
+        [self synchronizeSubscriptions];
     } errorBlock:^(QBResponse *response) {
-        QMLog(@"Create VOIP Subscription request - Error: %@", [response.error reasons]);
+        QMSLog(@"Create VOIP Subscription request - Error: %@", [response.error reasons]);
     }];
 }
 
-- (void)pushRegistry:(PKPushRegistry *)__unused registry didInvalidatePushTokenForType:(PKPushType)__unused type {
-    QMLog(@"Invalidated VOIP push token.");
+- (void)pushRegistry:(PKPushRegistry *)registry didInvalidatePushTokenForType:(PKPushType) type {
+    QMSLog(@"Invalidated VOIP push token.");
+    dispatch_group_t serviceGroup = dispatch_group_create();
+    NSSet<QBMSubscription *>*subscriptions = self.subscriptions.copy;
+    NSString *deviceIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSMutableArray *toDelete = @[].mutableCopy;
+    for (QBMSubscription *subscription in subscriptions) {
+        if (subscription.notificationChannel != QBMNotificationChannelAPNSVOIP ||
+            ![subscription.deviceUDID isEqualToString:deviceIdentifier]) {
+            continue;
+        }
+        dispatch_group_enter(serviceGroup);
+        NSString *chanel =  @"VOIP";
+        [NSString stringWithFormat:@"Unregister %@ Subscription request", chanel];
+        [QBRequest deleteSubscriptionWithID:subscription.ID
+                               successBlock:^(QBResponse *  response) {
+                                   QMSLog([chanel stringByAppendingString:@" - Success"]);
+                                   [toDelete addObject:subscription];
+                                   dispatch_group_leave(serviceGroup);
+                               } errorBlock:^(QBResponse *response) {
+                                   NSString *errorMessage = [NSString stringWithFormat:@" - Error: %@",
+                                                             [response.error reasons]];
+                                   QMSLog([chanel stringByAppendingString:errorMessage]);
+                                   [toDelete addObject:subscription];
+                                   dispatch_group_leave(serviceGroup);
+                               }];
+        
+    }
     @weakify(self);
-    [QBRequest deleteSubscriptionWithID:_voipSubscriptionID
-                           successBlock:^(QBResponse * __unused response) {
-                               QMLog(@"Unregister VOIP Subscription request - Success");
-                               @strongify(self);
-                               self.voipSubscriptionID = 0;
-                           } errorBlock:^(QBResponse *response) {
-                               QMLog(@"Unregister VOIP Subscription request - Error: %@", [response.error reasons]);
-                           }];
+    dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^{
+        @strongify(self);
+        for (QBMSubscription *subscription in toDelete) {
+            [self.subscriptions removeObject:subscription];
+        }
+        [self synchronizeSubscriptions];
+    });
 }
 
-- (void)pushRegistry:(PKPushRegistry *)__unused registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)__unused type {
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType) type {
     if (QMCallManager.isCallKitAvailable
         && [payload.dictionaryPayload objectForKey:QMVoipCallEventKey] != nil) {
         [self.serviceManager.callManager performCallKitPreparations];

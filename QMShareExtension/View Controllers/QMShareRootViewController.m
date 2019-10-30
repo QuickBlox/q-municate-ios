@@ -2,32 +2,31 @@
 //  QMShareRouterViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 11/4/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 11/4/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMShareRootViewController.h"
 #import "QMShareTableViewController.h"
 #import "QMShareTasks.h"
-
 #import "QMShareEtxentionOperation.h"
 #import "QMExtensionCache.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import "QBSettings+Qmunicate.h"
-
 #import <Bolts/Bolts.h>
 #import <SVProgressHUD/SVProgressHUD.h>
 #import <Reachability/Reachability.h>
+#import "QMImageLoader.h"
 #import "QBUUser+QMShareItemProtocol.h"
 #import "QBChatDialog+QMShareItemProtocol.h"
 #import "UIImage+QM.h"
 #import "QBChatAttachment+QMCustomParameters.h"
 #import "UIAlertController+QM.h"
 #import "QMConstants.h"
-#import <QMImageLoader.h>
 #import "QMMediaUploadService.h"
-#import "QMLog.h"
 #import <notify.h>
+#import "QMSLog.h"
+#import "QMServices.h"
 
 static const NSUInteger kQMUnauthorizedErrorCode = 401;
 
@@ -55,11 +54,9 @@ QMShareEtxentionOperationDelegate>
 //MARK: - View Life Cycle
 - (void)viewDidLoad {
     
-    QMImageLoader.instance.imageDownloader.shouldDecompressImages = NO;
-    
     [super viewDidLoad];
     
-    // Quickblox settings
+    // QuickBlox settings
     [QBSettings configure];
     
     [self configureAppereance];
@@ -122,18 +119,18 @@ QMShareEtxentionOperationDelegate>
     __weak typeof(self) weakSelf = self;
     
     [self presentAlertControllerWithStatus:status
-                         buttonHandler:^{
-                             
-                             __strong typeof(weakSelf) strongSelf = weakSelf;
-                             
-                             if (QBSession.currentSession.currentUser.ID &&
-                                 error.code == kQMUnauthorizedErrorCode) {
-                                 [strongSelf configureAndPresentShareTableViewController];
-                             }
-                             else {
-                                 [strongSelf dismiss];
-                             }
-                         }];
+                             buttonHandler:^{
+                                 
+                                 __strong typeof(weakSelf) strongSelf = weakSelf;
+                                 
+                                 if (QBSession.currentSession.currentUser.ID &&
+                                     error.code == kQMUnauthorizedErrorCode) {
+                                     [strongSelf configureAndPresentShareTableViewController];
+                                 }
+                                 else {
+                                     [strongSelf dismiss];
+                                 }
+                             }];
 }
 
 - (void)dismiss {
@@ -213,7 +210,7 @@ QMShareEtxentionOperationDelegate>
 //MARK: - QMShareControllerDelegate
 -(void)shareTableViewController:(QMShareTableViewController *)shareTableViewController
 didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)selectedItems {
-
+    
     NSParameterAssert(self.shareItem);
     
     if (self.shareOperation.isSending) {
@@ -222,7 +219,7 @@ didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)select
     
     if (!self.internetConnection.isReachable) {
         [self presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                             buttonHandler:nil];
+                                 buttonHandler:nil];
         return;
     }
     
@@ -253,7 +250,7 @@ didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)select
                       NSString *errorText =
                       @"Something went wrong. The message wasn’t sent to recipients that remain selected.";
                       [strongSelf presentAlertControllerWithStatus:errorText
-                                                 buttonHandler:nil];
+                                                     buttonHandler:nil];
                       [strongSelf.shareTableViewController deselectShareItems:resultDetails.sentRecipients.allObjects];
                   }
                   else {
@@ -326,15 +323,15 @@ didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)select
         
         self.shareOperation.objectToCancel =
         (id <QMCancellableObject>)[QBRequest sendMessage:message
-                                            successBlock:^(QBResponse * _Nonnull __unused response,
-                                                           QBChatMessage * _Nonnull __unused tMessage)
+                                            successBlock:^(QBResponse * _Nonnull  response,
+                                                           QBChatMessage * _Nonnull  tMessage)
                                    {
                                        [qmTaskSaveToCache(tMessage) continueWithBlock:^id _Nullable(BFTask<QBChatMessage *> * _Nonnull t) {
                                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                                                qmPostNotificationsForDialogID(t.result.dialogID);
                                                [source setResult:tMessage];
                                            });
-                        
+                                           
                                            return nil;
                                        }];
                                    }
@@ -378,12 +375,12 @@ didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)select
     __weak typeof(self) weakSelf = self;
     
     // setting unreachable block
-    [_internetConnection setUnreachableBlock:^(Reachability __unused *reachability) {
+    [_internetConnection setUnreachableBlock:^(Reachability  *reachability) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // reachability block could possibly be called in background thread
             // [weakSelf cancelShare];
             [weakSelf presentAlertControllerWithStatus:NSLocalizedString(@"QM_STR_LOST_INTERNET_CONNECTION", nil)
-                                     buttonHandler:nil];
+                                         buttonHandler:nil];
         });
     }];
     
@@ -437,7 +434,6 @@ didTapShareBarButtonWithSelectedItems:(NSArray<id<QMShareItemProtocol>> *)select
 static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
     
     NSCParameterAssert(message.dialogID);
-    
     return make_task(^(BFTaskCompletionSource * _Nonnull source) {
         
         [QMExtensionCache.chatCache insertOrUpdateMessage:message
@@ -462,13 +458,13 @@ static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
 - (BFTask *)qmTaskGetShareItem {
     
     NSArray *inputItems = self.extensionContext.inputItems;
-    QMLog(@"Input items = %@", inputItems);
+    QMSLog(@"Input items = %@", inputItems);
     NSMutableArray *providers = [NSMutableArray array];
     for (NSExtensionItem *item in inputItems) {
         [providers addObjectsFromArray:item.attachments];
     }
     
-    QMLog(@"providers = %@", providers);
+    QMSLog(@"providers = %@", providers);
     
     if (providers.count == 0) {
         NSString *errorText = NSLocalizedString(@"QM_EXT_SHARE_COMMON_ERROR", nil);
@@ -484,7 +480,7 @@ static BFTask<QBChatMessage *>* qmTaskSaveToCache(QBChatMessage *message) {
     return [[QMShareTasks loadItemsForItemProviders:providers] continueWithExecutor:BFExecutor.mainThreadExecutor
                                                                    withSuccessBlock:
             ^id _Nullable(BFTask<NSArray<QMItemProviderResult *> *> * _Nonnull t) {
-                QMLog(@"QMItemProviderResults = %@", t.result);
+                QMSLog(@"QMItemProviderResults = %@", t.result);
                 QMItemProviderResult *result = t.result.firstObject;
                 self.shareItem = result;
                 

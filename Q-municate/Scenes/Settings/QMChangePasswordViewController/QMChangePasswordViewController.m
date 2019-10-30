@@ -2,8 +2,8 @@
 //  QMChangePasswordViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/20/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/20/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMChangePasswordViewController.h"
@@ -25,7 +25,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -56,7 +56,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
 
 //MARK: - Actions
 
-- (IBAction)changeButtonPressed:(UIBarButtonItem *)__unused sender {
+- (IBAction)changeButtonPressed:(UIBarButtonItem *)sender {
     
     QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     if (![self.passwordOldField.text isEqualToString:QMCore.instance.currentProfile.userData.password]) {
@@ -146,12 +146,12 @@ static const NSUInteger kQMPasswordMinChar = 8;
     return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)__unused textField {
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
-- (BOOL)textFieldShouldClear:(UITextField *)__unused textField {
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
     
     self.navigationItem.rightBarButtonItem.enabled = NO;
     return YES;
@@ -159,7 +159,7 @@ static const NSUInteger kQMPasswordMinChar = 8;
 
 //MARK: - UITableViewDataSource
 
-- (NSString *)tableView:(UITableView *)__unused tableView titleForFooterInSection:(NSInteger)__unused section {
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger) section {
     
     return NSLocalizedString(@"QM_STR_PASSWORD_DESCRIPTION", nil);
 }

@@ -2,11 +2,12 @@
 //  QMAudioRecorder.m
 //  Q-municate
 //
-//  Created by Vitaliy Gurkovsky on 3/1/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 3/1/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMAudioRecorder.h"
+#import "QMSLog.h"
 
 static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
 
@@ -43,7 +44,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
                                                error:&setCategoryError];
         
         if (setCategoryError) {
-            QMLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
+            QMSLog(@"Error setting category! %@", [setCategoryError localizedDescription]);
             
         }
         
@@ -56,8 +57,6 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         //encoder
         [options setValue:@(AVAudioQualityHigh) forKey:AVEncoderAudioQualityKey]; //channels
         [options setValue:@(16) forKey:AVEncoderBitDepthHintKey]; //channels
-        
-        
         
         // Initiate and prepare the recorder
         _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:options error:&error];
@@ -93,24 +92,24 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     }
     
     _maximumDuration = duration;
-    [_recorder record];
+    [self.recorder record];
 }
 
 - (void)startRecording {
-    [_recorder record];
+    [self.recorder record];
 }
 
 - (void)pauseRecording {
-    [_recorder pause];
+    [self.recorder pause];
 }
 
 - (void)stopRecording {
-    [_recorder stop];
+    [self.recorder stop];
 }
 
 - (void)cancelRecording {
     
-    _isCancelled = YES;
+    self.isCancelled = YES;
     [self stopRecording];
 }
 
@@ -125,7 +124,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     
     [[AVAudioSession sharedInstance] setCategory:_oldSessionCategory error:nil];
     
-    if (_isCancelled) {
+    if (self.isCancelled) {
         
         if (self.cancellBlock) {
             self.cancellBlock();
@@ -142,12 +141,10 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
             NSTimeInterval duration = CMTimeGetSeconds(audioAsset.duration);
             NSURL *fileURL = duration > kQMMinimalDuration ? recorder.url : nil;
             
-            __weak typeof(self) weakSelf = self;
-            
             dispatch_async(dispatch_get_main_queue(), ^{
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                if (strongSelf.completionBlock) {
-                    strongSelf.completionBlock(fileURL, duration, nil);
+                
+                if (self.completionBlock) {
+                    self.completionBlock(fileURL, duration, nil);
                 }
             });
         });
@@ -159,7 +156,7 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
     }
 }
 
-- (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)__unused recorder
+- (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)recorder
                                    error:(NSError * __nullable)error {
     
     [[AVAudioSession sharedInstance] setCategory:_oldSessionCategory error:nil];
@@ -184,7 +181,6 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         case AVAudioSessionInterruptionTypeBegan: {
             
             if (self.recordState == QBRecordStateRecording) {
-                
                 self.pausedByInterruption = YES;
             }
             break;
@@ -192,7 +188,6 @@ static const NSTimeInterval kQMMinimalDuration = 1.0; // in seconds
         case AVAudioSessionInterruptionTypeEnded: {
             
             if (self.recordState == QBRecordStatePaused && _pausedByInterruption) {
-                
                 [self.recorder record];
                 self.pausedByInterruption = NO;
             }

@@ -2,19 +2,19 @@
 //  QMDialogsDataSource.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 1/13/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 1/13/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMDialogsDataSource.h"
 #import "QMDialogCell.h"
 #import "QMCore.h"
-#import <QMDateUtils.h>
 #import "QBChatDialog+OpponentID.h"
+#import "QMDateUtils.h"
 
 @implementation QMDialogsDataSource
 
-- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (CGFloat)heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return [QMDialogCell height];
 }
@@ -56,12 +56,12 @@
     return cell;
 }
 
-- (BOOL)tableView:(UITableView *)__unused tableView canEditRowAtIndexPath:(NSIndexPath *)__unused indexPath {
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return YES;
 }
 
-- (void)tableView:(UITableView *)__unused tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         

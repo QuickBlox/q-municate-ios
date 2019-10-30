@@ -2,13 +2,13 @@
 //  NSURL+QMShareExtension.m
 //  QMShareExtension
 //
-//  Created by Vitaliy Gurkovsky on 10/20/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 10/20/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "NSURL+QMShareExtension.h"
 #import <Bolts/Bolts.h>
-#import "QMLog.h"
+#import "QMSLog.h"
 
 NSString *const QMAppleMapsHost = @"maps.apple.com";
 NSString *const QMAppleMapsPath = @"/maps";
@@ -23,7 +23,6 @@ NSString *const QMGoogleMapsHost = @"google.com";
 NSString *const QMGoogleMapsSearchPath = @"maps/search";
 NSString *const QMGoogleMapsPlacePath = @"maps/place";
 NSString *const QMGoogleMapsProvider = @"google";
-
 
 @implementation NSURL (QMShareExtension)
 
@@ -170,7 +169,7 @@ NSString *const QMGoogleMapsProvider = @"google";
         NSArray *matches = [regex matchesInString:googleURL
                                           options:0
                                             range:NSMakeRange(0, [googleURL length])];
-
+        
         NSTextCheckingResult *mathResult = matches.firstObject;
         
         if (mathResult.numberOfRanges > 2) {
@@ -180,14 +179,14 @@ NSString *const QMGoogleMapsProvider = @"google";
             if (fabs(latitude.doubleValue) > DBL_EPSILON &&
                 fabs(longitude.doubleValue) > DBL_EPSILON) {
                 
-                  location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
-                                                              longitude:longitude.doubleValue];
+                location = [[CLLocation alloc] initWithLatitude:latitude.doubleValue
+                                                      longitude:longitude.doubleValue];
             }
         }
-        QMLog(@"location = %@", location);
+        QMSLog(@"location = %@", location);
     }
     else {
-        QMLog(@"REGEX error: %@", regexError);
+        QMSLog(@"REGEX error: %@", regexError);
     }
     
     return location;
@@ -212,7 +211,7 @@ NSString *const QMGoogleMapsProvider = @"google";
               if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
                   NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
                   if (statusCode != 200) {
-                      QMLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
+                      QMSLog(@"dataTaskWithRequest HTTP status code: %ld", (long)statusCode);
                       NSError *responseError =
                       [NSError errorWithDomain:@"QMShareExtension"
                                           code:0
@@ -232,12 +231,12 @@ NSString *const QMGoogleMapsProvider = @"google";
                   [source setResult:[NSURL URLWithString:longUrl]];
               }
               else {
-                  QMLog(@"JSON parse error: %@", jsonParseError);
+                  QMSLog(@"JSON parse error: %@", jsonParseError);
                   [source setError:error];
               }
           }
           else {
-              QMLog(@"API request error: %@", error);
+              QMSLog(@"API request error: %@", error);
               [source setError:error];
           }
       }] resume];

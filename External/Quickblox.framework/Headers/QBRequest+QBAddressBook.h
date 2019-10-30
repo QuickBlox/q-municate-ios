@@ -5,8 +5,8 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
-#import <Quickblox/QBRequest.h>
+#import <Foundation/Foundation.h>
+#import "QBRequest.h"
 
 @class QBAddressBookContact;
 @class QBAddressBookUpdates;

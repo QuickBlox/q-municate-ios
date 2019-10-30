@@ -2,8 +2,8 @@
 //  QMGlobalSearchDataProvider.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/3/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/3/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMGlobalSearchDataProvider.h"
@@ -86,12 +86,12 @@ static const NSUInteger kQMUsersPageLimit = 50;
     
     self.globalSearchCancellationTokenSource = [BFCancellationTokenSource cancellationTokenSource];
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    UIApplication.sharedApplication.networkActivityIndicatorVisible = YES;
     
     [[QMCore.instance.usersService searchUsersWithFullName:self.cachedSearchText page:self.responsePage]
      continueWithBlock:^id _Nullable(BFTask<NSArray<QBUUser *> *> *task) {
          
-         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+         UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
          
          if (task.isCompleted) {
              
@@ -136,7 +136,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
     
     if (self.globalSearchCancellationTokenSource) {
         // cancel existing task if in progress
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        UIApplication.sharedApplication.networkActivityIndicatorVisible = NO;
         [self.globalSearchCancellationTokenSource cancel];
     }
 }
@@ -156,7 +156,7 @@ static const NSUInteger kQMUsersPageLimit = 50;
 
 //MARK: - QMContactListServiceDelegate
 
-- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     [self.delegate searchDataProviderDidFinishDataFetching:self];
 }

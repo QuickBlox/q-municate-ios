@@ -2,8 +2,8 @@
 //  QMContactsSearchDataProvider.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/17/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/17/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMContactsSearchDataProvider.h"
@@ -81,12 +81,12 @@ QMUsersServiceDelegate
 
 //MARK: - QMUsersServiceDelegate
 
-- (void)usersService:(QMUsersService *)__unused usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)__unused users {
+- (void)usersService:(QMUsersService *)usersService didLoadUsersFromCache:(NSArray<QBUUser *> *)users {
     
     [self updateData];
 }
 
-- (void)usersService:(QMUsersService *)__unused usersService didAddUsers:(NSArray<QBUUser *> *)__unused user {
+- (void)usersService:(QMUsersService *)usersService didAddUsers:(NSArray<QBUUser *> *)user {
     
     [self updateData];
 }
@@ -98,7 +98,7 @@ QMUsersServiceDelegate
     [self updateData];
 }
 
-- (void)contactListService:(QMContactListService *)__unused contactListService contactListDidChange:(QBContactList *)__unused contactList {
+- (void)contactListService:(QMContactListService *)contactListService contactListDidChange:(QBContactList *)contactList {
     
     [self updateData];
 }

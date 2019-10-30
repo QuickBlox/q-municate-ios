@@ -2,12 +2,13 @@
 //  QMImagePicker.m
 //  Q-municate
 //
-//  Created by Andrey Ivanov on 11.08.14.
-//  Copyright (c) 2014 Quickblox. All rights reserved.
+//  Created by Injoit on 11.08.14.
+//  Copyright © 2014 QuickBlox. All rights reserved.
 //
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "QMImagePicker.h"
+#import "QMSLog.h"
 
 static NSString * const kQMImagePickerErrorDomain = @"com.qmunicate.imagepicker";
 static const NSUInteger kQMMaxFileSize = 100; //in MBs
@@ -24,7 +25,7 @@ static const NSUInteger kQMMaxFileSize = 100; //in MBs
 @implementation QMImagePicker
 
 - (void)dealloc {
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
 }
 
 - (instancetype)init {
@@ -182,7 +183,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
             NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:resultMediaUrl.path
                                                                                             error:&attributesError];
             if (attributesError) {
-                QMLog(@"Error occurred while getting file attributes = %@", attributesError);
+                QMSLog(@"Error occurred while getting file attributes = %@", attributesError);
                 return;
             }
             

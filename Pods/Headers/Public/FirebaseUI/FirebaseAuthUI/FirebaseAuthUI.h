@@ -1,1 +1,0 @@
-../../../../FirebaseUI/FirebaseUIFrameworks/FirebaseAuthUI/Frameworks/FirebaseAuthUI.framework/Headers/FirebaseAuthUI.h

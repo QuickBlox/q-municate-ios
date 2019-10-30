@@ -2,25 +2,26 @@
 //  QMSettingsViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/4/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/4/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMSettingsViewController.h"
-#import "QMTableSectionHeaderView.h"
-#import "QMColors.h"
 #import "QMUpdateUserViewController.h"
-#import "QMImagePicker.h"
-#import "QMTasks.h"
-#import "QMCore.h"
-#import "QMProfile.h"
-#import <QMImageView.h>
+#import "UIViewController+SmartDeselection.h"
+#import "QMTableSectionHeaderView.h"
 #import "QMNavigationController.h"
 #import "QMSettingsFooterView.h"
-
-#import <NYTPhotoViewer/NYTPhotosViewController.h>
 #import "QMImagePreview.h"
-#import "SVProgressHUD.h"
+#import "QMImagePicker.h"
+#import "QMProfile.h"
+#import "QMColors.h"
+#import "QMTasks.h"
+#import "QMCore.h"
+
+#import <NYTPhotoViewer/NYTPhotoViewer.h>
+#import "QMChatViewController.h"
+#import <SVProgressHUD/SVProgressHUD.h>
 
 static const CGFloat kQMDefaultSectionHeaderHeight = 24.0f;
 static const CGFloat kQMStatusSectionHeaderHeight = 40.0f;
@@ -111,8 +112,9 @@ NYTPhotosViewControllerDelegate
 }
 
 - (void)configureUserData:(QBUUser *)userData {
-    
-    [self.avatarImageView setImageWithURL:[NSURL URLWithString:userData.avatarUrl]
+   
+    NSString *url = userData.avatarUrl;
+    [self.avatarImageView setImageWithURL:[NSURL URLWithString:url]
                                     title:userData.fullName
                            completedBlock:nil];
     
@@ -162,7 +164,7 @@ NYTPhotosViewControllerDelegate
     
     __weak QMNavigationController *navigationController = (QMNavigationController *)self.navigationController;
     
-    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull __unused task) {
+    BFContinuationBlock completionBlock = ^id _Nullable(BFTask * _Nonnull  task) {
         if (task.faulted) {
             [navigationController showNotificationWithType:QMNotificationPanelTypeFailed message:task.result duration:3];
         }
@@ -181,7 +183,7 @@ NYTPhotosViewControllerDelegate
         self.subscribeTask = [[QMCore.instance.pushNotificationManager registerAndSubscribeForPushNotifications] continueWithBlock:completionBlock];
     }
     else {
-        self.subscribeTask = [[QMCore.instance.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe:NO] continueWithBlock:completionBlock];
+        self.subscribeTask = [[QMCore.instance.pushNotificationManager unregisterFromPushNotificationsAndUnsubscribe] continueWithBlock:completionBlock];
     }
 }
 
@@ -194,13 +196,13 @@ NYTPhotosViewControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil)
                                                         style:UIAlertActionStyleCancel
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                       }]];
     
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_LOGOUT", nil)
                                                         style:UIAlertActionStyleDestructive
-                                                      handler:^(UIAlertAction * _Nonnull __unused action)
+                                                      handler:^(UIAlertAction * _Nonnull  action)
                                 {
                                     if (self.logoutTask) {
                                         // task is in progress
@@ -208,7 +210,7 @@ NYTPhotosViewControllerDelegate
                                     }
                                     
                                     [SVProgressHUD show];
-                                    self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id(BFTask *__unused logoutTask) {
+                                    self.logoutTask = [[QMCore.instance logout] continueWithBlock:^id(BFTask * logoutTask) {
                                         [SVProgressHUD dismiss];
                                         [self performSegueWithIdentifier:kQMSceneSegueAuth sender:nil];
                                         return nil;
@@ -309,7 +311,7 @@ NYTPhotosViewControllerDelegate
     return [super tableView:tableView viewForHeaderInSection:section];
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForHeaderInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     
     if (![self shouldShowHeaderForSection:section]) {
         
@@ -340,7 +342,7 @@ NYTPhotosViewControllerDelegate
     return [super tableView:tableView viewForFooterInSection:section];
 }
 
-- (CGFloat)tableView:(UITableView *)__unused tableView heightForFooterInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     
     if (section == QMSettingsSectionLogout) {
         
@@ -352,14 +354,14 @@ NYTPhotosViewControllerDelegate
 
 //MARK: - QMProfileDelegate
 
-- (void)profile:(QMProfile *)__unused currentProfile didUpdateUserData:(QBUUser *)userData {
+- (void)profile:(QMProfile *)currentProfile didUpdateUserData:(QBUUser *)userData {
     
     [self configureUserData:userData];
 }
 
 // MARK: - QMUsersServiceListenerProtocol
 
-- (void)usersService:(QMUsersService *)__unused usersService didUpdateUser:(QBUUser *)user {
+- (void)usersService:(QMUsersService *)usersService didUpdateUser:(QBUUser *)user {
     
     user.password = QMCore.instance.currentProfile.userData.password;
     [QMCore.instance.currentProfile synchronizeWithUserData:user];
@@ -373,14 +375,14 @@ NYTPhotosViewControllerDelegate
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_TAKE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                           [QMImagePicker takePhotoInViewController:self resultHandler:self];
                                                       }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CHOOSE_IMAGE", nil)
                                                         style:UIAlertActionStyleDefault
-                                                      handler:^(UIAlertAction * _Nonnull __unused action) {
+                                                      handler:^(UIAlertAction * _Nonnull  action) {
                                                           
                                                           [QMImagePicker choosePhotoInViewController:self resultHandler:self];
                                                       }]];
@@ -390,7 +392,7 @@ NYTPhotosViewControllerDelegate
         
         [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_OPEN_IMAGE", nil)
                                                             style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * _Nonnull __unused action)
+                                                          handler:^(UIAlertAction * _Nonnull  action)
                                     {
                                         
                                         [QMImagePreview previewImageWithURL:[NSURL URLWithString:avatarURL] inViewController:self];
@@ -412,7 +414,7 @@ NYTPhotosViewControllerDelegate
 
 //MARK: - QMImagePickerResultHandler
 
-- (void)imagePicker:(QMImagePicker *)__unused imagePicker didFinishPickingPhoto:(UIImage *)photo {
+- (void)imagePicker:(QMImagePicker *)imagePicker didFinishPickingPhoto:(UIImage *)photo {
     
     if (![QMCore.instance isInternetConnected]) {
         
@@ -433,7 +435,7 @@ NYTPhotosViewControllerDelegate
 
 //MARK: - NYTPhotosViewControllerDelegate
 
-- (UIView *)photosViewController:(NYTPhotosViewController *)__unused photosViewController referenceViewForPhoto:(id<NYTPhoto>)__unused photo {
+- (UIView *)photosViewController:(NYTPhotosViewController *)photosViewController referenceViewForPhoto:(id<NYTPhoto>) photo {
     
     return self.avatarImageView;
 }

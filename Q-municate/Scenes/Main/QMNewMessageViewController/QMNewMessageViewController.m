@@ -2,8 +2,8 @@
 //  QMNewMessageViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 3/15/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 3/15/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMNewMessageViewController.h"
@@ -38,7 +38,7 @@ QMTagFieldViewDelegate
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -61,7 +61,7 @@ QMTagFieldViewDelegate
 
 //MARK: - Actions
 
-- (IBAction)rightBarButtonPressed:(UIBarButtonItem *)__unused sender {
+- (IBAction)rightBarButtonPressed:(UIBarButtonItem *)sender {
     
     if (self.dialogCreationTask) {
         // task is in progress
@@ -69,6 +69,11 @@ QMTagFieldViewDelegate
     }
     
     NSArray *tagIDs = [self.tagFieldView tagIDs];
+    
+    if (![QMCore.instance isInternetConnected]) {
+         [SVProgressHUD showErrorWithStatus:NSLocalizedString(@"QM_STR_CHECK_INTERNET_CONNECTION", nil)];
+        return;
+    }
     
     if (tagIDs.count > 1) {
         // creating group chat
@@ -83,9 +88,8 @@ QMTagFieldViewDelegate
         @weakify(self);
         self.dialogCreationTask = [[[QMCore.instance.chatService createGroupChatDialogWithName:name photo:nil occupants:tagIDs] continueWithBlock:^id _Nullable(BFTask<QBChatDialog *> * _Nonnull task) {
             
-            @strongify(self);
             [SVProgressHUD dismiss];
-            
+            @strongify(self);            
             if (!task.isFaulted) {
                 
                 chatDialog = task.result;
@@ -166,13 +170,13 @@ QMTagFieldViewDelegate
 
 //MARK: - QMMessageContactListViewControllerDelegate
 
-- (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didDeselectUser:(QBUUser *)deselectedUser {
+- (void)messageContactListViewController:(QMMessageContactListViewController *)messageContactListViewController didDeselectUser:(QBUUser *)deselectedUser {
     
     [self.tagFieldView removeTagWithID:deselectedUser];
     [self updateNextButtonState];
 }
 
-- (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didSelectUser:(QBUUser *)selectedUser {
+- (void)messageContactListViewController:(QMMessageContactListViewController *)messageContactListViewController didSelectUser:(QBUUser *)selectedUser {
     
     [self.tagFieldView addTag:selectedUser.fullName tagID:selectedUser animated:YES];
     [self.tagFieldView scrollToTextField:YES];
@@ -181,31 +185,31 @@ QMTagFieldViewDelegate
     [self updateNextButtonState];
 }
 
-- (void)messageContactListViewController:(QMMessageContactListViewController *)__unused messageContactListViewController didScrollContactList:(UIScrollView *)__unused scrollView {
+- (void)messageContactListViewController:(QMMessageContactListViewController *)messageContactListViewController didScrollContactList:(UIScrollView *)scrollView {
     
     [self.view endEditing:YES];
 }
 
 //MARK: - QMTagFieldViewDelegate
 
-- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didDeleteTagWithID:(id)tagID {
+- (void)tagFieldView:(QMTagFieldView *)tagFieldView didDeleteTagWithID:(id)tagID {
     
     [self.messageContactListViewController deselectUser:tagID];
     
     [self updateNextButtonState];
 }
 
-- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeHeight:(CGFloat)height {
+- (void)tagFieldView:(QMTagFieldView *)tagFieldView didChangeHeight:(CGFloat)height {
     
     self.tagFieldViewHeightConstraint.constant = height;
 }
 
-- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeText:(NSString *)text {
+- (void)tagFieldView:(QMTagFieldView *)tagFieldView didChangeText:(NSString *)text {
     
     [self.messageContactListViewController performSearch:text];
 }
 
-- (void)tagFieldView:(QMTagFieldView *)__unused tagFieldView didChangeSearchStatus:(BOOL)__unused searchIsActive byClearingTextField:(BOOL)byClearingTextField {
+- (void)tagFieldView:(QMTagFieldView *)tagFieldView didChangeSearchStatus:(BOOL) searchIsActive byClearingTextField:(BOOL)byClearingTextField {
     
     if (!byClearingTextField) {
         

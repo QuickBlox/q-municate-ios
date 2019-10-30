@@ -2,16 +2,17 @@
 //  QMFeedbackViewController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 5/20/16.
-//  Copyright © 2016 Quickblox. All rights reserved.
+//  Created by Injoit on 5/20/16.
+//  Copyright © 2016 QuickBlox. All rights reserved.
 //
 
 #import "QMFeedbackViewController.h"
 #import "QMColors.h"
 #import "REMessageUI.h"
+#import "SVProgressHUD.h"
+#import "QMSLog.h"
 
-#import <UIDevice-Hardware.h>
-#import <SVProgressHUD.h>
+#import <UIDevice_Hardware/UIDevice-Hardware.h>
 
 static const CGFloat kQMTextCellMinHeight = 64.0f;
 static NSString *const kQMBundleVersion = @"CFBundleVersion";
@@ -41,7 +42,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
 
 - (void)dealloc {
     
-    ILog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
+    QMSLog(@"%@ - %@",  NSStringFromSelector(_cmd), self);
     
     // removing left bar button item that is responsible for split view
     // display mode managing. Not removing it will cause item update
@@ -92,7 +93,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
         
         [self presentViewController:mailVC animated:YES completion:nil];
         
-    } finish:^(MFMailComposeResult result, NSError * __unused error) {
+    } finish:^(MFMailComposeResult result, NSError *  error) {
         
         if (result == MFMailComposeResultSent) {
             
@@ -104,7 +105,7 @@ typedef NS_ENUM(NSUInteger, QMFeedbackSelection) {
             
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedString(@"QM_STR_MAIL_COMPOSER_ERROR_DESCRIPTION", nil) preferredStyle:UIAlertControllerStyleAlert];
             
-            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull __unused action) {
+            [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"QM_STR_CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull  action) {
                 
             }]];
             

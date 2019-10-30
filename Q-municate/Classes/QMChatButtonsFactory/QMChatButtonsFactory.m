@@ -2,8 +2,8 @@
 //  QMChatButtonsFactory.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 9/25/15.
-//  Copyright © 2015 Quickblox. All rights reserved.
+//  Created by Injoit on 9/25/15.
+//  Copyright © 2015 QuickBlox. All rights reserved.
 //
 
 #import "QMChatButtonsFactory.h"

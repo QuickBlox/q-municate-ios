@@ -1,1 +1,0 @@
-../../../NYTPhotoViewer/NYTPhotoViewer/NYTPhotosOverlayView.h

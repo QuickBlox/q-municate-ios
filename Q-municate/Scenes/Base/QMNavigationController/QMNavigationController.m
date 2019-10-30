@@ -2,8 +2,8 @@
 //  QMNavigationController.m
 //  Q-municate
 //
-//  Created by Vitaliy Gorbachov on 6/16/17.
-//  Copyright © 2017 Quickblox. All rights reserved.
+//  Created by Injoit on 6/16/17.
+//  Copyright © 2017 QuickBlox. All rights reserved.
 //
 
 #import "QMNavigationController.h"

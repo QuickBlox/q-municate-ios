@@ -5,7 +5,7 @@
 //  Copyright (c) 2017 QuickBlox. All rights reserved.
 //
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,21 +40,15 @@ extern NSString * const kQBMNotificationChannelsAPNS;
 extern NSString * const kQBMNotificationChannelsAPNSVOIP;
 extern NSString * const kQBMNotificationChannelsGCM;
 extern NSString * const kQBMNotificationChannelsMPNS;
-extern NSString * const kQBMNotificationChannelsBBPS;
-extern NSString * const kQBMNotificationChannelsPull;
-extern NSString * const kQBMNotificationChannelsHttpRequest;
 
 // Notification type
 extern NSString * const kQBMNotificationTypePush;
 extern NSString * const kQBMNotificationTypeEmail;
-extern NSString * const kQBMNotificationTypeRequest;
-extern NSString * const kQBMNotificationTypePull;
 
 // Push type
 extern NSString * const kQBMPushTypeAPNS;
 extern NSString * const kQBMPushTypeAPNSVOIP;
 extern NSString * const kQBMPushTypeGCM;
 extern NSString * const kQBMPushTypeMPNS;
-extern NSString * const kQBMPushTypeBBPS;
 
 NS_ASSUME_NONNULL_END
