@@ -1,4 +1,4 @@
-# Q-municate 3.0.0
+#Source code removed from the public access, if you are interested in Q-municate please [contact us](https://communication.quickblox.com/q-municate#rec209621870)
 
 
 ![](https://d2mxuefqeaa7sj.cloudfront.net/s_7BF69620C1058AA11632E980A66E2B94CAE1B1639FF018694E91270C4F3093C2_1517567392151_retina_cover-min.png)
