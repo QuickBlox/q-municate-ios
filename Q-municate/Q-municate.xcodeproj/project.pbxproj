@@ -1,0 +1,840 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2C1094ED2B31D15400A02DCE /* EnterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1094EC2B31D15400A02DCE /* EnterView.swift */; };
+		2C3562E32B2CA82000039D22 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3562E22B2CA82000039D22 /* User.swift */; };
+		2C4417F52B2717E200216796 /* Q_municateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4417F42B2717E200216796 /* Q_municateApp.swift */; };
+		2C4417FC2B2717E300216796 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C4417FB2B2717E300216796 /* Preview Assets.xcassets */; };
+		2C4418062B2717E300216796 /* Q_municateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4418052B2717E300216796 /* Q_municateTests.swift */; };
+		2C4418102B2717E400216796 /* Q_municateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C44180F2B2717E400216796 /* Q_municateUITests.swift */; };
+		2C4418122B2717E400216796 /* Q_municateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4418112B2717E400216796 /* Q_municateUITestsLaunchTests.swift */; };
+		2C4418602B27525600216796 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4418352B27525600216796 /* API.swift */; };
+		2C4418612B27525600216796 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C4418372B27525600216796 /* Assets.xcassets */; };
+		2C4418622B27525600216796 /* PhoneCountryCodes.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C4418382B27525600216796 /* PhoneCountryCodes.json */; };
+		2C4418632B27525600216796 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4418392B27525600216796 /* AppDelegate.swift */; };
+		2C4418742B27525600216796 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C44184C2B27525600216796 /* Errors.swift */; };
+		2C44188C2B279F5D00216796 /* EnterPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C44188B2B279F5D00216796 /* EnterPhoneNumberView.swift */; };
+		2C44188F2B27A1B500216796 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C44188E2B27A1B500216796 /* AppTheme.swift */; };
+		2C4418922B27A6EC00216796 /* EnterPhoneNumberSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4418912B27A6EC00216796 /* EnterPhoneNumberSettings.swift */; };
+		2C99FA842B38AF8700C60BAE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C99FA832B38AF8700C60BAE /* LaunchScreen.storyboard */; };
+		2CAA7AED2B29E53A000FB3A3 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 2CAA7AEC2B29E53A000FB3A3 /* Localizable.xcstrings */; };
+		2CB29A922B6682CF00BCFB40 /* EnterScreenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB29A912B6682CF00BCFB40 /* EnterScreenSettings.swift */; };
+		2CBF214F2B28AA88008BF463 /* EnterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF214E2B28AA88008BF463 /* EnterViewModel.swift */; };
+		2CBF21512B28AB5D008BF463 /* CountryPhoneCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF21502B28AB5D008BF463 /* CountryPhoneCode.swift */; };
+		2CBF21532B28B48F008BF463 /* CountryScreenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF21522B28B48F008BF463 /* CountryScreenSettings.swift */; };
+		2CBF21552B290A80008BF463 /* SelectCountryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CBF21542B290A80008BF463 /* SelectCountryListView.swift */; };
+		2CC067042B3DA6C8003CD9EE /* FirebaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC067032B3DA6C8003CD9EE /* FirebaseAPI.swift */; };
+		2CC067062B3DA6ED003CD9EE /* QuickbloxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC067052B3DA6ED003CD9EE /* QuickbloxAPI.swift */; };
+		2CC5F3DF2B2B210D00493BB1 /* VerifyPhoneNumberScreenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC5F3DE2B2B210D00493BB1 /* VerifyPhoneNumberScreenSettings.swift */; };
+		2CC5F3E12B2B2FA800493BB1 /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC5F3E02B2B2FA800493BB1 /* CreateProfileView.swift */; };
+		2CC5F3E32B2B32C200493BB1 /* ProfileScreenSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC5F3E22B2B32C200493BB1 /* ProfileScreenSettings.swift */; };
+		2CD477E02B6A8D070073959B /* QuickBloxUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2CD477DF2B6A8D070073959B /* QuickBloxUIKit */; };
+		2CDE3D6D2B51629200DB1EBB /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2CDE3D6C2B51629200DB1EBB /* FirebaseAuth */; };
+		2CEDA5AC2B29F11D00B8167B /* TermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDA5AB2B29F11D00B8167B /* TermsView.swift */; };
+		2CEDA5AE2B2A04D900B8167B /* VerifyPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDA5AD2B2A04D900B8167B /* VerifyPhoneNumberView.swift */; };
+		2CFD6C092B28A11300C306AE /* CountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFD6C082B28A11300C306AE /* CountryView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2C4418022B2717E300216796 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C4417E92B2717E200216796 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C4417F02B2717E200216796;
+			remoteInfo = "Q-municate";
+		};
+		2C44180C2B2717E400216796 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C4417E92B2717E200216796 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2C4417F02B2717E200216796;
+			remoteInfo = "Q-municate";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2C1094EC2B31D15400A02DCE /* EnterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterView.swift; sourceTree = "<group>"; };
+		2C3562E22B2CA82000039D22 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		2C4417F12B2717E200216796 /* Q-municate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Q-municate.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C4417F42B2717E200216796 /* Q_municateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Q_municateApp.swift; sourceTree = "<group>"; };
+		2C4417FB2B2717E300216796 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2C4418012B2717E300216796 /* Q-municateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Q-municateTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C4418052B2717E300216796 /* Q_municateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Q_municateTests.swift; sourceTree = "<group>"; };
+		2C44180B2B2717E400216796 /* Q-municateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Q-municateUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C44180F2B2717E400216796 /* Q_municateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Q_municateUITests.swift; sourceTree = "<group>"; };
+		2C4418112B2717E400216796 /* Q_municateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Q_municateUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2C4418222B271B4F00216796 /* Q-municate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Q-municate.entitlements"; sourceTree = "<group>"; };
+		2C4418252B2734F300216796 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C4418352B27525600216796 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		2C4418372B27525600216796 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C4418382B27525600216796 /* PhoneCountryCodes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneCountryCodes.json; sourceTree = "<group>"; };
+		2C4418392B27525600216796 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2C44184C2B27525600216796 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		2C44188B2B279F5D00216796 /* EnterPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberView.swift; sourceTree = "<group>"; };
+		2C44188E2B27A1B500216796 /* AppTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		2C4418912B27A6EC00216796 /* EnterPhoneNumberSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterPhoneNumberSettings.swift; sourceTree = "<group>"; };
+		2C99FA832B38AF8700C60BAE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2CAA7AEC2B29E53A000FB3A3 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		2CB29A912B6682CF00BCFB40 /* EnterScreenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterScreenSettings.swift; sourceTree = "<group>"; };
+		2CBF214E2B28AA88008BF463 /* EnterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterViewModel.swift; sourceTree = "<group>"; };
+		2CBF21502B28AB5D008BF463 /* CountryPhoneCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPhoneCode.swift; sourceTree = "<group>"; };
+		2CBF21522B28B48F008BF463 /* CountryScreenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryScreenSettings.swift; sourceTree = "<group>"; };
+		2CBF21542B290A80008BF463 /* SelectCountryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCountryListView.swift; sourceTree = "<group>"; };
+		2CC067032B3DA6C8003CD9EE /* FirebaseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAPI.swift; sourceTree = "<group>"; };
+		2CC067052B3DA6ED003CD9EE /* QuickbloxAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickbloxAPI.swift; sourceTree = "<group>"; };
+		2CC5F3DE2B2B210D00493BB1 /* VerifyPhoneNumberScreenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPhoneNumberScreenSettings.swift; sourceTree = "<group>"; };
+		2CC5F3E02B2B2FA800493BB1 /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
+		2CC5F3E22B2B32C200493BB1 /* ProfileScreenSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreenSettings.swift; sourceTree = "<group>"; };
+		2CEDA5AB2B29F11D00B8167B /* TermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsView.swift; sourceTree = "<group>"; };
+		2CEDA5AD2B2A04D900B8167B /* VerifyPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPhoneNumberView.swift; sourceTree = "<group>"; };
+		2CFD6C082B28A11300C306AE /* CountryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2C4417EE2B2717E200216796 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CD477E02B6A8D070073959B /* QuickBloxUIKit in Frameworks */,
+				2CDE3D6D2B51629200DB1EBB /* FirebaseAuth in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C4417FE2B2717E300216796 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C4418082B2717E400216796 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2C4417E82B2717E200216796 = {
+			isa = PBXGroup;
+			children = (
+				2C4417F32B2717E200216796 /* Q-municate */,
+				2C4418042B2717E300216796 /* Q-municateTests */,
+				2C44180E2B2717E400216796 /* Q-municateUITests */,
+				2C4417F22B2717E200216796 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2C4417F22B2717E200216796 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C4417F12B2717E200216796 /* Q-municate.app */,
+				2C4418012B2717E300216796 /* Q-municateTests.xctest */,
+				2C44180B2B2717E400216796 /* Q-municateUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2C4417F32B2717E200216796 /* Q-municate */ = {
+			isa = PBXGroup;
+			children = (
+				2C4418452B27525600216796 /* Model */,
+				2C4418342B27525600216796 /* API */,
+				2C4418362B27525600216796 /* Resources */,
+				2C44184D2B27525600216796 /* View */,
+				2C44182B2B27525600216796 /* ViewModel */,
+				2C4418232B27347600216796 /* Supporting Files */,
+				2C4417F42B2717E200216796 /* Q_municateApp.swift */,
+				2C4417FA2B2717E300216796 /* Preview Content */,
+			);
+			path = "Q-municate";
+			sourceTree = "<group>";
+		};
+		2C4417FA2B2717E300216796 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2C4417FB2B2717E300216796 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2C4418042B2717E300216796 /* Q-municateTests */ = {
+			isa = PBXGroup;
+			children = (
+				2C4418052B2717E300216796 /* Q_municateTests.swift */,
+			);
+			path = "Q-municateTests";
+			sourceTree = "<group>";
+		};
+		2C44180E2B2717E400216796 /* Q-municateUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2C44180F2B2717E400216796 /* Q_municateUITests.swift */,
+				2C4418112B2717E400216796 /* Q_municateUITestsLaunchTests.swift */,
+			);
+			path = "Q-municateUITests";
+			sourceTree = "<group>";
+		};
+		2C4418232B27347600216796 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2C4418222B271B4F00216796 /* Q-municate.entitlements */,
+				2C4418252B2734F300216796 /* Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2C44182B2B27525600216796 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2CBF214E2B28AA88008BF463 /* EnterViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2C4418342B27525600216796 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				2C4418352B27525600216796 /* API.swift */,
+				2CC067052B3DA6ED003CD9EE /* QuickbloxAPI.swift */,
+				2CC067032B3DA6C8003CD9EE /* FirebaseAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		2C4418362B27525600216796 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2C4418902B27A6C500216796 /* Settings */,
+				2C44188D2B27A1B500216796 /* AppTheme */,
+				2C4418372B27525600216796 /* Assets.xcassets */,
+				2C4418382B27525600216796 /* PhoneCountryCodes.json */,
+				2CAA7AEC2B29E53A000FB3A3 /* Localizable.xcstrings */,
+				2C4418392B27525600216796 /* AppDelegate.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2C4418452B27525600216796 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2C44184C2B27525600216796 /* Errors.swift */,
+				2CBF21502B28AB5D008BF463 /* CountryPhoneCode.swift */,
+				2C3562E22B2CA82000039D22 /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2C44184D2B27525600216796 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2C99FA832B38AF8700C60BAE /* LaunchScreen.storyboard */,
+				2CEDA5AB2B29F11D00B8167B /* TermsView.swift */,
+				2CFD6C082B28A11300C306AE /* CountryView.swift */,
+				2CBF21542B290A80008BF463 /* SelectCountryListView.swift */,
+				2CEDA5AD2B2A04D900B8167B /* VerifyPhoneNumberView.swift */,
+				2CC5F3E02B2B2FA800493BB1 /* CreateProfileView.swift */,
+				2C44188B2B279F5D00216796 /* EnterPhoneNumberView.swift */,
+				2C1094EC2B31D15400A02DCE /* EnterView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2C44188D2B27A1B500216796 /* AppTheme */ = {
+			isa = PBXGroup;
+			children = (
+				2C44188E2B27A1B500216796 /* AppTheme.swift */,
+			);
+			path = AppTheme;
+			sourceTree = "<group>";
+		};
+		2C4418902B27A6C500216796 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				2C4418912B27A6EC00216796 /* EnterPhoneNumberSettings.swift */,
+				2CC5F3DE2B2B210D00493BB1 /* VerifyPhoneNumberScreenSettings.swift */,
+				2CB29A912B6682CF00BCFB40 /* EnterScreenSettings.swift */,
+				2CC5F3E22B2B32C200493BB1 /* ProfileScreenSettings.swift */,
+				2CBF21522B28B48F008BF463 /* CountryScreenSettings.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2C4417F02B2717E200216796 /* Q-municate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C4418152B2717E400216796 /* Build configuration list for PBXNativeTarget "Q-municate" */;
+			buildPhases = (
+				2C4417ED2B2717E200216796 /* Sources */,
+				2C4417EE2B2717E200216796 /* Frameworks */,
+				2C4417EF2B2717E200216796 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Q-municate";
+			packageProductDependencies = (
+				2CDE3D6C2B51629200DB1EBB /* FirebaseAuth */,
+				2CD477DF2B6A8D070073959B /* QuickBloxUIKit */,
+			);
+			productName = "Q-municate";
+			productReference = 2C4417F12B2717E200216796 /* Q-municate.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2C4418002B2717E300216796 /* Q-municateTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C4418182B2717E400216796 /* Build configuration list for PBXNativeTarget "Q-municateTests" */;
+			buildPhases = (
+				2C4417FD2B2717E300216796 /* Sources */,
+				2C4417FE2B2717E300216796 /* Frameworks */,
+				2C4417FF2B2717E300216796 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C4418032B2717E300216796 /* PBXTargetDependency */,
+			);
+			name = "Q-municateTests";
+			productName = "Q-municateTests";
+			productReference = 2C4418012B2717E300216796 /* Q-municateTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2C44180A2B2717E400216796 /* Q-municateUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C44181B2B2717E400216796 /* Build configuration list for PBXNativeTarget "Q-municateUITests" */;
+			buildPhases = (
+				2C4418072B2717E400216796 /* Sources */,
+				2C4418082B2717E400216796 /* Frameworks */,
+				2C4418092B2717E400216796 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2C44180D2B2717E400216796 /* PBXTargetDependency */,
+			);
+			name = "Q-municateUITests";
+			productName = "Q-municateUITests";
+			productReference = 2C44180B2B2717E400216796 /* Q-municateUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2C4417E92B2717E200216796 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1510;
+				TargetAttributes = {
+					2C4417F02B2717E200216796 = {
+						CreatedOnToolsVersion = 15.0.1;
+					};
+					2C4418002B2717E300216796 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 2C4417F02B2717E200216796;
+					};
+					2C44180A2B2717E400216796 = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = 2C4417F02B2717E200216796;
+					};
+				};
+			};
+			buildConfigurationList = 2C4417EC2B2717E200216796 /* Build configuration list for PBXProject "Q-municate" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				es,
+				Base,
+			);
+			mainGroup = 2C4417E82B2717E200216796;
+			packageReferences = (
+				2CDE3D6B2B51629200DB1EBB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2CD477DE2B6A8D060073959B /* XCRemoteSwiftPackageReference "ios-ui-kit" */,
+			);
+			productRefGroup = 2C4417F22B2717E200216796 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2C4417F02B2717E200216796 /* Q-municate */,
+				2C4418002B2717E300216796 /* Q-municateTests */,
+				2C44180A2B2717E400216796 /* Q-municateUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2C4417EF2B2717E200216796 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C4417FC2B2717E300216796 /* Preview Assets.xcassets in Resources */,
+				2CAA7AED2B29E53A000FB3A3 /* Localizable.xcstrings in Resources */,
+				2C99FA842B38AF8700C60BAE /* LaunchScreen.storyboard in Resources */,
+				2C4418622B27525600216796 /* PhoneCountryCodes.json in Resources */,
+				2C4418612B27525600216796 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C4417FF2B2717E300216796 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C4418092B2717E400216796 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2C4417ED2B2717E200216796 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2CC5F3E32B2B32C200493BB1 /* ProfileScreenSettings.swift in Sources */,
+				2CC067042B3DA6C8003CD9EE /* FirebaseAPI.swift in Sources */,
+				2C4418632B27525600216796 /* AppDelegate.swift in Sources */,
+				2C44188F2B27A1B500216796 /* AppTheme.swift in Sources */,
+				2C1094ED2B31D15400A02DCE /* EnterView.swift in Sources */,
+				2CB29A922B6682CF00BCFB40 /* EnterScreenSettings.swift in Sources */,
+				2CC5F3DF2B2B210D00493BB1 /* VerifyPhoneNumberScreenSettings.swift in Sources */,
+				2CC067062B3DA6ED003CD9EE /* QuickbloxAPI.swift in Sources */,
+				2CBF21512B28AB5D008BF463 /* CountryPhoneCode.swift in Sources */,
+				2CBF214F2B28AA88008BF463 /* EnterViewModel.swift in Sources */,
+				2CC5F3E12B2B2FA800493BB1 /* CreateProfileView.swift in Sources */,
+				2CBF21532B28B48F008BF463 /* CountryScreenSettings.swift in Sources */,
+				2C4418602B27525600216796 /* API.swift in Sources */,
+				2CBF21552B290A80008BF463 /* SelectCountryListView.swift in Sources */,
+				2CEDA5AE2B2A04D900B8167B /* VerifyPhoneNumberView.swift in Sources */,
+				2C3562E32B2CA82000039D22 /* User.swift in Sources */,
+				2C44188C2B279F5D00216796 /* EnterPhoneNumberView.swift in Sources */,
+				2C4418922B27A6EC00216796 /* EnterPhoneNumberSettings.swift in Sources */,
+				2C4417F52B2717E200216796 /* Q_municateApp.swift in Sources */,
+				2CEDA5AC2B29F11D00B8167B /* TermsView.swift in Sources */,
+				2CFD6C092B28A11300C306AE /* CountryView.swift in Sources */,
+				2C4418742B27525600216796 /* Errors.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C4417FD2B2717E300216796 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C4418062B2717E300216796 /* Q_municateTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2C4418072B2717E400216796 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C4418122B2717E400216796 /* Q_municateUITestsLaunchTests.swift in Sources */,
+				2C4418102B2717E400216796 /* Q_municateUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2C4418032B2717E300216796 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C4417F02B2717E200216796 /* Q-municate */;
+			targetProxy = 2C4418022B2717E300216796 /* PBXContainerItemProxy */;
+		};
+		2C44180D2B2717E400216796 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2C4417F02B2717E200216796 /* Q-municate */;
+			targetProxy = 2C44180C2B2717E400216796 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2C4418132B2717E400216796 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2C4418142B2717E400216796 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2C4418162B2717E400216796 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Q-municate/Supporting Files/Q-municate.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Q-municate/Preview Content\"";
+				DEVELOPMENT_TEAM = 8885H5G2YX;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Q-municate/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Q-municate";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Taking pictures, video calls";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Saving images for contacts";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location for messaging";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app wants to record sound.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app wants to save pictures & videos to your library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app wants to use your picture & video library.";
+				INFOPLIST_KEY_NSSiriUsageDescription = Messaging;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2C4418172B2717E400216796 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Q-municate/Supporting Files/Q-municate.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Q-municate/Preview Content\"";
+				DEVELOPMENT_TEAM = 8885H5G2YX;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Q-municate/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Q-municate";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Taking pictures, video calls";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Saving images for contacts";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location for messaging";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app wants to record sound.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "This app wants to save pictures & videos to your library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app wants to use your picture & video library.";
+				INFOPLIST_KEY_NSSiriUsageDescription = Messaging;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2C4418192B2717E400216796 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8885H5G2YX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quickblox.Q-municateTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Q-municate.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Q-municate";
+			};
+			name = Debug;
+		};
+		2C44181A2B2717E400216796 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8885H5G2YX;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quickblox.Q-municateTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Q-municate.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Q-municate";
+			};
+			name = Release;
+		};
+		2C44181C2B2717E400216796 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8885H5G2YX;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quickblox.Q-municateUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Q-municate";
+			};
+			name = Debug;
+		};
+		2C44181D2B2717E400216796 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8885H5G2YX;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quickblox.Q-municateUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Q-municate";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C4417EC2B2717E200216796 /* Build configuration list for PBXProject "Q-municate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C4418132B2717E400216796 /* Debug */,
+				2C4418142B2717E400216796 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C4418152B2717E400216796 /* Build configuration list for PBXNativeTarget "Q-municate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C4418162B2717E400216796 /* Debug */,
+				2C4418172B2717E400216796 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C4418182B2717E400216796 /* Build configuration list for PBXNativeTarget "Q-municateTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C4418192B2717E400216796 /* Debug */,
+				2C44181A2B2717E400216796 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C44181B2B2717E400216796 /* Build configuration list for PBXNativeTarget "Q-municateUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C44181C2B2717E400216796 /* Debug */,
+				2C44181D2B2717E400216796 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2CD477DE2B6A8D060073959B /* XCRemoteSwiftPackageReference "ios-ui-kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/QuickBlox/ios-ui-kit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.4;
+			};
+		};
+		2CDE3D6B2B51629200DB1EBB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.19.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2CD477DF2B6A8D070073959B /* QuickBloxUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CD477DE2B6A8D060073959B /* XCRemoteSwiftPackageReference "ios-ui-kit" */;
+			productName = QuickBloxUIKit;
+		};
+		2CDE3D6C2B51629200DB1EBB /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CDE3D6B2B51629200DB1EBB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2C4417E92B2717E200216796 /* Project object */;
+}
