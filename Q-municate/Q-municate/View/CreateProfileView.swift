@@ -13,7 +13,6 @@ import QuickBloxData
 import QuickBloxUIKit
 
 struct CreateProfileView: View {
-    @Environment(\.dismiss) var dismiss
     
     private var settings: ProfileScreenSettings
     
@@ -41,83 +40,80 @@ struct CreateProfileView: View {
     
     @ViewBuilder
     private func container() -> some View {
-        NavigationStack {
-            ZStack {
-                settings.backgroundColor.ignoresSafeArea()
-                VStack(spacing: 0) {
-                    HStack(spacing: settings.spacing) {
-                        ProfilePhoto(selectedImage: $viewModel.avatar,
-                                     isLoadingAvatar: viewModel.isLoadingAvatar,
-                                     onTap: {
-                            isAlertPresented = true
-                        }, settings: settings)
-                        
-                        ProfileNameTextField(profileName: $viewModel.userName,
-                                             isValidProfileName: viewModel.isValidUserName,
-                                             settings: settings)
-                            .focused($isFocused)
-                    }.padding([.leading, .trailing])
-                        .padding(.top)
-                        .frame(maxHeight: 140)
-                   
-                    if viewModel.user?.name.isEmpty == false {
-                        Button {
-                            isLogOutAlertPresented = true
-                        } label: {
-                            Text(settings.logoutButton.title)
-                                .foregroundColor(settings.logoutButton.color)
-                                .font(settings.logoutButton.font)
-                        }.frame(width: settings.logoutButton.size.width,
-                                height: settings.logoutButton.size.height)
-                            .padding(.top, 44)
+        ZStack {
+            settings.backgroundColor.ignoresSafeArea()
+            VStack(spacing: 0) {
+                ProfileHeader(onTap:  {
+                    isFocused = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.viewModel.updateUser()
                     }
+                }, settings: settings.header,
+                                        isSave: viewModel.user?.name.isEmpty == false,
+                                        disabled: viewModel.isValidUserName == false)
+                .mediaAlert(isAlertPresented: $isAlertPresented,
+                            isExistingImage: viewModel.isExistingImage,
+                            mediaTypes: [.images],
+                            viewModel: viewModel,
+                            onRemoveImage: {
+                    viewModel.removeExistingImage()
+                }, onGetAvatarImage: { avatarImage in
+                    viewModel.handleOnSelect(avatarImage)
                     
-                    Spacer()
-                }
-            }
-            
-            .if(isLogOutAlertPresented == true, transform: { view in
-                view.logoutAlert(isPresented: $isLogOutAlertPresented, onSubmit: {
-                    viewModel.logOut()
-                }, settings: settings)
-            })
-            
-            .modifier(ProfileHeader(onTap: {
-                isFocused = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.viewModel.updateUser()
-                }
-            }, settings: settings.header,
-                                    isSave: viewModel.user?.name.isEmpty == false,
-                                    disabled: viewModel.isValidUserName == false))
-            
-            .mediaAlert(isAlertPresented: $isAlertPresented,
-                        isExistingImage: viewModel.isExistingImage,
-                        mediaTypes: [.images],
-                        viewModel: viewModel,
-                        onRemoveImage: {
-                viewModel.removeExistingImage()
-            }, onGetAvatarImage: { avatarImage in
-                viewModel.handleOnSelect(avatarImage)
+                })
+                .padding()
+                HStack(spacing: settings.spacing) {
+                    ProfilePhoto(selectedImage: $viewModel.avatar,
+                                 isLoadingAvatar: viewModel.isLoadingAvatar,
+                                 onTap: {
+                        isAlertPresented = true
+                    }, settings: settings)
+                    
+                    ProfileNameTextField(profileName: $viewModel.userName,
+                                         isValidProfileName: viewModel.isValidUserName,
+                                         settings: settings)
+                    .focused($isFocused)
+                }.padding([.leading, .trailing])
+                    .padding(.top)
+                    .frame(maxHeight: 140)
                 
-                            })
-          
-                            .disabled(viewModel.isProcessing == true)
-                            .if(viewModel.isProcessing == true) { view in
-                                view.overlay() {
-                                    CustomProgressView()
-                                }
-                            }
-                            .onAppear() {
-                                isFocused = false
-                                viewModel.setupUserInfo()
-                            }
-                            .onDisappear {
-                                isFocused = false
-                                viewModel.resetUserInfo()
-                            }
-            
+                if viewModel.user?.name.isEmpty == false {
+                    Button {
+                        isLogOutAlertPresented = true
+                    } label: {
+                        Text(settings.logoutButton.title)
+                            .foregroundColor(settings.logoutButton.color)
+                            .font(settings.logoutButton.font)
+                    }.frame(width: settings.logoutButton.size.width,
+                            height: settings.logoutButton.size.height)
+                    .padding(.top, 44)
+                }
+                
+                Spacer()
+            }
         }
+        
+        .if(isLogOutAlertPresented == true, transform: { view in
+            view.logoutAlert(isPresented: $isLogOutAlertPresented, onSubmit: {
+                viewModel.logOut()
+            }, settings: settings)
+        })
+        
+        .disabled(viewModel.isProcessing == true)
+        .if(viewModel.isProcessing == true) { view in
+            view.overlay() {
+                CustomProgressView()
+            }
+        }
+        .onAppear() {
+            isFocused = false
+            viewModel.setupUserInfo()
+        }
+        .onDisappear {
+            isFocused = false
+            viewModel.resetUserInfo()
+        }
+        
     }
 }
 
@@ -160,7 +156,7 @@ public struct ProfilePhoto: View {
                         .avatarModifier(height: settings.height).opacity(0.6)
                         .overlay {
                             ProgressView().tint(.white)
-                    }
+                        }
                 } else {
                     settings.avatar
                         .avatarModifier(height: settings.height)
@@ -212,7 +208,7 @@ public struct ProfileNameTextField: View {
             TextField(settings.textfieldPrompt, text: $profileName, onEditingChanged: { (changed) in
                 isFocused = changed
             }).padding(.top)
-
+            
             Divider()
                 .background(settings.hint.color)
             
@@ -268,7 +264,7 @@ extension View {
     }
 }
 
-struct ProfileHeaderToolbarContent: ToolbarContent {
+struct ProfileHeader: View {
     
     private var settings: SettingsHeaderSettings
     private var isSave: Bool
@@ -286,14 +282,12 @@ struct ProfileHeaderToolbarContent: ToolbarContent {
         self.disabled = disabled
     }
     
-    public var body: some ToolbarContent {
-        ToolbarItem(placement: .principal) {
+    public var body: some View {
+        HStack(alignment: .center) {
             Text(isSave == true ?  settings.title.settings : settings.title.profile)
                 .font(settings.title.font)
                 .foregroundColor(settings.title.color)
-        }
-        
-        ToolbarItem(placement: .navigationBarTrailing) {
+        Spacer()
             Button {
                 onTap()
             } label: {
@@ -301,38 +295,6 @@ struct ProfileHeaderToolbarContent: ToolbarContent {
                     .foregroundColor(disabled == false ? settings.rightButton.color : settings.rightButton.color.opacity(0.4))
             }.disabled(disabled)
         }
-    }
-}
-
-public struct ProfileHeader: ViewModifier {
-    
-    private var settings: SettingsHeaderSettings
-    private var isSave: Bool
-    private var disabled: Bool
-    
-    let onTap: () -> Void
-    
-    init(onTap: @escaping () -> Void,
-         settings: SettingsHeaderSettings,
-         isSave: Bool,
-         disabled: Bool) {
-        self.onTap = onTap
-        self.settings = settings
-        self.isSave = isSave
-        self.disabled = disabled
-    }
-    
-    public func body(content: Content) -> some View {
-        content.toolbar {
-            ProfileHeaderToolbarContent(onTap: onTap, settings: settings, isSave: isSave, disabled: disabled)
-        }
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(settings.displayMode)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(settings.isHidden)
-        .toolbarBackground(settings.backgroundColor,for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarRole(.editor)
     }
 }
 
@@ -375,21 +337,21 @@ public struct CustomMediaAlert: ViewModifier {
             
                 .if(isIphone == true, transform: { view in
                     view.confirmationDialog(settings.title, isPresented: $isAlertPresented, actions: {
-                            if isExistingImage == true {
-                                Button(settings.removePhoto, role: .destructive) {
-                                    onRemoveImage()
-                                    defaultState()
-                                }
-                            }
-                            Button(settings.camera, role: .none) {
-                                isCameraPresented = true
-                            }
-                            Button(settings.gallery, role: .none, action: {
-                                isImagePickerPresented = true
-                            })
-                            Button(settings.cancel, role: .cancel) {
+                        if isExistingImage == true {
+                            Button(settings.removePhoto, role: .destructive) {
+                                onRemoveImage()
                                 defaultState()
                             }
+                        }
+                        Button(settings.camera, role: .none) {
+                            isCameraPresented = true
+                        }
+                        Button(settings.gallery, role: .none, action: {
+                            isImagePickerPresented = true
+                        })
+                        Button(settings.cancel, role: .cancel) {
+                            defaultState()
+                        }
                     })
                 })
             
@@ -454,24 +416,24 @@ public struct CustomMediaAlert: ViewModifier {
                               photoLibrary: .shared())
             
                 .onChange(of: selectedItem) { _ in
-                            Task {
-                                self.avatarImage = nil
-                                
-                                if let data = try? await selectedItem?.loadTransferable(type: Data.self),
-                                   let contentType = selectedItem?.supportedContentTypes.first {
-                                    let url = documentsDirectoryPath().appendingPathComponent("\(UUID().uuidString).\(contentType.preferredFilenameExtension ?? "")")
-                                    do {
-                                        try data.write(to: url)
-                                        if let avatarImage = UIImage(data: data) {
-                                            self.avatarImage = avatarImage
-                                        }
-                                    } catch {
-                                        print("Failed")
-                                    }
+                    Task {
+                        self.avatarImage = nil
+                        
+                        if let data = try? await selectedItem?.loadTransferable(type: Data.self),
+                           let contentType = selectedItem?.supportedContentTypes.first {
+                            let url = documentsDirectoryPath().appendingPathComponent("\(UUID().uuidString).\(contentType.preferredFilenameExtension ?? "")")
+                            do {
+                                try data.write(to: url)
+                                if let avatarImage = UIImage(data: data) {
+                                    self.avatarImage = avatarImage
                                 }
+                            } catch {
                                 print("Failed")
                             }
                         }
+                        print("Failed")
+                    }
+                }
         }
     }
     
@@ -606,16 +568,16 @@ func documentsDirectoryPath() -> URL {
 }
 
 struct MediaPickerView: UIViewControllerRepresentable {
-
+    
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Binding var avatarImage: UIImage?
     @Binding var isPresented: Bool
     var mediaTypes: [String]
-
+    
     func makeCoordinator() -> MediaPickerViewCoordinator {
         return MediaPickerViewCoordinator(avatarImage: $avatarImage, isPresented: $isPresented)
     }
-
+    
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let pickerController = UIImagePickerController()
         pickerController.sourceType = sourceType
@@ -624,15 +586,15 @@ struct MediaPickerView: UIViewControllerRepresentable {
         pickerController.allowsEditing = true
         return pickerController
     }
-
+    
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
 }
 
 class MediaPickerViewCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-
+    
     @Binding var avatarImage: UIImage?
     @Binding var isPresented: Bool
-
+    
     init(avatarImage: Binding<UIImage?>, isPresented: Binding<Bool>) {
         self._avatarImage = avatarImage
         self._isPresented = isPresented

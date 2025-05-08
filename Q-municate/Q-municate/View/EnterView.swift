@@ -9,6 +9,8 @@
 import SwiftUI
 import QuickBloxUIKit
 import QuickBloxDomain
+import Quickblox
+import QuickBloxLog
 import Combine
 
 struct EnterViewConstant {
@@ -17,14 +19,29 @@ struct EnterViewConstant {
     static let aiApiKey = ""
 }
 
-struct EnterView: View {
-    @Environment(\.dismiss) var dismiss
+public struct TabIndex: Hashable {
+    public var title: String
+    public var systemIcon: String
     
+    public init(title: String, systemIcon: String) {
+        self.title = title
+        self.systemIcon = systemIcon
+    }
+}
+
+public extension TabIndex {
+    static let dialogs = TabIndex(title: "Dialogs",
+                                  systemIcon: "message.fill")
+    static let settings = TabIndex(title: "Settings",
+                                   systemIcon: "gearshape.fill")
+}
+
+struct EnterView: View {
     @ObservedObject var viewModel: EnterViewModel
     
     @State public var theme: AppTheme = appThemes[UserDefaults.standard.integer(forKey: "Theme")]
-    @State private var selectedTabIndex: QuickBloxUIKit.TabIndex = .dialogs
-    @State private var tabBarVisibility: Visibility = .hidden
+    @State private var selectedTabIndex: TabIndex = .dialogs
+    @State private var tabBarVisibility: Visibility = .visible
     @State private var showAppVersionAlert: Bool = false
     @State private var showNoInternetAlert: Bool = false
     @State private var isCheckUpdate: Bool = false
@@ -47,6 +64,38 @@ struct EnterView: View {
             .store(in: &cancellables)
     }
     
+    private func setupTabView(with content: AnyView, isNavigationBarPresented: Binding<Bool>) -> AnyView {
+        let dialogsTab = content
+            .toolbarBackground(theme.color.mainBackground, for: .tabBar)
+            .toolbarBackground(tabBarVisibility, for: .tabBar)
+            .tabItem {
+                Label(TabIndex.dialogs.title, systemImage: TabIndex.dialogs.systemIcon)
+            }
+            .tag(TabIndex.dialogs)
+        
+        let settingsTab = CreateProfileView(viewModel, theme: theme)
+            .toolbarBackground(theme.color.mainBackground, for: .tabBar)
+            .toolbarBackground(tabBarVisibility, for: .tabBar)
+            .tabItem {
+                Label(TabIndex.settings.title, systemImage: TabIndex.settings.systemIcon)
+            }
+            .tag(TabIndex.settings)
+        
+        let tabView = TabView(selection: $selectedTabIndex) {
+            if UIDevice.current.userInterfaceIdiom != .phone {
+                Spacer()
+            }
+            dialogsTab
+            settingsTab
+        }
+            .onChange(of: selectedTabIndex) { newValue in
+                isNavigationBarPresented.wrappedValue = (newValue == .dialogs)
+            }
+            .accentColor(theme.color.mainElements)
+        
+        return AnyView(tabView)
+    }
+    
     var body: some View {
         ZStack {
             theme.color.mainBackground.ignoresSafeArea()
@@ -61,51 +110,13 @@ struct EnterView: View {
                 if viewModel.user?.name.isEmpty == true ||
                     viewModel.user?.name.isValid(regexes: [EnterViewConstant.regexUserName]) == false {
                     CreateProfileView(viewModel, theme: theme)
-                        .onChange(of: viewModel.userName) { newValue in
-                            tabBarVisibility = newValue.isEmpty == false ? .visible : .hidden
-                        }
                 } else {
-                    TabView(selection: $selectedTabIndex) {
-                        if viewModel.user?.name.isEmpty == false {
-                            QuickBloxUIKit.dialogsView(onSelect: { tabIndex in
-                                if tabIndex != .dialogs {
-                                    selectedTabIndex = tabIndex
-                                }
-                            })
-                            .toolbar(tabBarVisibility, for: .tabBar)
-                            .toolbarBackground(theme.color.mainBackground, for: .tabBar)
-                            .toolbarBackground(tabBarVisibility, for: .tabBar)
-                            .tag(TabIndex.dialogs)
-                            .tabItem {
-                                Label(TabIndex.dialogs.title, systemImage: TabIndex.dialogs.systemIcon)
-                            }
-                            .onAppear {
-                                theme = appThemes[UserDefaults.standard.integer(forKey: "Theme")]
-                                setupSettings()
-                                tabBarVisibility = selectedTabIndex == .settings ? .visible : .hidden
-                            }
-                        }
-                        
-                        if viewModel.user != nil {
-                            CreateProfileView(viewModel, theme: theme)
-                                .toolbar(tabBarVisibility, for: .tabBar)
-                                .toolbarBackground(theme.color.mainBackground, for: .tabBar)
-                                .toolbarBackground(tabBarVisibility, for: .tabBar)
-                                .tabItem {
-                                    Label(TabIndex.settings.title, systemImage: TabIndex.settings.systemIcon)
-                                }
-                                .tag(TabIndex.settings)
-                        }
-                    }
-                    .accentColor(theme.color.mainElements)
+                    QuickBloxUIKit.dialogsView(onModifyContent: { content, isNavigationBarPresented in
+                        setupTabView(with: content, isNavigationBarPresented: isNavigationBarPresented)
+                    })
                     .onAppear {
                         theme = appThemes[UserDefaults.standard.integer(forKey: "Theme")]
                         setupSettings()
-                        tabBarVisibility = selectedTabIndex == .settings ? .visible : .hidden
-                    }
-                    
-                    .onChange(of: selectedTabIndex) { newValue in
-                        tabBarVisibility = newValue == .settings ? .visible : .hidden
                     }
                     
                     .onChange(of: viewModel.error) { newValue in
@@ -113,8 +124,8 @@ struct EnterView: View {
                     }
                     
                     .enterPhoneFailureAlert(isPresented: $showNoInternetAlert,
-                                                message: viewModel.error,
-                                                onDismiss: {
+                                            message: viewModel.error,
+                                            onDismiss: {
                         viewModel.error = ""
                         showNoInternetAlert = false
                     }, settings: EnterPhoneNumberScreenSettings(theme))
@@ -156,13 +167,16 @@ struct EnterView: View {
     }
     
     private func setupFeatures() {
+        QBSettings.logLevel = .nothing
+        QuickBloxLog.LogSettings.type = .nothing
+        
+        
         QuickBloxUIKit.feature.ai.apiKey = EnterViewConstant.aiApiKey
         QuickBloxUIKit.feature.ai.ui = QuickBloxUIKit.AIUISettings(theme)
         QuickBloxUIKit.feature.forward.enable = true
         QuickBloxUIKit.feature.reply.enable = true
         QuickBloxUIKit.feature.regex.userName = EnterViewConstant.regexUserName
         QuickBloxUIKit.feature.regex.dialogName = EnterViewConstant.regexDialogName
-        QuickBloxUIKit.feature.toolbar.enable = true
     }
     
     private func setupSettings() {

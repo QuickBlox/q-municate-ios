@@ -1,4 +1,5 @@
 {
+  "originHash" : "639121be7fa83dea7bcfa74b53f3251d36e4401b65b9545199271acc17331da7",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -86,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/QuickBlox/ios-ai-answer-assistant.git",
       "state" : {
-        "revision" : "83da3d2846129853ad4a626205f7fea7edc933c2",
-        "version" : "2.0.0"
+        "revision" : "36cf55dd8d2e612e500c4b9ab3176694cd803027",
+        "version" : "2.1.0"
       }
     },
     {
@@ -95,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/QuickBlox/ios-ai-rephrase.git",
       "state" : {
-        "revision" : "633d1ce0219d0e48dd5773716e631233a5abe017",
-        "version" : "2.0.0"
+        "revision" : "dbe7875bb2bb647b9afaa4f71d807095402fa7b5",
+        "version" : "2.2.0"
       }
     },
     {
@@ -104,8 +105,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/QuickBlox/ios-ai-translate.git",
       "state" : {
-        "revision" : "52a058215c03fa101c6810b692b80be2b07fc8ed",
-        "version" : "2.0.0"
+        "revision" : "00d85e185965f180637cfd9eb591ce6b85f45543",
+        "version" : "2.1.0"
+      }
+    },
+    {
+      "identity" : "ios-google-webrtc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/QuickBlox/ios-google-webrtc",
+      "state" : {
+        "revision" : "3fd6be3c8b74621e5fa2f81621233acac1627acb",
+        "version" : "124.0.2"
       }
     },
     {
@@ -113,8 +123,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/QuickBlox/ios-quickblox-sdk",
       "state" : {
-        "revision" : "54fa973bf6a788529ae1b39ba5e301db94218385",
-        "version" : "2.19.0"
+        "revision" : "fcb3ad5ccf33f340424ca1a5c89841e3c976095d",
+        "version" : "2.21.0"
+      }
+    },
+    {
+      "identity" : "ios-quickblox-sdk-webrtc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/QuickBlox/ios-quickblox-sdk-webrtc",
+      "state" : {
+        "revision" : "9a754f68eb9324cf41ede34eb668669e98cfc1db",
+        "version" : "3.2.0"
       }
     },
     {
@@ -122,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/QuickBlox/ios-ui-kit.git",
       "state" : {
-        "revision" : "cf4ee2b6c3330d66be3be88aaf2425bd561c1497",
-        "version" : "0.3.4"
+        "revision" : "5943660c7cdccb9d9c3cfe2e327a311fb2b092ce",
+        "version" : "0.6.0"
       }
     },
     {
@@ -163,5 +182,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
