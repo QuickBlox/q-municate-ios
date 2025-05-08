@@ -39,6 +39,8 @@
 		2CEDA5AC2B29F11D00B8167B /* TermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDA5AB2B29F11D00B8167B /* TermsView.swift */; };
 		2CEDA5AE2B2A04D900B8167B /* VerifyPhoneNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDA5AD2B2A04D900B8167B /* VerifyPhoneNumberView.swift */; };
 		2CFD6C092B28A11300C306AE /* CountryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFD6C082B28A11300C306AE /* CountryView.swift */; };
+		3A7EFF952DB8CC2600A2126F /* QuickbloxWebRTC in Frameworks */ = {isa = PBXBuildFile; productRef = 3A7EFF942DB8CC2600A2126F /* QuickbloxWebRTC */; };
+		3A7EFF972DB8CE6C00A2126F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A7EFF962DB8CE6C00A2126F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +96,7 @@
 		2CEDA5AB2B29F11D00B8167B /* TermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsView.swift; sourceTree = "<group>"; };
 		2CEDA5AD2B2A04D900B8167B /* VerifyPhoneNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyPhoneNumberView.swift; sourceTree = "<group>"; };
 		2CFD6C082B28A11300C306AE /* CountryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryView.swift; sourceTree = "<group>"; };
+		3A7EFF962DB8CE6C00A2126F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A7EFF952DB8CC2600A2126F /* QuickbloxWebRTC in Frameworks */,
 				2CD477E02B6A8D070073959B /* QuickBloxUIKit in Frameworks */,
 				2CDE3D6D2B51629200DB1EBB /* FirebaseAuth in Frameworks */,
 			);
@@ -146,6 +150,7 @@
 		2C4417F32B2717E200216796 /* Q-municate */ = {
 			isa = PBXGroup;
 			children = (
+				3A7EFF962DB8CE6C00A2126F /* GoogleService-Info.plist */,
 				2C4418452B27525600216796 /* Model */,
 				2C4418342B27525600216796 /* API */,
 				2C4418362B27525600216796 /* Resources */,
@@ -287,6 +292,7 @@
 			packageProductDependencies = (
 				2CDE3D6C2B51629200DB1EBB /* FirebaseAuth */,
 				2CD477DF2B6A8D070073959B /* QuickBloxUIKit */,
+				3A7EFF942DB8CC2600A2126F /* QuickbloxWebRTC */,
 			);
 			productName = "Q-municate";
 			productReference = 2C4417F12B2717E200216796 /* Q-municate.app */;
@@ -364,6 +370,7 @@
 			packageReferences = (
 				2CDE3D6B2B51629200DB1EBB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2CD477DE2B6A8D060073959B /* XCRemoteSwiftPackageReference "ios-ui-kit" */,
+				3A7EFF932DB8CC2500A2126F /* XCRemoteSwiftPackageReference "ios-quickblox-sdk-webrtc" */,
 			);
 			productRefGroup = 2C4417F22B2717E200216796 /* Products */;
 			projectDirPath = "";
@@ -386,6 +393,7 @@
 				2C99FA842B38AF8700C60BAE /* LaunchScreen.storyboard in Resources */,
 				2C4418622B27525600216796 /* PhoneCountryCodes.json in Resources */,
 				2C4418612B27525600216796 /* Assets.xcassets in Resources */,
+				3A7EFF972DB8CE6C00A2126F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,7 +633,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -674,7 +682,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0.0;
+				MARKETING_VERSION = 4.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.quickblox.qmunicate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -809,8 +817,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/QuickBlox/ios-ui-kit.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.4;
+				kind = exactVersion;
+				version = 0.6.0;
 			};
 		};
 		2CDE3D6B2B51629200DB1EBB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
@@ -819,6 +827,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 10.19.1;
+			};
+		};
+		3A7EFF932DB8CC2500A2126F /* XCRemoteSwiftPackageReference "ios-quickblox-sdk-webrtc" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/QuickBlox/ios-quickblox-sdk-webrtc";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -833,6 +849,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2CDE3D6B2B51629200DB1EBB /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		3A7EFF942DB8CC2600A2126F /* QuickbloxWebRTC */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A7EFF932DB8CC2500A2126F /* XCRemoteSwiftPackageReference "ios-quickblox-sdk-webrtc" */;
+			productName = QuickbloxWebRTC;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
